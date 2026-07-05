@@ -430,8 +430,6 @@ function WaveChart({
   onOpen,
   ariaLabel
 }) {
-  const width = 620;
-  const height = compact ? 42 : 66;
   const ChartTag = onOpen ? "button" : "div";
 
   return (
@@ -455,17 +453,16 @@ function WaveChart({
       )}
 
       <WebGLWaveformCanvas
-  values={values}
-  points={values.length}
-  color={color}
-  mode="unit"
-/>
+        values={values}
+        points={values?.length || 360}
+        color={color}
+        mode="unit"
+      />
 
       {onOpen && <span className="kgen-open-wave-hint">↗</span>}
     </ChartTag>
   );
 }
-
 function MiniTrend({ values, color = "red", onOpen, ariaLabel }) {
   const TrendTag = onOpen ? "button" : "div";
 
@@ -479,18 +476,17 @@ function MiniTrend({ values, color = "red", onOpen, ariaLabel }) {
       aria-label={ariaLabel}
     >
       <WebGLWaveformCanvas
-  values={values}
-  points={80}
-  color={color}
-  mode="auto"
-  className={`kgen-mini-trend ${color}`}
-/>
+        values={values}
+        points={96}
+        color={color}
+        mode="auto"
+        className={`kgen-mini-trend ${color}`}
+      />
 
       {onOpen && <span className="kgen-mini-open-dot">↗</span>}
     </TrendTag>
   );
 }
-
 function LabTile({
   name,
   value,
@@ -625,10 +621,10 @@ function WaveformOverlay({ config, onClose }) {
           </div>
         </div>
 
-       <div className={`kgen-wave-overlay-chart ${config.color}`}>
+      <div className={`kgen-wave-overlay-chart ${config.color}`}>
   <WebGLWaveformCanvas
     values={config.values}
-    points={Math.max(360, config.values.length)}
+    points={Math.max(720, config.values?.length || 360)}
     color={config.color}
     mode={config.scaleMode === "scaled" ? "auto" : "unit"}
   />

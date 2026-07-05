@@ -6,7 +6,7 @@ const COLOR_MAP = {
   yellow: [245 / 255, 158 / 255, 11 / 255, 1],
   green: [52 / 255, 211 / 255, 153 / 255, 1],
   cyan: [125 / 255, 211 / 255, 252 / 255, 1],
-  white: [226 / 255, 232 / 255, 240 / 255, 1],
+  white: [226 / 255, 232 / 240, 1],
 };
 
 function getColor(colorName = "cyan") {
@@ -28,12 +28,26 @@ function normalizeValue(value, mode, min, max) {
   return Math.max(-1, Math.min(1, value));
 }
 
+function interpolateArrayValue(values, outputIndex, outputLength) {
+  if (!values?.length) return 0;
+  if (values.length === 1 || outputLength <= 1) return values[0];
+
+  const sourcePosition = (outputIndex / (outputLength - 1)) * (values.length - 1);
+  const leftIndex = Math.floor(sourcePosition);
+  const rightIndex = Math.min(values.length - 1, leftIndex + 1);
+
+  const rawT = sourcePosition - leftIndex;
+  const smoothT = rawT * rawT * (3 - 2 * rawT);
+
+  const left = Number(values[leftIndex]) || 0;
+  const right = Number(values[rightIndex]) || left;
+
+  return left + (right - left) * smoothT;
+}
+
 function createShader(gl, type, source) {
   const shader = gl.createShader(type);
-
-  if (!shader) {
-    throw new Error("Unable to create WebGL shader.");
-  }
+  if (!shader) throw new Error("Unable to create WebGL shader.");
 
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
@@ -65,7 +79,6 @@ function createProgram(gl) {
     gl.FRAGMENT_SHADER,
     `
       precision mediump float;
-
       uniform vec4 u_color;
 
       void main() {
@@ -75,10 +88,7 @@ function createProgram(gl) {
   );
 
   const program = gl.createProgram();
-
-  if (!program) {
-    throw new Error("Unable to create WebGL program.");
-  }
+  if (!program) throw new Error("Unable to create WebGL program.");
 
   gl.attachShader(program, vertexShader);
   gl.attachShader(program, fragmentShader);
@@ -107,9 +117,9 @@ export default function WebGLWaveformCanvas({
   const canvasRef = useRef(null);
   const glRef = useRef(null);
   const programRef = useRef(null);
+  const positionBufferRef = useRef(null);
   const positionLocationRef = useRef(null);
   const colorLocationRef = useRef(null);
-  const positionBufferRef = useRef(null);
   const animationRef = useRef(null);
 
   const bufferRef = useRef(new Float32Array(points));
@@ -137,10 +147,8 @@ export default function WebGLWaveformCanvas({
     const canvas = canvasRef.current;
     if (!canvas) return undefined;
 
-    let gl;
-
     try {
-      gl = canvas.getContext("webgl", {
+      const gl = canvas.getContext("webgl", {
         alpha: true,
         antialias: false,
         depth: false,
@@ -164,14 +172,13 @@ export default function WebGLWaveformCanvas({
 
       glRef.current = gl;
       programRef.current = program;
+      positionBufferRef.current = positionBuffer;
       positionLocationRef.current = positionLocation;
       colorLocationRef.current = colorLocation;
-      positionBufferRef.current = positionBuffer;
 
       gl.useProgram(program);
       gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
       gl.bufferData(gl.ARRAY_BUFFER, verticesRef.current.byteLength, gl.DYNAMIC_DRAW);
-
       gl.enableVertexAttribArray(positionLocation);
       gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
@@ -179,13 +186,8 @@ export default function WebGLWaveformCanvas({
         const dpr = window.devicePixelRatio || 1;
         const rect = canvas.getBoundingClientRect();
 
-        const nextWidth = Math.max(1, Math.floor(rect.width * dpr));
-        const nextHeight = Math.max(1, Math.floor(rect.height * dpr));
-
-        if (canvas.width !== nextWidth || canvas.height !== nextHeight) {
-          canvas.width = nextWidth;
-          canvas.height = nextHeight;
-        }
+        canvas.width = Math.max(1, Math.floor(rect.width * dpr));
+        canvas.height = Math.max(1, Math.floor(rect.height * dpr));
 
         gl.viewport(0, 0, canvas.width, canvas.height);
       }
@@ -198,28 +200,26 @@ export default function WebGLWaveformCanvas({
       function draw() {
         const activeGl = glRef.current;
         const activeProgram = programRef.current;
-        const activePositionBuffer = positionBufferRef.current;
+        const activeBuffer = positionBufferRef.current;
         const activeColorLocation = colorLocationRef.current;
 
-        if (!activeGl || !activeProgram || !activePositionBuffer || !activeColorLocation) {
-          return;
-        }
+        if (!activeGl || !activeProgram || !activeBuffer || !activeColorLocation) return;
 
-        const buffer = bufferRef.current;
+        const signalBuffer = bufferRef.current;
         const vertices = verticesRef.current;
         const writeIndex = writeIndexRef.current;
 
         for (let i = 0; i < points; i += 1) {
           const x = points <= 1 ? 0 : -1 + (2 * i) / (points - 1);
           const sourceIndex = (writeIndex + i) % points;
-          const y = buffer[sourceIndex];
+          const y = signalBuffer[sourceIndex];
 
           vertices[i * 2] = x;
           vertices[i * 2 + 1] = y;
         }
 
         activeGl.useProgram(activeProgram);
-        activeGl.bindBuffer(activeGl.ARRAY_BUFFER, activePositionBuffer);
+        activeGl.bindBuffer(activeGl.ARRAY_BUFFER, activeBuffer);
         activeGl.bufferSubData(activeGl.ARRAY_BUFFER, 0, vertices);
 
         activeGl.clearColor(0, 0, 0, 0);
@@ -234,19 +234,11 @@ export default function WebGLWaveformCanvas({
       animationRef.current = requestAnimationFrame(draw);
 
       return () => {
-        if (animationRef.current) {
-          cancelAnimationFrame(animationRef.current);
-        }
-
+        if (animationRef.current) cancelAnimationFrame(animationRef.current);
         resizeObserver.disconnect();
 
-        if (gl && positionBuffer) {
-          gl.deleteBuffer(positionBuffer);
-        }
-
-        if (gl && program) {
-          gl.deleteProgram(program);
-        }
+        gl.deleteBuffer(positionBuffer);
+        gl.deleteProgram(program);
 
         glRef.current = null;
         programRef.current = null;
@@ -262,16 +254,13 @@ export default function WebGLWaveformCanvas({
   useEffect(() => {
     if (!values?.length) return;
 
-    const buffer = bufferRef.current;
+    const signalBuffer = bufferRef.current;
     const min = valueRange.min;
     const max = valueRange.max;
 
-    for (let i = 0; i < buffer.length; i += 1) {
-      const valueIndex = Math.floor(
-        (i / Math.max(1, buffer.length - 1)) * (values.length - 1)
-      );
-
-      buffer[i] = normalizeValue(values[valueIndex], mode, min, max);
+    for (let i = 0; i < signalBuffer.length; i += 1) {
+      const interpolated = interpolateArrayValue(values, i, signalBuffer.length);
+      signalBuffer[i] = normalizeValue(interpolated, mode, min, max);
     }
 
     writeIndexRef.current = 0;
@@ -280,20 +269,16 @@ export default function WebGLWaveformCanvas({
   useEffect(() => {
     if (!samples?.length) return;
 
-    const buffer = bufferRef.current;
+    const signalBuffer = bufferRef.current;
 
     for (const sample of samples) {
-      buffer[writeIndexRef.current] = normalizeValue(sample, mode, -1, 1);
-      writeIndexRef.current = (writeIndexRef.current + 1) % buffer.length;
+      signalBuffer[writeIndexRef.current] = normalizeValue(sample, mode, -1, 1);
+      writeIndexRef.current = (writeIndexRef.current + 1) % signalBuffer.length;
     }
   }, [samples, mode]);
 
   if (!webglSupported) {
-    return (
-      <div className={`webgl-waveform-fallback ${className}`}>
-        WebGL unavailable
-      </div>
-    );
+    return <div className={`webgl-waveform-fallback ${className}`}>WebGL unavailable</div>;
   }
 
   return <canvas ref={canvasRef} className={`webgl-waveform-canvas ${className}`} />;

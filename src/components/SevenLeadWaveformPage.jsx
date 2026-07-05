@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import WebGLWaveformCanvas from "./WebGLWaveformCanvas";
 import { connectWaveformStream } from "../services/waveformStream";
 import { connectFhirStream } from "../services/fhirStream";
+import "./SevenLeadWaveformPage.css";
 
 const LEADS = [
   { id: "lead1", label: "Lead 1", color: "cyan" },
@@ -13,22 +14,27 @@ const LEADS = [
   { id: "pleth", label: "SpO₂ Pleth", color: "blue" },
 ];
 
-const EMPTY_WAVEFORM_FRAME = {
-  receivedAt: "",
+const EMPTY_FRAME = {
   sampleRate: 200,
+  batchSize: 0,
+  receivedAt: "",
   leads: Object.fromEntries(LEADS.map((lead) => [lead.id, []])),
   vitals: {
     heartRate: "--",
     spo2: "--",
     systolic: "--",
     diastolic: "--",
-    temperature: "--",
     respiratoryRate: "--",
+    temperature: "--",
   },
 };
 
+function valueOrDash(value) {
+  return value === null || value === undefined || value === "" ? "--" : value;
+}
+
 export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
-  const [waveFrame, setWaveFrame] = useState(EMPTY_WAVEFORM_FRAME);
+  const [waveFrame, setWaveFrame] = useState(EMPTY_FRAME);
   const [fhirFrame, setFhirFrame] = useState(null);
   const [streamStatus, setStreamStatus] = useState("connecting");
 
@@ -63,50 +69,51 @@ export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
   }, [waveFrame.vitals, fhirFrame]);
 
   const labs = fhirFrame?.labs || {};
-  const source = fhirFrame?.source || "oracle-smart";
+  const interpretation = fhirFrame?.interpretation;
   const dataQuality = fhirFrame?.dataQuality;
 
   return (
-    <section className="waveform-main-page">
-      <header className="waveform-main-header">
+    <section className="wave7-page">
+      <header className="wave7-header">
         <div>
-          <p className="eyebrow">Real-time telemetry</p>
+          <p className="wave7-eyebrow">Real-time telemetry</p>
           <h1>{patient?.name || "Selected Patient"}</h1>
           <span>
-            MRN {patient?.mrn || "--"} • {patient?.location || "Bedside Monitor"} • {source}
+            MRN {patient?.mrn || "--"} • {patient?.location || "Bedside"} •{" "}
+            {fhirFrame?.source || "oracle-smart"}
           </span>
         </div>
 
-        <div className="waveform-header-actions">
-          <span className={`waveform-live-pill ${streamStatus}`}>
+        <div className="wave7-header-actions">
+          <span className={`wave7-live-pill ${streamStatus}`}>
             ● {streamStatus === "live" ? "Live WebGL" : "Connecting"}
           </span>
 
-          <button type="button" className="ghost-btn" onClick={onOpenAnalytics}>
+          <button type="button" className="wave7-action-btn" onClick={onOpenAnalytics}>
             Open Analytics
           </button>
         </div>
       </header>
 
-      <main className="waveform-main-grid">
-        <section className="waveform-monitor-card">
-          <div className="waveform-monitor-title">
+      <main className="wave7-body">
+        <section className="wave7-monitor-card">
+          <div className="wave7-monitor-title">
             <div>
-              <p className="eyebrow">High precision</p>
+              <p className="wave7-eyebrow">High precision</p>
               <h2>7 waveform monitor</h2>
             </div>
 
             <span>{waveFrame.sampleRate || 200} samples/sec</span>
           </div>
 
-          <div className="waveform-stack">
+          <div className="wave7-stack">
             {LEADS.map((lead) => (
-              <article className="webgl-lead-row" key={lead.id}>
+              <article className="wave7-lead-row" key={lead.id}>
                 <span>{lead.label}</span>
 
                 <WebGLWaveformCanvas
                   samples={waveFrame.leads?.[lead.id] || []}
-                  points={900}
+                  points={760}
                   color={lead.color}
                   mode="bipolar"
                 />
@@ -115,72 +122,49 @@ export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
           </div>
         </section>
 
-        <aside className="waveform-vitals-rail">
-          <Metric label="HR" value={vitals.heartRate} unit="BPM" icon="♥" />
-          <Metric label="SpO₂" value={vitals.spo2} unit="%" icon="●" />
+        <aside className="wave7-side-rail">
+          <Metric label="HR" value={valueOrDash(vitals.heartRate)} unit="BPM" icon="♥" />
+          <Metric label="SpO₂" value={valueOrDash(vitals.spo2)} unit="%" icon="●" />
           <Metric
             label="BP"
-            value={`${vitals.systolic}/${vitals.diastolic}`}
+            value={`${valueOrDash(vitals.systolic)}/${valueOrDash(vitals.diastolic)}`}
             unit="mmHg"
             icon="⌁"
           />
-          <Metric label="RR" value={vitals.respiratoryRate} unit="/min" icon="↕" />
-          <Metric label="Temp" value={vitals.temperature} unit="°C" icon="♨" />
+          <Metric label="RR" value={valueOrDash(vitals.respiratoryRate)} unit="/min" icon="↕" />
+          <Metric label="Temp" value={valueOrDash(vitals.temperature)} unit="°C" icon="♨" />
+
+          <section className="wave7-insight-card">
+            <strong>Insight</strong>
+            <p>
+              {interpretation?.rhythm ||
+                "Oracle/FHIR clinical insight will appear when the backend stream is connected."}
+            </p>
+          </section>
+
+          <section className="wave7-lab-card">
+            <strong>Labs</strong>
+            <span>K {valueOrDash(labs.potassium)}</span>
+            <span>Cr {valueOrDash(labs.creatinine)}</span>
+            <span>Glu {valueOrDash(labs.glucose)}</span>
+            <small>
+              FHIR {dataQuality?.fhirFieldCount ?? 0} • Fallback{" "}
+              {dataQuality?.fallbackFieldCount ?? 0}
+            </small>
+          </section>
         </aside>
       </main>
-
-      <section className="waveform-lower-grid">
-        <InfoPanel title="Lab results">
-          <Row label="Glucose" value={labs.glucose ?? "--"} unit="mg/dL" />
-          <Row label="Potassium" value={labs.potassium ?? "--"} unit="mmol/L" />
-          <Row label="Creatinine" value={labs.creatinine ?? "--"} unit="mg/dL" />
-          <Row label="WBC" value={labs.wbc ?? "--"} unit="10³/uL" />
-        </InfoPanel>
-
-        <InfoPanel title="FHIR data quality">
-          <Row label="FHIR fields" value={dataQuality?.fhirFieldCount ?? 0} unit="" />
-          <Row label="Fallback fields" value={dataQuality?.fallbackFieldCount ?? 0} unit="" />
-          <Row label="Observations" value={dataQuality?.observationCount ?? 0} unit="" />
-          <Row label="Matched" value={dataQuality?.matchedObservationCount ?? 0} unit="" />
-        </InfoPanel>
-
-        <InfoPanel title="Interpretation">
-          <p className="waveform-interpretation">
-            {fhirFrame?.interpretation?.rhythm ||
-              "FHIR clinical interpretation will appear after Oracle SMART data is received."}
-          </p>
-        </InfoPanel>
-      </section>
     </section>
   );
 }
 
 function Metric({ label, value, unit, icon }) {
   return (
-    <div className="waveform-metric">
+    <section className="wave7-metric">
       <span>{icon}</span>
       <small>{label}</small>
       <strong>{value}</strong>
       <em>{unit}</em>
-    </div>
-  );
-}
-
-function InfoPanel({ title, children }) {
-  return (
-    <section className="waveform-info-panel">
-      <h3>{title}</h3>
-      {children}
     </section>
-  );
-}
-
-function Row({ label, value, unit }) {
-  return (
-    <div className="waveform-info-row">
-      <span>{label}</span>
-      <strong>{value}</strong>
-      <em>{unit}</em>
-    </div>
   );
 }
