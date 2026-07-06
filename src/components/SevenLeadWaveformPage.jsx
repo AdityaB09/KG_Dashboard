@@ -1,21 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
 import WebGLWaveformCanvas from "./WebGLWaveformCanvas";
 import { connectWaveformStream } from "../services/waveformStream";
-import { connectFhirStream } from "../services/fhirStream";
 import "./SevenLeadWaveformPage.css";
 
 const LEADS = [
-  { id: "lead1", label: "Lead 1", color: "cyan" },
-  { id: "lead2", label: "Lead 2", color: "cyan" },
-  { id: "lead3", label: "Lead 3", color: "cyan" },
+  { id: "lead1", label: "Lead I", color: "cyan" },
+  { id: "lead2", label: "Lead II", color: "cyan" },
+  { id: "lead3", label: "Lead III", color: "cyan" },
   { id: "avr", label: "aVR", color: "cyan" },
   { id: "avl", label: "aVL", color: "cyan" },
   { id: "avf", label: "aVF", color: "cyan" },
-  { id: "pleth", label: "SpO₂ Pleth", color: "blue" },
+  { id: "v1", label: "V1", color: "cyan" },
 ];
-
 const EMPTY_FRAME = {
-  sampleRate: 200,
+  sampleRate: 220,
   batchSize: 0,
   receivedAt: "",
   leads: Object.fromEntries(LEADS.map((lead) => [lead.id, []])),
@@ -33,44 +31,90 @@ function valueOrDash(value) {
   return value === null || value === undefined || value === "" ? "--" : value;
 }
 
+function latestAmplitude(samples = []) {
+  if (!samples.length) return "--";
+  const latest = samples[samples.length - 1];
+
+  if (!Number.isFinite(latest)) return "--";
+
+  return latest.toFixed(2);
+}
+
 export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
   const [waveFrame, setWaveFrame] = useState(EMPTY_FRAME);
-  const [fhirFrame, setFhirFrame] = useState(null);
   const [streamStatus, setStreamStatus] = useState("connecting");
 
   useEffect(() => {
     const disconnectWaveforms = connectWaveformStream({
       onFrame: (frame) => {
         setWaveFrame(frame);
-        setStreamStatus("live");
+        setStreamStatus(frame.status === "error" ? "warning" : "live");
       },
       onError: () => setStreamStatus("warning"),
     });
 
-    const disconnectFhir = connectFhirStream({
-      provider: "oracle",
-      patientId: "",
-      onFrame: (frame) => setFhirFrame(frame),
-      onHeartbeat: () => {},
-      onError: () => {},
-    });
-
     return () => {
       disconnectWaveforms?.();
-      disconnectFhir?.();
     };
-  }, [patient?.id, patient?.fhirId]);
+  }, [patient?.id]);
 
-  const vitals = useMemo(() => {
-    return {
-      ...waveFrame.vitals,
-      ...(fhirFrame?.vitals || {}),
-    };
-  }, [waveFrame.vitals, fhirFrame]);
+  const vitals = waveFrame.vitals || EMPTY_FRAME.vitals;
+  const visibleSeconds = waveFrame.xAxis?.secondsVisible || 6;
+  const visiblePoints = Math.round((waveFrame.sampleRate || 220) * visibleSeconds);
 
-  const labs = fhirFrame?.labs || {};
-  const interpretation = fhirFrame?.interpretation;
-  const dataQuality = fhirFrame?.dataQuality;
+  const metricBoxes = useMemo(() => {
+    return [
+      {
+        label: "Lead 1",
+        title: "HR",
+        value: valueOrDash(vitals.heartRate),
+        unit: "BPM",
+        icon: "♥",
+      },
+      {
+        label: "Lead 2",
+        title: "Lead II",
+        value: valueOrDash(waveFrame.latestMv?.lead2),
+        unit: "mV",
+        icon: "⌁",
+      },
+      {
+        label: "Lead 3",
+        title: "Lead III",
+        value: valueOrDash(waveFrame.latestMv?.lead3),
+        unit: "mV",
+        icon: "⌁",
+      },
+      {
+        label: "aVR",
+        title: "BP",
+        value: `${valueOrDash(vitals.systolic)}/${valueOrDash(vitals.diastolic)}`,
+        unit: "mmHg",
+        icon: "↯",
+      },
+      {
+        label: "aVL",
+        title: "RR",
+        value: valueOrDash(vitals.respiratoryRate),
+        unit: "/min",
+        icon: "↕",
+      },
+      {
+        label: "aVF",
+        title: "Temp",
+        value: valueOrDash(vitals.temperature),
+        unit: "°C",
+        icon: "♨",
+      },
+      {
+        label: "V1",
+        title: "SpO₂",
+        value: valueOrDash(vitals.spo2),
+        unit: "%",
+        icon: "●",
+      },
+    ];
+  }, [vitals, waveFrame.latestMv]);
 
   return (
     <section className="wave7-page">
@@ -80,13 +124,17 @@ export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
           <h1>{patient?.name || "Selected Patient"}</h1>
           <span>
             MRN {patient?.mrn || "--"} • {patient?.location || "Bedside"} •{" "}
-            {fhirFrame?.source || "oracle-smart"}
+            {waveFrame.source || "physionet-ptb-xl"}
           </span>
         </div>
 
         <div className="wave7-header-actions">
           <span className={`wave7-live-pill ${streamStatus}`}>
             ● {streamStatus === "live" ? "Live WebGL" : "Connecting"}
+          </span>
+
+          <span className="wave7-speed-pill">
+            {waveFrame.sampleRate || 220} Hz • {visibleSeconds}s window
           </span>
 
           <button type="button" className="wave7-action-btn" onClick={onOpenAnalytics}>
@@ -103,7 +151,9 @@ export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
               <h2>7 waveform monitor</h2>
             </div>
 
-            <span>{waveFrame.sampleRate || 200} samples/sec</span>
+            <span>
+              {waveFrame.sampleRate || 220} samples/sec • 25 mm/sec display model
+            </span>
           </div>
 
           <div className="wave7-stack">
@@ -113,7 +163,7 @@ export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
 
                 <WebGLWaveformCanvas
                   samples={waveFrame.leads?.[lead.id] || []}
-                  points={760}
+                  points={visiblePoints}
                   color={lead.color}
                   mode="bipolar"
                 />
@@ -123,46 +173,20 @@ export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
         </section>
 
         <aside className="wave7-side-rail">
-          <Metric label="HR" value={valueOrDash(vitals.heartRate)} unit="BPM" icon="♥" />
-          <Metric label="SpO₂" value={valueOrDash(vitals.spo2)} unit="%" icon="●" />
-          <Metric
-            label="BP"
-            value={`${valueOrDash(vitals.systolic)}/${valueOrDash(vitals.diastolic)}`}
-            unit="mmHg"
-            icon="⌁"
-          />
-          <Metric label="RR" value={valueOrDash(vitals.respiratoryRate)} unit="/min" icon="↕" />
-          <Metric label="Temp" value={valueOrDash(vitals.temperature)} unit="°C" icon="♨" />
-
-          <section className="wave7-insight-card">
-            <strong>Insight</strong>
-            <p>
-              {interpretation?.rhythm ||
-                "Oracle/FHIR clinical insight will appear when the backend stream is connected."}
-            </p>
-          </section>
-
-          <section className="wave7-lab-card">
-            <strong>Labs</strong>
-            <span>K {valueOrDash(labs.potassium)}</span>
-            <span>Cr {valueOrDash(labs.creatinine)}</span>
-            <span>Glu {valueOrDash(labs.glucose)}</span>
-            <small>
-              FHIR {dataQuality?.fhirFieldCount ?? 0} • Fallback{" "}
-              {dataQuality?.fallbackFieldCount ?? 0}
-            </small>
-          </section>
+          {metricBoxes.map((metric) => (
+            <MetricBox key={metric.label} {...metric} />
+          ))}
         </aside>
       </main>
     </section>
   );
 }
-
-function Metric({ label, value, unit, icon }) {
+function MetricBox({ label, title, value, unit, icon }) {
   return (
     <section className="wave7-metric">
-      <span>{icon}</span>
       <small>{label}</small>
+      <span>{icon}</span>
+      <b>{title}</b>
       <strong>{value}</strong>
       <em>{unit}</em>
     </section>

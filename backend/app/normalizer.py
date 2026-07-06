@@ -886,7 +886,7 @@ def build_priority_trends(
             "trend": demo_trend,
             "score": score,
             "reason": reason,
-            "meta": timestamps.get(field) or "latest FHIR",
+            "meta": timestamps.get(field) or "07/28 08/26",
         })
 
     return sorted(trends, key=lambda item: item["score"], reverse=True)[:4]

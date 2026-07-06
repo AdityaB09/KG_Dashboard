@@ -5,6 +5,7 @@ import hashlib
 from fastapi import FastAPI, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
+from app.physionet_waveforms import build_physionet_frame
 
 from app.config import settings
 from app.normalizer import FIELD_LABELS, now_iso, to_dashboard_frame
@@ -454,27 +455,82 @@ async def raw_oracle_observations(
     
     
     
+@app.get("/api/waveforms/latest")
+async def latest_waveform_frame():
+    try:
+        frame = build_physionet_frame(
+            cursor=0,
+            batch_size=max(1, int(settings.WAVEFORM_SAMPLE_RATE * 0.25)),
+        )
+        return frame
+
+    except Exception as error:
+        return {
+            "source": "physionet-ptb-xl",
+            "status": "error",
+            "error": str(error),
+            "help": (
+                "Check PHYSIONET_DB and PHYSIONET_RECORD. "
+                "For PTB-XL record 00001_hr, use "
+                "PHYSIONET_DB=ptb-xl/1.0.3/records500/00000 and "
+                "PHYSIONET_RECORD=00001_hr."
+            ),
+        }
+
 @app.get("/api/waveforms/stream")
 async def stream_waveform_frame(
-    sample_rate: int = Query(default=200, ge=50, le=1000),
-    batch_ms: int = Query(default=50, ge=20, le=500),
+    sample_rate: int = Query(default=settings.WAVEFORM_SAMPLE_RATE, ge=50, le=1000),
+    batch_ms: int = Query(default=settings.WAVEFORM_BATCH_MS, ge=20, le=500),
 ):
     async def event_generator():
-        started_at = time.monotonic()
         batch_size = max(1, int(sample_rate * (batch_ms / 1000)))
+        cursor = 0
 
         while True:
-            now = time.monotonic() - started_at
-            frame = build_waveform_frame(
-                start_seconds=now,
-                sample_rate=sample_rate,
-                batch_size=batch_size,
-            )
+            try:
+                frame = build_physionet_frame(
+                    cursor=cursor,
+                    batch_size=batch_size,
+                )
 
-            yield "event: waveform-frame\n"
-            yield f"data: {json.dumps(frame, separators=(',', ':'))}\n\n"
+                cursor += batch_size
 
-            await asyncio.sleep(batch_ms / 1000)
+                yield "event: waveform-frame\n"
+                yield f"data: {json.dumps(frame, separators=(',', ':'))}\n\n"
+
+                await asyncio.sleep(batch_ms / 1000)
+
+            except Exception as error:
+                error_frame = {
+                    "source": "physionet-ptb-xl",
+                    "status": "error",
+                    "error": str(error),
+                    "sampleRate": sample_rate,
+                    "batchSize": batch_size,
+                    "leads": {},
+                    "latestMv": {},
+                    "vitals": {},
+                    "xAxis": {
+                        "type": "time",
+                        "unit": "seconds",
+                        "sampleRate": sample_rate,
+                        "secondsVisible": settings.WAVEFORM_VISIBLE_SECONDS,
+                        "paperSpeedMmPerSec": 25,
+                    },
+                    "yAxis": {
+                        "type": "voltage",
+                        "unit": "mV",
+                        "displayVoltageScaleMmPerMv": 10,
+                        "webglRange": [-1, 1],
+                    },
+                }
+
+                print("[KGEN WAVEFORM STREAM ERROR]", str(error))
+
+                yield "event: waveform-frame\n"
+                yield f"data: {json.dumps(error_frame, separators=(',', ':'))}\n\n"
+
+                await asyncio.sleep(1.0)
 
     return StreamingResponse(
         event_generator(),
@@ -482,10 +538,9 @@ async def stream_waveform_frame(
         headers={
             "Cache-Control": "no-cache",
             "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
         },
     )
-
-
 def build_waveform_frame(
     *,
     start_seconds: float,

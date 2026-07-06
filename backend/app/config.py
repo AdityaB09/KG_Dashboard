@@ -51,5 +51,28 @@ class Settings:
     # Local demo session signing only. Not production.
     SESSION_SECRET_KEY = os.getenv("SESSION_SECRET_KEY", "dev-only-change-me")
 
+    WAVEFORM_SAMPLE_RATE = int(os.getenv("WAVEFORM_SAMPLE_RATE", "220"))
+    WAVEFORM_BATCH_MS = int(os.getenv("WAVEFORM_BATCH_MS", "50"))
+    WAVEFORM_VISIBLE_SECONDS = float(os.getenv("WAVEFORM_VISIBLE_SECONDS", "6"))
 
+    PHYSIONET_DB = os.getenv(
+        "PHYSIONET_DB",
+        "ptb-xl/1.0.3/records500/00000",
+    )
+
+    PHYSIONET_RECORD = os.getenv(
+        "PHYSIONET_RECORD",
+        "00001_hr",
+    )
+
+    PHYSIONET_FALLBACK_DB = os.getenv(
+        "PHYSIONET_FALLBACK_DB",
+        "ptb-xl/1.0.3/records100/00000",
+    )
+
+    PHYSIONET_FALLBACK_RECORD = os.getenv(
+        "PHYSIONET_FALLBACK_RECORD",
+        "00001_lr",
+    )
+    
 settings = Settings()
