@@ -469,12 +469,6 @@ async def latest_waveform_frame():
             "source": "physionet-ptb-xl",
             "status": "error",
             "error": str(error),
-            "help": (
-                "Check PHYSIONET_DB and PHYSIONET_RECORD. "
-                "For PTB-XL record 00001_hr, use "
-                "PHYSIONET_DB=ptb-xl/1.0.3/records500/00000 and "
-                "PHYSIONET_RECORD=00001_hr."
-            ),
         }
 
 @app.get("/api/waveforms/stream")
@@ -493,7 +487,7 @@ async def stream_waveform_frame(
                     batch_size=batch_size,
                 )
 
-                cursor += batch_size
+                cursor = int(frame.get("nextCursor", cursor + batch_size))
 
                 yield "event: waveform-frame\n"
                 yield f"data: {json.dumps(frame, separators=(',', ':'))}\n\n"
@@ -508,21 +502,9 @@ async def stream_waveform_frame(
                     "sampleRate": sample_rate,
                     "batchSize": batch_size,
                     "leads": {},
+                    "leadsMv": {},
                     "latestMv": {},
                     "vitals": {},
-                    "xAxis": {
-                        "type": "time",
-                        "unit": "seconds",
-                        "sampleRate": sample_rate,
-                        "secondsVisible": settings.WAVEFORM_VISIBLE_SECONDS,
-                        "paperSpeedMmPerSec": 25,
-                    },
-                    "yAxis": {
-                        "type": "voltage",
-                        "unit": "mV",
-                        "displayVoltageScaleMmPerMv": 10,
-                        "webglRange": [-1, 1],
-                    },
                 }
 
                 print("[KGEN WAVEFORM STREAM ERROR]", str(error))
@@ -541,6 +523,7 @@ async def stream_waveform_frame(
             "X-Accel-Buffering": "no",
         },
     )
+
 def build_waveform_frame(
     *,
     start_seconds: float,

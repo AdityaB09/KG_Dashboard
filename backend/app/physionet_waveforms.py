@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from threading import Lock
+from threading import RLock
 from typing import Any
 
 import numpy as np
@@ -34,10 +34,60 @@ class PhysioNetWaveformData:
     lead_names: list[str]
     estimated_hr: int
 
+@dataclass
+class CyclicWaveformBuffer:
+    sample_rate: int
+    source_sample_rate: float
+    record_name: str
+    pn_dir: str
+    normalized_signals: np.ndarray
+    physical_signals_mv: np.ndarray
+    lead_ids: list[str]
+    lead_names: list[str]
+    estimated_hr: int
+    buffer_seconds: int
 
-_CACHE_LOCK = Lock()
+    @property
+    def total_samples(self) -> int:
+        return int(self.physical_signals_mv.shape[0])
+
+    def read(self, cursor: int, batch_size: int) -> tuple[int, np.ndarray, np.ndarray]:
+        total = self.total_samples
+
+        if total <= 0:
+            raise RuntimeError("Cyclic waveform buffer is empty.")
+
+        start = cursor % total
+        end = start + batch_size
+
+        if end <= total:
+            normalized_batch = self.normalized_signals[start:end]
+            physical_batch = self.physical_signals_mv[start:end]
+        else:
+            first_normalized = self.normalized_signals[start:total]
+            second_normalized = self.normalized_signals[0 : end - total]
+
+            first_physical = self.physical_signals_mv[start:total]
+            second_physical = self.physical_signals_mv[0 : end - total]
+
+            normalized_batch = np.concatenate(
+                [first_normalized, second_normalized],
+                axis=0,
+            )
+
+            physical_batch = np.concatenate(
+                [first_physical, second_physical],
+                axis=0,
+            )
+
+        next_cursor = (cursor + batch_size) % total
+
+        return next_cursor, normalized_batch, physical_batch
+
+_CACHE_LOCK = RLock()
 _CACHED_DATA: PhysioNetWaveformData | None = None
 _CACHED_ERROR: str | None = None
+_CACHED_CYCLIC_BUFFER: CyclicWaveformBuffer | None = None
 
 
 def now_iso() -> str:
@@ -251,7 +301,71 @@ def get_physionet_waveform_data() -> PhysioNetWaveformData:
             f"Details: {_CACHED_ERROR}"
         )
 
+_CACHED_CYCLIC_BUFFER: CyclicWaveformBuffer | None = None
 
+
+def build_cyclic_buffer_from_physionet(
+    data: PhysioNetWaveformData,
+    buffer_seconds: int,
+) -> CyclicWaveformBuffer:
+    target_samples = int(data.sample_rate * buffer_seconds)
+
+    if target_samples <= 0:
+        raise RuntimeError("WAVEFORM_TEST_BUFFER_SECONDS must be greater than 0.")
+
+    source_samples = data.physical_signals_mv.shape[0]
+
+    if source_samples <= 0:
+        raise RuntimeError("PhysioNet source signal is empty.")
+
+    repeat_count = int(np.ceil(target_samples / source_samples))
+
+    physical_1min = np.tile(data.physical_signals_mv, (repeat_count, 1))[
+        :target_samples
+    ]
+
+    normalized_1min = np.tile(data.normalized_signals, (repeat_count, 1))[
+        :target_samples
+    ]
+
+    print(
+        "[KGEN CYCLIC BUFFER READY]",
+        f"record={data.record_name}",
+        f"sample_rate={data.sample_rate}",
+        f"buffer_seconds={buffer_seconds}",
+        f"samples={target_samples}",
+        f"repeated_source={repeat_count}x",
+    )
+
+    return CyclicWaveformBuffer(
+        sample_rate=data.sample_rate,
+        source_sample_rate=data.source_sample_rate,
+        record_name=data.record_name,
+        pn_dir=data.pn_dir,
+        normalized_signals=normalized_1min.astype(np.float32),
+        physical_signals_mv=physical_1min.astype(np.float32),
+        lead_ids=data.lead_ids,
+        lead_names=data.lead_names,
+        estimated_hr=data.estimated_hr,
+        buffer_seconds=buffer_seconds,
+    )
+
+
+def get_cyclic_waveform_buffer() -> CyclicWaveformBuffer:
+    global _CACHED_CYCLIC_BUFFER
+
+    with _CACHE_LOCK:
+        if _CACHED_CYCLIC_BUFFER is not None:
+            return _CACHED_CYCLIC_BUFFER
+
+        data = get_physionet_waveform_data()
+
+        _CACHED_CYCLIC_BUFFER = build_cyclic_buffer_from_physionet(
+            data=data,
+            buffer_seconds=settings.WAVEFORM_TEST_BUFFER_SECONDS,
+        )
+
+        return _CACHED_CYCLIC_BUFFER
 
 
 def slice_circular(signal: np.ndarray, start: int, length: int) -> np.ndarray:
@@ -273,90 +387,81 @@ def build_physionet_frame(
     cursor: int,
     batch_size: int,
 ) -> dict[str, Any]:
-    data = get_physionet_waveform_data()
+    buffer = get_cyclic_waveform_buffer()
 
-    normalized_batch = slice_circular(data.normalized_signals, cursor, batch_size)
-    physical_batch = slice_circular(data.physical_signals_mv, cursor, batch_size)
+    next_cursor, normalized_batch, physical_batch = buffer.read(
+        cursor=cursor,
+        batch_size=batch_size,
+    )
 
     leads: dict[str, list[float]] = {}
     leads_mv: dict[str, list[float]] = {}
     latest_mv: dict[str, float] = {}
 
-    for column_index, lead_id in enumerate(data.lead_ids):
-    # Normalized signal is kept only for old display compatibility.
+    for column_index, lead_id in enumerate(buffer.lead_ids):
         leads[lead_id] = [
-        round(float(value), 5)
-        for value in normalized_batch[:, column_index]
-    ]
+            round(float(value), 5)
+            for value in normalized_batch[:, column_index]
+        ]
 
-    # This is the medically meaningful plotting signal.
-    # These values are real physical ECG voltage values in mV.
         leads_mv[lead_id] = [
-        round(float(value), 5)
-        for value in physical_batch[:, column_index]
-    ]
+            round(float(value), 5)
+            for value in physical_batch[:, column_index]
+        ]
 
         latest_mv[lead_id] = round(float(physical_batch[-1, column_index]), 3)
 
-    heart_rate = data.estimated_hr
-
+    heart_rate = buffer.estimated_hr
     respiratory_rate = max(10, min(32, round(heart_rate / 4.2)))
     spo2 = 97 if heart_rate < 110 else 94
     temperature = 37.0 if heart_rate < 110 else 37.4
     systolic = 118 if heart_rate < 110 else 128
     diastolic = 78 if heart_rate < 110 else 86
 
- 
     return {
-    "source": "physionet-ptb-xl",
-    "record": data.record_name,
-    "status": "connected",
-    "receivedAt": now_iso(),
-    "sampleRate": data.sample_rate,
-    "sourceSampleRate": data.source_sample_rate,
-    "batchSize": batch_size,
-    "cursor": cursor,
-
-    "xAxis": {
-        "type": "time",
-        "unit": "seconds",
-        "sampleRate": data.sample_rate,
-        "secondsVisible": float(settings.WAVEFORM_VISIBLE_SECONDS),
-        "samplePeriodMs": round(1000 / data.sample_rate, 3),
-        "paperSpeedMmPerSec": 25,
-        "minorBoxSeconds": 0.04,
-        "majorBoxSeconds": 0.20,
-    },
-
-    "yAxis": {
-        "type": "voltage",
-        "unit": "mV",
-        "defaultGainMmPerMv": 10,
-        "allowedGainMmPerMv": [5, 10, 20],
-        "minorBoxMv": 0.1,
-        "majorBoxMv": 0.5,
-        "autoScale": False,
-    },
-
-    # Old normalized signal. Do not use this for calibrated ECG display.
-    "leads": leads,
-
-    # New calibrated signal. Use this on the ECG paper renderer.
-    "leadsMv": leads_mv,
-
-    "leadNames": {
-        lead_id: lead_name
-        for lead_id, lead_name in zip(data.lead_ids, data.lead_names)
-    },
-
-    "latestMv": latest_mv,
-
-    "vitals": {
-        "heartRate": heart_rate,
-        "spo2": spo2,
-        "systolic": systolic,
-        "diastolic": diastolic,
-        "respiratoryRate": respiratory_rate,
-        "temperature": temperature,
-    },
-}
+        "source": "physionet-ptb-xl",
+        "record": buffer.record_name,
+        "status": "connected",
+        "receivedAt": now_iso(),
+        "sampleRate": buffer.sample_rate,
+        "sourceSampleRate": buffer.source_sample_rate,
+        "batchSize": batch_size,
+        "cursor": cursor,
+        "nextCursor": next_cursor,
+        "bufferSeconds": buffer.buffer_seconds,
+        "bufferSamples": buffer.total_samples,
+        "xAxis": {
+            "type": "time",
+            "unit": "seconds",
+            "sampleRate": buffer.sample_rate,
+            "secondsVisible": float(settings.WAVEFORM_VISIBLE_SECONDS),
+            "samplePeriodMs": round(1000 / buffer.sample_rate, 3),
+            "paperSpeedMmPerSec": 25,
+            "minorBoxSeconds": 0.04,
+            "majorBoxSeconds": 0.20,
+        },
+        "yAxis": {
+            "type": "voltage",
+            "unit": "mV",
+            "defaultGainMmPerMv": 10,
+            "allowedGainMmPerMv": [5, 10, 20],
+            "minorBoxMv": 0.1,
+            "majorBoxMv": 0.5,
+            "autoScale": False,
+        },
+        "leads": leads,
+        "leadsMv": leads_mv,
+        "leadNames": {
+            lead_id: lead_name
+            for lead_id, lead_name in zip(buffer.lead_ids, buffer.lead_names)
+        },
+        "latestMv": latest_mv,
+        "vitals": {
+            "heartRate": heart_rate,
+            "spo2": spo2,
+            "systolic": systolic,
+            "diastolic": diastolic,
+            "respiratoryRate": respiratory_rate,
+            "temperature": temperature,
+        },
+    }

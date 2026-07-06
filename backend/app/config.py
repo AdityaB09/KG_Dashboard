@@ -75,4 +75,6 @@ class Settings:
         "00001_lr",
     )
     
+    
+    WAVEFORM_TEST_BUFFER_SECONDS = int(os.getenv("WAVEFORM_TEST_BUFFER_SECONDS", "60"))
 settings = Settings()
