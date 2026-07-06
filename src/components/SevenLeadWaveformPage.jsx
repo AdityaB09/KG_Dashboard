@@ -9,7 +9,7 @@ const DEFAULT_VISIBLE_SECONDS = 6;
 
 const MIN_PX_PER_MM = 3.5;
 const MAX_PX_PER_MM = 8.5;
-const ECG_ROW_HEIGHT_MM = 28;
+const ECG_ROW_HEIGHT_MM = 24;
 
 const LEADS = [
   { id: "lead1", label: "Lead I", color: "cyan" },
@@ -21,23 +21,20 @@ const LEADS = [
   { id: "v1", label: "V1", color: "cyan" },
 ];
 
+const EMPTY_LEADS = Object.fromEntries(LEADS.map((lead) => [lead.id, []]));
+
 const EMPTY_FRAME = {
   source: "physionet-ptb-xl",
   sampleRate: 220,
   batchSize: 0,
   receivedAt: "",
-  leadsMv: Object.fromEntries(LEADS.map((lead) => [lead.id, []])),
+  leadsMv: EMPTY_LEADS,
   latestMv: {},
   xAxis: {
     secondsVisible: DEFAULT_VISIBLE_SECONDS,
   },
   vitals: {
     heartRate: "--",
-    spo2: "--",
-    systolic: "--",
-    diastolic: "--",
-    respiratoryRate: "--",
-    temperature: "--",
   },
 };
 
@@ -50,8 +47,6 @@ function valueOrDash(value) {
 }
 
 function formatMv(value) {
-  if (value === null || value === undefined || value === "") return "--";
-
   const numericValue = Number(value);
 
   if (!Number.isFinite(numericValue)) return "--";
@@ -59,18 +54,66 @@ function formatMv(value) {
   return numericValue.toFixed(3);
 }
 
+function getLeadStats(samples = [], latestFallback) {
+  const values = samples.map(Number).filter(Number.isFinite);
+
+  if (!values.length) {
+    return {
+      latest: formatMv(latestFallback),
+      p2p: "--",
+      min: "--",
+      max: "--",
+    };
+  }
+
+  const latest = values[values.length - 1];
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const p2p = max - min;
+
+  return {
+    latest: formatMv(latest),
+    p2p: formatMv(p2p),
+    min: formatMv(min),
+    max: formatMv(max),
+  };
+}
+
+function appendLeadWindows(prev, frame) {
+  const sampleRate = frame.sampleRate || 220;
+  const visibleSeconds = frame.xAxis?.secondsVisible || DEFAULT_VISIBLE_SECONDS;
+  const maxPoints = Math.round(sampleRate * visibleSeconds);
+
+  const next = {};
+
+  for (const lead of LEADS) {
+    const previousSamples = prev[lead.id] || [];
+    const incomingSamples = frame.leadsMv?.[lead.id] || [];
+
+    next[lead.id] = [...previousSamples, ...incomingSamples].slice(-maxPoints);
+  }
+
+  return next;
+}
+
 export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
   const [waveFrame, setWaveFrame] = useState(EMPTY_FRAME);
+  const [leadWindows, setLeadWindows] = useState(EMPTY_LEADS);
   const [streamStatus, setStreamStatus] = useState("connecting");
   const [gainMmPerMv, setGainMmPerMv] = useState(DEFAULT_GAIN_MM_PER_MV);
   const [plotWidthPx, setPlotWidthPx] = useState(0);
+  const [titleHeightPx, setTitleHeightPx] = useState(0);
 
   const monitorRef = useRef(null);
+  const titleRef = useRef(null);
 
   useEffect(() => {
+    setLeadWindows(EMPTY_LEADS);
+
     const disconnectWaveforms = connectWaveformStream({
       onFrame: (frame) => {
         setWaveFrame(frame);
+        setLeadWindows((prev) => appendLeadWindows(prev, frame));
         setStreamStatus(frame.status === "connected" ? "live" : "warning");
       },
       onError: () => setStreamStatus("warning"),
@@ -82,23 +125,28 @@ export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
   }, [patient?.id]);
 
   useEffect(() => {
-    const element = monitorRef.current;
-    if (!element) return undefined;
+    const monitorElement = monitorRef.current;
+    const titleElement = titleRef.current;
 
-    function updateWidth() {
-      const rect = element.getBoundingClientRect();
-      setPlotWidthPx(Math.max(1, rect.width));
+    if (!monitorElement || !titleElement) return undefined;
+
+    function updateMeasurements() {
+      const monitorRect = monitorElement.getBoundingClientRect();
+      const titleRect = titleElement.getBoundingClientRect();
+
+      setPlotWidthPx(Math.max(1, monitorRect.width));
+      setTitleHeightPx(Math.max(1, titleRect.height));
     }
 
-    updateWidth();
+    updateMeasurements();
 
-    const observer = new ResizeObserver(updateWidth);
-    observer.observe(element);
+    const observer = new ResizeObserver(updateMeasurements);
+    observer.observe(monitorElement);
+    observer.observe(titleElement);
 
     return () => observer.disconnect();
   }, []);
 
-  const vitals = waveFrame.vitals || EMPTY_FRAME.vitals;
   const visibleSeconds = waveFrame.xAxis?.secondsVisible || DEFAULT_VISIBLE_SECONDS;
   const sampleRate = waveFrame.sampleRate || 220;
   const visiblePoints = Math.round(sampleRate * visibleSeconds);
@@ -111,68 +159,28 @@ export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
     MAX_PX_PER_MM
   );
 
-  const rowHeightPx = Math.round(
-    clamp(pxPerMm * ECG_ROW_HEIGHT_MM, 106, 170)
-  );
+  const rowHeightPx = Math.round(clamp(pxPerMm * ECG_ROW_HEIGHT_MM, 112, 150));
+  const titleOffsetPx = Math.round(titleHeightPx + 10);
 
   const metricBoxes = useMemo(() => {
-    return [
-      {
-        label: "Lead I",
-        title: "HR",
-        value: valueOrDash(vitals.heartRate),
-        unit: "BPM",
-        icon: "♥",
-      },
-      {
-        label: "Lead II",
-        title: "Lead II",
-        value: formatMv(waveFrame.latestMv?.lead2),
-        unit: "mV",
-        icon: "⌁",
-      },
-      {
-        label: "Lead III",
-        title: "Lead III",
-        value: formatMv(waveFrame.latestMv?.lead3),
-        unit: "mV",
-        icon: "⌁",
-      },
-      {
-        label: "aVR",
-        title: "BP",
-        value: `${valueOrDash(vitals.systolic)}/${valueOrDash(vitals.diastolic)}`,
-        unit: "mmHg",
-        icon: "↯",
-      },
-      {
-        label: "aVL",
-        title: "RR",
-        value: valueOrDash(vitals.respiratoryRate),
-        unit: "/min",
-        icon: "↕",
-      },
-      {
-        label: "aVF",
-        title: "Temp",
-        value: valueOrDash(vitals.temperature),
-        unit: "°C",
-        icon: "♨",
-      },
-      {
-        label: "V1",
-        title: "SpO₂",
-        value: valueOrDash(vitals.spo2),
-        unit: "%",
-        icon: "●",
-      },
-    ];
-  }, [vitals, waveFrame.latestMv]);
+    return LEADS.map((lead) => {
+      const stats = getLeadStats(leadWindows[lead.id], waveFrame.latestMv?.[lead.id]);
+
+      return {
+        id: lead.id,
+        label: lead.label,
+        latest: stats.latest,
+        p2p: stats.p2p,
+        min: stats.min,
+        max: stats.max,
+      };
+    });
+  }, [leadWindows, waveFrame.latestMv]);
 
   return (
     <section className="wave7-page">
       <header className="wave7-header">
-        <div>
+        <div className="wave7-patient-copy">
           <p className="wave7-eyebrow">Real-time telemetry</p>
           <h1>{patient?.name || "Selected Patient"}</h1>
           <span>
@@ -216,7 +224,7 @@ export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
 
       <main className="wave7-body">
         <section className="wave7-monitor-card">
-          <div className="wave7-monitor-title">
+          <div ref={titleRef} className="wave7-monitor-title">
             <div>
               <p className="wave7-eyebrow">High precision</p>
               <h2>7 waveform monitor</h2>
@@ -259,10 +267,11 @@ export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
           className="wave7-side-rail"
           style={{
             "--wave7-row-height": `${rowHeightPx}px`,
+            "--wave7-title-offset": `${titleOffsetPx}px`,
           }}
         >
           {metricBoxes.map((metric) => (
-            <MetricBox key={metric.label} {...metric} />
+            <MetricBox key={metric.id} {...metric} />
           ))}
         </aside>
       </main>
@@ -270,14 +279,27 @@ export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
   );
 }
 
-function MetricBox({ label, title, value, unit, icon }) {
+function MetricBox({ label, latest, p2p, min, max }) {
   return (
     <section className="wave7-metric">
       <small>{label}</small>
-      <span>{icon}</span>
-      <b>{title}</b>
-      <strong>{value}</strong>
-      <em>{unit}</em>
+
+      <div className="wave7-metric-main">
+        <strong>{latest}</strong>
+        <em>mV latest</em>
+      </div>
+
+      <div className="wave7-metric-stats">
+        <span>
+          P-P <b>{p2p}</b>
+        </span>
+        <span>
+          Min <b>{min}</b>
+        </span>
+        <span>
+          Max <b>{max}</b>
+        </span>
+      </div>
     </section>
   );
 }
