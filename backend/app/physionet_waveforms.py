@@ -304,6 +304,87 @@ def get_physionet_waveform_data() -> PhysioNetWaveformData:
 _CACHED_CYCLIC_BUFFER: CyclicWaveformBuffer | None = None
 
 
+def apply_auto_gain_demo_profile(
+    signals_mv: np.ndarray,
+    sample_rate: int,
+    lead_ids: list[str],
+) -> np.ndarray:
+    """
+    Testing-only amplitude profile.
+
+    This keeps the ECG morphology from PhysioNet but changes amplitude per lead
+    at different time segments so the frontend auto-gain can be visibly tested.
+    Do not enable this for real clinical/device data.
+    """
+    output = signals_mv.copy()
+    total_samples = output.shape[0]
+
+    # Fractions of the 1-minute cyclic buffer.
+    # Each lead changes at different times, so one waveform can switch gain
+    # while the others stay unchanged.
+    profiles = {
+        "lead1": [
+            (0.00, 0.25, 1.0),
+            (0.25, 0.50, 0.35),
+            (0.50, 0.75, 2.4),
+            (0.75, 1.00, 1.0),
+        ],
+        "lead2": [
+            (0.00, 0.20, 0.45),
+            (0.20, 0.55, 1.0),
+            (0.55, 0.80, 2.2),
+            (0.80, 1.00, 0.65),
+        ],
+        "lead3": [
+            (0.00, 0.40, 0.30),
+            (0.40, 0.70, 1.0),
+            (0.70, 1.00, 1.8),
+        ],
+        "avr": [
+            (0.00, 0.30, 2.0),
+            (0.30, 0.65, 0.55),
+            (0.65, 1.00, 1.2),
+        ],
+        "avl": [
+            (0.00, 0.35, 0.35),
+            (0.35, 0.65, 1.0),
+            (0.65, 1.00, 2.3),
+        ],
+        "avf": [
+            (0.00, 0.25, 1.0),
+            (0.25, 0.60, 0.30),
+            (0.60, 0.85, 2.5),
+            (0.85, 1.00, 0.75),
+        ],
+        "v1": [
+            (0.00, 0.30, 2.2),
+            (0.30, 0.70, 1.0),
+            (0.70, 1.00, 0.35),
+        ],
+    }
+
+    for lead_id, segments in profiles.items():
+        if lead_id not in lead_ids:
+            continue
+
+        column_index = lead_ids.index(lead_id)
+
+        for start_fraction, end_fraction, multiplier in segments:
+            start = int(total_samples * start_fraction)
+            end = int(total_samples * end_fraction)
+
+            output[start:end, column_index] *= multiplier
+
+    print(
+        "[KGEN AUTO GAIN DEMO PROFILE]",
+        f"sample_rate={sample_rate}",
+        f"samples={total_samples}",
+        f"leads={lead_ids}",
+    )
+
+    return output.astype(np.float32)
+
+
 def build_cyclic_buffer_from_physionet(
     data: PhysioNetWaveformData,
     buffer_seconds: int,
@@ -321,10 +402,19 @@ def build_cyclic_buffer_from_physionet(
     repeat_count = int(np.ceil(target_samples / source_samples))
 
     physical_1min = np.tile(data.physical_signals_mv, (repeat_count, 1))[
-        :target_samples
-    ]
+    :target_samples
+]
 
-    normalized_1min = np.tile(data.normalized_signals, (repeat_count, 1))[
+    if settings.WAVEFORM_TEST_AUTO_GAIN_DEMO:
+        physical_1min = apply_auto_gain_demo_profile(
+        signals_mv=physical_1min,
+        sample_rate=data.sample_rate,
+        lead_ids=data.lead_ids,
+    )
+
+        normalized_1min = normalize_for_webgl(physical_1min)
+    else:
+     normalized_1min = np.tile(data.normalized_signals, (repeat_count, 1))[
         :target_samples
     ]
 

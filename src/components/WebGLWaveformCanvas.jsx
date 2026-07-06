@@ -34,7 +34,7 @@ function mapToClipY({
     const deltaMv = value - centerMv;
     const deltaPx = deltaMv * voltageScaleMmPerMv * pxPerMm;
 
-    return Math.max(-8, Math.min(8, deltaPx / halfHeightPx));
+    return clamp(deltaPx / halfHeightPx, -0.985, 0.985);
   }
 
   if (mode === "unit") {

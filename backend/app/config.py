@@ -75,6 +75,10 @@ class Settings:
         "00001_lr",
     )
     
+    WAVEFORM_TEST_AUTO_GAIN_DEMO = os.getenv(
+    "WAVEFORM_TEST_AUTO_GAIN_DEMO",
+    "false",
+).lower() in {"1", "true", "yes", "on"}
     
     WAVEFORM_TEST_BUFFER_SECONDS = int(os.getenv("WAVEFORM_TEST_BUFFER_SECONDS", "60"))
 settings = Settings()

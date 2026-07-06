@@ -425,3 +425,263 @@
     font-size: 9px;
   }
 }
+
+.wave7-lead-gain-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  border: 1px solid #dbeafe;
+}
+
+.wave7-lead-gain-toggle button {
+  border: 0;
+  border-radius: 999px;
+  min-width: 22px;
+  height: 20px;
+  padding: 0 5px;
+  background: transparent;
+  color: #64748b;
+  font-size: 9px;
+  line-height: 1;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.wave7-lead-gain-toggle button.active {
+  background: #061927;
+  color: #ffffff;
+}
+
+.wave7-metric-top {
+  gap: 3px;
+}
+
+.wave7-metric {
+  padding: 7px 8px;
+  gap: 4px;
+}
+
+.wave7-auto-gain-badge {
+  font-size: 8.5px;
+  padding: 3px 6px;
+}
+
+.wave7-metric-main strong {
+  font-size: clamp(19px, 1.5vw, 27px);
+}
+
+.wave7-metric-stats span {
+  font-size: 9px;
+}
+
+/* ===== Compact per-lead metric rail fixes ===== */
+
+.wave7-body {
+  grid-template-columns: minmax(0, 1fr) clamp(170px, 11vw, 205px);
+  gap: 10px;
+}
+
+.wave7-side-rail {
+  position: static;
+  align-self: start;
+  display: grid;
+  grid-template-rows: repeat(7, var(--wave7-row-height));
+  gap: 8px;
+  margin-top: var(--wave7-title-offset);
+  overflow: visible;
+}
+
+.wave7-metric {
+  height: var(--wave7-row-height);
+  min-height: var(--wave7-row-height);
+  padding: 7px 8px;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.wave7-metric-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  min-width: 0;
+}
+
+.wave7-metric-head small {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+.wave7-auto-gain-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 84px;
+  border-radius: 999px;
+  padding: 3px 6px;
+  background: #e0f2fe;
+  color: #075985;
+  font-size: 8.5px;
+  line-height: 1;
+  font-weight: 950;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wave7-lead-gain-toggle {
+  justify-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  border: 1px solid #dbeafe;
+}
+
+.wave7-lead-gain-toggle button {
+  border: 0;
+  border-radius: 999px;
+  min-width: 22px;
+  height: 19px;
+  padding: 0 5px;
+  background: transparent;
+  color: #64748b;
+  font-size: 9px;
+  line-height: 1;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.wave7-lead-gain-toggle button.active {
+  background: #061927;
+  color: #ffffff;
+}
+
+.wave7-metric-main {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 0;
+  min-height: 0;
+}
+
+.wave7-metric-main strong {
+  color: #132036;
+  font-size: clamp(18px, 1.45vw, 27px);
+  line-height: 0.95;
+  font-weight: 950;
+}
+
+.wave7-metric-main em {
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.wave7-metric-stats.compact {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px 7px;
+  padding-top: 4px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.wave7-metric-stats.compact span {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 8.5px;
+  line-height: 1;
+  font-weight: 850;
+  min-width: 0;
+}
+
+.wave7-metric-stats.compact b {
+  color: #132036;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+@media (max-width: 1280px) {
+  .wave7-body {
+    grid-template-columns: minmax(0, 1fr) 165px;
+  }
+
+  .wave7-metric {
+    padding: 6px 7px;
+    gap: 3px;
+  }
+
+  .wave7-auto-gain-badge {
+    max-width: 72px;
+    font-size: 8px;
+    padding-inline: 5px;
+  }
+
+  .wave7-lead-gain-toggle button {
+    min-width: 20px;
+    height: 18px;
+    font-size: 8.5px;
+    padding: 0 4px;
+  }
+
+  .wave7-metric-main strong {
+    font-size: clamp(17px, 1.35vw, 24px);
+  }
+
+  .wave7-metric-stats.compact span {
+    font-size: 8px;
+  }
+}
+
+.wave7-metric {
+  grid-template-rows: auto auto 1fr auto auto;
+}
+
+.wave7-gain-reason {
+  justify-self: center;
+  max-width: 100%;
+  border-radius: 999px;
+  padding: 2px 7px;
+  background: #f1f5f9;
+  color: #64748b;
+  font-size: 8px;
+  line-height: 1;
+  font-weight: 950;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wave7-gain-reason.clip-risk,
+.wave7-metric.clip-risk .wave7-auto-gain-badge {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.wave7-y-scale.clip-risk span:nth-child(2) {
+  color: #fecaca;
+}
+
+.wave7-metric-stats.compact {
+  grid-template-columns: 1fr 1fr;
+}
+
+.wave7-metric-stats.compact span:last-child {
+  grid-column: 1 / -1;
+}

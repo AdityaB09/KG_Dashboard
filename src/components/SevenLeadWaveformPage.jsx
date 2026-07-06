@@ -98,13 +98,32 @@ function median(values) {
   return sorted[middle];
 }
 
+const AUTO_GAIN_HEADROOM = 0.88;
+const AUTO_GAIN_COMFORT_LOW = 0.18;
+const AUTO_GAIN_COMFORT_HIGH = 0.72;
+
+function percentile(values, p) {
+  if (!values.length) return 0;
+
+  const sorted = [...values].sort((a, b) => a - b);
+  const index = (p / 100) * (sorted.length - 1);
+  const lower = Math.floor(index);
+  const upper = Math.ceil(index);
+  const weight = index - lower;
+
+  if (lower === upper) return sorted[lower];
+
+  return sorted[lower] * (1 - weight) + sorted[upper] * weight;
+}
+
 function getLeadAmplitude(samples = []) {
   const values = samples.map(Number).filter(Number.isFinite);
 
   if (!values.length) {
     return {
       centerMv: 0,
-      absMaxMv: 0,
+      robustAbsMv: 0,
+      hardAbsMv: 0,
       minMv: 0,
       maxMv: 0,
       p2pMv: 0,
@@ -112,17 +131,47 @@ function getLeadAmplitude(samples = []) {
   }
 
   const centerMv = median(values);
+  const deviations = values.map((value) => Math.abs(value - centerMv));
+
   const minMv = Math.min(...values);
   const maxMv = Math.max(...values);
-  const absMaxMv = Math.max(...values.map((value) => Math.abs(value - centerMv)));
 
   return {
     centerMv,
-    absMaxMv,
+
+    // This controls stable visual sizing.
+    // It prevents one noisy sample from causing constant gain flicker.
+    robustAbsMv: percentile(deviations, 95),
+
+    // This protects the true spike.
+    // This is the hard containment value.
+    hardAbsMv: Math.max(...deviations),
+
     minMv,
     maxMv,
     p2pMv: maxMv - minMv,
   };
+}
+
+function getFillRatio({ absMv, gainMmPerMv, rowHeightPx, pxPerMm }) {
+  if (!rowHeightPx || !pxPerMm || !gainMmPerMv) return 0;
+
+  const halfRowMm = rowHeightPx / pxPerMm / 2;
+
+  if (halfRowMm <= 0) return 0;
+
+  return (absMv * gainMmPerMv) / halfRowMm;
+}
+
+function gainKeepsSpikeInside({ hardAbsMv, gainMmPerMv, rowHeightPx, pxPerMm }) {
+  const hardFill = getFillRatio({
+    absMv: hardAbsMv,
+    gainMmPerMv,
+    rowHeightPx,
+    pxPerMm,
+  });
+
+  return hardFill <= AUTO_GAIN_HEADROOM;
 }
 
 function chooseAutoGain({ samples, currentGain, rowHeightPx, pxPerMm }) {
@@ -134,31 +183,118 @@ function chooseAutoGain({ samples, currentGain, rowHeightPx, pxPerMm }) {
 
   const amplitude = getLeadAmplitude(values);
 
-  if (amplitude.absMaxMv < 0.005) {
+  if (amplitude.hardAbsMv < 0.005) {
     return 20;
   }
 
-  const halfRowMm = rowHeightPx / pxPerMm / 2;
+  const safeAt20 = gainKeepsSpikeInside({
+    hardAbsMv: amplitude.hardAbsMv,
+    gainMmPerMv: 20,
+    rowHeightPx,
+    pxPerMm,
+  });
+
+  const safeAt10 = gainKeepsSpikeInside({
+    hardAbsMv: amplitude.hardAbsMv,
+    gainMmPerMv: 10,
+    rowHeightPx,
+    pxPerMm,
+  });
+
+  const safeAt5 = gainKeepsSpikeInside({
+    hardAbsMv: amplitude.hardAbsMv,
+    gainMmPerMv: 5,
+    rowHeightPx,
+    pxPerMm,
+  });
+
+  const robustFillAt10 = getFillRatio({
+    absMv: amplitude.robustAbsMv,
+    gainMmPerMv: 10,
+    rowHeightPx,
+    pxPerMm,
+  });
+
   const current = currentGain || DEFAULT_GAIN_MM_PER_MV;
-  const currentUsedMm = amplitude.absMaxMv * current;
 
-  const lowThresholdMm = halfRowMm * AUTOSCALE_LOW_FILL;
-  const highThresholdMm = halfRowMm * AUTOSCALE_HIGH_FILL;
+  // Hard safety first:
+  // if 10 cannot keep the real spike visible, move to 5.
+  if (!safeAt10 && safeAt5) {
+    return 5;
+  }
 
-  // Hysteresis: keep the current gain if it still looks clinically readable.
-  // This prevents flickering between 5/10/20 every frame.
-  if (currentUsedMm >= lowThresholdMm && currentUsedMm <= highThresholdMm) {
+  // If even 5 cannot fully contain it, 5 is still the safest standard ECG gain.
+  if (!safeAt5) {
+    return 5;
+  }
+
+  // Prefer 10 mm/mV whenever it is safe and clinically readable.
+  if (safeAt10 && robustFillAt10 >= AUTO_GAIN_COMFORT_LOW && robustFillAt10 <= AUTO_GAIN_COMFORT_HIGH) {
+    return 10;
+  }
+
+  // If the signal is too small at 10, use 20 only if the full spike still fits.
+  if (robustFillAt10 < AUTO_GAIN_COMFORT_LOW && safeAt20) {
+    return 20;
+  }
+
+  // If the signal is too large at 10, use 5.
+  if (robustFillAt10 > AUTO_GAIN_COMFORT_HIGH) {
+    return 5;
+  }
+
+  // Hysteresis: keep current gain if it is safe.
+  const currentSafe = gainKeepsSpikeInside({
+    hardAbsMv: amplitude.hardAbsMv,
+    gainMmPerMv: current,
+    rowHeightPx,
+    pxPerMm,
+  });
+
+  if (currentSafe) {
     return current;
   }
 
-  const targetGain = (halfRowMm * AUTOSCALE_TARGET_FILL) / amplitude.absMaxMv;
-
-  if (targetGain >= 20) return 20;
-  if (targetGain >= 10) return 10;
-  return 5;
+  return safeAt10 ? 10 : 5;
 }
 
-function getScaleInfo({ gainMmPerMv, rowHeightPx, pxPerMm }) {
+function getGainDecisionInfo({ samples, gainMmPerMv, rowHeightPx, pxPerMm }) {
+  const amplitude = getLeadAmplitude(samples);
+
+  const hardFill = getFillRatio({
+    absMv: amplitude.hardAbsMv,
+    gainMmPerMv,
+    rowHeightPx,
+    pxPerMm,
+  });
+
+  const robustFill = getFillRatio({
+    absMv: amplitude.robustAbsMv,
+    gainMmPerMv,
+    rowHeightPx,
+    pxPerMm,
+  });
+
+  let reason = "standard";
+
+  if (gainMmPerMv === 5) {
+    reason = "contains peak";
+  } else if (gainMmPerMv === 20) {
+    reason = "low amplitude";
+  }
+
+  const clipRisk = hardFill > AUTO_GAIN_HEADROOM;
+
+  return {
+    fillPercent: Math.round(Math.max(0, Math.min(1.5, robustFill)) * 100),
+    peakFillPercent: Math.round(Math.max(0, Math.min(1.5, hardFill)) * 100),
+    reason: clipRisk ? "peak risk" : reason,
+    clipRisk,
+    centerMv: amplitude.centerMv,
+  };
+}
+
+function getScaleInfo({ gainMmPerMv, rowHeightPx, pxPerMm, centerMv = 0 }) {
   const safeGain = gainMmPerMv || DEFAULT_GAIN_MM_PER_MV;
   const safePxPerMm = pxPerMm || 5;
   const safeRowHeightPx = rowHeightPx || 120;
@@ -171,8 +307,12 @@ function getScaleInfo({ gainMmPerMv, rowHeightPx, pxPerMm }) {
     mvPerSmallBox: 1 / safeGain,
     mvPerLargeBox: 5 / safeGain,
     halfRangeMv,
+    centerMv,
+    topMv: centerMv + halfRangeMv,
+    bottomMv: centerMv - halfRangeMv,
   };
 }
+
 
 function formatScale(value) {
   const numericValue = Number(value);
@@ -206,8 +346,11 @@ export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
   const [waveFrame, setWaveFrame] = useState(EMPTY_FRAME);
   const [leadWindows, setLeadWindows] = useState(EMPTY_LEADS);
   const [streamStatus, setStreamStatus] = useState("connecting");
-  const [gainMode, setGainMode] = useState(DEFAULT_GAIN_MODE);
-const [leadGains, setLeadGains] = useState(
+  const [leadGainModes, setLeadGainModes] = useState(() =>
+  Object.fromEntries(LEADS.map((lead) => [lead.id, DEFAULT_GAIN_MODE]))
+);
+
+const [leadAutoGains, setLeadAutoGains] = useState(() =>
   Object.fromEntries(LEADS.map((lead) => [lead.id, DEFAULT_GAIN_MM_PER_MV]))
 );
   const [plotWidthPx, setPlotWidthPx] = useState(0);
@@ -215,6 +358,13 @@ const [leadGains, setLeadGains] = useState(
 
   const monitorRef = useRef(null);
   const titleRef = useRef(null);
+
+  function updateLeadGainMode(leadId, nextMode) {
+  setLeadGainModes((previousModes) => ({
+    ...previousModes,
+    [leadId]: nextMode,
+  }));
+}
 
   useEffect(() => {
     setLeadWindows(EMPTY_LEADS);
@@ -276,10 +426,10 @@ const [leadGains, setLeadGains] = useState(
   const titleOffsetPx = Math.round(titleHeightPx + 10);
 
 
-  useEffect(() => {
+useEffect(() => {
   if (!rowHeightPx || !pxPerMm) return;
 
-  setLeadGains((previousGains) => {
+  setLeadAutoGains((previousGains) => {
     const nextGains = { ...previousGains };
     let changed = false;
 
@@ -303,15 +453,29 @@ const [leadGains, setLeadGains] = useState(
 
 const metricBoxes = useMemo(() => {
   return LEADS.map((lead) => {
-    const stats = getLeadStats(leadWindows[lead.id], waveFrame.latestMv?.[lead.id]);
-    const autoGain = leadGains[lead.id] || DEFAULT_GAIN_MM_PER_MV;
+    const samples = leadWindows[lead.id] || [];
+    const stats = getLeadStats(samples, waveFrame.latestMv?.[lead.id]);
+
+    const leadGainMode = leadGainModes[lead.id] || DEFAULT_GAIN_MODE;
+    const autoGain = leadAutoGains[lead.id] || DEFAULT_GAIN_MM_PER_MV;
+
     const effectiveGain =
-      gainMode === "auto" ? autoGain : Number(gainMode) || DEFAULT_GAIN_MM_PER_MV;
+      leadGainMode === "auto"
+        ? autoGain
+        : Number(leadGainMode) || DEFAULT_GAIN_MM_PER_MV;
+
+    const decision = getGainDecisionInfo({
+      samples,
+      gainMmPerMv: effectiveGain,
+      rowHeightPx,
+      pxPerMm,
+    });
 
     const scale = getScaleInfo({
       gainMmPerMv: effectiveGain,
       rowHeightPx,
       pxPerMm,
+      centerMv: decision.centerMv,
     });
 
     return {
@@ -321,13 +485,25 @@ const metricBoxes = useMemo(() => {
       p2p: stats.p2p,
       min: stats.min,
       max: stats.max,
-      gainMode,
+      gainMode: leadGainMode,
       gainMmPerMv: effectiveGain,
       mvPerLargeBox: scale.mvPerLargeBox,
       halfRangeMv: scale.halfRangeMv,
+      fillPercent: decision.fillPercent,
+      peakFillPercent: decision.peakFillPercent,
+      reason: decision.reason,
+      clipRisk: decision.clipRisk,
+      centerMv: decision.centerMv,
     };
   });
-}, [leadWindows, waveFrame.latestMv, leadGains, gainMode, rowHeightPx, pxPerMm]);
+}, [
+  leadWindows,
+  waveFrame.latestMv,
+  leadGainModes,
+  leadAutoGains,
+  rowHeightPx,
+  pxPerMm,
+]);
 
   return (
     <section className="wave7-page">
@@ -342,44 +518,23 @@ const metricBoxes = useMemo(() => {
         </div>
 
         <div className="wave7-header-actions">
-          <span className={`wave7-live-pill ${streamStatus}`}>
-            ●{" "}
-            {streamStatus === "live"
-              ? "Live WebGL"
-              : streamStatus === "warning"
-              ? "Waveform Warning"
-              : "Connecting"}
-          </span>
+  <span className={`wave7-live-pill ${streamStatus}`}>
+    ●{" "}
+    {streamStatus === "live"
+      ? "Live WebGL"
+      : streamStatus === "warning"
+      ? "Waveform Warning"
+      : "Connecting"}
+  </span>
 
-          <span className="wave7-speed-pill">
-  {sampleRate} Hz • {visibleSeconds}s • {gainMode === "auto" ? "Auto gain" : `${gainMode} mm/mV`}
-</span>
+  <span className="wave7-speed-pill">
+    {sampleRate} Hz • {visibleSeconds}s • per-lead Auto/5/10/20
+  </span>
 
-<div className="wave7-gain-toggle" aria-label="ECG gain selector">
-  <button
-    type="button"
-    className={gainMode === "auto" ? "active" : ""}
-    onClick={() => setGainMode("auto")}
-  >
-    Auto
+  <button type="button" className="wave7-action-btn" onClick={onOpenAnalytics}>
+    Open Analytics
   </button>
-
-  {ECG_GAIN_OPTIONS.map((gain) => (
-    <button
-      key={gain}
-      type="button"
-      className={gainMode === gain ? "active" : ""}
-      onClick={() => setGainMode(gain)}
-    >
-      {gain}
-    </button>
-  ))}
 </div>
-
-          <button type="button" className="wave7-action-btn" onClick={onOpenAnalytics}>
-            Open Analytics
-          </button>
-        </div>
       </header>
 
       <main className="wave7-body">
@@ -391,7 +546,7 @@ const metricBoxes = useMemo(() => {
             </div>
 
             <span>
-             {sampleRate} samples/sec • 25 mm/sec • {gainMode === "auto" ? "Auto 5/10/20 mm/mV" : `${gainMode} mm/mV`}
+             {sampleRate} samples/sec • 25 mm/sec • each lead Auto/5/10/20 mm/mV
             </span>
           </div>
 
@@ -403,15 +558,29 @@ const metricBoxes = useMemo(() => {
               "--wave7-row-height": `${rowHeightPx}px`,
             }}
           >
-            {LEADS.map((lead) => {
-  const autoGain = leadGains[lead.id] || DEFAULT_GAIN_MM_PER_MV;
+{LEADS.map((lead) => {
+  const leadSamples = leadWindows[lead.id] || [];
+
+  const leadGainMode = leadGainModes[lead.id] || DEFAULT_GAIN_MODE;
+  const autoGain = leadAutoGains[lead.id] || DEFAULT_GAIN_MM_PER_MV;
+
   const effectiveGain =
-    gainMode === "auto" ? autoGain : Number(gainMode) || DEFAULT_GAIN_MM_PER_MV;
+    leadGainMode === "auto"
+      ? autoGain
+      : Number(leadGainMode) || DEFAULT_GAIN_MM_PER_MV;
+
+  const decision = getGainDecisionInfo({
+    samples: leadSamples,
+    gainMmPerMv: effectiveGain,
+    rowHeightPx,
+    pxPerMm,
+  });
 
   const scale = getScaleInfo({
     gainMmPerMv: effectiveGain,
     rowHeightPx,
     pxPerMm,
+    centerMv: decision.centerMv,
   });
 
   return (
@@ -419,7 +588,7 @@ const metricBoxes = useMemo(() => {
       <span>{lead.label}</span>
 
       <div className="wave7-calibrated-strip">
-        <YAxisScale scale={scale} />
+        <YAxisScale scale={scale} clipRisk={decision.clipRisk} />
 
         <WebGLWaveformCanvas
           samples={waveFrame.leadsMv?.[lead.id] || []}
@@ -428,7 +597,7 @@ const metricBoxes = useMemo(() => {
           mode="millivolts"
           pxPerMm={pxPerMm}
           voltageScaleMmPerMv={effectiveGain}
-          centerMv={0}
+          centerMv={decision.centerMv}
         />
       </div>
     </article>
@@ -444,20 +613,24 @@ const metricBoxes = useMemo(() => {
             "--wave7-title-offset": `${titleOffsetPx}px`,
           }}
         >
-          {metricBoxes.map((metric) => (
-            <MetricBox key={metric.id} {...metric} />
-          ))}
+         {metricBoxes.map((metric) => (
+  <MetricBox
+    key={metric.id}
+    {...metric}
+    onGainModeChange={updateLeadGainMode}
+  />
+))}
         </aside>
       </main>
     </section>
   );
 }
 
-function YAxisScale({ scale }) {
+function YAxisScale({ scale, clipRisk }) {
   return (
-    <div className="wave7-y-scale" aria-hidden="true">
+    <div className={`wave7-y-scale ${clipRisk ? "clip-risk" : ""}`} aria-hidden="true">
       <span>+{formatScale(scale.halfRangeMv)} mV</span>
-      <span>0</span>
+      <span>{clipRisk ? "peak risk" : "0"}</span>
       <span>-{formatScale(scale.halfRangeMv)} mV</span>
     </div>
   );
@@ -465,6 +638,7 @@ function YAxisScale({ scale }) {
 
 
 function MetricBox({
+  id,
   label,
   latest,
   p2p,
@@ -474,14 +648,41 @@ function MetricBox({
   gainMmPerMv,
   mvPerLargeBox,
   halfRangeMv,
+  fillPercent,
+  peakFillPercent,
+  reason,
+  clipRisk,
+  onGainModeChange,
 }) {
   return (
-    <section className="wave7-metric">
-      <div className="wave7-metric-top">
+    <section className={`wave7-metric ${clipRisk ? "clip-risk" : ""}`}>
+      <div className="wave7-metric-head">
         <small>{label}</small>
+
         <span className="wave7-auto-gain-badge">
-          {gainMode === "auto" ? "Auto" : "Manual"} {gainMmPerMv} mm/mV
+          {gainMode === "auto" ? "Auto" : "Manual"} {gainMmPerMv}
         </span>
+      </div>
+
+      <div className="wave7-lead-gain-toggle" aria-label={`${label} gain selector`}>
+        <button
+          type="button"
+          className={gainMode === "auto" ? "active" : ""}
+          onClick={() => onGainModeChange(id, "auto")}
+        >
+          A
+        </button>
+
+        {ECG_GAIN_OPTIONS.map((gain) => (
+          <button
+            key={gain}
+            type="button"
+            className={gainMode === gain ? "active" : ""}
+            onClick={() => onGainModeChange(id, gain)}
+          >
+            {gain}
+          </button>
+        ))}
       </div>
 
       <div className="wave7-metric-main">
@@ -489,7 +690,7 @@ function MetricBox({
         <em>mV latest</em>
       </div>
 
-      <div className="wave7-metric-stats">
+      <div className="wave7-metric-stats compact">
         <span>
           P-P <b>{p2p}</b>
         </span>
@@ -500,11 +701,18 @@ function MetricBox({
           Max <b>{max}</b>
         </span>
         <span>
-          1 big <b>{formatScale(mvPerLargeBox)} mV</b>
+          Big <b>{formatScale(mvPerLargeBox)}</b>
         </span>
         <span>
           Range <b>±{formatScale(halfRangeMv)}</b>
         </span>
+        <span>
+          Peak <b>{peakFillPercent}%</b>
+        </span>
+      </div>
+
+      <div className={`wave7-gain-reason ${clipRisk ? "clip-risk" : ""}`}>
+        {reason}
       </div>
     </section>
   );
