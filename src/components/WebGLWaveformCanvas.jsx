@@ -6,15 +6,36 @@ const COLOR_MAP = {
   yellow: [245 / 255, 158 / 255, 11 / 255, 1],
   green: [52 / 255, 211 / 255, 153 / 255, 1],
   cyan: [125 / 255, 211 / 255, 252 / 255, 1],
-  white: [226 / 255, 232 / 240, 1],
+  white: [226 / 255, 232 / 255, 240 / 255, 1],
 };
 
 function getColor(colorName = "cyan") {
   return COLOR_MAP[colorName] || COLOR_MAP.cyan;
 }
 
-function normalizeValue(value, mode, min, max) {
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function mapToClipY({
+  value,
+  mode,
+  min,
+  max,
+  cssHeight,
+  pxPerMm,
+  voltageScaleMmPerMv,
+  centerMv,
+}) {
   if (!Number.isFinite(value)) return 0;
+
+  if (mode === "millivolts") {
+    const halfHeightPx = Math.max(1, cssHeight / 2);
+    const deltaMv = value - centerMv;
+    const deltaPx = deltaMv * voltageScaleMmPerMv * pxPerMm;
+
+    return Math.max(-8, Math.min(8, deltaPx / halfHeightPx));
+  }
 
   if (mode === "unit") {
     return Math.max(-1, Math.min(1, value * 2 - 1));
@@ -35,14 +56,12 @@ function interpolateArrayValue(values, outputIndex, outputLength) {
   const sourcePosition = (outputIndex / (outputLength - 1)) * (values.length - 1);
   const leftIndex = Math.floor(sourcePosition);
   const rightIndex = Math.min(values.length - 1, leftIndex + 1);
-
-  const rawT = sourcePosition - leftIndex;
-  const smoothT = rawT * rawT * (3 - 2 * rawT);
+  const t = sourcePosition - leftIndex;
 
   const left = Number(values[leftIndex]) || 0;
   const right = Number(values[rightIndex]) || left;
 
-  return left + (right - left) * smoothT;
+  return left + (right - left) * t;
 }
 
 function createShader(gl, type, source) {
@@ -113,18 +132,32 @@ export default function WebGLWaveformCanvas({
   color = "cyan",
   mode = "bipolar",
   className = "",
+  pxPerMm = 4,
+  voltageScaleMmPerMv = 10,
+  centerMv = 0,
 }) {
   const canvasRef = useRef(null);
   const glRef = useRef(null);
   const programRef = useRef(null);
   const positionBufferRef = useRef(null);
-  const positionLocationRef = useRef(null);
-  const colorLocationRef = useRef(null);
   const animationRef = useRef(null);
+
+  const colorLocationRef = useRef(null);
+  const cssHeightRef = useRef(1);
 
   const bufferRef = useRef(new Float32Array(points));
   const verticesRef = useRef(new Float32Array(points * 2));
   const writeIndexRef = useRef(0);
+
+  const propsRef = useRef({
+    mode,
+    color,
+    pxPerMm,
+    voltageScaleMmPerMv,
+    centerMv,
+    min: -1,
+    max: 1,
+  });
 
   const [webglSupported, setWebglSupported] = useState(true);
 
@@ -136,6 +169,18 @@ export default function WebGLWaveformCanvas({
       max: Math.max(...values),
     };
   }, [values]);
+
+  useEffect(() => {
+    propsRef.current = {
+      mode,
+      color,
+      pxPerMm,
+      voltageScaleMmPerMv,
+      centerMv,
+      min: valueRange.min,
+      max: valueRange.max,
+    };
+  }, [mode, color, pxPerMm, voltageScaleMmPerMv, centerMv, valueRange]);
 
   useEffect(() => {
     bufferRef.current = new Float32Array(points);
@@ -173,7 +218,6 @@ export default function WebGLWaveformCanvas({
       glRef.current = gl;
       programRef.current = program;
       positionBufferRef.current = positionBuffer;
-      positionLocationRef.current = positionLocation;
       colorLocationRef.current = colorLocation;
 
       gl.useProgram(program);
@@ -185,6 +229,8 @@ export default function WebGLWaveformCanvas({
       function resizeCanvas() {
         const dpr = window.devicePixelRatio || 1;
         const rect = canvas.getBoundingClientRect();
+
+        cssHeightRef.current = Math.max(1, rect.height);
 
         canvas.width = Math.max(1, Math.floor(rect.width * dpr));
         canvas.height = Math.max(1, Math.floor(rect.height * dpr));
@@ -203,16 +249,30 @@ export default function WebGLWaveformCanvas({
         const activeBuffer = positionBufferRef.current;
         const activeColorLocation = colorLocationRef.current;
 
-        if (!activeGl || !activeProgram || !activeBuffer || !activeColorLocation) return;
+        if (!activeGl || !activeProgram || !activeBuffer || !activeColorLocation) {
+          return;
+        }
 
         const signalBuffer = bufferRef.current;
         const vertices = verticesRef.current;
         const writeIndex = writeIndexRef.current;
+        const currentProps = propsRef.current;
 
         for (let i = 0; i < points; i += 1) {
           const x = points <= 1 ? 0 : -1 + (2 * i) / (points - 1);
           const sourceIndex = (writeIndex + i) % points;
-          const y = signalBuffer[sourceIndex];
+          const rawValue = signalBuffer[sourceIndex];
+
+          const y = mapToClipY({
+            value: rawValue,
+            mode: currentProps.mode,
+            min: currentProps.min,
+            max: currentProps.max,
+            cssHeight: cssHeightRef.current,
+            pxPerMm: currentProps.pxPerMm,
+            voltageScaleMmPerMv: currentProps.voltageScaleMmPerMv,
+            centerMv: currentProps.centerMv,
+          });
 
           vertices[i * 2] = x;
           vertices[i * 2 + 1] = y;
@@ -225,7 +285,7 @@ export default function WebGLWaveformCanvas({
         activeGl.clearColor(0, 0, 0, 0);
         activeGl.clear(activeGl.COLOR_BUFFER_BIT);
 
-        activeGl.uniform4fv(activeColorLocation, getColor(color));
+        activeGl.uniform4fv(activeColorLocation, getColor(currentProps.color));
         activeGl.drawArrays(activeGl.LINE_STRIP, 0, points);
 
         animationRef.current = requestAnimationFrame(draw);
@@ -249,22 +309,19 @@ export default function WebGLWaveformCanvas({
       setWebglSupported(false);
       return undefined;
     }
-  }, [points, color]);
+  }, [points]);
 
   useEffect(() => {
     if (!values?.length) return;
 
     const signalBuffer = bufferRef.current;
-    const min = valueRange.min;
-    const max = valueRange.max;
 
     for (let i = 0; i < signalBuffer.length; i += 1) {
-      const interpolated = interpolateArrayValue(values, i, signalBuffer.length);
-      signalBuffer[i] = normalizeValue(interpolated, mode, min, max);
+      signalBuffer[i] = interpolateArrayValue(values, i, signalBuffer.length);
     }
 
     writeIndexRef.current = 0;
-  }, [values, mode, valueRange]);
+  }, [values]);
 
   useEffect(() => {
     if (!samples?.length) return;
@@ -272,10 +329,10 @@ export default function WebGLWaveformCanvas({
     const signalBuffer = bufferRef.current;
 
     for (const sample of samples) {
-      signalBuffer[writeIndexRef.current] = normalizeValue(sample, mode, -1, 1);
-      writeIndexRef.current = (writeIndexRef.current + 1) % signalBuffer.length;
-    }
-  }, [samples, mode]);
+  signalBuffer[writeIndexRef.current] = Number(sample) || 0;
+  writeIndexRef.current = (writeIndexRef.current + 1) % signalBuffer.length;
+}
+  }, [samples]);
 
   if (!webglSupported) {
     return <div className={`webgl-waveform-fallback ${className}`}>WebGL unavailable</div>;

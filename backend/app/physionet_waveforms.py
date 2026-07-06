@@ -279,13 +279,22 @@ def build_physionet_frame(
     physical_batch = slice_circular(data.physical_signals_mv, cursor, batch_size)
 
     leads: dict[str, list[float]] = {}
+    leads_mv: dict[str, list[float]] = {}
     latest_mv: dict[str, float] = {}
 
     for column_index, lead_id in enumerate(data.lead_ids):
+    # Normalized signal is kept only for old display compatibility.
         leads[lead_id] = [
-            round(float(value), 5)
-            for value in normalized_batch[:, column_index]
-        ]
+        round(float(value), 5)
+        for value in normalized_batch[:, column_index]
+    ]
+
+    # This is the medically meaningful plotting signal.
+    # These values are real physical ECG voltage values in mV.
+        leads_mv[lead_id] = [
+        round(float(value), 5)
+        for value in physical_batch[:, column_index]
+    ]
 
         latest_mv[lead_id] = round(float(physical_batch[-1, column_index]), 3)
 
@@ -297,41 +306,57 @@ def build_physionet_frame(
     systolic = 118 if heart_rate < 110 else 128
     diastolic = 78 if heart_rate < 110 else 86
 
+ 
     return {
-        "source": "physionet-ptb-xl",
-        "record": data.record_name,
-        "status": "connected",
-        "receivedAt": now_iso(),
+    "source": "physionet-ptb-xl",
+    "record": data.record_name,
+    "status": "connected",
+    "receivedAt": now_iso(),
+    "sampleRate": data.sample_rate,
+    "sourceSampleRate": data.source_sample_rate,
+    "batchSize": batch_size,
+    "cursor": cursor,
+
+    "xAxis": {
+        "type": "time",
+        "unit": "seconds",
         "sampleRate": data.sample_rate,
-        "sourceSampleRate": data.source_sample_rate,
-        "batchSize": batch_size,
-        "cursor": cursor,
-        "xAxis": {
-            "type": "time",
-            "unit": "seconds",
-            "sampleRate": data.sample_rate,
-            "secondsVisible": float(settings.WAVEFORM_VISIBLE_SECONDS),
-            "samplePeriodMs": round(1000 / data.sample_rate, 3),
-            "paperSpeedMmPerSec": 25,
-        },
-        "yAxis": {
-            "type": "voltage",
-            "unit": "mV",
-            "displayVoltageScaleMmPerMv": 10,
-            "webglRange": [-1, 1],
-        },
-        "leads": leads,
-        "leadNames": {
-            lead_id: lead_name
-            for lead_id, lead_name in zip(data.lead_ids, data.lead_names)
-        },
-        "latestMv": latest_mv,
-        "vitals": {
-            "heartRate": heart_rate,
-            "spo2": spo2,
-            "systolic": systolic,
-            "diastolic": diastolic,
-            "respiratoryRate": respiratory_rate,
-            "temperature": temperature,
-        },
-    }
+        "secondsVisible": float(settings.WAVEFORM_VISIBLE_SECONDS),
+        "samplePeriodMs": round(1000 / data.sample_rate, 3),
+        "paperSpeedMmPerSec": 25,
+        "minorBoxSeconds": 0.04,
+        "majorBoxSeconds": 0.20,
+    },
+
+    "yAxis": {
+        "type": "voltage",
+        "unit": "mV",
+        "defaultGainMmPerMv": 10,
+        "allowedGainMmPerMv": [5, 10, 20],
+        "minorBoxMv": 0.1,
+        "majorBoxMv": 0.5,
+        "autoScale": False,
+    },
+
+    # Old normalized signal. Do not use this for calibrated ECG display.
+    "leads": leads,
+
+    # New calibrated signal. Use this on the ECG paper renderer.
+    "leadsMv": leads_mv,
+
+    "leadNames": {
+        lead_id: lead_name
+        for lead_id, lead_name in zip(data.lead_ids, data.lead_names)
+    },
+
+    "latestMv": latest_mv,
+
+    "vitals": {
+        "heartRate": heart_rate,
+        "spo2": spo2,
+        "systolic": systolic,
+        "diastolic": diastolic,
+        "respiratoryRate": respiratory_rate,
+        "temperature": temperature,
+    },
+}
