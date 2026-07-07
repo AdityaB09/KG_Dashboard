@@ -24,6 +24,9 @@ const WAVEFORM_COLUMN_COUNT = 2;
 const WAVEFORM_ROW_COUNT = 3;
 const VITAL_RAIL_WIDTH_PX = 160;
 
+const ECG_MINOR_BOXES_PER_MAJOR = 5;
+const PPG_MINI_GRAPH_POINTS = 64;
+
 const LEADS = [
   { id: "lead1", label: "Lead I", color: "cyan", area: "lead1" },
   { id: "lead2", label: "Lead II", color: "cyan", area: "lead2" },
@@ -498,11 +501,15 @@ gainMmPerMv: effectiveGain,
 <section
   ref={gridRef}
   className="wave7-grid"
-  style={{
-    "--ecg-mm": `${pxPerMm}px`,
-    "--wave7-grid-gap": `${GRID_GAP_PX}px`,
-    "--wave7-vitals-width": `${VITAL_RAIL_WIDTH_PX}px`,
-  }}
+ style={{
+  "--ecg-mm": `${pxPerMm}px`,
+  "--ecg-major-box": `${pxPerMm * ECG_MINOR_BOXES_PER_MAJOR}px`,
+  "--ecg-half-mm": `${pxPerMm / 2}px`,
+  "--ecg-half-major-box": `${(pxPerMm * ECG_MINOR_BOXES_PER_MAJOR) / 2}px`,
+  "--ecg-zero-y": "50%",
+  "--wave7-grid-gap": `${GRID_GAP_PX}px`,
+  "--wave7-vitals-width": `${VITAL_RAIL_WIDTH_PX}px`,
+}}
 >
   {leadTiles.map((lead) => (
     <WaveformTile
@@ -677,26 +684,110 @@ function useRollingSeries(value, maxPoints = 28) {
   return series;
 }
 
-function MiniPpgWaveform({ series }) {
-  const width = 86;
-  const height = 42;
+function downsampleSeries(values, targetPoints = PPG_MINI_GRAPH_POINTS) {
+  if (values.length <= targetPoints) return values;
 
-  const values = series
+  return Array.from({ length: targetPoints }, (_, index) => {
+    const sourceIndex = Math.round(
+      (index / (targetPoints - 1)) * (values.length - 1)
+    );
+
+    return values[sourceIndex];
+  });
+}
+
+function getOnePpgBeat(values, sampleRate = 220) {
+  const cleanValues = values
     .map((value) => Number(value))
     .filter(Number.isFinite);
 
-  const safeValues = values.length ? values : [0.5];
+  if (cleanValues.length < 12) {
+    return cleanValues.length ? cleanValues : [0.5];
+  }
 
-  const min = Math.min(...safeValues);
-  const max = Math.max(...safeValues);
+  const minValue = Math.min(...cleanValues);
+  const maxValue = Math.max(...cleanValues);
+  const range = maxValue - minValue || 1;
+
+  const threshold = minValue + range * 0.58;
+  const minPeakDistance = Math.max(12, Math.round(sampleRate * 0.32));
+
+  const peaks = [];
+  let lastPeakIndex = -minPeakDistance;
+
+  for (let index = 1; index < cleanValues.length - 1; index += 1) {
+    const value = cleanValues[index];
+
+    if (index - lastPeakIndex < minPeakDistance) continue;
+
+    const isLocalPeak =
+      value >= threshold &&
+      value >= cleanValues[index - 1] &&
+      value >= cleanValues[index + 1];
+
+    if (isLocalPeak) {
+      peaks.push(index);
+      lastPeakIndex = index;
+    }
+  }
+
+  let selectedPeakIndex = peaks[peaks.length - 1];
+
+  if (!Number.isFinite(selectedPeakIndex)) {
+    const recentStart = Math.floor(cleanValues.length * 0.55);
+    let bestIndex = recentStart;
+
+    for (let index = recentStart; index < cleanValues.length; index += 1) {
+      if (cleanValues[index] > cleanValues[bestIndex]) {
+        bestIndex = index;
+      }
+    }
+
+    selectedPeakIndex = bestIndex;
+  }
+
+  const beforePeak = Math.round(sampleRate * 0.18);
+  const afterPeak = Math.round(sampleRate * 0.52);
+  const desiredLength = beforePeak + afterPeak;
+
+  let start = selectedPeakIndex - beforePeak;
+  let end = selectedPeakIndex + afterPeak;
+
+  if (start < 0) {
+    end += Math.abs(start);
+    start = 0;
+  }
+
+  if (end > cleanValues.length) {
+    start = Math.max(0, start - (end - cleanValues.length));
+    end = cleanValues.length;
+  }
+
+  const beat = cleanValues.slice(start, end);
+
+  if (beat.length < 8) {
+    return downsampleSeries(cleanValues.slice(-desiredLength), PPG_MINI_GRAPH_POINTS);
+  }
+
+  return downsampleSeries(beat, PPG_MINI_GRAPH_POINTS);
+}
+
+function MiniPpgWaveform({ series, sampleRate = 220 }) {
+  const width = 86;
+  const height = 42;
+
+  const oneBeat = getOnePpgBeat(series || [], sampleRate);
+
+  const min = Math.min(...oneBeat);
+  const max = Math.max(...oneBeat);
   const range = max - min || 1;
 
-  const points = safeValues
+  const points = oneBeat
     .map((value, index) => {
       const x =
-        safeValues.length <= 1
+        oneBeat.length <= 1
           ? width
-          : (index / (safeValues.length - 1)) * width;
+          : (index / (oneBeat.length - 1)) * width;
 
       const y = height - ((value - min) / range) * height;
 
@@ -704,7 +795,7 @@ function MiniPpgWaveform({ series }) {
     })
     .join(" ");
 
-  const lastValue = safeValues[safeValues.length - 1];
+  const lastValue = oneBeat[oneBeat.length - 1];
   const lastX = width;
   const lastY = height - ((lastValue - min) / range) * height;
 
@@ -715,11 +806,10 @@ function MiniPpgWaveform({ series }) {
       aria-hidden="true"
     >
       <polyline points={points} />
-      <circle cx={lastX} cy={lastY} r="2.8" />
+      <circle cx={lastX} cy={lastY} r="2.6" />
     </svg>
   );
 }
-
 function BedsideVitalsPanel({ waveFrame }) {
   const vitals = waveFrame.vitals || {};
 
@@ -783,7 +873,12 @@ const ppgSeries =
         label="SpO₂"
         value={formatVitalValue(spo2)}
         unit=""
-         graph={<MiniPpgWaveform series={ppgSeries} />}
+         graph={
+  <MiniPpgWaveform
+    series={ppgSeries}
+    sampleRate={waveFrame.sampleRate || 220}
+  />
+}
       />
 
       <ReferenceVitalCard

@@ -1844,3 +1844,238 @@
     0 0 0 1px rgba(125, 211, 252, 0.18),
     0 0 7px rgba(125, 211, 252, 0.18);
 }
+
+/* =========================================================
+   CEO ECG PAPER FIX
+   0 mV must sit on the solid major grid line
+   ========================================================= */
+
+/* Make the tile draw its ECG paper using dedicated layers.
+   The horizontal major grid is anchored to 50%, so 0 mV sits
+   exactly on a large-box boundary, not through the middle of a box. */
+.wave7-calibrated-strip {
+  position: absolute !important;
+  inset: 0 !important;
+  overflow: hidden !important;
+  isolation: isolate !important;
+  background: #07111d !important;
+  background-image: none !important;
+}
+
+/* Minor 1 mm grid.
+   This is the lighter small-box grid. */
+.wave7-calibrated-strip::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgba(125, 211, 252, 0.09) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to right,
+      rgba(125, 211, 252, 0.09) 1px,
+      transparent 1px
+    );
+
+  background-size:
+    var(--ecg-mm) var(--ecg-mm),
+    var(--ecg-mm) var(--ecg-mm);
+
+  /* Anchor horizontal small boxes from the same 0 mV center. */
+  background-position:
+    left var(--ecg-zero-y, 50%),
+    left top;
+}
+
+/* Major 5 mm grid.
+   This is the stronger solid grid.
+   The first horizontal major line is placed exactly at 50%.
+   Then it repeats every large box above and below. */
+.wave7-calibrated-strip::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgba(125, 211, 252, 0.34) 1.5px,
+      transparent 1.5px
+    ),
+    linear-gradient(
+      to right,
+      rgba(125, 211, 252, 0.28) 1.2px,
+      transparent 1.2px
+    );
+
+  background-size:
+    var(--ecg-major-box, calc(var(--ecg-mm) * 5))
+      var(--ecg-major-box, calc(var(--ecg-mm) * 5)),
+    var(--ecg-major-box, calc(var(--ecg-mm) * 5))
+      var(--ecg-major-box, calc(var(--ecg-mm) * 5));
+
+  /* This is the key rule:
+     horizontal major grid line starts at 0 mV center. */
+  background-position:
+    left var(--ecg-zero-y, 50%),
+    left top;
+}
+
+/* Keep WebGL waveform above the ECG paper grid */
+.wave7-calibrated-strip .webgl-waveform-canvas,
+.webgl-waveform-canvas {
+  z-index: 2 !important;
+}
+
+/* 0 mV is not a random overlay anymore.
+   It is drawn exactly on top of the centered major grid line. */
+.wave7-zero-line {
+  top: var(--ecg-zero-y, 50%) !important;
+  height: 1.5px !important;
+  transform: translateY(-0.75px) !important;
+  z-index: 3 !important;
+  background: rgba(224, 242, 254, 0.82) !important;
+  box-shadow:
+    0 0 0 1px rgba(125, 211, 252, 0.18),
+    0 0 7px rgba(125, 211, 252, 0.16) !important;
+}
+
+/* Keep y-axis labels above waveform and grid */
+.wave7-y-scale {
+  z-index: 4 !important;
+}
+
+/* Keep lead labels above waveform and grid */
+.wave7-tile-top,
+.wave7-tile-bottom {
+  z-index: 5 !important;
+}
+
+/* =========================================================
+   FINAL ECG PAPER BASELINE FIX
+   0 mV must be the centered solid major grid line
+   ========================================================= */
+
+/* Stop old background-grid layers from deciding the baseline */
+.wave7-calibrated-strip {
+  position: absolute !important;
+  inset: 0 !important;
+  overflow: hidden !important;
+  isolation: isolate !important;
+  background: #07111d !important;
+  background-image: none !important;
+}
+
+/* Minor 1 mm grid.
+   The y-position uses 50% + half small-box correction.
+   This puts one minor grid line exactly on the 0 mV center. */
+.wave7-calibrated-strip::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgba(125, 211, 252, 0.095) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to right,
+      rgba(125, 211, 252, 0.095) 1px,
+      transparent 1px
+    );
+
+  background-size:
+    var(--ecg-mm) var(--ecg-mm),
+    var(--ecg-mm) var(--ecg-mm);
+
+  background-position:
+    left calc(var(--ecg-zero-y, 50%) + var(--ecg-half-mm, 0px)),
+    left top;
+}
+
+/* Major 5 mm grid.
+   The y-position uses 50% + half large-box correction.
+   This makes the 0 mV center sit exactly on a solid large-box line. */
+.wave7-calibrated-strip::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgba(125, 211, 252, 0.42) 1.5px,
+      transparent 1.5px
+    ),
+    linear-gradient(
+      to right,
+      rgba(125, 211, 252, 0.31) 1.25px,
+      transparent 1.25px
+    );
+
+  background-size:
+    var(--ecg-major-box) var(--ecg-major-box),
+    var(--ecg-major-box) var(--ecg-major-box);
+
+  background-position:
+    left calc(var(--ecg-zero-y, 50%) + var(--ecg-half-major-box, 0px)),
+    left top;
+}
+
+/* WebGL waveform stays above the paper */
+.wave7-calibrated-strip .webgl-waveform-canvas,
+.webgl-waveform-canvas {
+  z-index: 2 !important;
+}
+
+/* 0 mV line becomes the highlighted center major grid line.
+   It is not meant to replace the grid. It sits exactly on the major line. */
+.wave7-zero-line {
+  top: var(--ecg-zero-y, 50%) !important;
+  height: 1.5px !important;
+  transform: translateY(-0.75px) !important;
+  z-index: 3 !important;
+  background: rgba(224, 242, 254, 0.74) !important;
+  box-shadow:
+    0 0 0 1px rgba(125, 211, 252, 0.16),
+    0 0 7px rgba(125, 211, 252, 0.14) !important;
+}
+
+/* Keep labels above the grid and waveform */
+.wave7-y-scale {
+  z-index: 4 !important;
+}
+
+.wave7-tile-top,
+.wave7-tile-bottom {
+  z-index: 5 !important;
+}
+
+/* PPG mini graph should show one beat clearly */
+.wave7-reference-graph-box {
+  height: 42px !important;
+  padding: 3px 5px !important;
+}
+
+.wave7-spo2-reference-graph {
+  width: 100% !important;
+  height: 34px !important;
+}
+
+.wave7-spo2-reference-graph polyline {
+  stroke-width: 2.1 !important;
+}
