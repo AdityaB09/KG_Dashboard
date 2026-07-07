@@ -2079,3 +2079,114 @@
 .wave7-spo2-reference-graph polyline {
   stroke-width: 2.1 !important;
 }
+
+/* =========================================================
+   PRESENTATION-GRADE CLINICAL ECG POLISH
+   No signal manipulation. No morphology change.
+   ========================================================= */
+
+.wave7-monitor-card {
+  background:
+    radial-gradient(circle at top left, rgba(14, 165, 233, 0.08), transparent 34%),
+    linear-gradient(180deg, #071827 0%, #061321 100%) !important;
+}
+
+.wave7-wave-tile {
+  border-radius: 12px !important;
+  border-color: rgba(125, 211, 252, 0.28) !important;
+  background:
+    radial-gradient(circle at 18% 8%, rgba(125, 211, 252, 0.055), transparent 30%),
+    #07111d !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(15, 23, 42, 0.42),
+    0 8px 18px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Keep the ECG paper readable but reduce visual noise */
+.wave7-calibrated-strip::before {
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgba(125, 211, 252, 0.07) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to right,
+      rgba(125, 211, 252, 0.07) 1px,
+      transparent 1px
+    ) !important;
+}
+
+/* Major vertical grid stays visible */
+.wave7-calibrated-strip::after {
+  background-image:
+    linear-gradient(
+      to right,
+      rgba(125, 211, 252, 0.26) 1.25px,
+      transparent 1.25px
+    ) !important;
+
+  background-size:
+    var(--ecg-major-box) var(--ecg-major-box) !important;
+
+  background-position:
+    left top !important;
+}
+
+/*
+  Strong major horizontal ECG grid lines generated from the 0 mV baseline.
+  This guarantees 0 mV is on the solid major grid line.
+*/
+.wave7-zero-line {
+  top: var(--ecg-zero-y, 50%) !important;
+  height: 1.5px !important;
+  transform: translateY(-0.75px) !important;
+  z-index: 3 !important;
+  background: rgba(224, 242, 254, 0.82) !important;
+
+  box-shadow:
+    0 calc(var(--ecg-major-box) * -8) 0 rgba(125, 211, 252, 0.34),
+    0 calc(var(--ecg-major-box) * -7) 0 rgba(125, 211, 252, 0.34),
+    0 calc(var(--ecg-major-box) * -6) 0 rgba(125, 211, 252, 0.34),
+    0 calc(var(--ecg-major-box) * -5) 0 rgba(125, 211, 252, 0.34),
+    0 calc(var(--ecg-major-box) * -4) 0 rgba(125, 211, 252, 0.34),
+    0 calc(var(--ecg-major-box) * -3) 0 rgba(125, 211, 252, 0.34),
+    0 calc(var(--ecg-major-box) * -2) 0 rgba(125, 211, 252, 0.34),
+    0 calc(var(--ecg-major-box) * -1) 0 rgba(125, 211, 252, 0.34),
+    0 calc(var(--ecg-major-box) * 1) 0 rgba(125, 211, 252, 0.34),
+    0 calc(var(--ecg-major-box) * 2) 0 rgba(125, 211, 252, 0.34),
+    0 calc(var(--ecg-major-box) * 3) 0 rgba(125, 211, 252, 0.34),
+    0 calc(var(--ecg-major-box) * 4) 0 rgba(125, 211, 252, 0.34),
+    0 calc(var(--ecg-major-box) * 5) 0 rgba(125, 211, 252, 0.34),
+    0 calc(var(--ecg-major-box) * 6) 0 rgba(125, 211, 252, 0.34),
+    0 calc(var(--ecg-major-box) * 7) 0 rgba(125, 211, 252, 0.34),
+    0 calc(var(--ecg-major-box) * 8) 0 rgba(125, 211, 252, 0.34),
+    0 0 7px rgba(125, 211, 252, 0.16) !important;
+}
+
+/* Make labels cleaner and less distracting */
+.wave7-tile-top strong {
+  color: #f0f9ff !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95) !important;
+}
+
+.wave7-tile-top span {
+  background: rgba(14, 165, 233, 0.16) !important;
+  color: #7dd3fc !important;
+  border: 1px solid rgba(125, 211, 252, 0.18);
+}
+
+.wave7-tile-bottom strong {
+  color: #f8fbff !important;
+}
+
+.wave7-tile-bottom span,
+.wave7-y-scale {
+  color: rgba(224, 242, 254, 0.78) !important;
+}
+
+/* Keep waveform canvas above grid */
+.wave7-calibrated-strip .webgl-waveform-canvas,
+.webgl-waveform-canvas {
+  z-index: 2 !important;
+}

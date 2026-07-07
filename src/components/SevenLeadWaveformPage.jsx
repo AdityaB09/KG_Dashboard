@@ -7,14 +7,22 @@ const ECG_PAPER_SPEED_MM_PER_SEC = 25;
 const DEFAULT_VISIBLE_SECONDS = 3;
 const DEFAULT_GAIN_MM_PER_MV = 10;
 const DEFAULT_GAIN_MODE = "auto";
-const ECG_GAIN_OPTIONS = [5, 10, 20];
+
+/*
+  Calibrated display gain ladder.
+
+  This does not alter ECG data or morphology.
+  It only changes how many millimeters represent 1 mV.
+  The active gain is always shown as Auto 2.5 / 5 / 10 / 20 / 40.
+*/
+const ECG_GAIN_OPTIONS = [2.5, 5, 10, 20, 40];
 
 const ECG_ZERO_MV = 0;
 
-const AUTO_HEADROOM = 0.88;
-const AUTO_LOW_FILL_AT_10 = 0.16;
-const AUTO_RETURN_FROM_5_FILL = 0.72;
-const AUTO_RETURN_FROM_20_FILL = 0.28;
+const AUTO_HEADROOM = 0.9;
+const AUTO_TARGET_P2P_FILL = 0.46;
+const AUTO_KEEP_MIN_P2P_FILL = 0.34;
+const AUTO_KEEP_MAX_P2P_FILL = 0.64;
 
 const MIN_PX_PER_MM = 3.2;
 const MAX_PX_PER_MM = 9.0;
@@ -119,8 +127,10 @@ function getLeadStats(samples = [], latestFallback) {
 
 function appendLeadWindows(prev, frame) {
   const sampleRate = frame.sampleRate || 220;
-  const maxPoints = Math.round(sampleRate * DEFAULT_VISIBLE_SECONDS);
+  const visibleSeconds =
+    Number(frame.xAxis?.secondsVisible) || DEFAULT_VISIBLE_SECONDS;
 
+  const maxPoints = Math.round(sampleRate * visibleSeconds);
   const next = {};
 
   for (const lead of LEADS) {
@@ -134,7 +144,6 @@ function appendLeadWindows(prev, frame) {
 }
 
 
-
 function getLeadAmplitude(samples = []) {
   const values = samples.map(Number).filter(Number.isFinite);
 
@@ -143,6 +152,8 @@ function getLeadAmplitude(samples = []) {
       minMv: 0,
       maxMv: 0,
       p2pMv: 0,
+      robustP2pMv: 0,
+      displayP2pMv: 0,
       robustAbsMv: 0,
       hardAbsMv: 0,
     };
@@ -152,19 +163,26 @@ function getLeadAmplitude(samples = []) {
   const maxMv = Math.max(...values);
   const p2pMv = maxMv - minMv;
 
+  const p05 = percentile(values, 5);
+  const p95 = percentile(values, 95);
+  const robustP2pMv = Math.max(0, p95 - p05);
+
   const absFromZero = values.map((value) => Math.abs(value - ECG_ZERO_MV));
+
+  /*
+    displayP2pMv is used only for gain choice.
+    It avoids one noisy sample dominating the visual gain decision,
+    but it still respects the real peak-to-peak signal.
+  */
+  const displayP2pMv = Math.max(robustP2pMv, p2pMv * 0.65);
 
   return {
     minMv,
     maxMv,
     p2pMv,
-
-    // Stable readability value.
-    // This prevents one noisy sample from constantly flipping gain.
+    robustP2pMv,
+    displayP2pMv,
     robustAbsMv: percentile(absFromZero, 95),
-
-    // Hard safety value.
-    // This protects the actual spike from going outside the tile.
     hardAbsMv: Math.max(...absFromZero),
   };
 }
@@ -193,6 +211,27 @@ function peakFitsAtGain({ hardAbsMv, gainMmPerMv, rowHeightPx, pxPerMm }) {
   return fill <= AUTO_HEADROOM;
 }
 
+function getP2pFillRatio({ p2pMv, gainMmPerMv, rowHeightPx, pxPerMm }) {
+  if (!rowHeightPx || !pxPerMm || !gainMmPerMv) return 0;
+
+  const rowHeightMm = rowHeightPx / pxPerMm;
+
+  if (!rowHeightMm) return 0;
+
+  return (p2pMv * gainMmPerMv) / rowHeightMm;
+}
+
+function getClosestGain(allowedGains, idealGain) {
+  if (!allowedGains.length) return DEFAULT_GAIN_MM_PER_MV;
+
+  return allowedGains.reduce((bestGain, gain) => {
+    const bestDistance = Math.abs(bestGain - idealGain);
+    const nextDistance = Math.abs(gain - idealGain);
+
+    return nextDistance < bestDistance ? gain : bestGain;
+  }, allowedGains[0]);
+}
+
 function chooseAutoGain({ samples, currentGain, rowHeightPx, pxPerMm }) {
   const values = samples.map(Number).filter(Number.isFinite);
 
@@ -201,64 +240,52 @@ function chooseAutoGain({ samples, currentGain, rowHeightPx, pxPerMm }) {
   }
 
   const amplitude = getLeadAmplitude(values);
-
-  if (amplitude.hardAbsMv < 0.005) {
-    return 20;
-  }
-
-  const fits20 = peakFitsAtGain({
-    hardAbsMv: amplitude.hardAbsMv,
-    gainMmPerMv: 20,
-    rowHeightPx,
-    pxPerMm,
-  });
-
-  const fits10 = peakFitsAtGain({
-    hardAbsMv: amplitude.hardAbsMv,
-    gainMmPerMv: 10,
-    rowHeightPx,
-    pxPerMm,
-  });
-
-  const fits5 = peakFitsAtGain({
-    hardAbsMv: amplitude.hardAbsMv,
-    gainMmPerMv: 5,
-    rowHeightPx,
-    pxPerMm,
-  });
-
-  const fillAt10 = getPeakFillRatio({
-    absMv: amplitude.robustAbsMv,
-    gainMmPerMv: 10,
-    rowHeightPx,
-    pxPerMm,
-  });
-
+  const rowHeightMm = rowHeightPx / pxPerMm;
   const current = currentGain || DEFAULT_GAIN_MM_PER_MV;
 
-  // Hard safety first. If the true peak cannot fit at 10, use 5.
-  if (!fits10 && fits5) return 5;
-
-  // If even 5 cannot fit, 5 is still the safest standard ECG gain.
-  if (!fits5) return 5;
-
-  // Avoid flickering after switching to 5.
-  if (current === 5) {
-    return fits10 && fillAt10 <= AUTO_RETURN_FROM_5_FILL ? 10 : 5;
+  if (!rowHeightMm || amplitude.hardAbsMv < 0.005) {
+    return ECG_GAIN_OPTIONS[ECG_GAIN_OPTIONS.length - 1];
   }
 
-  // Avoid flickering after switching to 20.
-  if (current === 20) {
-    if (fillAt10 >= AUTO_RETURN_FROM_20_FILL) return 10;
-    return fits20 ? 20 : 10;
+  const viableGains = ECG_GAIN_OPTIONS.filter((gain) =>
+    peakFitsAtGain({
+      hardAbsMv: amplitude.hardAbsMv,
+      gainMmPerMv: gain,
+      rowHeightPx,
+      pxPerMm,
+    })
+  );
+
+  if (!viableGains.length) {
+    return ECG_GAIN_OPTIONS[0];
   }
 
-  // Use 20 only when the signal is genuinely small and full peaks still fit.
-  if (fillAt10 < AUTO_LOW_FILL_AT_10 && fits20) {
-    return 20;
+  const currentStillFits = viableGains.includes(current);
+  const currentP2pFill = getP2pFillRatio({
+    p2pMv: amplitude.displayP2pMv,
+    gainMmPerMv: current,
+    rowHeightPx,
+    pxPerMm,
+  });
+
+  /*
+    Hysteresis:
+    Keep the current gain if it is safe and already visually acceptable.
+    This prevents rapid gain flicker.
+  */
+  if (
+    currentStillFits &&
+    currentP2pFill >= AUTO_KEEP_MIN_P2P_FILL &&
+    currentP2pFill <= AUTO_KEEP_MAX_P2P_FILL
+  ) {
+    return current;
   }
 
-  return 10;
+  const idealGain =
+    (AUTO_TARGET_P2P_FILL * rowHeightMm) /
+    Math.max(amplitude.displayP2pMv, 0.01);
+
+  return getClosestGain(viableGains, idealGain);
 }
 
 function getDisplayScale({ samples, gainMmPerMv, rowHeightPx, pxPerMm }) {
@@ -491,11 +518,11 @@ gainMmPerMv: effectiveGain,
       <main className="wave7-monitor-card">
         <div className="wave7-monitor-title">
           <div>
-            <p className="wave7-eyebrow">High precision</p>
+            {/* <p className="wave7-eyebrow">High precision</p> */}
             <h2>6 waveform ECG matrix</h2>
           </div>
 
-          <span>5/10/20 mm/mV</span>
+          {/* <span>Calibrated auto gain</span> */}
         </div>
 
 <section
