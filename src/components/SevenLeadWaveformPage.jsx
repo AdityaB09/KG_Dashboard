@@ -22,7 +22,7 @@ const GRID_GAP_PX = 6;
 
 const WAVEFORM_COLUMN_COUNT = 3;
 const WAVEFORM_ROW_COUNT = 3;
-const VITAL_RAIL_WIDTH_PX = 300;
+const VITAL_RAIL_WIDTH_PX = 160;
 
 const LEADS = [
   { id: "lead1", label: "Lead I", color: "cyan", area: "lead1" },
@@ -297,9 +297,7 @@ export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
   const [leadWindows, setLeadWindows] = useState(EMPTY_LEADS);
   const [streamStatus, setStreamStatus] = useState("connecting");
 
-  const [leadGainModes, setLeadGainModes] = useState(() =>
-    Object.fromEntries(LEADS.map((lead) => [lead.id, DEFAULT_GAIN_MODE]))
-  );
+ 
 
   const [leadAutoGains, setLeadAutoGains] = useState(() =>
     Object.fromEntries(LEADS.map((lead) => [lead.id, DEFAULT_GAIN_MM_PER_MV]))
@@ -311,13 +309,6 @@ export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
   });
 
   const gridRef = useRef(null);
-
-  function updateLeadGainMode(leadId, nextMode) {
-    setLeadGainModes((previousModes) => ({
-      ...previousModes,
-      [leadId]: nextMode,
-    }));
-  }
 
   useEffect(() => {
     setLeadWindows(EMPTY_LEADS);
@@ -413,13 +404,16 @@ const rowHeightPx = Math.max(1, tileHeightPx);
       const samples = leadWindows[lead.id] || [];
       const stats = getLeadStats(samples, waveFrame.latestMv?.[lead.id]);
 
-      const leadGainMode = leadGainModes[lead.id] || DEFAULT_GAIN_MODE;
-      const autoGain = leadAutoGains[lead.id] || DEFAULT_GAIN_MM_PER_MV;
+      // const leadGainMode = leadGainModes[lead.id] || DEFAULT_GAIN_MODE;
+      // const autoGain = leadAutoGains[lead.id] || DEFAULT_GAIN_MM_PER_MV;
 
-      const effectiveGain =
-        leadGainMode === "auto"
-          ? autoGain
-          : Number(leadGainMode) || DEFAULT_GAIN_MM_PER_MV;
+      // const effectiveGain =
+      //   leadGainMode === "auto"
+      //     ? autoGain
+      //     : Number(leadGainMode) || DEFAULT_GAIN_MM_PER_MV;
+
+      const autoGain = leadAutoGains[lead.id] || DEFAULT_GAIN_MM_PER_MV;
+const effectiveGain = autoGain;
 
       const scale = getDisplayScale({
         samples,
@@ -432,15 +426,17 @@ const rowHeightPx = Math.max(1, tileHeightPx);
         ...lead,
         latest: stats.latest,
         p2p: stats.p2p,
-        gainMode: leadGainMode,
-        gainMmPerMv: effectiveGain,
+        // gainMode: leadGainMode,
+        // gainMmPerMv: effectiveGain,
+        gainMode: DEFAULT_GAIN_MODE,
+gainMmPerMv: effectiveGain,
         scale,
       };
     });
   }, [
     leadWindows,
     waveFrame.latestMv,
-    leadGainModes,
+    // leadGainModes,
     leadAutoGains,
     rowHeightPx,
     pxPerMm,
@@ -475,9 +471,9 @@ const rowHeightPx = Math.max(1, tileHeightPx);
               : "Connecting"}
           </span>
 
-          <span className="wave7-speed-pill">
+          {/* <span className="wave7-speed-pill">
             {sampleRate} Hz • {visibleSeconds}s • 25 mm/sec • per-lead gain
-          </span>
+          </span> */}
 
           <button
             type="button"
@@ -515,7 +511,7 @@ const rowHeightPx = Math.max(1, tileHeightPx);
       samples={waveFrame.leadsMv?.[lead.id] || []}
       visiblePoints={visiblePoints}
       pxPerMm={pxPerMm}
-      onGainModeChange={updateLeadGainMode}
+      // onGainModeChange={updateLeadGainMode}
     />
   ))}
 
@@ -526,20 +522,89 @@ const rowHeightPx = Math.max(1, tileHeightPx);
   );
 }
 
+// function WaveformTile({
+//   lead,
+//   samples,
+//   visiblePoints,
+//   pxPerMm,
+//   onGainModeChange,
+// }) {
+//   const { scale } = lead;
+
+//   return (
+//     <article
+//   className={`wave7-wave-tile ${scale.clipRisk ? "clip-risk" : ""}`}
+//   style={{ gridArea: lead.area }}
+// >
+//       <div className="wave7-calibrated-strip">
+//         <YAxisScale scale={scale} />
+
+//         <div className="wave7-zero-line" />
+
+//         <WebGLWaveformCanvas
+//           samples={samples}
+//           points={visiblePoints}
+//           color={lead.color}
+//           mode="millivolts"
+//           pxPerMm={pxPerMm}
+//           voltageScaleMmPerMv={lead.gainMmPerMv}
+//           centerMv={0}
+//         />
+//       </div>
+
+//       <div className="wave7-tile-top">
+//         <strong>{lead.label}</strong>
+//         <span>
+//           {lead.gainMode === "auto" ? "Auto" : "Manual"} {lead.gainMmPerMv}
+//         </span>
+//       </div>
+
+//       <div className="wave7-lead-gain-toggle" aria-label={`${lead.label} gain selector`}>
+//         <button
+//           type="button"
+//           className={lead.gainMode === "auto" ? "active" : ""}
+//           onClick={() => onGainModeChange(lead.id, "auto")}
+//         >
+//           A
+//         </button>
+
+//         {ECG_GAIN_OPTIONS.map((gain) => (
+//           <button
+//             key={gain}
+//             type="button"
+//             className={lead.gainMode === gain ? "active" : ""}
+//             onClick={() => onGainModeChange(lead.id, gain)}
+//           >
+//             {gain}
+//           </button>
+//         ))}
+//       </div>
+
+//       <div className="wave7-tile-bottom">
+//         <strong>
+//           {lead.latest}
+//           <em>mV</em>
+//         </strong>
+
+//         <span>P-P {lead.p2p}</span>
+//       </div>
+//     </article>
+//   );
+// }
+
 function WaveformTile({
   lead,
   samples,
   visiblePoints,
   pxPerMm,
-  onGainModeChange,
 }) {
   const { scale } = lead;
 
   return (
     <article
-  className={`wave7-wave-tile ${scale.clipRisk ? "clip-risk" : ""}`}
-  style={{ gridArea: lead.area }}
->
+      className={`wave7-wave-tile ${scale.clipRisk ? "clip-risk" : ""}`}
+      style={{ gridArea: lead.area }}
+    >
       <div className="wave7-calibrated-strip">
         <YAxisScale scale={scale} />
 
@@ -558,30 +623,7 @@ function WaveformTile({
 
       <div className="wave7-tile-top">
         <strong>{lead.label}</strong>
-        <span>
-          {lead.gainMode === "auto" ? "Auto" : "Manual"} {lead.gainMmPerMv}
-        </span>
-      </div>
-
-      <div className="wave7-lead-gain-toggle" aria-label={`${lead.label} gain selector`}>
-        <button
-          type="button"
-          className={lead.gainMode === "auto" ? "active" : ""}
-          onClick={() => onGainModeChange(lead.id, "auto")}
-        >
-          A
-        </button>
-
-        {ECG_GAIN_OPTIONS.map((gain) => (
-          <button
-            key={gain}
-            type="button"
-            className={lead.gainMode === gain ? "active" : ""}
-            onClick={() => onGainModeChange(lead.id, gain)}
-          >
-            {gain}
-          </button>
-        ))}
+        <span>Auto {lead.gainMmPerMv}</span>
       </div>
 
       <div className="wave7-tile-bottom">
@@ -616,7 +658,7 @@ function formatVitalValue(value, decimals = 0) {
 
 
 
-function useRollingSeries(value, maxPoints = 36) {
+function useRollingSeries(value, maxPoints = 28) {
   const [series, setSeries] = useState(() =>
     Array.from({ length: maxPoints }, () => Number(value) || 0)
   );
@@ -636,8 +678,8 @@ function useRollingSeries(value, maxPoints = 36) {
 }
 
 function MiniSpo2Trend({ series }) {
-  const width = 120;
-  const height = 34;
+  const width = 86;
+  const height = 42;
 
   const values = series
     .map((value) => Number(value))
@@ -645,7 +687,7 @@ function MiniSpo2Trend({ series }) {
 
   const safeValues = values.length ? values : [97];
 
-  const min = Math.min(88, ...safeValues);
+  const min = Math.min(92, ...safeValues);
   const max = Math.max(100, ...safeValues);
   const range = max - min || 1;
 
@@ -668,12 +710,12 @@ function MiniSpo2Trend({ series }) {
 
   return (
     <svg
-      className="wave7-spo2-trend"
+      className="wave7-spo2-reference-graph"
       viewBox={`0 0 ${width} ${height}`}
       aria-hidden="true"
     >
       <polyline points={points} />
-      <circle cx={lastX} cy={lastY} r="3.2" />
+      <circle cx={lastX} cy={lastY} r="2.8" />
     </svg>
   );
 }
@@ -713,53 +755,103 @@ function BedsideVitalsPanel({ waveFrame }) {
     vitals.bodyTemperature ??
     vitals.body_temperature;
 
-  const spo2Series = useRollingSeries(spo2, 36);
+  // const spo2Series = useRollingSeries(spo2, 28);
+  const rollingSpo2Series = useRollingSeries(spo2, 28);
+
+const spo2Series =
+  Array.isArray(vitals.spo2Trace) && vitals.spo2Trace.length
+    ? vitals.spo2Trace
+    : rollingSpo2Series;
+
 
   return (
-    <aside className="wave7-vitals-panel">
+    <aside className="wave7-vitals-panel wave7-reference-vitals">
       <div className="wave7-vitals-header">
         <p className="wave7-eyebrow">Bedside widgets</p>
         <span>{waveFrame.status === "connected" ? "Live signal" : "Waiting"}</span>
       </div>
 
-      <div className="wave7-vital-card hr">
-        <span>HR</span>
-        <strong>{formatVitalValue(heartRate)}</strong>
-        <em>bpm</em>
-      </div>
+      <ReferenceVitalCard
+        className="hr"
+        label="HR"
+        value={formatVitalValue(heartRate)}
+        unit=""
+      />
 
-      <div className="wave7-vital-card spo2 has-trend">
-        <div className="wave7-vital-label-row">
-          <span>SpO₂</span>
-          <small>current pulse point</small>
-        </div>
+      <ReferenceVitalCard
+        className="spo2"
+        label="SpO₂"
+        value={formatVitalValue(spo2)}
+        unit=""
+        graph={<MiniSpo2Trend series={spo2Series} />}
+      />
 
-        <strong>{formatVitalValue(spo2)}</strong>
-        <MiniSpo2Trend series={spo2Series} />
-        <em>%</em>
-      </div>
+      <ReferenceVitalCard
+        className="bp"
+        label="NIBP"
+        value={`${formatVitalValue(systolic)}/${formatVitalValue(diastolic)}`}
+        unit=""
+      />
 
-      <div className="wave7-vital-card bp">
-        <span>NIBP</span>
-        <strong>
-          {formatVitalValue(systolic)}
-          <small>/{formatVitalValue(diastolic)}</small>
-        </strong>
-        <em>mmHg</em>
-      </div>
+      <ReferenceVitalCard
+        className="rr"
+        label="RR"
+        value={formatVitalValue(respiratoryRate)}
+        unit=""
+      />
 
-      <div className="wave7-vital-card rr">
-        <span>RR</span>
-        <strong>{formatVitalValue(respiratoryRate)}</strong>
-        <em>/min</em>
-      </div>
-
-      <div className="wave7-vital-card temp">
-        <span>Temp</span>
-        <strong>{formatVitalValue(temperature, 1)}</strong>
-        <em>°C</em>
-      </div>
+      <ReferenceVitalCard
+        className="temp"
+        label="Temp"
+        value={formatVitalValue(temperature, 1)}
+        unit=""
+      />
     </aside>
   );
 }
 
+function ReferenceVitalCard({ label, value, unit, graph, className = "" }) {
+  return (
+    <article className={`wave7-reference-vital-card ${className}`}>
+      <div className="wave7-reference-vital-title">
+        <span>{label}</span>
+      </div>
+
+      <div className="wave7-reference-vital-main">
+        <div className="wave7-reference-vital-value">
+          <strong>{value}</strong>
+          <em>{unit}</em>
+        </div>
+
+        {graph && (
+          <div className="wave7-reference-graph-box">
+            {graph}
+          </div>
+        )}
+      </div>
+    </article>
+  );
+}
+
+function CompactVitalCard({ label, value, unit, graph, className = "" }) {
+  return (
+    <div className={`wave7-vital-card wave7-vital-compact ${className}`}>
+      <div className="wave7-compact-vital-top">
+        <span>{label}</span>
+      </div>
+
+      <div className="wave7-compact-vital-body">
+        <div className="wave7-compact-vital-value">
+          <strong>{value}</strong>
+          <em>{unit}</em>
+        </div>
+
+        {graph && (
+          <div className="wave7-compact-vital-graph">
+            {graph}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

@@ -1333,3 +1333,490 @@
     height: 32px;
   }
 }
+
+/* =========================================================
+   COMPACT RIGHT BED WIDGET RAIL + AUTO ONLY WAVEFORMS
+   Append at bottom of SevenLeadWaveformPage.css
+   ========================================================= */
+
+/* Give more width back to the ECG waveforms */
+.wave7-grid {
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr)
+    var(--wave7-vitals-width, 210px) !important;
+
+  grid-template-areas:
+    "lead1 lead2 vitals"
+    "lead3 avr   vitals"
+    "avl   avf   vitals" !important;
+}
+
+/* CEO zero-axis fix:
+   The center 0 mV line and the graph-paper horizontal grid are aligned. */
+.wave7-calibrated-strip {
+  background-position:
+    0 50%,
+    0 0,
+    0 50%,
+    0 0 !important;
+}
+
+.wave7-zero-line {
+  top: 50% !important;
+  height: 1px !important;
+  background: rgba(226, 232, 240, 0.72) !important;
+}
+
+/* Hide old gain controls if any old JSX/CSS remains */
+.wave7-lead-gain-toggle {
+  display: none !important;
+}
+
+/* Since controls are gone, the lead title can use more space */
+.wave7-tile-top {
+  right: 8px !important;
+}
+
+.wave7-tile-top span {
+  background: rgba(14, 165, 233, 0.16) !important;
+  color: #7dd3fc !important;
+}
+
+/* Compact right rail */
+.wave7-vitals-panel.wave7-vitals-panel-compact,
+.wave7-vitals-panel {
+  grid-area: vitals;
+  padding: 8px !important;
+  gap: 6px !important;
+  grid-template-rows:
+    auto
+    minmax(0, 1fr)
+    minmax(0, 1fr)
+    minmax(0, 1fr)
+    minmax(0, 1fr)
+    minmax(0, 1fr) !important;
+  overflow: hidden !important;
+}
+
+/* Smaller header */
+.wave7-vitals-header {
+  gap: 2px !important;
+}
+
+.wave7-vitals-header span {
+  font-size: 8px !important;
+}
+
+/* Compact card style similar to your reference tile */
+.wave7-vital-card.wave7-vital-compact {
+  min-height: 0 !important;
+  padding: 7px 8px !important;
+  border-radius: 10px !important;
+  background:
+    radial-gradient(circle at top right, rgba(14, 165, 233, 0.11), transparent 42%),
+    rgba(2, 8, 23, 0.5) !important;
+  border: 1px solid rgba(125, 211, 252, 0.2) !important;
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+  gap: 4px !important;
+}
+
+/* Label row */
+.wave7-compact-vital-top {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wave7-compact-vital-top span {
+  color: #94a3b8;
+  font-size: 10px !important;
+  line-height: 1;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Main row */
+.wave7-compact-vital-body {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(46px, 1fr);
+  align-items: end;
+  gap: 6px;
+}
+
+.wave7-vital-compact:not(.spo2) .wave7-compact-vital-body {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* Value */
+.wave7-compact-vital-value {
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.wave7-compact-vital-value strong {
+  color: #e5f7ff;
+  font-size: clamp(24px, 2.1vw, 38px) !important;
+  line-height: 0.92 !important;
+  font-weight: 950;
+  letter-spacing: -0.07em;
+  white-space: nowrap;
+}
+
+.wave7-compact-vital-value em {
+  color: #94a3b8;
+  font-size: 9px !important;
+  line-height: 1;
+  font-style: normal;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+/* Color coding */
+.wave7-vital-compact.hr strong {
+  color: #86efac !important;
+}
+
+.wave7-vital-compact.spo2 strong {
+  color: #7dd3fc !important;
+}
+
+.wave7-vital-compact.bp strong {
+  color: #f9e2af !important;
+  font-size: clamp(22px, 1.9vw, 34px) !important;
+}
+
+.wave7-vital-compact.rr strong {
+  color: #c4b5fd !important;
+}
+
+.wave7-vital-compact.temp strong {
+  color: #fca5a5 !important;
+}
+
+/* Only SpO2 has graph */
+.wave7-compact-vital-graph {
+  min-width: 0;
+  align-self: end;
+  justify-self: stretch;
+}
+
+.wave7-spo2-mini-graph {
+  width: 100%;
+  height: 28px;
+  display: block;
+}
+
+.wave7-spo2-mini-graph polyline {
+  fill: none;
+  stroke: #7dd3fc;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 3px rgba(125, 211, 252, 0.45));
+}
+
+.wave7-spo2-mini-graph circle {
+  fill: #e0f2fe;
+  stroke: #0284c7;
+  stroke-width: 1.3;
+  filter: drop-shadow(0 0 5px rgba(125, 211, 252, 0.9));
+}
+
+/* Remove Signal Source if old JSX still exists */
+.wave7-vital-card.source {
+  display: none !important;
+}
+
+/* Keep old SpO2 trend class hidden if previous version exists */
+.wave7-spo2-trend {
+  display: none !important;
+}
+
+/* Responsive tuning */
+@media (max-width: 1280px) {
+  .wave7-grid {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(0, 1fr)
+      var(--wave7-vitals-width, 200px) !important;
+  }
+
+  .wave7-vitals-panel.wave7-vitals-panel-compact,
+  .wave7-vitals-panel {
+    padding: 7px !important;
+    gap: 5px !important;
+  }
+
+  .wave7-vital-card.wave7-vital-compact {
+    padding: 6px 7px !important;
+  }
+
+  .wave7-compact-vital-value strong {
+    font-size: clamp(21px, 1.9vw, 34px) !important;
+  }
+
+  .wave7-vital-compact.bp strong {
+    font-size: clamp(19px, 1.7vw, 30px) !important;
+  }
+
+  .wave7-spo2-mini-graph {
+    height: 24px;
+  }
+}
+
+/* =========================================================
+   REFERENCE-STYLE BEDSIDE WIDGETS
+   Dark compact metric cards like lab/vital tiles
+   ========================================================= */
+
+/* Give waveform area more space */
+.wave7-grid {
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr)
+    var(--wave7-vitals-width, 220px) !important;
+}
+
+/* Keep CEO zero-axis fix */
+.wave7-calibrated-strip {
+  background-position:
+    0 50%,
+    0 0,
+    0 50%,
+    0 0 !important;
+}
+
+.wave7-zero-line {
+  top: 50% !important;
+  height: 1px !important;
+  background: rgba(226, 232, 240, 0.72) !important;
+}
+
+/* Hide waveform gain buttons because default mode is auto */
+.wave7-lead-gain-toggle {
+  display: none !important;
+}
+
+.wave7-tile-top {
+  right: 8px !important;
+}
+
+/* Main bedside widget rail */
+.wave7-vitals-panel.wave7-reference-vitals,
+.wave7-vitals-panel {
+  grid-area: vitals;
+  padding: 8px !important;
+  gap: 7px !important;
+  grid-template-rows:
+    auto
+    minmax(0, 1fr)
+    minmax(0, 1fr)
+    minmax(0, 1fr)
+    minmax(0, 1fr)
+    minmax(0, 1fr) !important;
+  overflow: hidden !important;
+}
+
+/* Header */
+.wave7-vitals-header {
+  gap: 2px !important;
+}
+
+.wave7-vitals-header .wave7-eyebrow {
+  font-size: 8.5px !important;
+}
+
+.wave7-vitals-header span {
+  font-size: 8px !important;
+  color: #38bdf8 !important;
+}
+
+/* New reference-style card */
+.wave7-reference-vital-card {
+  min-width: 0;
+  min-height: 0;
+  border-radius: 10px;
+  border: 1px solid rgba(125, 211, 252, 0.24);
+  background:
+    radial-gradient(circle at top right, rgba(14, 165, 233, 0.12), transparent 42%),
+    rgba(2, 8, 23, 0.58);
+  padding: 7px 8px;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 4px;
+  overflow: hidden;
+}
+
+/* Parameter name */
+.wave7-reference-vital-title {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wave7-reference-vital-title span {
+  color: #94a3b8;
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Card body */
+.wave7-reference-vital-main {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(70px, 1fr);
+  align-items: end;
+  gap: 8px;
+}
+
+/* Cards without graph use full width */
+.wave7-reference-vital-card:not(.spo2) .wave7-reference-vital-main {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* Value */
+.wave7-reference-vital-value {
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.wave7-reference-vital-value strong {
+  font-size: clamp(25px, 2.2vw, 39px);
+  line-height: 0.9;
+  font-weight: 950;
+  letter-spacing: -0.07em;
+  white-space: nowrap;
+  color: #e5f7ff;
+}
+
+.wave7-reference-vital-value em {
+  color: #94a3b8;
+  font-size: 9px;
+  line-height: 1;
+  font-style: normal;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+/* Color coding */
+.wave7-reference-vital-card.hr strong {
+  color: #86efac;
+}
+
+.wave7-reference-vital-card.spo2 strong {
+  color: #7dd3fc;
+}
+
+.wave7-reference-vital-card.bp strong {
+  color: #f9e2af;
+  font-size: clamp(22px, 1.85vw, 34px);
+}
+
+.wave7-reference-vital-card.rr strong {
+  color: #c4b5fd;
+}
+
+.wave7-reference-vital-card.temp strong {
+  color: #fca5a5;
+}
+
+/* SpO2 graph tile like the reference image */
+.wave7-reference-graph-box {
+  min-width: 0;
+  height: 46px;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(15, 23, 42, 0.15)),
+    rgba(248, 250, 252, 0.035);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.wave7-spo2-reference-graph {
+  width: 92%;
+  height: 38px;
+  display: block;
+}
+
+.wave7-spo2-reference-graph polyline {
+  fill: none;
+  stroke: #7dd3fc;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 4px rgba(125, 211, 252, 0.55));
+}
+
+.wave7-spo2-reference-graph circle {
+  fill: #e0f2fe;
+  stroke: #0284c7;
+  stroke-width: 1.3;
+  filter: drop-shadow(0 0 5px rgba(125, 211, 252, 0.9));
+}
+
+/* Hide previous graph versions if still in CSS */
+.wave7-spo2-trend,
+.wave7-spo2-mini-graph {
+  display: none !important;
+}
+
+/* Remove old source card if it still exists */
+.wave7-vital-card.source {
+  display: none !important;
+}
+
+/* Responsive tuning */
+@media (max-width: 1280px) {
+  .wave7-grid {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(0, 1fr)
+      var(--wave7-vitals-width, 205px) !important;
+  }
+
+  .wave7-vitals-panel.wave7-reference-vitals,
+  .wave7-vitals-panel {
+    padding: 7px !important;
+    gap: 6px !important;
+  }
+
+  .wave7-reference-vital-card {
+    padding: 6px 7px;
+  }
+
+  .wave7-reference-vital-value strong {
+    font-size: clamp(22px, 2vw, 34px);
+  }
+
+  .wave7-reference-vital-card.bp strong {
+    font-size: clamp(20px, 1.7vw, 30px);
+  }
+
+  .wave7-reference-graph-box {
+    height: 40px;
+  }
+
+  .wave7-spo2-reference-graph {
+    height: 32px;
+  }
+}

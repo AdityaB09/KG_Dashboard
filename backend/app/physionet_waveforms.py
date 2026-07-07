@@ -18,7 +18,6 @@ LEAD_CONFIG = [
     ("avr", "AVR"),
     ("avl", "AVL"),
     ("avf", "AVF"),
-    ("v1", "V1"),
 ]
 
 
@@ -304,62 +303,104 @@ def get_physionet_waveform_data() -> PhysioNetWaveformData:
 _CACHED_CYCLIC_BUFFER: CyclicWaveformBuffer | None = None
 
 
+def smoothstep(x: np.ndarray) -> np.ndarray:
+    x = np.clip(x, 0.0, 1.0)
+    return x * x * (3.0 - 2.0 * x)
+
+
+def build_smooth_envelope(
+    total_samples: int,
+    segments: list[tuple[float, float, float]],
+    transition_fraction: float = 0.025,
+) -> np.ndarray:
+    envelope = np.ones(total_samples, dtype=np.float32)
+
+    for start_fraction, end_fraction, multiplier in segments:
+        start = int(total_samples * start_fraction)
+        end = int(total_samples * end_fraction)
+
+        if end <= start:
+            continue
+
+        envelope[start:end] = multiplier
+
+    transition_samples = max(1, int(total_samples * transition_fraction))
+
+    # Smooth edges so the waveform does not jump suddenly.
+    for start_fraction, end_fraction, multiplier in segments:
+        start = int(total_samples * start_fraction)
+        end = int(total_samples * end_fraction)
+
+        ramp_start = max(0, start - transition_samples)
+        ramp_end = min(total_samples, start + transition_samples)
+
+        if ramp_end > ramp_start:
+            before_value = envelope[max(0, ramp_start - 1)]
+            after_value = multiplier
+            alpha = smoothstep(np.linspace(0, 1, ramp_end - ramp_start))
+            envelope[ramp_start:ramp_end] = before_value * (1 - alpha) + after_value * alpha
+
+        ramp_start = max(0, end - transition_samples)
+        ramp_end = min(total_samples, end + transition_samples)
+
+        if ramp_end > ramp_start:
+            before_value = multiplier
+            after_value = envelope[min(total_samples - 1, ramp_end - 1)]
+            alpha = smoothstep(np.linspace(0, 1, ramp_end - ramp_start))
+            envelope[ramp_start:ramp_end] = before_value * (1 - alpha) + after_value * alpha
+
+    return envelope
+
+
 def apply_auto_gain_demo_profile(
     signals_mv: np.ndarray,
     sample_rate: int,
     lead_ids: list[str],
 ) -> np.ndarray:
     """
-    Testing-only amplitude profile.
+    Demo-only amplitude profile.
 
-    This keeps the ECG morphology from PhysioNet but changes amplitude per lead
-    at different time segments so the frontend auto-gain can be visibly tested.
-    Do not enable this for real clinical/device data.
+    Purpose:
+    - Keep real PTB-XL ECG morphology.
+    - Smoothly vary amplitude so frontend auto gain can switch by itself.
+    - Do not use this as real clinical/device data.
     """
-    output = signals_mv.copy()
+    output = signals_mv.copy().astype(np.float32)
     total_samples = output.shape[0]
 
-    # Fractions of the 1-minute cyclic buffer.
-    # Each lead changes at different times, so one waveform can switch gain
-    # while the others stay unchanged.
     profiles = {
         "lead1": [
-            (0.00, 0.25, 1.0),
-            (0.25, 0.50, 0.35),
-            (0.50, 0.75, 2.4),
-            (0.75, 1.00, 1.0),
+            (0.00, 0.22, 1.0),
+            (0.22, 0.45, 0.42),
+            (0.45, 0.70, 2.15),
+            (0.70, 1.00, 1.0),
         ],
         "lead2": [
-            (0.00, 0.20, 0.45),
-            (0.20, 0.55, 1.0),
-            (0.55, 0.80, 2.2),
-            (0.80, 1.00, 0.65),
+            (0.00, 0.30, 0.55),
+            (0.30, 0.62, 1.0),
+            (0.62, 0.84, 2.0),
+            (0.84, 1.00, 0.75),
         ],
         "lead3": [
-            (0.00, 0.40, 0.30),
-            (0.40, 0.70, 1.0),
-            (0.70, 1.00, 1.8),
+            (0.00, 0.38, 0.38),
+            (0.38, 0.70, 1.0),
+            (0.70, 1.00, 1.75),
         ],
         "avr": [
-            (0.00, 0.30, 2.0),
-            (0.30, 0.65, 0.55),
-            (0.65, 1.00, 1.2),
+            (0.00, 0.28, 1.85),
+            (0.28, 0.64, 0.58),
+            (0.64, 1.00, 1.15),
         ],
         "avl": [
-            (0.00, 0.35, 0.35),
-            (0.35, 0.65, 1.0),
-            (0.65, 1.00, 2.3),
+            (0.00, 0.34, 0.45),
+            (0.34, 0.66, 1.0),
+            (0.66, 1.00, 2.0),
         ],
         "avf": [
-            (0.00, 0.25, 1.0),
-            (0.25, 0.60, 0.30),
-            (0.60, 0.85, 2.5),
-            (0.85, 1.00, 0.75),
-        ],
-        "v1": [
-            (0.00, 0.30, 2.2),
-            (0.30, 0.70, 1.0),
-            (0.70, 1.00, 0.35),
+            (0.00, 0.24, 1.0),
+            (0.24, 0.58, 0.42),
+            (0.58, 0.84, 2.1),
+            (0.84, 1.00, 0.82),
         ],
     }
 
@@ -368,21 +409,19 @@ def apply_auto_gain_demo_profile(
             continue
 
         column_index = lead_ids.index(lead_id)
+        envelope = build_smooth_envelope(total_samples, segments)
 
-        for start_fraction, end_fraction, multiplier in segments:
-            start = int(total_samples * start_fraction)
-            end = int(total_samples * end_fraction)
-
-            output[start:end, column_index] *= multiplier
+        output[:, column_index] *= envelope
 
     print(
-        "[KGEN AUTO GAIN DEMO PROFILE]",
+        "[KGEN SMOOTH AUTO GAIN DEMO PROFILE]",
         f"sample_rate={sample_rate}",
         f"samples={total_samples}",
         f"leads={lead_ids}",
     )
 
     return output.astype(np.float32)
+
 
 
 def build_cyclic_buffer_from_physionet(
@@ -472,6 +511,54 @@ def slice_circular(signal: np.ndarray, start: int, length: int) -> np.ndarray:
     return np.concatenate([first, second], axis=0)
 
 
+def build_spo2_demo_trace(
+    *,
+    cursor: int,
+    batch_size: int,
+    sample_rate: int,
+    heart_rate: int,
+    points: int = 32,
+) -> tuple[int, list[float]]:
+    """
+    Demo SpO2 trace for the bedside widget.
+
+    This is not replacing ECG. It gives the SpO2 card a live pulse-like trace
+    until the Amazon 1-minute API data is integrated.
+    """
+    now_seconds = cursor / max(sample_rate, 1)
+
+    # Smooth numeric SpO2 trend.
+    base_spo2 = (
+        97.0
+        + 0.9 * np.sin(now_seconds / 7.5)
+        + 0.35 * np.sin(now_seconds / 2.3)
+    )
+
+    # Occasional mild demo dip/recovery so the widget looks alive.
+    loop_second = now_seconds % 60.0
+    dip = 1.8 * np.exp(-((loop_second - 34.0) ** 2) / 55.0)
+
+    current_spo2 = int(round(np.clip(base_spo2 - dip, 92, 100)))
+
+    # Pulse-shaped trace in SpO2 units so frontend can plot it directly.
+    trace_seconds = 4.0
+    t = now_seconds + np.linspace(-trace_seconds, 0, points)
+
+    pulse_phase = (t * max(heart_rate, 40) / 60.0) % 1.0
+    pulse = np.exp(-((pulse_phase - 0.18) ** 2) / 0.006)
+
+    trace = (
+        current_spo2
+        - 0.45
+        + 0.75 * pulse
+        + 0.15 * np.sin(t / 2.0)
+    )
+
+    trace = np.clip(trace, 90, 100)
+
+    return current_spo2, [round(float(value), 2) for value in trace]
+
+
 def build_physionet_frame(
     *,
     cursor: int,
@@ -501,35 +588,69 @@ def build_physionet_frame(
 
         latest_mv[lead_id] = round(float(physical_batch[-1, column_index]), 3)
 
-    heart_rate = buffer.estimated_hr
-    respiratory_rate = max(10, min(32, round(heart_rate / 4.2)))
+    # heart_rate = buffer.estimated_hr
+    # respiratory_rate = max(10, min(32, round(heart_rate / 4.2)))
     phase_seconds = cursor / max(buffer.sample_rate, 1)
 
-    spo2_base = 97 if heart_rate < 110 else 94
-    spo2 = round(
-        max(
-            92,
-            min(
-                100,
-                spo2_base
-                + 0.8 * np.sin(phase_seconds / 2.8)
-                + 0.3 * np.sin(phase_seconds / 0.9),
-            ),
-        )
+    # spo2_base = 97 if heart_rate < 110 else 94
+    # spo2 = round(
+    #     max(
+    #         92,
+    #         min(
+    #             100,
+    #             spo2_base
+    #             + 0.8 * np.sin(phase_seconds / 2.8)
+    #             + 0.3 * np.sin(phase_seconds / 0.9),
+    #         ),
+    #     )
+    # )
+
+    # respiratory_rate = max(
+    #     10,
+    #     min(
+    #         32,
+    #         round((heart_rate / 4.2) + 1.5 * np.sin(phase_seconds / 4.5)),
+    #     ),
+    # )
+
+    # systolic = round(118 + 5 * np.sin(phase_seconds / 5.5))
+    # diastolic = round(78 + 3 * np.sin(phase_seconds / 6.0))
+    # temperature = round(37.0 + 0.15 * np.sin(phase_seconds / 12.0), 1)
+    
+    heart_rate = buffer.estimated_hr
+
+    phase_seconds = cursor / max(buffer.sample_rate, 1)
+
+    spo2, spo2_trace = build_spo2_demo_trace(
+        cursor=cursor,
+        batch_size=batch_size,
+        sample_rate=buffer.sample_rate,
+        heart_rate=heart_rate,
+        points=32,
     )
 
     respiratory_rate = max(
         10,
         min(
             32,
-            round((heart_rate / 4.2) + 1.5 * np.sin(phase_seconds / 4.5)),
+            round((heart_rate / 4.2) + 1.4 * np.sin(phase_seconds / 4.8)),
         ),
     )
 
-    systolic = round(118 + 5 * np.sin(phase_seconds / 5.5))
-    diastolic = round(78 + 3 * np.sin(phase_seconds / 6.0))
+    systolic = round(118 + 5 * np.sin(phase_seconds / 5.6))
+    diastolic = round(78 + 3 * np.sin(phase_seconds / 6.2))
     temperature = round(37.0 + 0.15 * np.sin(phase_seconds / 12.0), 1)
-   
+
+    loop_progress = cursor / max(buffer.total_samples, 1)
+
+    if loop_progress < 0.25:
+        demo_segment = "baseline amplitude"
+    elif loop_progress < 0.50:
+        demo_segment = "low amplitude auto-gain zone"
+    elif loop_progress < 0.75:
+        demo_segment = "high amplitude containment zone"
+    else:
+        demo_segment = "cyclic wrap preview"
     
     elapsed_seconds = cursor / max(buffer.sample_rate, 1)
     loop_progress = cursor / max(buffer.total_samples, 1)
@@ -586,18 +707,22 @@ def build_physionet_frame(
         },
         "latestMv": latest_mv,
         "vitals": {
-            "heartRate": heart_rate,
-            "spo2": spo2,
-            "systolic": systolic,
-            "diastolic": diastolic,
-            "respiratoryRate": respiratory_rate,
-            "temperature": temperature,
-        },
-        "demoPhase": {
-    "mode": "cyclic-physionet-demo",
-    "segment": segment_name,
-    "elapsedSeconds": round(elapsed_seconds, 1),
+    "heartRate": heart_rate,
+    "spo2": spo2,
+    "spo2Trace": spo2_trace,
+    "systolic": systolic,
+    "diastolic": diastolic,
+    "respiratoryRate": respiratory_rate,
+    "temperature": temperature,
+},
+"demo": {
+    "mode": "ptb-xl-cyclic-buffer",
+    "segment": demo_segment,
     "loopProgressPercent": round(loop_progress * 100),
-    "message": segment_message,
+    "autoGainDemo": bool(settings.WAVEFORM_TEST_AUTO_GAIN_DEMO),
+    "note": (
+        "ECG leads use PTB-XL physical mV values. "
+        "SpO2 trace is demo-enriched until external API data is connected."
+    ),
 },
     }
