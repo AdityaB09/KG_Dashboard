@@ -3,12 +3,13 @@ import hashlib
 import secrets
 import time
 from typing import Any
+from urllib import response
 from urllib.parse import urlencode
 
 from fastapi import APIRouter, HTTPException, Query, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from itsdangerous import BadSignature, URLSafeSerializer
-
+import os
 from app.config import settings
 from app.fhir_http import fhir_get, fhir_post_form
 
@@ -225,14 +226,16 @@ async def oracle_callback(
     """
 
     response = HTMLResponse(html)
+    is_production = os.getenv("ENVIRONMENT", "development").lower() == "production"
+
     response.set_cookie(
-        key="kardiogenics_oracle_session",
-        value=sign_session_id(session_id),
-        httponly=True,
-        secure=False,
-        samesite="lax",
-        max_age=60 * 60,
-    )
+    key="kardiogenics_oracle_session",
+    value=sign_session_id(session_id),
+    httponly=True,
+    secure=is_production,
+    samesite="none" if is_production else "lax",
+    max_age=60 * 60,
+)
     return response
 
 
