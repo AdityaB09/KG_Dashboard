@@ -7,6 +7,47 @@ const MAX_POINTS = 360;
 const CURRENT_MARK_RATIO = 0.47;
 const STATIC_ANALYTICS_MODE = true;
 
+const STATIC_ANALYTICS_LABS = [
+  {
+    name: "Glucose",
+    value: 234,
+    status: "High/Critical",
+    meta: "07/18",
+    trend: [125, 139, 141, 234],
+    color: "red",
+  },
+  {
+    name: "Potassium",
+    value: "5.5",
+    status: "High/Critical",
+    meta: "07/18",
+    trend: [3.9, 4.2, 5.1, 5.5],
+    color: "red",
+  },
+  {
+    name: "Creatinine",
+    value: "1.47",
+    status: "High/Critical",
+    meta: "07/18",
+    trend: [0.89, 1.05, 1.23, 1.47],
+    color: "red",
+  },
+  {
+    name: "WBC",
+    value: "11.6",
+    status: "High/Critical",
+    meta: "07/18",
+    trend: [8.2, 9.1, 10.4, 11.6],
+    color: "red",
+  },
+];
+
+const STATIC_ANALYTICS_VITAL_ROWS = [
+  ["BP", "127/84", "mmHg", "07/16/25"],
+  ["SpO2", "97", "%", "07/16/25"],
+  ["Oral Temperature", "37.2", "°C", "07/16/25"],
+];
+
 const BASE_PATIENT = {
   name: "Leslie Abbott",
   sex: "FEMALE",
@@ -657,7 +698,7 @@ useEffect(() => {
   if (STATIC_ANALYTICS_MODE) {
     return undefined;
   }
-  
+
   const provider = "oracle";
 
   console.log("[KGEN FHIR STREAM CONFIG]", {
@@ -724,72 +765,78 @@ useEffect(() => {
 
 const streamDate = formatStreamDate(live.streamTimestamp);
 
+// const labCards = useMemo(() => {
+//   if (live.priorityTrends?.length) {
+//     return live.priorityTrends.map((item) => ({
+//       name: item.label,
+//       value: item.displayValue ?? item.value,
+//       status: statusFromColor(normalizeColor(item.color, "blue")),
+//       meta: item.meta || streamDate,
+//       trend: item.trend || [],
+//       color: normalizeColor(item.color, "blue"),
+//       reason: item.reason
+//     }));
+//   }
+
+//   return [
+//     {
+//       name: "Glucose",
+//       value: live.glucose,
+//       status: statusFromColor(getLiveColor(live, "glucose", "red")),
+//       meta: streamDate,
+//       trend: live.glucoseTrend,
+//       color: getLiveColor(live, "glucose", "red")
+//     },
+//     {
+//       name: "Potassium",
+//       value: Number(live.potassium).toFixed(1),
+//       status: statusFromColor(getLiveColor(live, "potassium", "red")),
+//       meta: streamDate,
+//       trend: live.potassiumTrend,
+//       color: getLiveColor(live, "potassium", "red")
+//     },
+//     {
+//       name: "Creatinine",
+//       value: Number(live.creatinine).toFixed(2),
+//       status: statusFromColor(getLiveColor(live, "creatinine", "red")),
+//       meta: streamDate,
+//       trend: live.creatinineTrend,
+//       color: getLiveColor(live, "creatinine", "red")
+//     },
+//     {
+//       name: "WBC",
+//       value: Number(live.wbc).toFixed(1),
+//       status: statusFromColor(getLiveColor(live, "wbc", "red")),
+//       meta: streamDate,
+//       trend: live.wbcTrend,
+//       color: getLiveColor(live, "wbc", "red")
+//     }
+//   ];
+// }, [
+//   live.priorityTrends,
+//   live.glucose,
+//   live.potassium,
+//   live.creatinine,
+//   live.wbc,
+//   live.glucoseTrend,
+//   live.potassiumTrend,
+//   live.creatinineTrend,
+//   live.wbcTrend,
+//   live.colors,
+//   streamDate
+// ]);
+
 const labCards = useMemo(() => {
-  if (live.priorityTrends?.length) {
-    return live.priorityTrends.map((item) => ({
-      name: item.label,
-      value: item.displayValue ?? item.value,
-      status: statusFromColor(normalizeColor(item.color, "blue")),
-      meta: item.meta || streamDate,
-      trend: item.trend || [],
-      color: normalizeColor(item.color, "blue"),
-      reason: item.reason
-    }));
-  }
+  return STATIC_ANALYTICS_LABS;
+}, []);
 
-  return [
-    {
-      name: "Glucose",
-      value: live.glucose,
-      status: statusFromColor(getLiveColor(live, "glucose", "red")),
-      meta: streamDate,
-      trend: live.glucoseTrend,
-      color: getLiveColor(live, "glucose", "red")
-    },
-    {
-      name: "Potassium",
-      value: Number(live.potassium).toFixed(1),
-      status: statusFromColor(getLiveColor(live, "potassium", "red")),
-      meta: streamDate,
-      trend: live.potassiumTrend,
-      color: getLiveColor(live, "potassium", "red")
-    },
-    {
-      name: "Creatinine",
-      value: Number(live.creatinine).toFixed(2),
-      status: statusFromColor(getLiveColor(live, "creatinine", "red")),
-      meta: streamDate,
-      trend: live.creatinineTrend,
-      color: getLiveColor(live, "creatinine", "red")
-    },
-    {
-      name: "WBC",
-      value: Number(live.wbc).toFixed(1),
-      status: statusFromColor(getLiveColor(live, "wbc", "red")),
-      meta: streamDate,
-      trend: live.wbcTrend,
-      color: getLiveColor(live, "wbc", "red")
-    }
-  ];
-}, [
-  live.priorityTrends,
-  live.glucose,
-  live.potassium,
-  live.creatinine,
-  live.wbc,
-  live.glucoseTrend,
-  live.potassiumTrend,
-  live.creatinineTrend,
-  live.wbcTrend,
-  live.colors,
-  streamDate
-]);
+// const vitalRows = [
+//   ["BP", `${live.systolic}/${live.diastolic}`, "mmHg", streamDate],
+//   ["SpO2", live.spo2, "%", streamDate],
+//   ["Oral Temperature", Number(live.temperature).toFixed(1), "°C", streamDate]
+// ];
 
-const vitalRows = [
-  ["BP", `${live.systolic}/${live.diastolic}`, "mmHg", streamDate],
-  ["SpO2", live.spo2, "%", streamDate],
-  ["Oral Temperature", Number(live.temperature).toFixed(1), "°C", streamDate]
-];
+const vitalRows = STATIC_ANALYTICS_VITAL_ROWS;
 
   const waveformOverlay = useMemo(() => {
     if (!activeWaveformId) return null;
@@ -1057,7 +1104,7 @@ const alertColor = normalizeColor(live.alertColor, "red");
 ))}
           </div>
 
-          <div className="kgen-mini-table">
+          {/* <div className="kgen-mini-table">
             <span>06/23</span>
             <span>06/28</span>
             <span>07/07</span>
@@ -1072,8 +1119,24 @@ const alertColor = normalizeColor(live.alertColor, "red");
             <b>14</b>
             <b>0.89</b>
             <b>{live.potassium.toFixed(1)}</b>
-          </div>
+          </div> */}
 
+<div className="kgen-mini-table">
+  <span>06/23</span>
+  <span>06/28</span>
+  <span>07/07</span>
+  <span>07/18</span>
+
+  <b>125</b>
+  <b>139</b>
+  <b>141</b>
+  <b>234</b>
+
+  <b>1.47</b>
+  <b>1.05</b>
+  <b>1.23</b>
+  <b>5.5</b>
+</div>
           <button className="kgen-blue-btn" type="button" onClick={onOpenLabs}>
             Access full table
           </button>
