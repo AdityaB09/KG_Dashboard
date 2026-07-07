@@ -4,18 +4,21 @@ import { connectWaveformStream } from "../services/waveformStream";
 import "./SevenLeadWaveformPage.css";
 
 const ECG_PAPER_SPEED_MM_PER_SEC = 25;
+const DEFAULT_VISIBLE_SECONDS = 3;
 const DEFAULT_GAIN_MM_PER_MV = 10;
-const DEFAULT_VISIBLE_SECONDS = 6;
-
-const MIN_PX_PER_MM = 3.5;
-const MAX_PX_PER_MM = 8.5;
-const ECG_ROW_HEIGHT_MM = 24;
-
-const ECG_GAIN_OPTIONS = [5, 10, 20];
 const DEFAULT_GAIN_MODE = "auto";
-const AUTOSCALE_TARGET_FILL = 0.72;
-const AUTOSCALE_LOW_FILL = 0.20;
-const AUTOSCALE_HIGH_FILL = 0.86;
+const ECG_GAIN_OPTIONS = [5, 10, 20];
+
+const ECG_ZERO_MV = 0;
+
+const AUTO_HEADROOM = 0.88;
+const AUTO_LOW_FILL_AT_10 = 0.16;
+const AUTO_RETURN_FROM_5_FILL = 0.72;
+const AUTO_RETURN_FROM_20_FILL = 0.28;
+
+const MIN_PX_PER_MM = 3.2;
+const MAX_PX_PER_MM = 9.0;
+const GRID_GAP_PX = 4;
 
 const LEADS = [
   { id: "lead1", label: "Lead I", color: "cyan" },
@@ -39,68 +42,12 @@ const EMPTY_FRAME = {
   xAxis: {
     secondsVisible: DEFAULT_VISIBLE_SECONDS,
   },
-  vitals: {
-    heartRate: "--",
-  },
+  vitals: {},
 };
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
-
-function valueOrDash(value) {
-  return value === null || value === undefined || value === "" ? "--" : value;
-}
-
-function formatMv(value) {
-  const numericValue = Number(value);
-
-  if (!Number.isFinite(numericValue)) return "--";
-
-  return numericValue.toFixed(3);
-}
-
-function getLeadStats(samples = [], latestFallback) {
-  const values = samples.map(Number).filter(Number.isFinite);
-
-  if (!values.length) {
-    return {
-      latest: formatMv(latestFallback),
-      p2p: "--",
-      min: "--",
-      max: "--",
-    };
-  }
-
-  const latest = values[values.length - 1];
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  const p2p = max - min;
-
-  return {
-    latest: formatMv(latest),
-    p2p: formatMv(p2p),
-    min: formatMv(min),
-    max: formatMv(max),
-  };
-}
-
-function median(values) {
-  if (!values.length) return 0;
-
-  const sorted = [...values].sort((a, b) => a - b);
-  const middle = Math.floor(sorted.length / 2);
-
-  if (sorted.length % 2 === 0) {
-    return (sorted[middle - 1] + sorted[middle]) / 2;
-  }
-
-  return sorted[middle];
-}
-
-const AUTO_GAIN_HEADROOM = 0.88;
-const AUTO_GAIN_COMFORT_LOW = 0.18;
-const AUTO_GAIN_COMFORT_HIGH = 0.72;
 
 function percentile(values, p) {
   if (!values.length) return 0;
@@ -116,62 +63,128 @@ function percentile(values, p) {
   return sorted[lower] * (1 - weight) + sorted[upper] * weight;
 }
 
+function median(values) {
+  if (!values.length) return 0;
+
+  const sorted = [...values].sort((a, b) => a - b);
+  const middle = Math.floor(sorted.length / 2);
+
+  if (sorted.length % 2 === 0) {
+    return (sorted[middle - 1] + sorted[middle]) / 2;
+  }
+
+  return sorted[middle];
+}
+
+function formatMvValue(value) {
+  const numericValue = Number(value);
+
+  if (!Number.isFinite(numericValue)) return "--";
+  if (Math.abs(numericValue) >= 10) return numericValue.toFixed(1);
+  if (Math.abs(numericValue) >= 1) return numericValue.toFixed(2);
+
+  return numericValue.toFixed(3);
+}
+
+function getLeadStats(samples = [], latestFallback) {
+  const values = samples.map(Number).filter(Number.isFinite);
+
+  if (!values.length) {
+    return {
+      latest: formatMvValue(latestFallback),
+      min: "--",
+      max: "--",
+      p2p: "--",
+    };
+  }
+
+  const latest = values[values.length - 1];
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+
+  return {
+    latest: formatMvValue(latest),
+    min: formatMvValue(min),
+    max: formatMvValue(max),
+    p2p: formatMvValue(max - min),
+  };
+}
+
+
+function appendLeadWindows(prev, frame) {
+  const sampleRate = frame.sampleRate || 220;
+  const maxPoints = Math.round(sampleRate * DEFAULT_VISIBLE_SECONDS);
+
+  const next = {};
+
+  for (const lead of LEADS) {
+    const previousSamples = prev[lead.id] || [];
+    const incomingSamples = frame.leadsMv?.[lead.id] || [];
+
+    next[lead.id] = [...previousSamples, ...incomingSamples].slice(-maxPoints);
+  }
+
+  return next;
+}
+
+
+
 function getLeadAmplitude(samples = []) {
   const values = samples.map(Number).filter(Number.isFinite);
 
   if (!values.length) {
     return {
-      centerMv: 0,
-      robustAbsMv: 0,
-      hardAbsMv: 0,
       minMv: 0,
       maxMv: 0,
       p2pMv: 0,
+      robustAbsMv: 0,
+      hardAbsMv: 0,
     };
   }
 
-  const centerMv = median(values);
-  const deviations = values.map((value) => Math.abs(value - centerMv));
-
   const minMv = Math.min(...values);
   const maxMv = Math.max(...values);
+  const p2pMv = maxMv - minMv;
+
+  const absFromZero = values.map((value) => Math.abs(value - ECG_ZERO_MV));
 
   return {
-    centerMv,
-
-    // This controls stable visual sizing.
-    // It prevents one noisy sample from causing constant gain flicker.
-    robustAbsMv: percentile(deviations, 95),
-
-    // This protects the true spike.
-    // This is the hard containment value.
-    hardAbsMv: Math.max(...deviations),
-
     minMv,
     maxMv,
-    p2pMv: maxMv - minMv,
+    p2pMv,
+
+    // Stable readability value.
+    // This prevents one noisy sample from constantly flipping gain.
+    robustAbsMv: percentile(absFromZero, 95),
+
+    // Hard safety value.
+    // This protects the actual spike from going outside the tile.
+    hardAbsMv: Math.max(...absFromZero),
   };
 }
 
-function getFillRatio({ absMv, gainMmPerMv, rowHeightPx, pxPerMm }) {
-  if (!rowHeightPx || !pxPerMm || !gainMmPerMv) return 0;
+function getHalfRowMm(rowHeightPx, pxPerMm) {
+  if (!rowHeightPx || !pxPerMm) return 0;
+  return rowHeightPx / pxPerMm / 2;
+}
 
-  const halfRowMm = rowHeightPx / pxPerMm / 2;
+function getPeakFillRatio({ absMv, gainMmPerMv, rowHeightPx, pxPerMm }) {
+  const halfRowMm = getHalfRowMm(rowHeightPx, pxPerMm);
 
-  if (halfRowMm <= 0) return 0;
+  if (!halfRowMm || !gainMmPerMv) return 0;
 
   return (absMv * gainMmPerMv) / halfRowMm;
 }
 
-function gainKeepsSpikeInside({ hardAbsMv, gainMmPerMv, rowHeightPx, pxPerMm }) {
-  const hardFill = getFillRatio({
+function peakFitsAtGain({ hardAbsMv, gainMmPerMv, rowHeightPx, pxPerMm }) {
+  const fill = getPeakFillRatio({
     absMv: hardAbsMv,
     gainMmPerMv,
     rowHeightPx,
     pxPerMm,
   });
 
-  return hardFill <= AUTO_GAIN_HEADROOM;
+  return fill <= AUTO_HEADROOM;
 }
 
 function chooseAutoGain({ samples, currentGain, rowHeightPx, pxPerMm }) {
@@ -187,28 +200,28 @@ function chooseAutoGain({ samples, currentGain, rowHeightPx, pxPerMm }) {
     return 20;
   }
 
-  const safeAt20 = gainKeepsSpikeInside({
+  const fits20 = peakFitsAtGain({
     hardAbsMv: amplitude.hardAbsMv,
     gainMmPerMv: 20,
     rowHeightPx,
     pxPerMm,
   });
 
-  const safeAt10 = gainKeepsSpikeInside({
+  const fits10 = peakFitsAtGain({
     hardAbsMv: amplitude.hardAbsMv,
     gainMmPerMv: 10,
     rowHeightPx,
     pxPerMm,
   });
 
-  const safeAt5 = gainKeepsSpikeInside({
+  const fits5 = peakFitsAtGain({
     hardAbsMv: amplitude.hardAbsMv,
     gainMmPerMv: 5,
     rowHeightPx,
     pxPerMm,
   });
 
-  const robustFillAt10 = getFillRatio({
+  const fillAt10 = getPeakFillRatio({
     absMv: amplitude.robustAbsMv,
     gainMmPerMv: 10,
     rowHeightPx,
@@ -217,154 +230,91 @@ function chooseAutoGain({ samples, currentGain, rowHeightPx, pxPerMm }) {
 
   const current = currentGain || DEFAULT_GAIN_MM_PER_MV;
 
-  // Hard safety first:
-  // if 10 cannot keep the real spike visible, move to 5.
-  if (!safeAt10 && safeAt5) {
-    return 5;
+  // Hard safety first. If the true peak cannot fit at 10, use 5.
+  if (!fits10 && fits5) return 5;
+
+  // If even 5 cannot fit, 5 is still the safest standard ECG gain.
+  if (!fits5) return 5;
+
+  // Avoid flickering after switching to 5.
+  if (current === 5) {
+    return fits10 && fillAt10 <= AUTO_RETURN_FROM_5_FILL ? 10 : 5;
   }
 
-  // If even 5 cannot fully contain it, 5 is still the safest standard ECG gain.
-  if (!safeAt5) {
-    return 5;
+  // Avoid flickering after switching to 20.
+  if (current === 20) {
+    if (fillAt10 >= AUTO_RETURN_FROM_20_FILL) return 10;
+    return fits20 ? 20 : 10;
   }
 
-  // Prefer 10 mm/mV whenever it is safe and clinically readable.
-  if (safeAt10 && robustFillAt10 >= AUTO_GAIN_COMFORT_LOW && robustFillAt10 <= AUTO_GAIN_COMFORT_HIGH) {
-    return 10;
-  }
-
-  // If the signal is too small at 10, use 20 only if the full spike still fits.
-  if (robustFillAt10 < AUTO_GAIN_COMFORT_LOW && safeAt20) {
+  // Use 20 only when the signal is genuinely small and full peaks still fit.
+  if (fillAt10 < AUTO_LOW_FILL_AT_10 && fits20) {
     return 20;
   }
 
-  // If the signal is too large at 10, use 5.
-  if (robustFillAt10 > AUTO_GAIN_COMFORT_HIGH) {
-    return 5;
-  }
-
-  // Hysteresis: keep current gain if it is safe.
-  const currentSafe = gainKeepsSpikeInside({
-    hardAbsMv: amplitude.hardAbsMv,
-    gainMmPerMv: current,
-    rowHeightPx,
-    pxPerMm,
-  });
-
-  if (currentSafe) {
-    return current;
-  }
-
-  return safeAt10 ? 10 : 5;
+  return 10;
 }
 
-function getGainDecisionInfo({ samples, gainMmPerMv, rowHeightPx, pxPerMm }) {
+function getDisplayScale({ samples, gainMmPerMv, rowHeightPx, pxPerMm }) {
   const amplitude = getLeadAmplitude(samples);
-
-  const hardFill = getFillRatio({
-    absMv: amplitude.hardAbsMv,
-    gainMmPerMv,
-    rowHeightPx,
-    pxPerMm,
-  });
-
-  const robustFill = getFillRatio({
-    absMv: amplitude.robustAbsMv,
-    gainMmPerMv,
-    rowHeightPx,
-    pxPerMm,
-  });
-
-  let reason = "standard";
-
-  if (gainMmPerMv === 5) {
-    reason = "contains peak";
-  } else if (gainMmPerMv === 20) {
-    reason = "low amplitude";
-  }
-
-  const clipRisk = hardFill > AUTO_GAIN_HEADROOM;
-
-  return {
-    fillPercent: Math.round(Math.max(0, Math.min(1.5, robustFill)) * 100),
-    peakFillPercent: Math.round(Math.max(0, Math.min(1.5, hardFill)) * 100),
-    reason: clipRisk ? "peak risk" : reason,
-    clipRisk,
-    centerMv: amplitude.centerMv,
-  };
-}
-
-function getScaleInfo({ gainMmPerMv, rowHeightPx, pxPerMm, centerMv = 0 }) {
   const safeGain = gainMmPerMv || DEFAULT_GAIN_MM_PER_MV;
-  const safePxPerMm = pxPerMm || 5;
-  const safeRowHeightPx = rowHeightPx || 120;
+  const halfRowMm = getHalfRowMm(rowHeightPx, pxPerMm);
+  const halfRangeMv = halfRowMm > 0 ? halfRowMm / safeGain : 1;
 
-  const rowHeightMm = safeRowHeightPx / safePxPerMm;
-  const halfRangeMv = rowHeightMm / 2 / safeGain;
+  const peakFill = getPeakFillRatio({
+    absMv: amplitude.hardAbsMv,
+    gainMmPerMv: safeGain,
+    rowHeightPx,
+    pxPerMm,
+  });
 
   return {
-    gainMmPerMv: safeGain,
-    mvPerSmallBox: 1 / safeGain,
-    mvPerLargeBox: 5 / safeGain,
+    centerMv: 0,
     halfRangeMv,
-    centerMv,
-    topMv: centerMv + halfRangeMv,
-    bottomMv: centerMv - halfRangeMv,
+    topMv: halfRangeMv,
+    bottomMv: -halfRangeMv,
+    mvPerLargeBox: 5 / safeGain,
+    peakFillPercent: Math.round(Math.min(1.5, peakFill) * 100),
+    clipRisk: peakFill > AUTO_HEADROOM,
   };
 }
 
+function isZeroVisible() {
+  return true;
+}
 
-function formatScale(value) {
-  const numericValue = Number(value);
-
-  if (!Number.isFinite(numericValue)) return "--";
-
-  if (Math.abs(numericValue) >= 10) return numericValue.toFixed(1);
-  if (Math.abs(numericValue) >= 1) return numericValue.toFixed(2);
-  return numericValue.toFixed(3);
+function getZeroLineTopPercent() {
+  return 50;
 }
 
 
-function appendLeadWindows(prev, frame) {
-  const sampleRate = frame.sampleRate || 220;
-  const visibleSeconds = frame.xAxis?.secondsVisible || DEFAULT_VISIBLE_SECONDS;
-  const maxPoints = Math.round(sampleRate * visibleSeconds);
-
-  const next = {};
-
-  for (const lead of LEADS) {
-    const previousSamples = prev[lead.id] || [];
-    const incomingSamples = frame.leadsMv?.[lead.id] || [];
-
-    next[lead.id] = [...previousSamples, ...incomingSamples].slice(-maxPoints);
-  }
-
-  return next;
-}
 
 export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
   const [waveFrame, setWaveFrame] = useState(EMPTY_FRAME);
   const [leadWindows, setLeadWindows] = useState(EMPTY_LEADS);
   const [streamStatus, setStreamStatus] = useState("connecting");
+
   const [leadGainModes, setLeadGainModes] = useState(() =>
-  Object.fromEntries(LEADS.map((lead) => [lead.id, DEFAULT_GAIN_MODE]))
-);
+    Object.fromEntries(LEADS.map((lead) => [lead.id, DEFAULT_GAIN_MODE]))
+  );
 
-const [leadAutoGains, setLeadAutoGains] = useState(() =>
-  Object.fromEntries(LEADS.map((lead) => [lead.id, DEFAULT_GAIN_MM_PER_MV]))
-);
-  const [plotWidthPx, setPlotWidthPx] = useState(0);
-  const [titleHeightPx, setTitleHeightPx] = useState(0);
+  const [leadAutoGains, setLeadAutoGains] = useState(() =>
+    Object.fromEntries(LEADS.map((lead) => [lead.id, DEFAULT_GAIN_MM_PER_MV]))
+  );
 
-  const monitorRef = useRef(null);
-  const titleRef = useRef(null);
+  const [gridSize, setGridSize] = useState({
+    width: 0,
+    height: 0,
+  });
+
+  const gridRef = useRef(null);
 
   function updateLeadGainMode(leadId, nextMode) {
-  setLeadGainModes((previousModes) => ({
-    ...previousModes,
-    [leadId]: nextMode,
-  }));
-}
+    setLeadGainModes((previousModes) => ({
+      ...previousModes,
+      [leadId]: nextMode,
+    }));
+  }
 
   useEffect(() => {
     setLeadWindows(EMPTY_LEADS);
@@ -384,126 +334,111 @@ const [leadAutoGains, setLeadAutoGains] = useState(() =>
   }, [patient?.id]);
 
   useEffect(() => {
-    const monitorElement = monitorRef.current;
-    const titleElement = titleRef.current;
+    const gridElement = gridRef.current;
 
-    if (!monitorElement || !titleElement) return undefined;
+    if (!gridElement) return undefined;
 
     function updateMeasurements() {
-      const monitorRect = monitorElement.getBoundingClientRect();
-      const titleRect = titleElement.getBoundingClientRect();
+      const rect = gridElement.getBoundingClientRect();
 
-      setPlotWidthPx(Math.max(1, monitorRect.width));
-      setTitleHeightPx(Math.max(1, titleRect.height));
+      setGridSize({
+        width: Math.max(1, rect.width),
+        height: Math.max(1, rect.height),
+      });
     }
 
     updateMeasurements();
 
     const observer = new ResizeObserver(updateMeasurements);
-    observer.observe(monitorElement);
-    observer.observe(titleElement);
+    observer.observe(gridElement);
 
     return () => observer.disconnect();
   }, []);
 
-
-
-
-
-  const visibleSeconds = waveFrame.xAxis?.secondsVisible || DEFAULT_VISIBLE_SECONDS;
+  const visibleSeconds = DEFAULT_VISIBLE_SECONDS;
   const sampleRate = waveFrame.sampleRate || 220;
   const visiblePoints = Math.round(sampleRate * visibleSeconds);
-
   const paperWidthMm = visibleSeconds * ECG_PAPER_SPEED_MM_PER_SEC;
 
-  const pxPerMm = clamp(
-    plotWidthPx > 0 ? plotWidthPx / paperWidthMm : 5,
-    MIN_PX_PER_MM,
-    MAX_PX_PER_MM
-  );
+  const tileWidthPx =
+    gridSize.width > 0 ? (gridSize.width - GRID_GAP_PX * 2) / 3 : 360;
 
-  const rowHeightPx = Math.round(clamp(pxPerMm * ECG_ROW_HEIGHT_MM, 112, 150));
-  const titleOffsetPx = Math.round(titleHeightPx + 10);
+  const tileHeightPx =
+    gridSize.height > 0 ? (gridSize.height - GRID_GAP_PX * 2) / 3 : 160;
 
+const pxPerMm = tileWidthPx / paperWidthMm;
 
-useEffect(() => {
-  if (!rowHeightPx || !pxPerMm) return;
+  const rowHeightPx = Math.max(1, tileHeightPx);
 
-  setLeadAutoGains((previousGains) => {
-    const nextGains = { ...previousGains };
-    let changed = false;
+  useEffect(() => {
+    if (!rowHeightPx || !pxPerMm) return;
 
-    for (const lead of LEADS) {
-      const nextGain = chooseAutoGain({
-        samples: leadWindows[lead.id] || [],
-        currentGain: previousGains[lead.id] || DEFAULT_GAIN_MM_PER_MV,
+    setLeadAutoGains((previousGains) => {
+      const nextGains = { ...previousGains };
+      let changed = false;
+
+      for (const lead of LEADS) {
+        const nextGain = chooseAutoGain({
+          samples: leadWindows[lead.id] || [],
+          currentGain: previousGains[lead.id] || DEFAULT_GAIN_MM_PER_MV,
+          rowHeightPx,
+          pxPerMm,
+        });
+
+        if (nextGains[lead.id] !== nextGain) {
+          nextGains[lead.id] = nextGain;
+          changed = true;
+        }
+      }
+
+      return changed ? nextGains : previousGains;
+    });
+  }, [leadWindows, rowHeightPx, pxPerMm]);
+
+  const leadTiles = useMemo(() => {
+    return LEADS.map((lead) => {
+      const samples = leadWindows[lead.id] || [];
+      const stats = getLeadStats(samples, waveFrame.latestMv?.[lead.id]);
+
+      const leadGainMode = leadGainModes[lead.id] || DEFAULT_GAIN_MODE;
+      const autoGain = leadAutoGains[lead.id] || DEFAULT_GAIN_MM_PER_MV;
+
+      const effectiveGain =
+        leadGainMode === "auto"
+          ? autoGain
+          : Number(leadGainMode) || DEFAULT_GAIN_MM_PER_MV;
+
+      const scale = getDisplayScale({
+        samples,
+        gainMmPerMv: effectiveGain,
         rowHeightPx,
         pxPerMm,
       });
 
-      if (nextGains[lead.id] !== nextGain) {
-        nextGains[lead.id] = nextGain;
-        changed = true;
-      }
-    }
-
-    return changed ? nextGains : previousGains;
-  });
-}, [leadWindows, rowHeightPx, pxPerMm]);
-
-const metricBoxes = useMemo(() => {
-  return LEADS.map((lead) => {
-    const samples = leadWindows[lead.id] || [];
-    const stats = getLeadStats(samples, waveFrame.latestMv?.[lead.id]);
-
-    const leadGainMode = leadGainModes[lead.id] || DEFAULT_GAIN_MODE;
-    const autoGain = leadAutoGains[lead.id] || DEFAULT_GAIN_MM_PER_MV;
-
-    const effectiveGain =
-      leadGainMode === "auto"
-        ? autoGain
-        : Number(leadGainMode) || DEFAULT_GAIN_MM_PER_MV;
-
-    const decision = getGainDecisionInfo({
-      samples,
-      gainMmPerMv: effectiveGain,
-      rowHeightPx,
-      pxPerMm,
+      return {
+        ...lead,
+        latest: stats.latest,
+        p2p: stats.p2p,
+        gainMode: leadGainMode,
+        gainMmPerMv: effectiveGain,
+        scale,
+      };
     });
+  }, [
+    leadWindows,
+    waveFrame.latestMv,
+    leadGainModes,
+    leadAutoGains,
+    rowHeightPx,
+    pxPerMm,
+  ]);
 
-    const scale = getScaleInfo({
-      gainMmPerMv: effectiveGain,
-      rowHeightPx,
-      pxPerMm,
-      centerMv: decision.centerMv,
-    });
-
-    return {
-      id: lead.id,
-      label: lead.label,
-      latest: stats.latest,
-      p2p: stats.p2p,
-      min: stats.min,
-      max: stats.max,
-      gainMode: leadGainMode,
-      gainMmPerMv: effectiveGain,
-      mvPerLargeBox: scale.mvPerLargeBox,
-      halfRangeMv: scale.halfRangeMv,
-      fillPercent: decision.fillPercent,
-      peakFillPercent: decision.peakFillPercent,
-      reason: decision.reason,
-      clipRisk: decision.clipRisk,
-      centerMv: decision.centerMv,
-    };
-  });
-}, [
-  leadWindows,
-  waveFrame.latestMv,
-  leadGainModes,
-  leadAutoGains,
-  rowHeightPx,
-  pxPerMm,
-]);
+  const gainSummary = useMemo(() => {
+    return ECG_GAIN_OPTIONS.map((gain) => ({
+      gain,
+      count: leadTiles.filter((lead) => lead.gainMmPerMv === gain).length,
+    }));
+  }, [leadTiles]);
 
   return (
     <section className="wave7-page">
@@ -518,157 +453,110 @@ const metricBoxes = useMemo(() => {
         </div>
 
         <div className="wave7-header-actions">
-  <span className={`wave7-live-pill ${streamStatus}`}>
-    ●{" "}
-    {streamStatus === "live"
-      ? "Live WebGL"
-      : streamStatus === "warning"
-      ? "Waveform Warning"
-      : "Connecting"}
-  </span>
+          <span className={`wave7-live-pill ${streamStatus}`}>
+            ●{" "}
+            {streamStatus === "live"
+              ? "Live WebGL"
+              : streamStatus === "warning"
+              ? "Waveform Warning"
+              : "Connecting"}
+          </span>
 
-  <span className="wave7-speed-pill">
-    {sampleRate} Hz • {visibleSeconds}s • per-lead Auto/5/10/20
-  </span>
+          <span className="wave7-speed-pill">
+            {sampleRate} Hz • {visibleSeconds}s • 25 mm/sec • per-lead gain
+          </span>
 
-  <button type="button" className="wave7-action-btn" onClick={onOpenAnalytics}>
-    Open Analytics
-  </button>
-</div>
+          <button
+            type="button"
+            className="wave7-action-btn"
+            onClick={onOpenAnalytics}
+          >
+            Open Analytics
+          </button>
+        </div>
       </header>
 
-      <main className="wave7-body">
-        <section className="wave7-monitor-card">
-          <div ref={titleRef} className="wave7-monitor-title">
-            <div>
-              <p className="wave7-eyebrow">High precision</p>
-              <h2>7 waveform monitor</h2>
-            </div>
-
-            <span>
-             {sampleRate} samples/sec • 25 mm/sec • each lead Auto/5/10/20 mm/mV
-            </span>
+      <main className="wave7-monitor-card">
+        <div className="wave7-monitor-title">
+          <div>
+            <p className="wave7-eyebrow">High precision</p>
+            <h2>7 waveform ECG matrix</h2>
           </div>
 
-          <div
-            ref={monitorRef}
-            className="wave7-stack"
-            style={{
-              "--ecg-mm": `${pxPerMm}px`,
-              "--wave7-row-height": `${rowHeightPx}px`,
-            }}
-          >
-{LEADS.map((lead) => {
-  const leadSamples = leadWindows[lead.id] || [];
+          <span>3 × 3 clinical layout • 5/10/20 mm/mV only</span>
+        </div>
 
-  const leadGainMode = leadGainModes[lead.id] || DEFAULT_GAIN_MODE;
-  const autoGain = leadAutoGains[lead.id] || DEFAULT_GAIN_MM_PER_MV;
-
-  const effectiveGain =
-    leadGainMode === "auto"
-      ? autoGain
-      : Number(leadGainMode) || DEFAULT_GAIN_MM_PER_MV;
-
-  const decision = getGainDecisionInfo({
-    samples: leadSamples,
-    gainMmPerMv: effectiveGain,
-    rowHeightPx,
-    pxPerMm,
-  });
-
-  const scale = getScaleInfo({
-    gainMmPerMv: effectiveGain,
-    rowHeightPx,
-    pxPerMm,
-    centerMv: decision.centerMv,
-  });
-
-  return (
-    <article className="wave7-lead-row" key={lead.id}>
-      <span>{lead.label}</span>
-
-      <div className="wave7-calibrated-strip">
-        <YAxisScale scale={scale} clipRisk={decision.clipRisk} />
-
-        <WebGLWaveformCanvas
-          samples={waveFrame.leadsMv?.[lead.id] || []}
-          points={visiblePoints}
-          color={lead.color}
-          mode="millivolts"
-          pxPerMm={pxPerMm}
-          voltageScaleMmPerMv={effectiveGain}
-          centerMv={decision.centerMv}
-        />
-      </div>
-    </article>
-  );
-})}
-          </div>
-        </section>
-
-        <aside
-          className="wave7-side-rail"
+        <section
+          ref={gridRef}
+          className="wave7-grid"
           style={{
-            "--wave7-row-height": `${rowHeightPx}px`,
-            "--wave7-title-offset": `${titleOffsetPx}px`,
+            "--ecg-mm": `${pxPerMm}px`,
+            "--wave7-grid-gap": `${GRID_GAP_PX}px`,
           }}
         >
-         {metricBoxes.map((metric) => (
-  <MetricBox
-    key={metric.id}
-    {...metric}
-    onGainModeChange={updateLeadGainMode}
-  />
-))}
-        </aside>
+          {leadTiles.map((lead) => (
+            <WaveformTile
+              key={lead.id}
+              lead={lead}
+              samples={waveFrame.leadsMv?.[lead.id] || []}
+              visiblePoints={visiblePoints}
+              pxPerMm={pxPerMm}
+              onGainModeChange={updateLeadGainMode}
+            />
+          ))}
+
+          <TelemetryTile
+            sampleRate={sampleRate}
+            visibleSeconds={visibleSeconds}
+            waveFrame={waveFrame}
+          />
+
+          <GainSummaryTile gainSummary={gainSummary} />
+        </section>
       </main>
     </section>
   );
 }
 
-function YAxisScale({ scale, clipRisk }) {
-  return (
-    <div className={`wave7-y-scale ${clipRisk ? "clip-risk" : ""}`} aria-hidden="true">
-      <span>+{formatScale(scale.halfRangeMv)} mV</span>
-      <span>{clipRisk ? "peak risk" : "0"}</span>
-      <span>-{formatScale(scale.halfRangeMv)} mV</span>
-    </div>
-  );
-}
-
-
-function MetricBox({
-  id,
-  label,
-  latest,
-  p2p,
-  min,
-  max,
-  gainMode,
-  gainMmPerMv,
-  mvPerLargeBox,
-  halfRangeMv,
-  fillPercent,
-  peakFillPercent,
-  reason,
-  clipRisk,
+function WaveformTile({
+  lead,
+  samples,
+  visiblePoints,
+  pxPerMm,
   onGainModeChange,
 }) {
-  return (
-    <section className={`wave7-metric ${clipRisk ? "clip-risk" : ""}`}>
-      <div className="wave7-metric-head">
-        <small>{label}</small>
+  const { scale } = lead;
 
-        <span className="wave7-auto-gain-badge">
-          {gainMode === "auto" ? "Auto" : "Manual"} {gainMmPerMv}
+  return (
+    <article className={`wave7-wave-tile ${scale.clipRisk ? "clip-risk" : ""}`}>
+      <div className="wave7-calibrated-strip">
+        <YAxisScale scale={scale} />
+
+        <div className="wave7-zero-line" />
+
+        <WebGLWaveformCanvas
+          samples={samples}
+          points={visiblePoints}
+          color={lead.color}
+          mode="millivolts"
+          pxPerMm={pxPerMm}
+          voltageScaleMmPerMv={lead.gainMmPerMv}
+          centerMv={0}
+        />
+      </div>
+
+      <div className="wave7-tile-top">
+        <strong>{lead.label}</strong>
+        <span>
+          {lead.gainMode === "auto" ? "Auto" : "Manual"} {lead.gainMmPerMv}
         </span>
       </div>
 
-      <div className="wave7-lead-gain-toggle" aria-label={`${label} gain selector`}>
+      <div className="wave7-lead-gain-toggle" aria-label={`${lead.label} gain selector`}>
         <button
           type="button"
-          className={gainMode === "auto" ? "active" : ""}
-          onClick={() => onGainModeChange(id, "auto")}
+          className={lead.gainMode === "auto" ? "active" : ""}
+          onClick={() => onGainModeChange(lead.id, "auto")}
         >
           A
         </button>
@@ -677,43 +565,83 @@ function MetricBox({
           <button
             key={gain}
             type="button"
-            className={gainMode === gain ? "active" : ""}
-            onClick={() => onGainModeChange(id, gain)}
+            className={lead.gainMode === gain ? "active" : ""}
+            onClick={() => onGainModeChange(lead.id, gain)}
           >
             {gain}
           </button>
         ))}
       </div>
 
-      <div className="wave7-metric-main">
-        <strong>{latest}</strong>
-        <em>mV latest</em>
+      <div className="wave7-tile-bottom">
+        <strong>
+          {lead.latest}
+          <em>mV</em>
+        </strong>
+
+        <span>P-P {lead.p2p}</span>
+      </div>
+    </article>
+  );
+}
+
+function YAxisScale({ scale }) {
+  return (
+    <div className={`wave7-y-scale ${scale.clipRisk ? "clip-risk" : ""}`}>
+      <span>+{formatMvValue(scale.halfRangeMv)}</span>
+      <span>0 mV</span>
+      <span>-{formatMvValue(scale.halfRangeMv)}</span>
+    </div>
+  );
+}
+
+function TelemetryTile({ sampleRate, visibleSeconds, waveFrame }) {
+  const vitals = waveFrame.vitals || {};
+
+  return (
+    <article className="wave7-info-tile">
+      <p className="wave7-info-kicker">Telemetry</p>
+      <h3>{sampleRate} Hz</h3>
+
+      <div className="wave7-info-grid">
+        <span>
+          Window <b>{visibleSeconds}s</b>
+        </span>
+        <span>
+          Points <b>{sampleRate * visibleSeconds}</b>
+        </span>
+        <span>
+          HR <b>{vitals.heartRate ?? "--"}</b>
+        </span>
+        <span>
+          SpO₂ <b>{vitals.spo2 ?? "--"}</b>
+        </span>
       </div>
 
-      <div className="wave7-metric-stats compact">
-        <span>
-          P-P <b>{p2p}</b>
-        </span>
-        <span>
-          Min <b>{min}</b>
-        </span>
-        <span>
-          Max <b>{max}</b>
-        </span>
-        <span>
-          Big <b>{formatScale(mvPerLargeBox)}</b>
-        </span>
-        <span>
-          Range <b>±{formatScale(halfRangeMv)}</b>
-        </span>
-        <span>
-          Peak <b>{peakFillPercent}%</b>
-        </span>
+      <p className="wave7-info-note">
+        X-axis is fixed to ECG paper speed. Y-axis uses real mV with standard gain.
+      </p>
+    </article>
+  );
+}
+
+function GainSummaryTile({ gainSummary }) {
+  return (
+    <article className="wave7-info-tile">
+      <p className="wave7-info-kicker">Gain status</p>
+      <h3>Auto per lead</h3>
+
+      <div className="wave7-gain-summary">
+        {gainSummary.map((item) => (
+          <span key={item.gain}>
+            {item.gain} mm/mV <b>{item.count}</b>
+          </span>
+        ))}
       </div>
 
-      <div className={`wave7-gain-reason ${clipRisk ? "clip-risk" : ""}`}>
-        {reason}
-      </div>
-    </section>
+      <p className="wave7-info-note">
+        5 contains high amplitude. 10 is standard. 20 enlarges low amplitude.
+      </p>
+    </article>
   );
 }

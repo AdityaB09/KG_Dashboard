@@ -29,13 +29,13 @@ function mapToClipY({
 }) {
   if (!Number.isFinite(value)) return 0;
 
-  if (mode === "millivolts") {
-    const halfHeightPx = Math.max(1, cssHeight / 2);
-    const deltaMv = value - centerMv;
-    const deltaPx = deltaMv * voltageScaleMmPerMv * pxPerMm;
+ if (mode === "millivolts") {
+  const halfHeightPx = Math.max(1, cssHeight / 2);
+  const deltaMv = value - centerMv;
+  const deltaPx = deltaMv * voltageScaleMmPerMv * pxPerMm;
 
-    return clamp(deltaPx / halfHeightPx, -0.985, 0.985);
-  }
+  return clamp(deltaPx / halfHeightPx, -0.985, 0.985);
+}
 
   if (mode === "unit") {
     return Math.max(-1, Math.min(1, value * 2 - 1));
