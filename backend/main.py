@@ -262,11 +262,11 @@ def make_streaming_response(
                     include_debug=debug,
                     medication_resources=medication_resources,
                 )
-                
+
                 oracle_values = frame.get("debug", {}).get("rawExtractedFhirValues") or {
-                "vitals": frame.get("vitals"),
-                "labs": frame.get("labs"),
-            }
+                    "vitals": frame.get("vitals"),
+                    "labs": frame.get("labs"),
+                }
 
                 oracle_hash = hashlib.sha256(
                     json.dumps(oracle_values, sort_keys=True).encode("utf-8")
@@ -289,6 +289,7 @@ def make_streaming_response(
                     f"oracleHash={oracle_hash}",
                     f"oracleChanged={oracle_changed}",
                 )
+
                 payload = json.dumps(frame, separators=(",", ":"))
 
                 if payload != last_payload:
@@ -305,6 +306,7 @@ def make_streaming_response(
                         "provider": provider,
                         "receivedAt": now_iso(),
                     }
+
                     yield "event: heartbeat\n"
                     yield f"data: {json.dumps(heartbeat)}\n\n"
 
@@ -320,16 +322,24 @@ def make_streaming_response(
 
             await asyncio.sleep(settings.POLL_SECONDS)
 
+    origin = request.headers.get("origin")
+
+    headers = {
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive",
+        "X-Accel-Buffering": "no",
+        "Vary": "Origin",
+    }
+
+    if origin in settings.FRONTEND_ORIGINS:
+        headers["Access-Control-Allow-Origin"] = origin
+        headers["Access-Control-Allow-Credentials"] = "true"
+
     return StreamingResponse(
         event_generator(),
         media_type="text/event-stream",
-        headers={
-            "Cache-Control": "no-cache",
-            "Connection": "keep-alive",
-        },
+        headers=headers,
     )
-
-
 def resolve_patient_id(
     *,
     provider: str,
@@ -466,8 +476,10 @@ async def latest_waveform_frame():
             "error": str(error),
         }
 
+
 @app.get("/api/waveforms/stream")
 async def stream_waveform_frame(
+    request: Request,
     sample_rate: int = Query(default=settings.WAVEFORM_SAMPLE_RATE, ge=50, le=1000),
     batch_ms: int = Query(default=settings.WAVEFORM_BATCH_MS, ge=20, le=500),
 ):
@@ -509,14 +521,23 @@ async def stream_waveform_frame(
 
                 await asyncio.sleep(1.0)
 
+    origin = request.headers.get("origin")
+
+    headers = {
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive",
+        "X-Accel-Buffering": "no",
+        "Vary": "Origin",
+    }
+
+    if origin in settings.FRONTEND_ORIGINS:
+        headers["Access-Control-Allow-Origin"] = origin
+        headers["Access-Control-Allow-Credentials"] = "true"
+
     return StreamingResponse(
         event_generator(),
         media_type="text/event-stream",
-        headers={
-            "Cache-Control": "no-cache",
-            "Connection": "keep-alive",
-            "X-Accel-Buffering": "no",
-        },
+        headers=headers,
     )
 
 def build_waveform_frame(
