@@ -214,14 +214,16 @@ async def oracle_callback(
         "created_at_epoch": time.time(),
     }
 
-    html = """
+    frontend_app_url = os.getenv("FRONTEND_APP_URL", "http://127.0.0.1:5173")
+
+    html = f"""
     <h2>Oracle SMART connected</h2>
     <p>You can return to the KardioGenics React dashboard.</p>
-    <p>The backend now has the Oracle SMART token in a local signed session.</p>
+    <p>The backend now has the Oracle SMART token in a signed session.</p>
     <script>
-      setTimeout(() => {
-        window.location.href = "http://127.0.0.1:5173";
-      }, 1200);
+    setTimeout(() => {{
+        window.location.href = "{frontend_app_url}";
+    }}, 1200);
     </script>
     """
 
