@@ -18,16 +18,19 @@ const AUTO_RETURN_FROM_20_FILL = 0.28;
 
 const MIN_PX_PER_MM = 3.2;
 const MAX_PX_PER_MM = 9.0;
-const GRID_GAP_PX = 4;
+const GRID_GAP_PX = 6;
+
+const WAVEFORM_COLUMN_COUNT = 3;
+const WAVEFORM_ROW_COUNT = 3;
+const VITAL_RAIL_WIDTH_PX = 300;
 
 const LEADS = [
-  { id: "lead1", label: "Lead I", color: "cyan" },
-  { id: "lead2", label: "Lead II", color: "cyan" },
-  { id: "lead3", label: "Lead III", color: "cyan" },
-  { id: "avr", label: "aVR", color: "cyan" },
-  { id: "avl", label: "aVL", color: "cyan" },
-  { id: "avf", label: "aVF", color: "cyan" },
-  { id: "v1", label: "V1", color: "cyan" },
+  { id: "lead1", label: "Lead I", color: "cyan", area: "lead1" },
+  { id: "lead2", label: "Lead II", color: "cyan", area: "lead2" },
+  { id: "lead3", label: "Lead III", color: "cyan", area: "lead3" },
+  { id: "avr", label: "aVR", color: "cyan", area: "avr" },
+  { id: "avl", label: "aVL", color: "cyan", area: "avl" },
+  { id: "avf", label: "aVF", color: "cyan", area: "avf" },
 ];
 
 const EMPTY_LEADS = Object.fromEntries(LEADS.map((lead) => [lead.id, []]));
@@ -355,20 +358,30 @@ export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
     return () => observer.disconnect();
   }, []);
 
-  const visibleSeconds = DEFAULT_VISIBLE_SECONDS;
-  const sampleRate = waveFrame.sampleRate || 220;
-  const visiblePoints = Math.round(sampleRate * visibleSeconds);
-  const paperWidthMm = visibleSeconds * ECG_PAPER_SPEED_MM_PER_SEC;
+const visibleSeconds =
+  Number(waveFrame.xAxis?.secondsVisible) || DEFAULT_VISIBLE_SECONDS;
 
-  const tileWidthPx =
-    gridSize.width > 0 ? (gridSize.width - GRID_GAP_PX * 2) / 3 : 360;
+const sampleRate = waveFrame.sampleRate || 220;
+const visiblePoints = Math.round(sampleRate * visibleSeconds);
+const paperWidthMm = visibleSeconds * ECG_PAPER_SPEED_MM_PER_SEC;
 
-  const tileHeightPx =
-    gridSize.height > 0 ? (gridSize.height - GRID_GAP_PX * 2) / 3 : 160;
+const waveformGridWidth =
+  gridSize.width > 0
+    ? Math.max(1, gridSize.width - VITAL_RAIL_WIDTH_PX - GRID_GAP_PX * 3)
+    : 1080;
 
-const pxPerMm = tileWidthPx / paperWidthMm;
+const tileWidthPx =
+  gridSize.width > 0
+    ? waveformGridWidth / WAVEFORM_COLUMN_COUNT
+    : 360;
 
-  const rowHeightPx = Math.max(1, tileHeightPx);
+const tileHeightPx =
+  gridSize.height > 0
+    ? (gridSize.height - GRID_GAP_PX * 2) / WAVEFORM_ROW_COUNT
+    : 160;
+
+const pxPerMm = clamp(tileWidthPx / paperWidthMm, MIN_PX_PER_MM, MAX_PX_PER_MM);
+const rowHeightPx = Math.max(1, tileHeightPx);
 
   useEffect(() => {
     if (!rowHeightPx || !pxPerMm) return;
@@ -433,12 +446,12 @@ const pxPerMm = tileWidthPx / paperWidthMm;
     pxPerMm,
   ]);
 
-  const gainSummary = useMemo(() => {
-    return ECG_GAIN_OPTIONS.map((gain) => ({
-      gain,
-      count: leadTiles.filter((lead) => lead.gainMmPerMv === gain).length,
-    }));
-  }, [leadTiles]);
+// const gainSummary = useMemo(() => {
+//   return ECG_GAIN_OPTIONS.map((gain) => ({
+//     gain,
+//     count: leadTiles.filter((lead) => lead.gainMmPerMv === gain).length,
+//   }));
+// }, [leadTiles]);
 
   return (
     <section className="wave7-page">
@@ -480,39 +493,34 @@ const pxPerMm = tileWidthPx / paperWidthMm;
         <div className="wave7-monitor-title">
           <div>
             <p className="wave7-eyebrow">High precision</p>
-            <h2>7 waveform ECG matrix</h2>
+            <h2>6 waveform ECG matrix</h2>
           </div>
 
-          <span>3 × 3 clinical layout • 5/10/20 mm/mV only</span>
+          <span>5/10/20 mm/mV</span>
         </div>
 
-        <section
-          ref={gridRef}
-          className="wave7-grid"
-          style={{
-            "--ecg-mm": `${pxPerMm}px`,
-            "--wave7-grid-gap": `${GRID_GAP_PX}px`,
-          }}
-        >
-          {leadTiles.map((lead) => (
-            <WaveformTile
-              key={lead.id}
-              lead={lead}
-              samples={waveFrame.leadsMv?.[lead.id] || []}
-              visiblePoints={visiblePoints}
-              pxPerMm={pxPerMm}
-              onGainModeChange={updateLeadGainMode}
-            />
-          ))}
+<section
+  ref={gridRef}
+  className="wave7-grid"
+  style={{
+    "--ecg-mm": `${pxPerMm}px`,
+    "--wave7-grid-gap": `${GRID_GAP_PX}px`,
+    "--wave7-vitals-width": `${VITAL_RAIL_WIDTH_PX}px`,
+  }}
+>
+  {leadTiles.map((lead) => (
+    <WaveformTile
+      key={lead.id}
+      lead={lead}
+      samples={waveFrame.leadsMv?.[lead.id] || []}
+      visiblePoints={visiblePoints}
+      pxPerMm={pxPerMm}
+      onGainModeChange={updateLeadGainMode}
+    />
+  ))}
 
-          <TelemetryTile
-            sampleRate={sampleRate}
-            visibleSeconds={visibleSeconds}
-            waveFrame={waveFrame}
-          />
-
-          <GainSummaryTile gainSummary={gainSummary} />
-        </section>
+  <BedsideVitalsPanel waveFrame={waveFrame} />
+</section>
       </main>
     </section>
   );
@@ -528,7 +536,10 @@ function WaveformTile({
   const { scale } = lead;
 
   return (
-    <article className={`wave7-wave-tile ${scale.clipRisk ? "clip-risk" : ""}`}>
+    <article
+  className={`wave7-wave-tile ${scale.clipRisk ? "clip-risk" : ""}`}
+  style={{ gridArea: lead.area }}
+>
       <div className="wave7-calibrated-strip">
         <YAxisScale scale={scale} />
 
@@ -595,53 +606,160 @@ function YAxisScale({ scale }) {
   );
 }
 
-function TelemetryTile({ sampleRate, visibleSeconds, waveFrame }) {
+function formatVitalValue(value, decimals = 0) {
+  const numericValue = Number(value);
+
+  if (!Number.isFinite(numericValue)) return "--";
+
+  return numericValue.toFixed(decimals);
+}
+
+
+
+function useRollingSeries(value, maxPoints = 36) {
+  const [series, setSeries] = useState(() =>
+    Array.from({ length: maxPoints }, () => Number(value) || 0)
+  );
+
+  useEffect(() => {
+    const numericValue = Number(value);
+
+    if (!Number.isFinite(numericValue)) return;
+
+    setSeries((previous) => [
+      ...previous.slice(-(maxPoints - 1)),
+      numericValue,
+    ]);
+  }, [value, maxPoints]);
+
+  return series;
+}
+
+function MiniSpo2Trend({ series }) {
+  const width = 120;
+  const height = 34;
+
+  const values = series
+    .map((value) => Number(value))
+    .filter(Number.isFinite);
+
+  const safeValues = values.length ? values : [97];
+
+  const min = Math.min(88, ...safeValues);
+  const max = Math.max(100, ...safeValues);
+  const range = max - min || 1;
+
+  const points = safeValues
+    .map((value, index) => {
+      const x =
+        safeValues.length <= 1
+          ? width
+          : (index / (safeValues.length - 1)) * width;
+
+      const y = height - ((value - min) / range) * height;
+
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    })
+    .join(" ");
+
+  const lastValue = safeValues[safeValues.length - 1];
+  const lastX = width;
+  const lastY = height - ((lastValue - min) / range) * height;
+
+  return (
+    <svg
+      className="wave7-spo2-trend"
+      viewBox={`0 0 ${width} ${height}`}
+      aria-hidden="true"
+    >
+      <polyline points={points} />
+      <circle cx={lastX} cy={lastY} r="3.2" />
+    </svg>
+  );
+}
+
+function BedsideVitalsPanel({ waveFrame }) {
   const vitals = waveFrame.vitals || {};
 
-  return (
-    <article className="wave7-info-tile">
-      <p className="wave7-info-kicker">Telemetry</p>
-      <h3>{sampleRate} Hz</h3>
+  const heartRate =
+    vitals.heartRate ??
+    vitals.hr ??
+    vitals.heart_rate;
 
-      <div className="wave7-info-grid">
-        <span>
-          Window <b>{visibleSeconds}s</b>
-        </span>
-        <span>
-          Points <b>{sampleRate * visibleSeconds}</b>
-        </span>
-        <span>
-          HR <b>{vitals.heartRate ?? "--"}</b>
-        </span>
-        <span>
-          SpO₂ <b>{vitals.spo2 ?? "--"}</b>
-        </span>
+  const spo2 =
+    vitals.spo2 ??
+    vitals.SpO2 ??
+    vitals.oxygenSaturation ??
+    vitals.oxygen_saturation;
+
+  const systolic =
+    vitals.systolic ??
+    vitals.sbp ??
+    vitals.systolicBloodPressure;
+
+  const diastolic =
+    vitals.diastolic ??
+    vitals.dbp ??
+    vitals.diastolicBloodPressure;
+
+  const respiratoryRate =
+    vitals.respiratoryRate ??
+    vitals.rr ??
+    vitals.respiratory_rate;
+
+  const temperature =
+    vitals.temperature ??
+    vitals.temp ??
+    vitals.bodyTemperature ??
+    vitals.body_temperature;
+
+  const spo2Series = useRollingSeries(spo2, 36);
+
+  return (
+    <aside className="wave7-vitals-panel">
+      <div className="wave7-vitals-header">
+        <p className="wave7-eyebrow">Bedside widgets</p>
+        <span>{waveFrame.status === "connected" ? "Live signal" : "Waiting"}</span>
       </div>
 
-      <p className="wave7-info-note">
-        X-axis is fixed to ECG paper speed. Y-axis uses real mV with standard gain.
-      </p>
-    </article>
+      <div className="wave7-vital-card hr">
+        <span>HR</span>
+        <strong>{formatVitalValue(heartRate)}</strong>
+        <em>bpm</em>
+      </div>
+
+      <div className="wave7-vital-card spo2 has-trend">
+        <div className="wave7-vital-label-row">
+          <span>SpO₂</span>
+          <small>current pulse point</small>
+        </div>
+
+        <strong>{formatVitalValue(spo2)}</strong>
+        <MiniSpo2Trend series={spo2Series} />
+        <em>%</em>
+      </div>
+
+      <div className="wave7-vital-card bp">
+        <span>NIBP</span>
+        <strong>
+          {formatVitalValue(systolic)}
+          <small>/{formatVitalValue(diastolic)}</small>
+        </strong>
+        <em>mmHg</em>
+      </div>
+
+      <div className="wave7-vital-card rr">
+        <span>RR</span>
+        <strong>{formatVitalValue(respiratoryRate)}</strong>
+        <em>/min</em>
+      </div>
+
+      <div className="wave7-vital-card temp">
+        <span>Temp</span>
+        <strong>{formatVitalValue(temperature, 1)}</strong>
+        <em>°C</em>
+      </div>
+    </aside>
   );
 }
 
-function GainSummaryTile({ gainSummary }) {
-  return (
-    <article className="wave7-info-tile">
-      <p className="wave7-info-kicker">Gain status</p>
-      <h3>Auto per lead</h3>
-
-      <div className="wave7-gain-summary">
-        {gainSummary.map((item) => (
-          <span key={item.gain}>
-            {item.gain} mm/mV <b>{item.count}</b>
-          </span>
-        ))}
-      </div>
-
-      <p className="wave7-info-note">
-        5 contains high amplitude. 10 is standard. 20 enlarges low amplitude.
-      </p>
-    </article>
-  );
-}

@@ -503,10 +503,49 @@ def build_physionet_frame(
 
     heart_rate = buffer.estimated_hr
     respiratory_rate = max(10, min(32, round(heart_rate / 4.2)))
-    spo2 = 97 if heart_rate < 110 else 94
-    temperature = 37.0 if heart_rate < 110 else 37.4
-    systolic = 118 if heart_rate < 110 else 128
-    diastolic = 78 if heart_rate < 110 else 86
+    phase_seconds = cursor / max(buffer.sample_rate, 1)
+
+    spo2_base = 97 if heart_rate < 110 else 94
+    spo2 = round(
+        max(
+            92,
+            min(
+                100,
+                spo2_base
+                + 0.8 * np.sin(phase_seconds / 2.8)
+                + 0.3 * np.sin(phase_seconds / 0.9),
+            ),
+        )
+    )
+
+    respiratory_rate = max(
+        10,
+        min(
+            32,
+            round((heart_rate / 4.2) + 1.5 * np.sin(phase_seconds / 4.5)),
+        ),
+    )
+
+    systolic = round(118 + 5 * np.sin(phase_seconds / 5.5))
+    diastolic = round(78 + 3 * np.sin(phase_seconds / 6.0))
+    temperature = round(37.0 + 0.15 * np.sin(phase_seconds / 12.0), 1)
+   
+    
+    elapsed_seconds = cursor / max(buffer.sample_rate, 1)
+    loop_progress = cursor / max(buffer.total_samples, 1)
+
+    if loop_progress < 0.25:
+        segment_name = "baseline rhythm"
+        segment_message = "Clean ECG segment from PTB-XL record."
+    elif loop_progress < 0.50:
+        segment_name = "amplitude variation"
+        segment_message = "Lead amplitude changes demonstrate per-lead gain handling."
+    elif loop_progress < 0.75:
+        segment_name = "oxygenation watch"
+        segment_message = "SpO2 widget shows live current-point movement."
+    else:
+        segment_name = "loop reset preview"
+        segment_message = "Cyclic buffer is about to wrap without breaking the stream."
 
     return {
         "source": "physionet-ptb-xl",
@@ -554,4 +593,11 @@ def build_physionet_frame(
             "respiratoryRate": respiratory_rate,
             "temperature": temperature,
         },
+        "demoPhase": {
+    "mode": "cyclic-physionet-demo",
+    "segment": segment_name,
+    "elapsedSeconds": round(elapsed_seconds, 1),
+    "loopProgressPercent": round(loop_progress * 100),
+    "message": segment_message,
+},
     }

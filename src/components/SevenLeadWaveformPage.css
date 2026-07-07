@@ -1,30 +1,34 @@
 :root {
-  --wave7-nav-offset: 84px;
+  --wave7-nav-offset: 54px;
 }
 
+/* Main dashboard wrapper only when this page is active */
 .dashboard-main:has(.wave7-page) {
   height: calc(100dvh - var(--wave7-nav-offset));
-  padding: 2px 4px 4px;
+  padding: 0 2px 1px;
+  margin: 0;
   overflow: hidden;
   box-sizing: border-box;
 }
 
+/* Page layout */
 .wave7-page {
   height: 100%;
   min-height: 0;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 4px;
+  gap: 8px;
   overflow: hidden;
 }
 
+/* Top white telemetry header */
 .wave7-header {
-  min-height: 42px;
+  min-height: 36px;
   background: #ffffff;
   border: 1px solid var(--line);
   border-radius: 13px;
   box-shadow: var(--shadow);
-  padding: 6px 11px;
+  padding: 4px 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -47,9 +51,9 @@
 }
 
 .wave7-header h1 {
-  margin: 2px 0 1px;
+  margin: 1px 0 0;
   color: #132036;
-  font-size: clamp(17px, 1.45vw, 24px);
+  font-size: clamp(15px, 1.25vw, 21px);
   line-height: 1;
   font-weight: 950;
   white-space: nowrap;
@@ -115,26 +119,33 @@
   cursor: pointer;
 }
 
+/* Dark ECG monitor */
 .wave7-monitor-card {
   min-width: 0;
   min-height: 0;
   height: 100%;
+  width: calc(100% + 4px);
+  margin-left: -2px;
+  margin-right: -2px;
   background: #071827;
   border: 1px solid #1e3a4f;
   border-radius: 14px;
   box-shadow: var(--shadow);
-  padding: 6px;
+  padding: 8px 6px 5px;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 5px;
+  gap: 6px;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
+/* This gives breathing room above High Precision and the title */
 .wave7-monitor-title {
-  min-height: 26px;
+  min-height: 36px;
+  padding: 2px 4px 3px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   color: #e5f7ff;
   gap: 8px;
   overflow: hidden;
@@ -145,7 +156,7 @@
 }
 
 .wave7-monitor-title h2 {
-  margin: 1px 0 0;
+  margin: 3px 0 0;
   color: #e5f7ff;
   font-size: clamp(16px, 1.35vw, 22px);
   line-height: 1;
@@ -161,16 +172,25 @@
   line-height: 1;
   font-weight: 950;
   white-space: nowrap;
+  padding-top: 4px;
 }
 
+/* 3 x 3 waveform matrix */
 .wave7-grid {
   min-height: 0;
   height: 100%;
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr)
+    var(--wave7-vitals-width, 260px);
   grid-template-rows: repeat(3, minmax(0, 1fr));
-  gap: var(--wave7-grid-gap, 4px);
+  grid-template-areas:
+    "lead1 lead2 vitals"
+    "lead3 avr   vitals"
+    "avl   avf   vitals";
+  gap: var(--wave7-grid-gap, 6px);
   overflow: hidden;
 }
 
@@ -266,7 +286,7 @@
 
 .wave7-tile-top {
   position: absolute;
-  top: 6px;
+  top: 7px;
   left: 8px;
   right: 76px;
   z-index: 5;
@@ -297,7 +317,7 @@
 
 .wave7-lead-gain-toggle {
   position: absolute;
-  top: 5px;
+  top: 7px;
   left: 50%;
   z-index: 6;
   transform: translateX(-50%);
@@ -370,6 +390,7 @@
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.88);
 }
 
+/* Telemetry and gain cards */
 .wave7-info-tile {
   padding: 8px;
   display: grid;
@@ -436,22 +457,27 @@
   font-weight: 800;
 }
 
+/* Responsive tuning */
 @media (max-width: 1280px) {
   :root {
-    --wave7-nav-offset: 80px;
+    --wave7-nav-offset: 54px;
   }
 
   .dashboard-main:has(.wave7-page) {
-    padding: 2px 4px 3px;
+    padding: 0 2px 1px;
+  }
+
+  .wave7-page {
+    gap: 7px;
   }
 
   .wave7-header {
-    min-height: 40px;
-    padding: 5px 9px;
+    min-height: 34px;
+    padding: 3px 8px;
   }
 
   .wave7-header h1 {
-    font-size: clamp(16px, 1.4vw, 22px);
+    font-size: clamp(15px, 1.2vw, 20px);
   }
 
   .wave7-live-pill,
@@ -466,23 +492,36 @@
   }
 
   .wave7-monitor-card {
-    padding: 5px;
+    width: calc(100% + 4px);
+    margin-left: -2px;
+    margin-right: -2px;
+    padding: 7px 5px 4px;
+    gap: 5px;
   }
 
   .wave7-monitor-title {
-    min-height: 25px;
+    min-height: 34px;
+    padding: 2px 4px 3px;
   }
 
   .wave7-monitor-title h2 {
+    margin-top: 3px;
     font-size: clamp(15px, 1.25vw, 21px);
   }
 
   .wave7-monitor-title span {
     font-size: 9px;
+    padding-top: 4px;
   }
 
-  .wave7-grid {
-    gap: 4px;
+
+
+  .wave7-tile-top {
+    top: 7px;
+  }
+
+  .wave7-lead-gain-toggle {
+    top: 7px;
   }
 
   .wave7-tile-top strong {
@@ -518,5 +557,779 @@
   .wave7-info-note {
     font-size: 7.8px;
   }
+
+  .wave7-grid {
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr)
+    minmax(0, 1fr)
+    var(--wave7-vitals-width, 300px);
+  gap: var(--wave7-grid-gap, 6px);
 }
 
+.wave7-vitals-panel {
+  padding: 8px;
+  gap: 6px;
+}
+
+.wave7-vital-card {
+  padding: 7px;
+}
+
+.wave7-vital-card strong {
+  font-size: clamp(22px, 2.3vw, 40px);
+}
+}
+
+.wave7-vitals-panel {
+  grid-area: vitals;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  padding: 10px;
+  border: 1px solid rgba(125, 211, 252, 0.28);
+  border-radius: 11px;
+  background:
+    radial-gradient(circle at top right, rgba(14, 165, 233, 0.18), transparent 42%),
+    linear-gradient(180deg, rgba(8, 24, 39, 0.96), rgba(3, 12, 22, 0.98));
+  display: grid;
+  grid-template-rows: auto repeat(3, minmax(0, 1fr)) auto;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.wave7-vitals-header {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.wave7-vitals-header span {
+  color: #7dd3fc;
+  font-size: 9px;
+  line-height: 1;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.wave7-vital-card {
+  min-width: 0;
+  min-height: 0;
+  border: 1px solid rgba(125, 211, 252, 0.18);
+  border-radius: 12px;
+  padding: 9px;
+  background: rgba(2, 8, 23, 0.45);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  align-items: center;
+  overflow: hidden;
+}
+
+.wave7-vital-card span {
+  color: #94a3b8;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.wave7-vital-card strong {
+  color: #e5f7ff;
+  font-size: clamp(34px, 4.2vw, 62px);
+  line-height: 0.95;
+  font-weight: 950;
+  letter-spacing: -0.06em;
+  white-space: nowrap;
+}
+
+.wave7-vital-card em {
+  color: #94a3b8;
+  font-size: 12px;
+  line-height: 1;
+  font-style: normal;
+  font-weight: 950;
+  justify-self: end;
+}
+
+.wave7-vital-card.hr strong {
+  color: #86efac;
+}
+
+.wave7-vital-card.spo2 strong {
+  color: #7dd3fc;
+}
+
+.wave7-vital-card.temp strong {
+  color: #fca5a5;
+}
+
+.wave7-vitals-note {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 8px;
+  line-height: 1.25;
+  font-weight: 800;
+}
+
+@media (max-width: 1280px) {
+  :root {
+    --wave7-nav-offset: 54px;
+  }
+
+  .dashboard-main:has(.wave7-page) {
+    padding: 0 2px 1px;
+  }
+
+  .wave7-page {
+    gap: 7px;
+  }
+
+  .wave7-header {
+    min-height: 34px;
+    padding: 3px 8px;
+  }
+
+  .wave7-header h1 {
+    font-size: clamp(15px, 1.2vw, 20px);
+  }
+
+  .wave7-live-pill,
+  .wave7-speed-pill {
+    padding: 5px 7px;
+    font-size: 9.5px;
+  }
+
+  .wave7-action-btn {
+    padding: 5px 7px;
+    font-size: 10.5px;
+  }
+
+  .wave7-monitor-card {
+    width: calc(100% + 4px);
+    margin-left: -2px;
+    margin-right: -2px;
+    padding: 7px 5px 4px;
+    gap: 5px;
+  }
+
+  .wave7-monitor-title {
+    min-height: 34px;
+    padding: 2px 4px 3px;
+  }
+
+  .wave7-monitor-title h2 {
+    margin-top: 3px;
+    font-size: clamp(15px, 1.25vw, 21px);
+  }
+
+  .wave7-monitor-title span {
+    font-size: 9px;
+    padding-top: 4px;
+  }
+
+  .wave7-grid {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(0, 1fr)
+      var(--wave7-vitals-width, 260px);
+    gap: var(--wave7-grid-gap, 6px);
+  }
+
+  .wave7-tile-top {
+    top: 7px;
+  }
+
+  .wave7-lead-gain-toggle {
+    top: 7px;
+  }
+
+  .wave7-tile-top strong {
+    font-size: 9px;
+  }
+
+  .wave7-tile-top span,
+  .wave7-tile-bottom span {
+    font-size: 6.8px;
+  }
+
+  .wave7-y-scale {
+    font-size: 7px;
+  }
+
+  .wave7-lead-gain-toggle button {
+    min-width: 15px;
+    height: 13px;
+    font-size: 6.5px;
+  }
+
+  .wave7-vitals-panel {
+    padding: 8px;
+    gap: 7px;
+  }
+
+  .wave7-vital-card {
+    padding: 8px;
+  }
+
+  .wave7-vital-card strong {
+    font-size: clamp(30px, 3.8vw, 54px);
+  }
+
+  .wave7-vitals-note {
+    font-size: 7.6px;
+  }
+
+  .wave7-grid {
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr)
+    minmax(0, 1fr)
+    var(--wave7-vitals-width, 300px);
+  gap: var(--wave7-grid-gap, 6px);
+}
+
+.wave7-vitals-panel {
+  padding: 8px;
+  gap: 6px;
+}
+
+.wave7-vital-card {
+  padding: 7px;
+}
+
+.wave7-vital-card strong {
+  font-size: clamp(22px, 2.3vw, 40px);
+}
+}
+
+.wave7-grid {
+  min-height: 0;
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr)
+    minmax(0, 1fr)
+    var(--wave7-vitals-width, 300px);
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  grid-template-areas:
+    "lead1 lead2 lead3 vitals"
+    "avr   avl   avf   vitals"
+    "v1    telemetry gain vitals";
+  gap: var(--wave7-grid-gap, 6px);
+  overflow: hidden;
+}
+
+.wave7-calibrated-strip {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    linear-gradient(rgba(125, 211, 252, 0.23) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(125, 211, 252, 0.23) 1px, transparent 1px),
+    linear-gradient(rgba(125, 211, 252, 0.085) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(125, 211, 252, 0.085) 1px, transparent 1px);
+  background-size:
+    calc(var(--ecg-mm) * 5) calc(var(--ecg-mm) * 5),
+    calc(var(--ecg-mm) * 5) calc(var(--ecg-mm) * 5),
+    var(--ecg-mm) var(--ecg-mm),
+    var(--ecg-mm) var(--ecg-mm);
+
+  /* CEO rule: make 0 mV sit on the centered graph-paper line */
+  background-position:
+    0 50%,
+    0 0,
+    0 50%,
+    0 0;
+
+  background-color: #07111d;
+}
+
+.wave7-info-tile.telemetry-tile {
+  grid-area: telemetry;
+}
+
+.wave7-info-tile.gain-tile {
+  grid-area: gain;
+}
+
+.wave7-vitals-panel {
+  grid-area: vitals;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  padding: 10px;
+  border: 1px solid rgba(125, 211, 252, 0.28);
+  border-radius: 11px;
+  background:
+    radial-gradient(circle at top right, rgba(14, 165, 233, 0.18), transparent 42%),
+    linear-gradient(180deg, rgba(8, 24, 39, 0.96), rgba(3, 12, 22, 0.98));
+  display: grid;
+  grid-template-rows:
+    auto
+    minmax(0, 0.95fr)
+    minmax(0, 1.2fr)
+    minmax(0, 0.95fr)
+    minmax(0, 0.85fr)
+    minmax(0, 0.85fr)
+    minmax(0, 0.8fr);
+  gap: 7px;
+  overflow: hidden;
+}
+
+.wave7-vitals-header {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.wave7-vitals-header span {
+  color: #7dd3fc;
+  font-size: 9px;
+  line-height: 1;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.wave7-vital-card {
+  min-width: 0;
+  min-height: 0;
+  border: 1px solid rgba(125, 211, 252, 0.18);
+  border-radius: 12px;
+  padding: 8px 9px;
+  background: rgba(2, 8, 23, 0.45);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  align-items: center;
+  overflow: hidden;
+}
+
+.wave7-vital-card.has-trend {
+  grid-template-rows: auto auto minmax(28px, 1fr) auto;
+}
+
+.wave7-vital-card span {
+  color: #94a3b8;
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.wave7-vital-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.wave7-vital-label-row small {
+  color: rgba(125, 211, 252, 0.72);
+  font-size: 7.5px;
+  line-height: 1;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.wave7-vital-card strong {
+  color: #e5f7ff;
+  font-size: clamp(25px, 2.6vw, 46px);
+  line-height: 0.95;
+  font-weight: 950;
+  letter-spacing: -0.06em;
+  white-space: nowrap;
+}
+
+.wave7-vital-card strong small {
+  color: rgba(226, 232, 240, 0.78);
+  font-size: 0.52em;
+  letter-spacing: -0.03em;
+}
+
+.wave7-vital-card em {
+  color: #94a3b8;
+  font-size: 10px;
+  line-height: 1;
+  font-style: normal;
+  font-weight: 950;
+  justify-self: end;
+}
+
+.wave7-vital-card.hr strong {
+  color: #86efac;
+}
+
+.wave7-vital-card.spo2 strong {
+  color: #7dd3fc;
+}
+
+.wave7-vital-card.bp strong {
+  color: #f9e2af;
+}
+
+.wave7-vital-card.rr strong {
+  color: #c4b5fd;
+}
+
+.wave7-vital-card.temp strong {
+  color: #fca5a5;
+}
+
+.wave7-vital-card.source strong {
+  font-size: clamp(14px, 1.1vw, 19px);
+  letter-spacing: -0.02em;
+  white-space: normal;
+}
+
+.wave7-spo2-trend {
+  width: 100%;
+  height: 34px;
+  display: block;
+  margin-top: 2px;
+}
+
+.wave7-spo2-trend polyline {
+  fill: none;
+  stroke: #7dd3fc;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.wave7-spo2-trend circle {
+  fill: #e0f2fe;
+  stroke: #0284c7;
+  stroke-width: 1.4;
+}
+
+/* =========================================================
+   MAIN ECG PAGE OVERRIDE
+   Six waveform layout + centered 0 mV graph-paper axis
+   ========================================================= */
+
+/* Keep the layout exactly like the screenshot:
+   2 waveform columns x 3 waveform rows + right vitals rail */
+.wave7-grid {
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr)
+    var(--wave7-vitals-width, 300px) !important;
+
+  grid-template-rows: repeat(3, minmax(0, 1fr)) !important;
+
+  grid-template-areas:
+    "lead1 lead2 vitals"
+    "lead3 avr   vitals"
+    "avl   avf   vitals" !important;
+
+  gap: var(--wave7-grid-gap, 6px) !important;
+}
+
+/* CEO rule:
+   0 mV horizontal axis must be centered AND must sit on the graph-paper line.
+   This anchors the horizontal grid to the center of the tile. */
+.wave7-calibrated-strip {
+  background-position:
+    0 50%,
+    0 0,
+    0 50%,
+    0 0 !important;
+}
+
+/* Keep the actual 0 mV line fixed at center */
+.wave7-zero-line {
+  top: 50% !important;
+  background: rgba(226, 232, 240, 0.72) !important;
+}
+
+/* Slightly wider vitals rail so SpO2 mini graph has room */
+.wave7-vitals-panel {
+  grid-area: vitals;
+  padding: 10px !important;
+  grid-template-rows:
+    auto
+    minmax(0, 1fr)
+    minmax(0, 1.22fr)
+    minmax(0, 1fr) !important;
+  gap: 9px !important;
+}
+
+/* Make vitals cards look richer but still close to your screenshot */
+.wave7-vital-card {
+  border-radius: 13px !important;
+  padding: 10px 11px !important;
+  background:
+    radial-gradient(circle at top left, rgba(125, 211, 252, 0.07), transparent 44%),
+    rgba(2, 8, 23, 0.52) !important;
+  border: 1px solid rgba(125, 211, 252, 0.2) !important;
+}
+
+.wave7-vital-card span {
+  font-size: 11px !important;
+  letter-spacing: 0.08em !important;
+}
+
+.wave7-vital-card strong {
+  font-size: clamp(38px, 4.5vw, 66px) !important;
+  line-height: 0.95 !important;
+}
+
+.wave7-vital-card em {
+  font-size: 12px !important;
+}
+
+/* SpO2 card gets a graph below the value */
+.wave7-vital-card.has-trend {
+  grid-template-rows: auto auto minmax(30px, 1fr) auto !important;
+}
+
+.wave7-vital-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.wave7-vital-label-row small {
+  color: rgba(125, 211, 252, 0.75);
+  font-size: 8px;
+  line-height: 1;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.wave7-spo2-trend {
+  width: 100%;
+  height: 34px;
+  display: block;
+  margin-top: 2px;
+}
+
+.wave7-spo2-trend polyline {
+  fill: none;
+  stroke: #7dd3fc;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 4px rgba(125, 211, 252, 0.35));
+}
+
+.wave7-spo2-trend circle {
+  fill: #e0f2fe;
+  stroke: #0284c7;
+  stroke-width: 1.4;
+  filter: drop-shadow(0 0 5px rgba(125, 211, 252, 0.8));
+}
+
+/* Make sure any old telemetry/gain tiles do not occupy layout space */
+.wave7-info-tile.telemetry-tile,
+.wave7-info-tile.gain-tile {
+  display: none !important;
+}
+
+/* Responsive version keeps same six waveform layout */
+@media (max-width: 1280px) {
+  .wave7-grid {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(0, 1fr)
+      var(--wave7-vitals-width, 300px) !important;
+
+    grid-template-areas:
+      "lead1 lead2 vitals"
+      "lead3 avr   vitals"
+      "avl   avf   vitals" !important;
+  }
+
+  .wave7-vitals-panel {
+    padding: 8px !important;
+    gap: 7px !important;
+  }
+
+  .wave7-vital-card {
+    padding: 8px !important;
+  }
+
+  .wave7-vital-card strong {
+    font-size: clamp(32px, 4vw, 56px) !important;
+  }
+
+  .wave7-spo2-trend {
+    height: 30px;
+  }
+}
+
+/* =========================================================
+   MAIN ECG PAGE OVERRIDE
+   Six waveform layout + centered 0 mV graph-paper axis
+   ========================================================= */
+
+/* Keep six-waveform layout only */
+.wave7-grid {
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr)
+    var(--wave7-vitals-width, 300px) !important;
+
+  grid-template-rows: repeat(3, minmax(0, 1fr)) !important;
+
+  grid-template-areas:
+    "lead1 lead2 vitals"
+    "lead3 avr   vitals"
+    "avl   avf   vitals" !important;
+
+  gap: var(--wave7-grid-gap, 6px) !important;
+}
+
+/* CEO fix:
+   The 0 mV axis is centered AND the graph-paper grid is aligned to it. */
+.wave7-calibrated-strip {
+  background-position:
+    0 50%,
+    0 0,
+    0 50%,
+    0 0 !important;
+}
+
+/* Keep true 0 mV baseline fixed in the center */
+.wave7-zero-line {
+  top: 50% !important;
+  height: 1px !important;
+  background: rgba(226, 232, 240, 0.72) !important;
+}
+
+/* Remove any old source/demo cards if still present */
+.wave7-vital-card.source {
+  display: none !important;
+}
+
+/* Right rail: five widgets only, no clipping */
+.wave7-vitals-panel {
+  grid-area: vitals;
+  padding: 10px !important;
+  grid-template-rows:
+    auto
+    minmax(0, 1fr)
+    minmax(0, 1.2fr)
+    minmax(0, 0.92fr)
+    minmax(0, 0.92fr)
+    minmax(0, 1fr) !important;
+  gap: 8px !important;
+  overflow: hidden !important;
+}
+
+/* Richer widget cards */
+.wave7-vital-card {
+  border-radius: 13px !important;
+  padding: 9px 11px !important;
+  background:
+    radial-gradient(circle at top left, rgba(125, 211, 252, 0.07), transparent 44%),
+    rgba(2, 8, 23, 0.52) !important;
+  border: 1px solid rgba(125, 211, 252, 0.2) !important;
+  overflow: hidden !important;
+}
+
+.wave7-vital-card span {
+  font-size: 10.5px !important;
+  letter-spacing: 0.08em !important;
+}
+
+.wave7-vital-card strong {
+  font-size: clamp(30px, 3.4vw, 54px) !important;
+  line-height: 0.95 !important;
+}
+
+.wave7-vital-card strong small {
+  color: rgba(226, 232, 240, 0.78);
+  font-size: 0.48em;
+  letter-spacing: -0.03em;
+}
+
+.wave7-vital-card em {
+  font-size: 11px !important;
+}
+
+/* SpO2 card gets its own mini graph row */
+.wave7-vital-card.has-trend {
+  grid-template-rows: auto auto minmax(34px, 1fr) auto !important;
+}
+
+.wave7-vital-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.wave7-vital-label-row small {
+  color: rgba(125, 211, 252, 0.78);
+  font-size: 7.6px;
+  line-height: 1;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.wave7-spo2-trend {
+  width: 100%;
+  height: 38px;
+  display: block;
+  margin-top: 2px;
+}
+
+.wave7-spo2-trend polyline {
+  fill: none;
+  stroke: #7dd3fc;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 4px rgba(125, 211, 252, 0.4));
+}
+
+.wave7-spo2-trend circle {
+  fill: #e0f2fe;
+  stroke: #0284c7;
+  stroke-width: 1.4;
+  filter: drop-shadow(0 0 5px rgba(125, 211, 252, 0.85));
+}
+
+/* Improve readability of NIBP and Temp */
+.wave7-vital-card.bp strong {
+  color: #f9e2af !important;
+}
+
+.wave7-vital-card.rr strong {
+  color: #c4b5fd !important;
+}
+
+.wave7-vital-card.temp strong {
+  color: #fca5a5 !important;
+}
+
+/* Smaller screens */
+@media (max-width: 1280px) {
+  .wave7-vitals-panel {
+    padding: 8px !important;
+    gap: 7px !important;
+  }
+
+  .wave7-vital-card {
+    padding: 8px !important;
+  }
+
+  .wave7-vital-card strong {
+    font-size: clamp(27px, 3vw, 46px) !important;
+  }
+
+  .wave7-spo2-trend {
+    height: 32px;
+  }
+}
