@@ -1067,7 +1067,7 @@ const alertColor = normalizeColor(live.alertColor, "red");
               </div>
 
               <div className="kgen-side-vital">
-                <span>Respiratory Rate</span>
+                <span>NIBR</span>
                 <strong className="blue">{live.respiratoryRate}</strong>
          <MiniTrend
   color={getLiveColor(live, "respiratoryRate", "yellow")}
