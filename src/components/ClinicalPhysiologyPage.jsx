@@ -5,7 +5,7 @@ import WebGLWaveformCanvas from "./WebGLWaveformCanvas";
 
 const MAX_POINTS = 360;
 const CURRENT_MARK_RATIO = 0.47;
-const STATIC_ANALYTICS_MODE = true;
+const STATIC_ANALYTICS_MODE = false;
 
 const STATIC_ANALYTICS_LABS = [
   {
@@ -765,70 +765,57 @@ useEffect(() => {
 
 const streamDate = formatStreamDate(live.streamTimestamp);
 
-// const labCards = useMemo(() => {
-//   if (live.priorityTrends?.length) {
-//     return live.priorityTrends.map((item) => ({
-//       name: item.label,
-//       value: item.displayValue ?? item.value,
-//       status: statusFromColor(normalizeColor(item.color, "blue")),
-//       meta: item.meta || streamDate,
-//       trend: item.trend || [],
-//       color: normalizeColor(item.color, "blue"),
-//       reason: item.reason
-//     }));
-//   }
-
-//   return [
-//     {
-//       name: "Glucose",
-//       value: live.glucose,
-//       status: statusFromColor(getLiveColor(live, "glucose", "red")),
-//       meta: streamDate,
-//       trend: live.glucoseTrend,
-//       color: getLiveColor(live, "glucose", "red")
-//     },
-//     {
-//       name: "Potassium",
-//       value: Number(live.potassium).toFixed(1),
-//       status: statusFromColor(getLiveColor(live, "potassium", "red")),
-//       meta: streamDate,
-//       trend: live.potassiumTrend,
-//       color: getLiveColor(live, "potassium", "red")
-//     },
-//     {
-//       name: "Creatinine",
-//       value: Number(live.creatinine).toFixed(2),
-//       status: statusFromColor(getLiveColor(live, "creatinine", "red")),
-//       meta: streamDate,
-//       trend: live.creatinineTrend,
-//       color: getLiveColor(live, "creatinine", "red")
-//     },
-//     {
-//       name: "WBC",
-//       value: Number(live.wbc).toFixed(1),
-//       status: statusFromColor(getLiveColor(live, "wbc", "red")),
-//       meta: streamDate,
-//       trend: live.wbcTrend,
-//       color: getLiveColor(live, "wbc", "red")
-//     }
-//   ];
-// }, [
-//   live.priorityTrends,
-//   live.glucose,
-//   live.potassium,
-//   live.creatinine,
-//   live.wbc,
-//   live.glucoseTrend,
-//   live.potassiumTrend,
-//   live.creatinineTrend,
-//   live.wbcTrend,
-//   live.colors,
-//   streamDate
-// ]);
-
 const labCards = useMemo(() => {
-  return STATIC_ANALYTICS_LABS;
-}, []);
+  return [
+    {
+      name: "Glucose",
+      value: live.glucose,
+      status: statusFromColor(getLiveColor(live, "glucose", "blue")),
+      meta: streamDate,
+      trend: live.glucoseTrend,
+      color: getLiveColor(live, "glucose", "blue"),
+    },
+    {
+      name: "Potassium",
+      value: Number(live.potassium).toFixed(1),
+      status: statusFromColor(getLiveColor(live, "potassium", "blue")),
+      meta: streamDate,
+      trend: live.potassiumTrend,
+      color: getLiveColor(live, "potassium", "blue"),
+    },
+    {
+      name: "Creatinine",
+      value: Number(live.creatinine).toFixed(2),
+      status: statusFromColor(getLiveColor(live, "creatinine", "blue")),
+      meta: streamDate,
+      trend: live.creatinineTrend,
+      color: getLiveColor(live, "creatinine", "blue"),
+    },
+    {
+      name: "WBC",
+      value: Number(live.wbc).toFixed(1),
+      status: statusFromColor(getLiveColor(live, "wbc", "blue")),
+      meta: streamDate,
+      trend: live.wbcTrend,
+      color: getLiveColor(live, "wbc", "blue"),
+    },
+  ];
+}, [
+  live.glucose,
+  live.potassium,
+  live.creatinine,
+  live.wbc,
+  live.glucoseTrend,
+  live.potassiumTrend,
+  live.creatinineTrend,
+  live.wbcTrend,
+  live.colors,
+  streamDate,
+]);
+
+// const labCards = useMemo(() => {
+//   return STATIC_ANALYTICS_LABS;
+// }, []);
 
 // const vitalRows = [
 //   ["BP", `${live.systolic}/${live.diastolic}`, "mmHg", streamDate],
@@ -836,9 +823,14 @@ const labCards = useMemo(() => {
 //   ["Oral Temperature", Number(live.temperature).toFixed(1), "°C", streamDate]
 // ];
 
-const vitalRows = STATIC_ANALYTICS_VITAL_ROWS;
+// const vitalRows = STATIC_ANALYTICS_VITAL_ROWS;
 
-  const waveformOverlay = useMemo(() => {
+const vitalRows = [
+  ["BP", `${live.systolic}/${live.diastolic}`, "mmHg", streamDate],
+  ["SpO2", live.spo2, "%", streamDate],
+  ["Oral Temperature", Number(live.temperature).toFixed(1), "°C", streamDate],
+];
+const waveformOverlay = useMemo(() => {
     if (!activeWaveformId) return null;
 
     const liveWaveforms = {
