@@ -20,7 +20,7 @@ const MIN_PX_PER_MM = 3.2;
 const MAX_PX_PER_MM = 9.0;
 const GRID_GAP_PX = 6;
 
-const WAVEFORM_COLUMN_COUNT = 3;
+const WAVEFORM_COLUMN_COUNT = 2;
 const WAVEFORM_ROW_COUNT = 3;
 const VITAL_RAIL_WIDTH_PX = 160;
 
@@ -358,8 +358,8 @@ const paperWidthMm = visibleSeconds * ECG_PAPER_SPEED_MM_PER_SEC;
 
 const waveformGridWidth =
   gridSize.width > 0
-    ? Math.max(1, gridSize.width - VITAL_RAIL_WIDTH_PX - GRID_GAP_PX * 3)
-    : 1080;
+    ? Math.max(1, gridSize.width - VITAL_RAIL_WIDTH_PX - GRID_GAP_PX * 2)
+    : 720;
 
 const tileWidthPx =
   gridSize.width > 0
@@ -677,7 +677,7 @@ function useRollingSeries(value, maxPoints = 28) {
   return series;
 }
 
-function MiniSpo2Trend({ series }) {
+function MiniPpgWaveform({ series }) {
   const width = 86;
   const height = 42;
 
@@ -685,10 +685,10 @@ function MiniSpo2Trend({ series }) {
     .map((value) => Number(value))
     .filter(Number.isFinite);
 
-  const safeValues = values.length ? values : [97];
+  const safeValues = values.length ? values : [0.5];
 
-  const min = Math.min(92, ...safeValues);
-  const max = Math.max(100, ...safeValues);
+  const min = Math.min(...safeValues);
+  const max = Math.max(...safeValues);
   const range = max - min || 1;
 
   const points = safeValues
@@ -756,11 +756,11 @@ function BedsideVitalsPanel({ waveFrame }) {
     vitals.body_temperature;
 
   // const spo2Series = useRollingSeries(spo2, 28);
-  const rollingSpo2Series = useRollingSeries(spo2, 28);
+const rollingSpo2Series = useRollingSeries(spo2, 28);
 
-const spo2Series =
-  Array.isArray(vitals.spo2Trace) && vitals.spo2Trace.length
-    ? vitals.spo2Trace
+const ppgSeries =
+  Array.isArray(vitals.ppgTrace) && vitals.ppgTrace.length
+    ? vitals.ppgTrace
     : rollingSpo2Series;
 
 
@@ -783,7 +783,7 @@ const spo2Series =
         label="SpO₂"
         value={formatVitalValue(spo2)}
         unit=""
-        graph={<MiniSpo2Trend series={spo2Series} />}
+         graph={<MiniPpgWaveform series={ppgSeries} />}
       />
 
       <ReferenceVitalCard

@@ -89,5 +89,26 @@ class Settings:
     if origin.strip()
 ]
     
+        # Waveform source switch
+    WAVEFORM_SOURCE = os.getenv("WAVEFORM_SOURCE", "physionet").lower()
+
+    # CSV waveform source
+    WAVEFORM_CSV_PATHS = [
+        item.strip()
+        for item in os.getenv("WAVEFORM_CSV_PATHS", "").split(",")
+        if item.strip()
+    ]
+
+    WAVEFORM_CSV_ACTIVE_INDEX = int(os.getenv("WAVEFORM_CSV_ACTIVE_INDEX", "0"))
+
+    # If you know the real device calibration, set this.
+    # Example: 1000 counts per mV.
+    # If left as 0, backend uses demo calibration from raw ADC counts to mV-like display values.
+    WAVEFORM_CSV_ECG_COUNTS_PER_MV = float(
+        os.getenv("WAVEFORM_CSV_ECG_COUNTS_PER_MV", "0")
+    )
+    
+    
+    
     WAVEFORM_TEST_BUFFER_SECONDS = int(os.getenv("WAVEFORM_TEST_BUFFER_SECONDS", "60"))
 settings = Settings()

@@ -1820,3 +1820,27 @@
     height: 32px;
   }
 }
+
+/* =========================================================
+   CEO ECG GRID RULE
+   0 mV must sit on the solid center grid line
+   ========================================================= */
+
+.wave7-calibrated-strip {
+  background-position:
+    left center,
+    left top,
+    left center,
+    left top !important;
+}
+
+/* Treat 0 mV as the central major grid line */
+.wave7-zero-line {
+  top: 50% !important;
+  height: 1px !important;
+  transform: translateY(-0.5px);
+  background: rgba(125, 211, 252, 0.48) !important;
+  box-shadow:
+    0 0 0 1px rgba(125, 211, 252, 0.18),
+    0 0 7px rgba(125, 211, 252, 0.18);
+}

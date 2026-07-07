@@ -6,6 +6,7 @@ from fastapi import FastAPI, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from app.physionet_waveforms import build_physionet_frame
+from app.csv_waveforms import build_csv_waveform_frame
 
 from app.config import settings
 from app.normalizer import FIELD_LABELS, now_iso, to_dashboard_frame
@@ -463,10 +464,10 @@ async def raw_oracle_observations(
 @app.get("/api/waveforms/latest")
 async def latest_waveform_frame():
     try:
-        frame = build_physionet_frame(
-            cursor=0,
-            batch_size=max(1, int(settings.WAVEFORM_SAMPLE_RATE * 0.25)),
-        )
+        frame = build_selected_waveform_frame(
+    cursor=0,
+    batch_size=max(1, int(settings.WAVEFORM_SAMPLE_RATE * 0.25)),
+)
         return frame
 
     except Exception as error:
@@ -489,10 +490,10 @@ async def stream_waveform_frame(
 
         while True:
             try:
-                frame = build_physionet_frame(
-                    cursor=cursor,
-                    batch_size=batch_size,
-                )
+                frame = build_selected_waveform_frame(
+    cursor=cursor,
+    batch_size=batch_size,
+)
 
                 cursor = int(frame.get("nextCursor", cursor + batch_size))
 
@@ -619,3 +620,19 @@ def synthetic_pleth_value(t: float, bpm: int = 72) -> float:
 
     value = -0.45 + pulse * 0.85 + 0.03 * math.sin(2 * math.pi * 0.4 * t)
     return max(-1.0, min(1.0, value))
+
+def build_selected_waveform_frame(
+    *,
+    cursor: int,
+    batch_size: int,
+) -> dict[str, Any]:
+    if settings.WAVEFORM_SOURCE == "csv":
+        return build_csv_waveform_frame(
+            cursor=cursor,
+            batch_size=batch_size,
+        )
+
+    return build_physionet_frame(
+        cursor=cursor,
+        batch_size=batch_size,
+    )

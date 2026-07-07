@@ -5,6 +5,7 @@ import WebGLWaveformCanvas from "./WebGLWaveformCanvas";
 
 const MAX_POINTS = 360;
 const CURRENT_MARK_RATIO = 0.47;
+const STATIC_ANALYTICS_MODE = true;
 
 const BASE_PATIENT = {
   name: "Leslie Abbott",
@@ -652,6 +653,11 @@ export default function ClinicalPhysiologyPage({ patient, onOpenLabs }) {
   }, []);
 
 useEffect(() => {
+
+  if (STATIC_ANALYTICS_MODE) {
+    return undefined;
+  }
+  
   const provider = "oracle";
 
   console.log("[KGEN FHIR STREAM CONFIG]", {
