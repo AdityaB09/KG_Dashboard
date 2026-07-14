@@ -306,17 +306,17 @@ async def load_api_range_buffer() -> ApiRangeBuffer:
     normalized_signals = normalize_for_webgl(signals_mv)
 
     ppg_series = parse_series(
+    payload,
+    "ppgred",
+    required=False,
+)
+
+    if ppg_series is None:
+        ppg_series = parse_series(
         payload,
         "ppgIR",
         required=False,
     )
-
-    if ppg_series is None:
-        ppg_series = parse_series(
-            payload,
-            "ppgred",
-            required=False,
-        )
 
     ppg_signal = normalize_ppg(
         resample_series(ppg_series, target_times, 0.0)

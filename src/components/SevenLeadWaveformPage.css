@@ -2222,3 +2222,28 @@
   outline: 2px solid #38bdf8;
   outline-offset: 1px;
 }
+
+.wave7-header {
+  position: relative;
+  z-index: 50;
+  overflow: visible;
+}
+
+.wave7-header-actions {
+  position: relative;
+  z-index: 51;
+  pointer-events: auto;
+}
+
+.wave7-source-toggle {
+  position: relative;
+  z-index: 52;
+  pointer-events: auto !important;
+}
+
+.wave7-source-toggle button {
+  position: relative;
+  z-index: 53;
+  pointer-events: auto !important;
+  cursor: pointer;
+}

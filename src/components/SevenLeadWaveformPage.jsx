@@ -58,7 +58,13 @@ const LEADS = [
   { id: "avf", label: "aVF", color: "cyan", area: "avf" },
 ];
 
-const EMPTY_LEADS = Object.fromEntries(LEADS.map((lead) => [lead.id, []]));
+function createEmptyLeads() {
+  return Object.fromEntries(
+    LEADS.map((lead) => [lead.id, []])
+  );
+}
+
+const EMPTY_LEADS = createEmptyLeads();
 
 const EMPTY_FRAME = {
   source: "physionet-ptb-xl",
@@ -72,6 +78,16 @@ const EMPTY_FRAME = {
   },
   vitals: {},
 };
+
+function createEmptyFrame(source = "physionet") {
+  return {
+    ...EMPTY_FRAME,
+    source,
+    leadsMv: createEmptyLeads(),
+    latestMv: {},
+    vitals: {},
+  };
+}
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -337,11 +353,13 @@ function getZeroLineTopPercent() {
 
 
 export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
-  const [waveFrame, setWaveFrame] = useState(EMPTY_FRAME);
+  const [waveFrame, setWaveFrame] = useState(() =>
+  createEmptyFrame("api_range")
+);
   const [leadWindows, setLeadWindows] = useState(EMPTY_LEADS);
   const [streamStatus, setStreamStatus] = useState("connecting");
   const [waveformSource, setWaveformSource] =
-  useState("physionet");
+  useState("api_range");
  
 
   const [leadAutoGains, setLeadAutoGains] = useState(() =>
@@ -355,10 +373,31 @@ export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
 
   const gridRef = useRef(null);
 
-useEffect(() => {
-  setLeadWindows(EMPTY_LEADS);
-  setWaveFrame(EMPTY_FRAME);
+  function changeWaveformSource(nextSource) {
+  if (nextSource === waveformSource) return;
+
   setStreamStatus("connecting");
+  setWaveFrame(createEmptyFrame(nextSource));
+  setLeadWindows(createEmptyLeads());
+
+  setLeadAutoGains(
+    Object.fromEntries(
+      LEADS.map((lead) => [
+        lead.id,
+        DEFAULT_GAIN_MM_PER_MV,
+      ])
+    )
+  );
+
+  setWaveformSource(nextSource);
+}
+
+useEffect(() => {
+  let active = true;
+
+  setStreamStatus("connecting");
+  setWaveFrame(createEmptyFrame(waveformSource));
+  setLeadWindows(createEmptyLeads());
 
   setLeadAutoGains(
     Object.fromEntries(
@@ -373,6 +412,8 @@ useEffect(() => {
     source: waveformSource,
 
     onFrame: (frame) => {
+      if (!active) return;
+
       setWaveFrame(frame);
 
       setLeadWindows((previous) =>
@@ -387,11 +428,14 @@ useEffect(() => {
     },
 
     onError: () => {
-      setStreamStatus("warning");
+      if (active) {
+        setStreamStatus("warning");
+      }
     },
   });
 
   return () => {
+    active = false;
     disconnectWaveforms?.();
   };
 }, [patient?.id, waveformSource]);
@@ -544,9 +588,7 @@ gainMmPerMv: effectiveGain,
           ? "active"
           : ""
       }
-      onClick={() =>
-        setWaveformSource(source.id)
-      }
+      onClick={() => changeWaveformSource(source.id)}
     >
       {source.label}
     </button>
@@ -598,18 +640,20 @@ gainMmPerMv: effectiveGain,
   "--wave7-vitals-width": `${VITAL_RAIL_WIDTH_PX}px`,
 }}
 >
-  {leadTiles.map((lead) => (
-    <WaveformTile
-      key={lead.id}
-      lead={lead}
-      samples={waveFrame.leadsMv?.[lead.id] || []}
-      visiblePoints={visiblePoints}
-      pxPerMm={pxPerMm}
-      // onGainModeChange={updateLeadGainMode}
-    />
-  ))}
+ {leadTiles.map((lead) => (
+  <WaveformTile
+    key={`${waveformSource}-${lead.id}`}
+    lead={lead}
+    samples={waveFrame.leadsMv?.[lead.id] || []}
+    visiblePoints={visiblePoints}
+    pxPerMm={pxPerMm}
+  />
+))}
 
-  <BedsideVitalsPanel waveFrame={waveFrame} />
+  <BedsideVitalsPanel
+  key={`${waveformSource}-vitals`}
+  waveFrame={waveFrame}
+/>
 </section>
       </main>
     </section>
@@ -783,87 +827,160 @@ function downsampleSeries(values, targetPoints = PPG_MINI_GRAPH_POINTS) {
   });
 }
 
-function getOnePpgBeat(values, sampleRate = 220) {
+
+
+function smoothPpg(values, radius) {
+  return values.map((_, index) => {
+    const start = Math.max(0, index - radius);
+    const end = Math.min(
+      values.length,
+      index + radius + 1
+    );
+
+    let total = 0;
+
+    for (let current = start; current < end; current += 1) {
+      total += values[current];
+    }
+
+    return total / Math.max(1, end - start);
+  });
+}
+
+function getMovingPpgBeat(
+  values,
+  sampleRate = 220,
+  heartRate = 72,
+  source = ""
+) {
   const cleanValues = values
-    .map((value) => Number(value))
+    .map(Number)
     .filter(Number.isFinite);
 
-  if (cleanValues.length < 12) {
-    return cleanValues.length ? cleanValues : [0.5];
+  if (cleanValues.length < 8) {
+    return cleanValues.length
+      ? cleanValues
+      : [0.5];
   }
 
-  const minValue = Math.min(...cleanValues);
-  const maxValue = Math.max(...cleanValues);
-  const range = maxValue - minValue || 1;
+  const safeSampleRate = Math.max(
+    50,
+    Number(sampleRate) || 220
+  );
 
-  const threshold = minValue + range * 0.58;
-  const minPeakDistance = Math.max(12, Math.round(sampleRate * 0.32));
+  const safeHeartRate = clamp(
+    Number(heartRate) || 72,
+    40,
+    180
+  );
 
-  const peaks = [];
-  let lastPeakIndex = -minPeakDistance;
+  const beatLength = clamp(
+    Math.round(
+      safeSampleRate * (60 / safeHeartRate)
+    ),
+    Math.round(safeSampleRate * 0.45),
+    Math.round(safeSampleRate * 1.4)
+  );
 
-  for (let index = 1; index < cleanValues.length - 1; index += 1) {
-    const value = cleanValues[index];
+  const isApiRange =
+    source === "api-range" ||
+    source === "api_range";
 
-    if (index - lastPeakIndex < minPeakDistance) continue;
+  if (!isApiRange) {
+    const beat = cleanValues.slice(-beatLength);
 
-    const isLocalPeak =
-      value >= threshold &&
-      value >= cleanValues[index - 1] &&
-      value >= cleanValues[index + 1];
+    return downsampleSeries(
+      smoothPpg(beat, 2),
+      PPG_MINI_GRAPH_POINTS
+    );
+  }
 
-    if (isLocalPeak) {
-      peaks.push(index);
-      lastPeakIndex = index;
+  const analysisLength = Math.min(
+    cleanValues.length,
+    beatLength * 3
+  );
+
+  const recent = cleanValues.slice(-analysisLength);
+
+  const firstPass = smoothPpg(
+    recent,
+    Math.max(
+      4,
+      Math.round(safeSampleRate * 0.045)
+    )
+  );
+
+  const smoothed = smoothPpg(
+    firstPass,
+    Math.max(
+      3,
+      Math.round(safeSampleRate * 0.03)
+    )
+  );
+
+  const edgeSpace = Math.max(
+    4,
+    Math.round(beatLength * 0.18)
+  );
+
+  let peakIndex = edgeSpace;
+
+  for (
+    let index = edgeSpace;
+    index < smoothed.length - edgeSpace;
+    index += 1
+  ) {
+    if (smoothed[index] > smoothed[peakIndex]) {
+      peakIndex = index;
     }
   }
 
-  let selectedPeakIndex = peaks[peaks.length - 1];
+  const beforePeak = Math.round(
+    beatLength * 0.28
+  );
 
-  if (!Number.isFinite(selectedPeakIndex)) {
-    const recentStart = Math.floor(cleanValues.length * 0.55);
-    let bestIndex = recentStart;
+  const afterPeak = beatLength - beforePeak;
 
-    for (let index = recentStart; index < cleanValues.length; index += 1) {
-      if (cleanValues[index] > cleanValues[bestIndex]) {
-        bestIndex = index;
-      }
-    }
-
-    selectedPeakIndex = bestIndex;
-  }
-
-  const beforePeak = Math.round(sampleRate * 0.18);
-  const afterPeak = Math.round(sampleRate * 0.52);
-  const desiredLength = beforePeak + afterPeak;
-
-  let start = selectedPeakIndex - beforePeak;
-  let end = selectedPeakIndex + afterPeak;
+  let start = peakIndex - beforePeak;
+  let end = peakIndex + afterPeak;
 
   if (start < 0) {
     end += Math.abs(start);
     start = 0;
   }
 
-  if (end > cleanValues.length) {
-    start = Math.max(0, start - (end - cleanValues.length));
-    end = cleanValues.length;
+  if (end > smoothed.length) {
+    start = Math.max(
+      0,
+      start - (end - smoothed.length)
+    );
+
+    end = smoothed.length;
   }
 
-  const beat = cleanValues.slice(start, end);
+  const oneBeat = smoothed.slice(start, end);
 
-  if (beat.length < 8) {
-    return downsampleSeries(cleanValues.slice(-desiredLength), PPG_MINI_GRAPH_POINTS);
-  }
-
-  return downsampleSeries(beat, PPG_MINI_GRAPH_POINTS);
+  return downsampleSeries(
+    oneBeat,
+    PPG_MINI_GRAPH_POINTS
+  );
 }
 
-function MiniPpgWaveform({ series, sampleRate = 220 }) {
+function MiniPpgWaveform({
+  series,
+  sampleRate = 220,
+  heartRate = 72,
+  source = "",
+}) {
   const width = 86;
   const height = 42;
 
-  const oneBeat = getOnePpgBeat(series || [], sampleRate);
+  const oneBeat = getMovingPpgBeat(
+    series || [],
+    sampleRate,
+    heartRate,
+    source
+  );
 
   const min = Math.min(...oneBeat);
   const max = Math.max(...oneBeat);
@@ -961,10 +1078,12 @@ const ppgSeries =
         value={formatVitalValue(spo2)}
         unit=""
          graph={
-  <MiniPpgWaveform
-    series={ppgSeries}
-    sampleRate={waveFrame.sampleRate || 220}
-  />
+ <MiniPpgWaveform
+  series={ppgSeries}
+  sampleRate={waveFrame.sampleRate || 220}
+  heartRate={heartRate}
+  source={waveFrame.source}
+/>
 }
       />
 
