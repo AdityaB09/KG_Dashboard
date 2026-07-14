@@ -111,4 +111,27 @@ class Settings:
     
     
     WAVEFORM_TEST_BUFFER_SECONDS = int(os.getenv("WAVEFORM_TEST_BUFFER_SECONDS", "60"))
+    
+    
+    API_RANGE_URL = os.getenv("API_RANGE_URL", "").strip()
+    API_RANGE_USER_ID = os.getenv("API_RANGE_USER_ID", "").strip()
+    API_RANGE_DEVICE_ID = os.getenv("API_RANGE_DEVICE_ID", "").strip()
+    API_RANGE_FROM_TIMESTAMP = os.getenv(
+        "API_RANGE_FROM_TIMESTAMP", ""
+    ).strip()
+    API_RANGE_TO_TIMESTAMP = os.getenv(
+        "API_RANGE_TO_TIMESTAMP", ""
+    ).strip()
+    API_RANGE_TIMEOUT_SECONDS = float(
+        os.getenv("API_RANGE_TIMEOUT_SECONDS", "30")
+    )
+    API_RANGE_ECG_VALUE_TO_MV = float(
+        os.getenv("API_RANGE_ECG_VALUE_TO_MV", "1.0")
+    )
+    API_RANGE_API_KEY = os.getenv("API_RANGE_API_KEY", "").strip()
+    API_RANGE_API_KEY_HEADER = os.getenv(
+        "API_RANGE_API_KEY_HEADER", "x-api-key"
+    ).strip()
+
+
 settings = Settings()

@@ -2190,3 +2190,35 @@
 .webgl-waveform-canvas {
   z-index: 2 !important;
 }
+
+.wave7-source-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid #dbe4ec;
+  border-radius: 999px;
+  background: #f1f5f9;
+}
+
+.wave7-source-toggle button {
+  border: 0;
+  border-radius: 999px;
+  padding: 5px 8px;
+  background: transparent;
+  color: #64748b;
+  font-size: 9px;
+  line-height: 1;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.wave7-source-toggle button.active {
+  background: #071827;
+  color: #e0f2fe;
+}
+
+.wave7-source-toggle button:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 1px;
+}

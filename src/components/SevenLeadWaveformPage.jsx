@@ -15,8 +15,22 @@ const DEFAULT_GAIN_MODE = "auto";
   It only changes how many millimeters represent 1 mV.
   The active gain is always shown as Auto 2.5 / 5 / 10 / 20 / 40.
 */
-const ECG_GAIN_OPTIONS = [2.5, 5, 10, 20, 40];
+const ECG_GAIN_OPTIONS = [
+  0.25,
+  0.5,
+  1,
+  2.5,
+  5,
+  10,
+  20,
+  40,
+];
 
+const WAVEFORM_SOURCES = [
+  { id: "physionet", label: "PhysioNet" },
+  { id: "csv", label: "CSV" },
+  { id: "api_range", label: "API Range" },
+];
 const ECG_ZERO_MV = 0;
 
 const AUTO_HEADROOM = 0.9;
@@ -326,7 +340,8 @@ export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
   const [waveFrame, setWaveFrame] = useState(EMPTY_FRAME);
   const [leadWindows, setLeadWindows] = useState(EMPTY_LEADS);
   const [streamStatus, setStreamStatus] = useState("connecting");
-
+  const [waveformSource, setWaveformSource] =
+  useState("physionet");
  
 
   const [leadAutoGains, setLeadAutoGains] = useState(() =>
@@ -340,22 +355,46 @@ export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
 
   const gridRef = useRef(null);
 
-  useEffect(() => {
-    setLeadWindows(EMPTY_LEADS);
+useEffect(() => {
+  setLeadWindows(EMPTY_LEADS);
+  setWaveFrame(EMPTY_FRAME);
+  setStreamStatus("connecting");
 
-    const disconnectWaveforms = connectWaveformStream({
-      onFrame: (frame) => {
-        setWaveFrame(frame);
-        setLeadWindows((prev) => appendLeadWindows(prev, frame));
-        setStreamStatus(frame.status === "connected" ? "live" : "warning");
-      },
-      onError: () => setStreamStatus("warning"),
-    });
+  setLeadAutoGains(
+    Object.fromEntries(
+      LEADS.map((lead) => [
+        lead.id,
+        DEFAULT_GAIN_MM_PER_MV,
+      ])
+    )
+  );
 
-    return () => {
-      disconnectWaveforms?.();
-    };
-  }, [patient?.id]);
+  const disconnectWaveforms = connectWaveformStream({
+    source: waveformSource,
+
+    onFrame: (frame) => {
+      setWaveFrame(frame);
+
+      setLeadWindows((previous) =>
+        appendLeadWindows(previous, frame)
+      );
+
+      setStreamStatus(
+        frame.status === "connected"
+          ? "live"
+          : "warning"
+      );
+    },
+
+    onError: () => {
+      setStreamStatus("warning");
+    },
+  });
+
+  return () => {
+    disconnectWaveforms?.();
+  };
+}, [patient?.id, waveformSource]);
 
   useEffect(() => {
     const gridElement = gridRef.current;
@@ -492,6 +531,27 @@ gainMmPerMv: effectiveGain,
         </div>
 
         <div className="wave7-header-actions">
+          <div
+  className="wave7-source-toggle"
+  aria-label="Waveform source"
+>
+  {WAVEFORM_SOURCES.map((source) => (
+    <button
+      key={source.id}
+      type="button"
+      className={
+        waveformSource === source.id
+          ? "active"
+          : ""
+      }
+      onClick={() =>
+        setWaveformSource(source.id)
+      }
+    >
+      {source.label}
+    </button>
+  ))}
+</div>
           <span className={`wave7-live-pill ${streamStatus}`}>
             ●{" "}
             {streamStatus === "live"

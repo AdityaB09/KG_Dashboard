@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from app.physionet_waveforms import build_physionet_frame
 from app.csv_waveforms import build_csv_waveform_frame
-
+from app.api_range_waveforms import build_api_range_frame
 from app.config import settings
 from app.normalizer import FIELD_LABELS, now_iso, to_dashboard_frame
 from app.oracle_smart import get_token_for_request, router as oracle_smart_router
@@ -462,17 +462,21 @@ async def raw_oracle_observations(
     
     
 @app.get("/api/waveforms/latest")
-async def latest_waveform_frame():
+async def latest_waveform_frame(
+    source: str = Query(default=settings.WAVEFORM_SOURCE),
+):
     try:
-        frame = build_selected_waveform_frame(
-    cursor=0,
-    batch_size=max(1, int(settings.WAVEFORM_SAMPLE_RATE * 0.25)),
-)
-        return frame
-
+        return await build_selected_waveform_frame(
+            source=source,
+            cursor=0,
+            batch_size=max(
+                1,
+                int(settings.WAVEFORM_SAMPLE_RATE * 0.25),
+            ),
+        )
     except Exception as error:
         return {
-            "source": "physionet-ptb-xl",
+            "source": source,
             "status": "error",
             "error": str(error),
         }
@@ -481,33 +485,56 @@ async def latest_waveform_frame():
 @app.get("/api/waveforms/stream")
 async def stream_waveform_frame(
     request: Request,
-    sample_rate: int = Query(default=settings.WAVEFORM_SAMPLE_RATE, ge=50, le=1000),
-    batch_ms: int = Query(default=settings.WAVEFORM_BATCH_MS, ge=20, le=500),
+    source: str = Query(default=settings.WAVEFORM_SOURCE),
+    batch_ms: int = Query(
+        default=settings.WAVEFORM_BATCH_MS,
+        ge=20,
+        le=500,
+    ),
 ):
     async def event_generator():
-        batch_size = max(1, int(sample_rate * (batch_ms / 1000)))
+        batch_size = max(
+            1,
+            int(
+                settings.WAVEFORM_SAMPLE_RATE
+                * (batch_ms / 1000)
+            ),
+        )
         cursor = 0
 
         while True:
-            try:
-                frame = build_selected_waveform_frame(
-    cursor=cursor,
-    batch_size=batch_size,
-)
+            if await request.is_disconnected():
+                break
 
-                cursor = int(frame.get("nextCursor", cursor + batch_size))
+            try:
+                frame = await build_selected_waveform_frame(
+                    source=source,
+                    cursor=cursor,
+                    batch_size=batch_size,
+                )
+
+                cursor = int(
+                    frame.get(
+                        "nextCursor",
+                        cursor + batch_size,
+                    )
+                )
 
                 yield "event: waveform-frame\n"
-                yield f"data: {json.dumps(frame, separators=(',', ':'))}\n\n"
+                yield (
+                    f"data: "
+                    f"{json.dumps(frame, separators=(',', ':'))}"
+                    f"\n\n"
+                )
 
                 await asyncio.sleep(batch_ms / 1000)
 
             except Exception as error:
                 error_frame = {
-                    "source": "physionet-ptb-xl",
+                    "source": source,
                     "status": "error",
                     "error": str(error),
-                    "sampleRate": sample_rate,
+                    "sampleRate": settings.WAVEFORM_SAMPLE_RATE,
                     "batchSize": batch_size,
                     "leads": {},
                     "leadsMv": {},
@@ -515,12 +542,19 @@ async def stream_waveform_frame(
                     "vitals": {},
                 }
 
-                print("[KGEN WAVEFORM STREAM ERROR]", str(error))
+                print(
+                    "[KGEN WAVEFORM STREAM ERROR]",
+                    str(error),
+                )
 
                 yield "event: waveform-frame\n"
-                yield f"data: {json.dumps(error_frame, separators=(',', ':'))}\n\n"
+                yield (
+                    f"data: "
+                    f"{json.dumps(error_frame, separators=(',', ':'))}"
+                    f"\n\n"
+                )
 
-                await asyncio.sleep(1.0)
+                await asyncio.sleep(1)
 
     origin = request.headers.get("origin")
 
@@ -621,18 +655,32 @@ def synthetic_pleth_value(t: float, bpm: int = 72) -> float:
     value = -0.45 + pulse * 0.85 + 0.03 * math.sin(2 * math.pi * 0.4 * t)
     return max(-1.0, min(1.0, value))
 
-def build_selected_waveform_frame(
+async def build_selected_waveform_frame(
     *,
+    source: str,
     cursor: int,
     batch_size: int,
 ) -> dict[str, Any]:
-    if settings.WAVEFORM_SOURCE == "csv":
+    selected_source = source.strip().lower()
+
+    if selected_source == "csv":
         return build_csv_waveform_frame(
             cursor=cursor,
             batch_size=batch_size,
         )
 
-    return build_physionet_frame(
-        cursor=cursor,
-        batch_size=batch_size,
+    if selected_source in {"api_range", "api-range"}:
+        return await build_api_range_frame(
+            cursor=cursor,
+            batch_size=batch_size,
+        )
+
+    if selected_source == "physionet":
+        return build_physionet_frame(
+            cursor=cursor,
+            batch_size=batch_size,
+        )
+
+    raise ValueError(
+        "source must be physionet, csv, or api_range"
     )
