@@ -1,0 +1,1165 @@
+{
+  "id": "incart-I01-loop-1-ep-001",
+  "catalogId": "incart-I01-ep-001",
+  "patientId": "research-incart-I01",
+  "record": "I01",
+  "loopNumber": 1,
+  "state": "CAPTURED",
+  "analysisStatus": "pending",
+  "label": "reviewed_annotation_window",
+  "display": "Reviewed annotated rhythm window",
+  "severity": "warning",
+  "sampleRate": 220,
+  "sourceSampleRate": 257.0,
+  "leadIds": [
+    "lead1",
+    "lead2",
+    "lead3",
+    "avr",
+    "avl",
+    "avf",
+    "v1",
+    "v2",
+    "v3",
+    "v4",
+    "v5",
+    "v6"
+  ],
+  "leadNames": [
+    "I",
+    "II",
+    "III",
+    "AVR",
+    "AVL",
+    "AVF",
+    "V1",
+    "V2",
+    "V3",
+    "V4",
+    "V5",
+    "V6"
+  ],
+  "captureStartSeconds": 0.0,
+  "captureEndSeconds": 68.0,
+  "eventStartSeconds": 30.0,
+  "eventEndSeconds": 38.0,
+  "eventStartOffsetSeconds": 30.0,
+  "eventEndOffsetSeconds": 38.0,
+  "durationSeconds": 68.0,
+  "eventDurationSeconds": 8.0,
+  "preSecondsCaptured": 30.0,
+  "postSecondsCaptured": 30.0,
+  "triggerHeartRate": 93,
+  "annotationCount": 109,
+  "annotationSymbols": [
+    "N",
+    "V"
+  ],
+  "annotations": [
+    {
+      "symbol": "N",
+      "sample": 98,
+      "absoluteSample": 98,
+      "frameOffset": 98,
+      "seconds": 0.445,
+      "loopNumber": 1,
+      "captureOffsetSamples": 98,
+      "captureOffsetSeconds": 0.445
+    },
+    {
+      "symbol": "N",
+      "sample": 237,
+      "absoluteSample": 237,
+      "frameOffset": 237,
+      "seconds": 1.077,
+      "loopNumber": 1,
+      "captureOffsetSamples": 237,
+      "captureOffsetSeconds": 1.077
+    },
+    {
+      "symbol": "N",
+      "sample": 378,
+      "absoluteSample": 378,
+      "frameOffset": 378,
+      "seconds": 1.718,
+      "loopNumber": 1,
+      "captureOffsetSamples": 378,
+      "captureOffsetSeconds": 1.718
+    },
+    {
+      "symbol": "N",
+      "sample": 520,
+      "absoluteSample": 520,
+      "frameOffset": 520,
+      "seconds": 2.364,
+      "loopNumber": 1,
+      "captureOffsetSamples": 520,
+      "captureOffsetSeconds": 2.364
+    },
+    {
+      "symbol": "V",
+      "sample": 608,
+      "absoluteSample": 608,
+      "frameOffset": 608,
+      "seconds": 2.764,
+      "loopNumber": 1,
+      "captureOffsetSamples": 608,
+      "captureOffsetSeconds": 2.764
+    },
+    {
+      "symbol": "N",
+      "sample": 806,
+      "absoluteSample": 806,
+      "frameOffset": 806,
+      "seconds": 3.664,
+      "loopNumber": 1,
+      "captureOffsetSamples": 806,
+      "captureOffsetSeconds": 3.664
+    },
+    {
+      "symbol": "N",
+      "sample": 947,
+      "absoluteSample": 947,
+      "frameOffset": 947,
+      "seconds": 4.305,
+      "loopNumber": 1,
+      "captureOffsetSamples": 947,
+      "captureOffsetSeconds": 4.305
+    },
+    {
+      "symbol": "N",
+      "sample": 1086,
+      "absoluteSample": 1086,
+      "frameOffset": 1086,
+      "seconds": 4.936,
+      "loopNumber": 1,
+      "captureOffsetSamples": 1086,
+      "captureOffsetSeconds": 4.936
+    },
+    {
+      "symbol": "N",
+      "sample": 1228,
+      "absoluteSample": 1228,
+      "frameOffset": 1228,
+      "seconds": 5.582,
+      "loopNumber": 1,
+      "captureOffsetSamples": 1228,
+      "captureOffsetSeconds": 5.582
+    },
+    {
+      "symbol": "N",
+      "sample": 1366,
+      "absoluteSample": 1366,
+      "frameOffset": 1366,
+      "seconds": 6.209,
+      "loopNumber": 1,
+      "captureOffsetSamples": 1366,
+      "captureOffsetSeconds": 6.209
+    },
+    {
+      "symbol": "N",
+      "sample": 1503,
+      "absoluteSample": 1503,
+      "frameOffset": 1503,
+      "seconds": 6.832,
+      "loopNumber": 1,
+      "captureOffsetSamples": 1503,
+      "captureOffsetSeconds": 6.832
+    },
+    {
+      "symbol": "N",
+      "sample": 1638,
+      "absoluteSample": 1638,
+      "frameOffset": 1638,
+      "seconds": 7.445,
+      "loopNumber": 1,
+      "captureOffsetSamples": 1638,
+      "captureOffsetSeconds": 7.445
+    },
+    {
+      "symbol": "N",
+      "sample": 1777,
+      "absoluteSample": 1777,
+      "frameOffset": 1777,
+      "seconds": 8.077,
+      "loopNumber": 1,
+      "captureOffsetSamples": 1777,
+      "captureOffsetSeconds": 8.077
+    },
+    {
+      "symbol": "N",
+      "sample": 1915,
+      "absoluteSample": 1915,
+      "frameOffset": 1915,
+      "seconds": 8.705,
+      "loopNumber": 1,
+      "captureOffsetSamples": 1915,
+      "captureOffsetSeconds": 8.705
+    },
+    {
+      "symbol": "N",
+      "sample": 2048,
+      "absoluteSample": 2048,
+      "frameOffset": 2048,
+      "seconds": 9.309,
+      "loopNumber": 1,
+      "captureOffsetSamples": 2048,
+      "captureOffsetSeconds": 9.309
+    },
+    {
+      "symbol": "N",
+      "sample": 2189,
+      "absoluteSample": 2189,
+      "frameOffset": 2189,
+      "seconds": 9.95,
+      "loopNumber": 1,
+      "captureOffsetSamples": 2189,
+      "captureOffsetSeconds": 9.95
+    },
+    {
+      "symbol": "V",
+      "sample": 2274,
+      "absoluteSample": 2274,
+      "frameOffset": 2274,
+      "seconds": 10.336,
+      "loopNumber": 1,
+      "captureOffsetSamples": 2274,
+      "captureOffsetSeconds": 10.336
+    },
+    {
+      "symbol": "N",
+      "sample": 2470,
+      "absoluteSample": 2470,
+      "frameOffset": 2470,
+      "seconds": 11.227,
+      "loopNumber": 1,
+      "captureOffsetSamples": 2470,
+      "captureOffsetSeconds": 11.227
+    },
+    {
+      "symbol": "N",
+      "sample": 2604,
+      "absoluteSample": 2604,
+      "frameOffset": 2604,
+      "seconds": 11.836,
+      "loopNumber": 1,
+      "captureOffsetSamples": 2604,
+      "captureOffsetSeconds": 11.836
+    },
+    {
+      "symbol": "N",
+      "sample": 2742,
+      "absoluteSample": 2742,
+      "frameOffset": 2742,
+      "seconds": 12.464,
+      "loopNumber": 1,
+      "captureOffsetSamples": 2742,
+      "captureOffsetSeconds": 12.464
+    },
+    {
+      "symbol": "N",
+      "sample": 2879,
+      "absoluteSample": 2879,
+      "frameOffset": 2879,
+      "seconds": 13.086,
+      "loopNumber": 1,
+      "captureOffsetSamples": 2879,
+      "captureOffsetSeconds": 13.086
+    },
+    {
+      "symbol": "N",
+      "sample": 3014,
+      "absoluteSample": 3014,
+      "frameOffset": 3014,
+      "seconds": 13.7,
+      "loopNumber": 1,
+      "captureOffsetSamples": 3014,
+      "captureOffsetSeconds": 13.7
+    },
+    {
+      "symbol": "N",
+      "sample": 3151,
+      "absoluteSample": 3151,
+      "frameOffset": 3151,
+      "seconds": 14.323,
+      "loopNumber": 1,
+      "captureOffsetSamples": 3151,
+      "captureOffsetSeconds": 14.323
+    },
+    {
+      "symbol": "N",
+      "sample": 3286,
+      "absoluteSample": 3286,
+      "frameOffset": 3286,
+      "seconds": 14.936,
+      "loopNumber": 1,
+      "captureOffsetSamples": 3286,
+      "captureOffsetSeconds": 14.936
+    },
+    {
+      "symbol": "N",
+      "sample": 3422,
+      "absoluteSample": 3422,
+      "frameOffset": 3422,
+      "seconds": 15.555,
+      "loopNumber": 1,
+      "captureOffsetSamples": 3422,
+      "captureOffsetSeconds": 15.555
+    },
+    {
+      "symbol": "N",
+      "sample": 3559,
+      "absoluteSample": 3559,
+      "frameOffset": 3559,
+      "seconds": 16.177,
+      "loopNumber": 1,
+      "captureOffsetSamples": 3559,
+      "captureOffsetSeconds": 16.177
+    },
+    {
+      "symbol": "N",
+      "sample": 3697,
+      "absoluteSample": 3697,
+      "frameOffset": 3697,
+      "seconds": 16.805,
+      "loopNumber": 1,
+      "captureOffsetSamples": 3697,
+      "captureOffsetSeconds": 16.805
+    },
+    {
+      "symbol": "N",
+      "sample": 3838,
+      "absoluteSample": 3838,
+      "frameOffset": 3838,
+      "seconds": 17.445,
+      "loopNumber": 1,
+      "captureOffsetSamples": 3838,
+      "captureOffsetSeconds": 17.445
+    },
+    {
+      "symbol": "N",
+      "sample": 3981,
+      "absoluteSample": 3981,
+      "frameOffset": 3981,
+      "seconds": 18.095,
+      "loopNumber": 1,
+      "captureOffsetSamples": 3981,
+      "captureOffsetSeconds": 18.095
+    },
+    {
+      "symbol": "N",
+      "sample": 4125,
+      "absoluteSample": 4125,
+      "frameOffset": 4125,
+      "seconds": 18.75,
+      "loopNumber": 1,
+      "captureOffsetSamples": 4125,
+      "captureOffsetSeconds": 18.75
+    },
+    {
+      "symbol": "N",
+      "sample": 4268,
+      "absoluteSample": 4268,
+      "frameOffset": 4268,
+      "seconds": 19.4,
+      "loopNumber": 1,
+      "captureOffsetSamples": 4268,
+      "captureOffsetSeconds": 19.4
+    },
+    {
+      "symbol": "N",
+      "sample": 4414,
+      "absoluteSample": 4414,
+      "frameOffset": 4414,
+      "seconds": 20.064,
+      "loopNumber": 1,
+      "captureOffsetSamples": 4414,
+      "captureOffsetSeconds": 20.064
+    },
+    {
+      "symbol": "V",
+      "sample": 4505,
+      "absoluteSample": 4505,
+      "frameOffset": 4505,
+      "seconds": 20.477,
+      "loopNumber": 1,
+      "captureOffsetSamples": 4505,
+      "captureOffsetSeconds": 20.477
+    },
+    {
+      "symbol": "N",
+      "sample": 4710,
+      "absoluteSample": 4710,
+      "frameOffset": 4710,
+      "seconds": 21.409,
+      "loopNumber": 1,
+      "captureOffsetSamples": 4710,
+      "captureOffsetSeconds": 21.409
+    },
+    {
+      "symbol": "N",
+      "sample": 4855,
+      "absoluteSample": 4855,
+      "frameOffset": 4855,
+      "seconds": 22.068,
+      "loopNumber": 1,
+      "captureOffsetSamples": 4855,
+      "captureOffsetSeconds": 22.068
+    },
+    {
+      "symbol": "N",
+      "sample": 4998,
+      "absoluteSample": 4998,
+      "frameOffset": 4998,
+      "seconds": 22.718,
+      "loopNumber": 1,
+      "captureOffsetSamples": 4998,
+      "captureOffsetSeconds": 22.718
+    },
+    {
+      "symbol": "N",
+      "sample": 5145,
+      "absoluteSample": 5145,
+      "frameOffset": 5145,
+      "seconds": 23.386,
+      "loopNumber": 1,
+      "captureOffsetSamples": 5145,
+      "captureOffsetSeconds": 23.386
+    },
+    {
+      "symbol": "N",
+      "sample": 5285,
+      "absoluteSample": 5285,
+      "frameOffset": 5285,
+      "seconds": 24.023,
+      "loopNumber": 1,
+      "captureOffsetSamples": 5285,
+      "captureOffsetSeconds": 24.023
+    },
+    {
+      "symbol": "N",
+      "sample": 5427,
+      "absoluteSample": 5427,
+      "frameOffset": 5427,
+      "seconds": 24.668,
+      "loopNumber": 1,
+      "captureOffsetSamples": 5427,
+      "captureOffsetSeconds": 24.668
+    },
+    {
+      "symbol": "N",
+      "sample": 5568,
+      "absoluteSample": 5568,
+      "frameOffset": 5568,
+      "seconds": 25.309,
+      "loopNumber": 1,
+      "captureOffsetSamples": 5568,
+      "captureOffsetSeconds": 25.309
+    },
+    {
+      "symbol": "N",
+      "sample": 5709,
+      "absoluteSample": 5709,
+      "frameOffset": 5709,
+      "seconds": 25.95,
+      "loopNumber": 1,
+      "captureOffsetSamples": 5709,
+      "captureOffsetSeconds": 25.95
+    },
+    {
+      "symbol": "N",
+      "sample": 5851,
+      "absoluteSample": 5851,
+      "frameOffset": 5851,
+      "seconds": 26.595,
+      "loopNumber": 1,
+      "captureOffsetSamples": 5851,
+      "captureOffsetSeconds": 26.595
+    },
+    {
+      "symbol": "N",
+      "sample": 5990,
+      "absoluteSample": 5990,
+      "frameOffset": 5990,
+      "seconds": 27.227,
+      "loopNumber": 1,
+      "captureOffsetSamples": 5990,
+      "captureOffsetSeconds": 27.227
+    },
+    {
+      "symbol": "N",
+      "sample": 6128,
+      "absoluteSample": 6128,
+      "frameOffset": 6128,
+      "seconds": 27.855,
+      "loopNumber": 1,
+      "captureOffsetSamples": 6128,
+      "captureOffsetSeconds": 27.855
+    },
+    {
+      "symbol": "N",
+      "sample": 6266,
+      "absoluteSample": 6266,
+      "frameOffset": 6266,
+      "seconds": 28.482,
+      "loopNumber": 1,
+      "captureOffsetSamples": 6266,
+      "captureOffsetSeconds": 28.482
+    },
+    {
+      "symbol": "N",
+      "sample": 6405,
+      "absoluteSample": 6405,
+      "frameOffset": 6405,
+      "seconds": 29.114,
+      "loopNumber": 1,
+      "captureOffsetSamples": 6405,
+      "captureOffsetSeconds": 29.114
+    },
+    {
+      "symbol": "N",
+      "sample": 6544,
+      "absoluteSample": 6544,
+      "frameOffset": 6544,
+      "seconds": 29.745,
+      "loopNumber": 1,
+      "captureOffsetSamples": 6544,
+      "captureOffsetSeconds": 29.745
+    },
+    {
+      "symbol": "N",
+      "sample": 6683,
+      "absoluteSample": 6683,
+      "frameOffset": 6683,
+      "seconds": 30.377,
+      "loopNumber": 1,
+      "captureOffsetSamples": 6683,
+      "captureOffsetSeconds": 30.377
+    },
+    {
+      "symbol": "N",
+      "sample": 6820,
+      "absoluteSample": 6820,
+      "frameOffset": 6820,
+      "seconds": 31.0,
+      "loopNumber": 1,
+      "captureOffsetSamples": 6820,
+      "captureOffsetSeconds": 31.0
+    },
+    {
+      "symbol": "N",
+      "sample": 6954,
+      "absoluteSample": 6954,
+      "frameOffset": 6954,
+      "seconds": 31.609,
+      "loopNumber": 1,
+      "captureOffsetSamples": 6954,
+      "captureOffsetSeconds": 31.609
+    },
+    {
+      "symbol": "N",
+      "sample": 7090,
+      "absoluteSample": 7090,
+      "frameOffset": 7090,
+      "seconds": 32.227,
+      "loopNumber": 1,
+      "captureOffsetSamples": 7090,
+      "captureOffsetSeconds": 32.227
+    },
+    {
+      "symbol": "N",
+      "sample": 7227,
+      "absoluteSample": 7227,
+      "frameOffset": 7227,
+      "seconds": 32.85,
+      "loopNumber": 1,
+      "captureOffsetSamples": 7227,
+      "captureOffsetSeconds": 32.85
+    },
+    {
+      "symbol": "V",
+      "sample": 7311,
+      "absoluteSample": 7311,
+      "frameOffset": 7311,
+      "seconds": 33.232,
+      "loopNumber": 1,
+      "captureOffsetSamples": 7311,
+      "captureOffsetSeconds": 33.232
+    },
+    {
+      "symbol": "N",
+      "sample": 7505,
+      "absoluteSample": 7505,
+      "frameOffset": 7505,
+      "seconds": 34.114,
+      "loopNumber": 1,
+      "captureOffsetSamples": 7505,
+      "captureOffsetSeconds": 34.114
+    },
+    {
+      "symbol": "N",
+      "sample": 7640,
+      "absoluteSample": 7640,
+      "frameOffset": 7640,
+      "seconds": 34.727,
+      "loopNumber": 1,
+      "captureOffsetSamples": 7640,
+      "captureOffsetSeconds": 34.727
+    },
+    {
+      "symbol": "N",
+      "sample": 7774,
+      "absoluteSample": 7774,
+      "frameOffset": 7774,
+      "seconds": 35.336,
+      "loopNumber": 1,
+      "captureOffsetSamples": 7774,
+      "captureOffsetSeconds": 35.336
+    },
+    {
+      "symbol": "N",
+      "sample": 7911,
+      "absoluteSample": 7911,
+      "frameOffset": 7911,
+      "seconds": 35.959,
+      "loopNumber": 1,
+      "captureOffsetSamples": 7911,
+      "captureOffsetSeconds": 35.959
+    },
+    {
+      "symbol": "N",
+      "sample": 8041,
+      "absoluteSample": 8041,
+      "frameOffset": 8041,
+      "seconds": 36.55,
+      "loopNumber": 1,
+      "captureOffsetSamples": 8041,
+      "captureOffsetSeconds": 36.55
+    },
+    {
+      "symbol": "N",
+      "sample": 8176,
+      "absoluteSample": 8176,
+      "frameOffset": 8176,
+      "seconds": 37.164,
+      "loopNumber": 1,
+      "captureOffsetSamples": 8176,
+      "captureOffsetSeconds": 37.164
+    },
+    {
+      "symbol": "N",
+      "sample": 8308,
+      "absoluteSample": 8308,
+      "frameOffset": 8308,
+      "seconds": 37.764,
+      "loopNumber": 1,
+      "captureOffsetSamples": 8308,
+      "captureOffsetSeconds": 37.764
+    },
+    {
+      "symbol": "N",
+      "sample": 8441,
+      "absoluteSample": 8441,
+      "frameOffset": 8441,
+      "seconds": 38.368,
+      "loopNumber": 1,
+      "captureOffsetSamples": 8441,
+      "captureOffsetSeconds": 38.368
+    },
+    {
+      "symbol": "N",
+      "sample": 8574,
+      "absoluteSample": 8574,
+      "frameOffset": 8574,
+      "seconds": 38.973,
+      "loopNumber": 1,
+      "captureOffsetSamples": 8574,
+      "captureOffsetSeconds": 38.973
+    },
+    {
+      "symbol": "N",
+      "sample": 8708,
+      "absoluteSample": 8708,
+      "frameOffset": 8708,
+      "seconds": 39.582,
+      "loopNumber": 1,
+      "captureOffsetSamples": 8708,
+      "captureOffsetSeconds": 39.582
+    },
+    {
+      "symbol": "N",
+      "sample": 8841,
+      "absoluteSample": 8841,
+      "frameOffset": 8841,
+      "seconds": 40.186,
+      "loopNumber": 1,
+      "captureOffsetSamples": 8841,
+      "captureOffsetSeconds": 40.186
+    },
+    {
+      "symbol": "N",
+      "sample": 8974,
+      "absoluteSample": 8974,
+      "frameOffset": 8974,
+      "seconds": 40.791,
+      "loopNumber": 1,
+      "captureOffsetSamples": 8974,
+      "captureOffsetSeconds": 40.791
+    },
+    {
+      "symbol": "N",
+      "sample": 9107,
+      "absoluteSample": 9107,
+      "frameOffset": 9107,
+      "seconds": 41.395,
+      "loopNumber": 1,
+      "captureOffsetSamples": 9107,
+      "captureOffsetSeconds": 41.395
+    },
+    {
+      "symbol": "N",
+      "sample": 9243,
+      "absoluteSample": 9243,
+      "frameOffset": 9243,
+      "seconds": 42.014,
+      "loopNumber": 1,
+      "captureOffsetSamples": 9243,
+      "captureOffsetSeconds": 42.014
+    },
+    {
+      "symbol": "V",
+      "sample": 9326,
+      "absoluteSample": 9326,
+      "frameOffset": 9326,
+      "seconds": 42.391,
+      "loopNumber": 1,
+      "captureOffsetSamples": 9326,
+      "captureOffsetSeconds": 42.391
+    },
+    {
+      "symbol": "N",
+      "sample": 9516,
+      "absoluteSample": 9516,
+      "frameOffset": 9516,
+      "seconds": 43.255,
+      "loopNumber": 1,
+      "captureOffsetSamples": 9516,
+      "captureOffsetSeconds": 43.255
+    },
+    {
+      "symbol": "N",
+      "sample": 9651,
+      "absoluteSample": 9651,
+      "frameOffset": 9651,
+      "seconds": 43.868,
+      "loopNumber": 1,
+      "captureOffsetSamples": 9651,
+      "captureOffsetSeconds": 43.868
+    },
+    {
+      "symbol": "N",
+      "sample": 9788,
+      "absoluteSample": 9788,
+      "frameOffset": 9788,
+      "seconds": 44.491,
+      "loopNumber": 1,
+      "captureOffsetSamples": 9788,
+      "captureOffsetSeconds": 44.491
+    },
+    {
+      "symbol": "N",
+      "sample": 9921,
+      "absoluteSample": 9921,
+      "frameOffset": 9921,
+      "seconds": 45.095,
+      "loopNumber": 1,
+      "captureOffsetSamples": 9921,
+      "captureOffsetSeconds": 45.095
+    },
+    {
+      "symbol": "N",
+      "sample": 10054,
+      "absoluteSample": 10054,
+      "frameOffset": 10054,
+      "seconds": 45.7,
+      "loopNumber": 1,
+      "captureOffsetSamples": 10054,
+      "captureOffsetSeconds": 45.7
+    },
+    {
+      "symbol": "N",
+      "sample": 10185,
+      "absoluteSample": 10185,
+      "frameOffset": 10185,
+      "seconds": 46.295,
+      "loopNumber": 1,
+      "captureOffsetSamples": 10185,
+      "captureOffsetSeconds": 46.295
+    },
+    {
+      "symbol": "N",
+      "sample": 10317,
+      "absoluteSample": 10317,
+      "frameOffset": 10317,
+      "seconds": 46.895,
+      "loopNumber": 1,
+      "captureOffsetSamples": 10317,
+      "captureOffsetSeconds": 46.895
+    },
+    {
+      "symbol": "N",
+      "sample": 10450,
+      "absoluteSample": 10450,
+      "frameOffset": 10450,
+      "seconds": 47.5,
+      "loopNumber": 1,
+      "captureOffsetSamples": 10450,
+      "captureOffsetSeconds": 47.5
+    },
+    {
+      "symbol": "N",
+      "sample": 10582,
+      "absoluteSample": 10582,
+      "frameOffset": 10582,
+      "seconds": 48.1,
+      "loopNumber": 1,
+      "captureOffsetSamples": 10582,
+      "captureOffsetSeconds": 48.1
+    },
+    {
+      "symbol": "N",
+      "sample": 10716,
+      "absoluteSample": 10716,
+      "frameOffset": 10716,
+      "seconds": 48.709,
+      "loopNumber": 1,
+      "captureOffsetSamples": 10716,
+      "captureOffsetSeconds": 48.709
+    },
+    {
+      "symbol": "N",
+      "sample": 10848,
+      "absoluteSample": 10848,
+      "frameOffset": 10848,
+      "seconds": 49.309,
+      "loopNumber": 1,
+      "captureOffsetSamples": 10848,
+      "captureOffsetSeconds": 49.309
+    },
+    {
+      "symbol": "N",
+      "sample": 10981,
+      "absoluteSample": 10981,
+      "frameOffset": 10981,
+      "seconds": 49.914,
+      "loopNumber": 1,
+      "captureOffsetSamples": 10981,
+      "captureOffsetSeconds": 49.914
+    },
+    {
+      "symbol": "N",
+      "sample": 11115,
+      "absoluteSample": 11115,
+      "frameOffset": 11115,
+      "seconds": 50.523,
+      "loopNumber": 1,
+      "captureOffsetSamples": 11115,
+      "captureOffsetSeconds": 50.523
+    },
+    {
+      "symbol": "N",
+      "sample": 11249,
+      "absoluteSample": 11249,
+      "frameOffset": 11249,
+      "seconds": 51.132,
+      "loopNumber": 1,
+      "captureOffsetSamples": 11249,
+      "captureOffsetSeconds": 51.132
+    },
+    {
+      "symbol": "N",
+      "sample": 11383,
+      "absoluteSample": 11383,
+      "frameOffset": 11383,
+      "seconds": 51.741,
+      "loopNumber": 1,
+      "captureOffsetSamples": 11383,
+      "captureOffsetSeconds": 51.741
+    },
+    {
+      "symbol": "N",
+      "sample": 11515,
+      "absoluteSample": 11515,
+      "frameOffset": 11515,
+      "seconds": 52.341,
+      "loopNumber": 1,
+      "captureOffsetSamples": 11515,
+      "captureOffsetSeconds": 52.341
+    },
+    {
+      "symbol": "N",
+      "sample": 11651,
+      "absoluteSample": 11651,
+      "frameOffset": 11651,
+      "seconds": 52.959,
+      "loopNumber": 1,
+      "captureOffsetSamples": 11651,
+      "captureOffsetSeconds": 52.959
+    },
+    {
+      "symbol": "N",
+      "sample": 11782,
+      "absoluteSample": 11782,
+      "frameOffset": 11782,
+      "seconds": 53.555,
+      "loopNumber": 1,
+      "captureOffsetSamples": 11782,
+      "captureOffsetSeconds": 53.555
+    },
+    {
+      "symbol": "N",
+      "sample": 11917,
+      "absoluteSample": 11917,
+      "frameOffset": 11917,
+      "seconds": 54.168,
+      "loopNumber": 1,
+      "captureOffsetSamples": 11917,
+      "captureOffsetSeconds": 54.168
+    },
+    {
+      "symbol": "N",
+      "sample": 12051,
+      "absoluteSample": 12051,
+      "frameOffset": 12051,
+      "seconds": 54.777,
+      "loopNumber": 1,
+      "captureOffsetSamples": 12051,
+      "captureOffsetSeconds": 54.777
+    },
+    {
+      "symbol": "N",
+      "sample": 12183,
+      "absoluteSample": 12183,
+      "frameOffset": 12183,
+      "seconds": 55.377,
+      "loopNumber": 1,
+      "captureOffsetSamples": 12183,
+      "captureOffsetSeconds": 55.377
+    },
+    {
+      "symbol": "N",
+      "sample": 12316,
+      "absoluteSample": 12316,
+      "frameOffset": 12316,
+      "seconds": 55.982,
+      "loopNumber": 1,
+      "captureOffsetSamples": 12316,
+      "captureOffsetSeconds": 55.982
+    },
+    {
+      "symbol": "N",
+      "sample": 12450,
+      "absoluteSample": 12450,
+      "frameOffset": 12450,
+      "seconds": 56.591,
+      "loopNumber": 1,
+      "captureOffsetSamples": 12450,
+      "captureOffsetSeconds": 56.591
+    },
+    {
+      "symbol": "N",
+      "sample": 12585,
+      "absoluteSample": 12585,
+      "frameOffset": 12585,
+      "seconds": 57.205,
+      "loopNumber": 1,
+      "captureOffsetSamples": 12585,
+      "captureOffsetSeconds": 57.205
+    },
+    {
+      "symbol": "N",
+      "sample": 12720,
+      "absoluteSample": 12720,
+      "frameOffset": 12720,
+      "seconds": 57.818,
+      "loopNumber": 1,
+      "captureOffsetSamples": 12720,
+      "captureOffsetSeconds": 57.818
+    },
+    {
+      "symbol": "N",
+      "sample": 12854,
+      "absoluteSample": 12854,
+      "frameOffset": 12854,
+      "seconds": 58.427,
+      "loopNumber": 1,
+      "captureOffsetSamples": 12854,
+      "captureOffsetSeconds": 58.427
+    },
+    {
+      "symbol": "N",
+      "sample": 12988,
+      "absoluteSample": 12988,
+      "frameOffset": 12988,
+      "seconds": 59.036,
+      "loopNumber": 1,
+      "captureOffsetSamples": 12988,
+      "captureOffsetSeconds": 59.036
+    },
+    {
+      "symbol": "N",
+      "sample": 13121,
+      "absoluteSample": 13121,
+      "frameOffset": 13121,
+      "seconds": 59.641,
+      "loopNumber": 1,
+      "captureOffsetSamples": 13121,
+      "captureOffsetSeconds": 59.641
+    },
+    {
+      "symbol": "N",
+      "sample": 13256,
+      "absoluteSample": 13256,
+      "frameOffset": 13256,
+      "seconds": 60.255,
+      "loopNumber": 1,
+      "captureOffsetSamples": 13256,
+      "captureOffsetSeconds": 60.255
+    },
+    {
+      "symbol": "N",
+      "sample": 13393,
+      "absoluteSample": 13393,
+      "frameOffset": 13393,
+      "seconds": 60.877,
+      "loopNumber": 1,
+      "captureOffsetSamples": 13393,
+      "captureOffsetSeconds": 60.877
+    },
+    {
+      "symbol": "N",
+      "sample": 13523,
+      "absoluteSample": 13523,
+      "frameOffset": 13523,
+      "seconds": 61.468,
+      "loopNumber": 1,
+      "captureOffsetSamples": 13523,
+      "captureOffsetSeconds": 61.468
+    },
+    {
+      "symbol": "N",
+      "sample": 13658,
+      "absoluteSample": 13658,
+      "frameOffset": 13658,
+      "seconds": 62.082,
+      "loopNumber": 1,
+      "captureOffsetSamples": 13658,
+      "captureOffsetSeconds": 62.082
+    },
+    {
+      "symbol": "V",
+      "sample": 13742,
+      "absoluteSample": 13742,
+      "frameOffset": 13742,
+      "seconds": 62.464,
+      "loopNumber": 1,
+      "captureOffsetSamples": 13742,
+      "captureOffsetSeconds": 62.464
+    },
+    {
+      "symbol": "N",
+      "sample": 13928,
+      "absoluteSample": 13928,
+      "frameOffset": 13928,
+      "seconds": 63.309,
+      "loopNumber": 1,
+      "captureOffsetSamples": 13928,
+      "captureOffsetSeconds": 63.309
+    },
+    {
+      "symbol": "N",
+      "sample": 14061,
+      "absoluteSample": 14061,
+      "frameOffset": 14061,
+      "seconds": 63.914,
+      "loopNumber": 1,
+      "captureOffsetSamples": 14061,
+      "captureOffsetSeconds": 63.914
+    },
+    {
+      "symbol": "N",
+      "sample": 14197,
+      "absoluteSample": 14197,
+      "frameOffset": 14197,
+      "seconds": 64.532,
+      "loopNumber": 1,
+      "captureOffsetSamples": 14197,
+      "captureOffsetSeconds": 64.532
+    },
+    {
+      "symbol": "N",
+      "sample": 14333,
+      "absoluteSample": 14333,
+      "frameOffset": 14333,
+      "seconds": 65.15,
+      "loopNumber": 1,
+      "captureOffsetSamples": 14333,
+      "captureOffsetSeconds": 65.15
+    },
+    {
+      "symbol": "N",
+      "sample": 14466,
+      "absoluteSample": 14466,
+      "frameOffset": 14466,
+      "seconds": 65.755,
+      "loopNumber": 1,
+      "captureOffsetSamples": 14466,
+      "captureOffsetSeconds": 65.755
+    },
+    {
+      "symbol": "N",
+      "sample": 14601,
+      "absoluteSample": 14601,
+      "frameOffset": 14601,
+      "seconds": 66.368,
+      "loopNumber": 1,
+      "captureOffsetSamples": 14601,
+      "captureOffsetSeconds": 66.368
+    },
+    {
+      "symbol": "N",
+      "sample": 14739,
+      "absoluteSample": 14739,
+      "frameOffset": 14739,
+      "seconds": 66.995,
+      "loopNumber": 1,
+      "captureOffsetSamples": 14739,
+      "captureOffsetSeconds": 66.995
+    },
+    {
+      "symbol": "V",
+      "sample": 14833,
+      "absoluteSample": 14833,
+      "frameOffset": 14833,
+      "seconds": 67.423,
+      "loopNumber": 1,
+      "captureOffsetSamples": 14833,
+      "captureOffsetSeconds": 67.423
+    }
+  ],
+  "ringBufferFramesAtTrigger": 601,
+  "diagnosis": {
+    "label": "reviewed_annotation_window",
+    "display": "Reviewed annotated rhythm window",
+    "sourceType": "dataset_annotation",
+    "sourceName": "PhysioNet INCART",
+    "confidence": null,
+    "referenceAnnotation": true
+  },
+  "provenance": {
+    "waveformSource": "PhysioNet INCART",
+    "annotationSource": "Reviewed INCART annotation-derived window",
+    "clinicalContextSource": null
+  },
+  "capturedAt": "2026-07-14T23:08:20.924902+00:00"
+}

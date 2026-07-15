@@ -43,6 +43,10 @@ export default function App() {
   const [multiMonitorOpen, setMultiMonitorOpen] = useState(false);
   
   const [activePage, setActivePage] = useState("main"); // "dashboard", "monitor", "physiology" 
+  const [
+  selectedEpisodeId,
+  setSelectedEpisodeId,
+] = useState(null);
   const [monitorPatientIds, setMonitorPatientIds] = useState([]);
   
   const [monitorSlots, setMonitorSlots] = useState([null, null, null, null]);
@@ -159,6 +163,7 @@ export default function App() {
     setModal(null);
     setGlobalSearchOpen(false);
     setGlobalSearchQuery("");
+    setSelectedEpisodeId(null);
   };
 
 
@@ -327,7 +332,9 @@ function renderMainPage() {
   return (
     <SevenLeadWaveformPage
       patient={selectedPatient}
-      onOpenAnalytics={() => setActivePage("physiology")}
+      onOpenAnalytics={() =>
+        setActivePage("physiology")
+      }
     />
   );
 }
@@ -366,10 +373,13 @@ function renderPhysiologyPage() {
   return (
     <ClinicalPhysiologyPage
       patient={selectedPatient}
+      episodeId={selectedEpisodeId}
       onOpenLabs={() => openModal("labs")}
     />
   );
 }
+
+
 function renderActivePage() {
   if (activePage === "main") return renderMainPage();
   if (activePage === "dashboard") return renderDashboardPage();

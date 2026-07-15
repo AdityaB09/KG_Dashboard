@@ -2,7 +2,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import WebGLWaveformCanvas from "./WebGLWaveformCanvas";
 import { connectWaveformStream } from "../services/waveformStream";
 import "./SevenLeadWaveformPage.css";
-
+import {
+  connectEpisodeEvents,
+  getLatestEpisode,
+} from "../services/episodeService";
 const ECG_PAPER_SPEED_MM_PER_SEC = 25;
 const DEFAULT_VISIBLE_SECONDS = 3;
 const DEFAULT_GAIN_MM_PER_MV = 10;
@@ -30,6 +33,7 @@ const WAVEFORM_SOURCES = [
   { id: "physionet", label: "PhysioNet" },
   { id: "csv", label: "CSV" },
   { id: "api_range", label: "API Range" },
+  { id: "incart", label: "INCART" },
 ];
 const ECG_ZERO_MV = 0;
 
@@ -354,12 +358,16 @@ function getZeroLineTopPercent() {
 
 export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
   const [waveFrame, setWaveFrame] = useState(() =>
-  createEmptyFrame("api_range")
+  createEmptyFrame("physionet")
 );
   const [leadWindows, setLeadWindows] = useState(EMPTY_LEADS);
   const [streamStatus, setStreamStatus] = useState("connecting");
   const [waveformSource, setWaveformSource] =
-  useState("api_range");
+  useState("physionet");
+  const [
+  latestEpisodeId,
+  setLatestEpisodeId,
+] = useState(null);
  
 
   const [leadAutoGains, setLeadAutoGains] = useState(() =>
@@ -439,6 +447,40 @@ useEffect(() => {
     disconnectWaveforms?.();
   };
 }, [patient?.id, waveformSource]);
+
+
+useEffect(() => {
+  let active = true;
+
+  getLatestEpisode()
+    .then((episode) => {
+      if (active && episode?.id) {
+        setLatestEpisodeId(episode.id);
+      }
+    })
+    .catch(() => {});
+
+  const disconnect = connectEpisodeEvents({
+    onEvent: (event) => {
+      if (
+        active &&
+        event.type === "episode.captured" &&
+        event.episodeId
+      ) {
+        setLatestEpisodeId(
+          event.episodeId
+        );
+      }
+    },
+    onError: () => {},
+  });
+
+  return () => {
+    active = false;
+    disconnect?.();
+  };
+}, []);
+
 
   useEffect(() => {
     const gridElement = gridRef.current;
@@ -610,7 +652,9 @@ gainMmPerMv: effectiveGain,
           <button
             type="button"
             className="wave7-action-btn"
-            onClick={onOpenAnalytics}
+           onClick={() =>
+  onOpenAnalytics?.(latestEpisodeId)
+}
           >
             Open Analytics
           </button>

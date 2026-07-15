@@ -19,7 +19,10 @@ from app.providers import (
 
 import math
 import time
+from app.incart_waveforms import build_incart_frame
 
+from app.episodes import episode_coordinator
+from app.episode_routes import router as episode_router
 
 app = FastAPI(title="KardioGenics FHIR Streaming Backend")
 
@@ -33,6 +36,7 @@ app.add_middleware(
 
 app.include_router(oracle_smart_router)
 
+app.include_router(episode_router)
 
 @app.get("/health")
 async def health():
@@ -485,7 +489,10 @@ async def latest_waveform_frame(
 @app.get("/api/waveforms/stream")
 async def stream_waveform_frame(
     request: Request,
-    source: str = Query(default=settings.WAVEFORM_SOURCE),
+    source: str = Query(
+        default=settings.WAVEFORM_SOURCE
+    ),
+    session_id: str = Query(default="main"),
     batch_ms: int = Query(
         default=settings.WAVEFORM_BATCH_MS,
         ge=20,
@@ -519,6 +526,10 @@ async def stream_waveform_frame(
                         cursor + batch_size,
                     )
                 )
+                episode_coordinator.observe_frame(
+    session_id=f"{session_id}:{source}",
+    frame=frame,
+)
 
                 yield "event: waveform-frame\n"
                 yield (
@@ -680,7 +691,12 @@ async def build_selected_waveform_frame(
             cursor=cursor,
             batch_size=batch_size,
         )
+    if selected_source == "incart":
+        return await build_incart_frame(
+            cursor=cursor,
+            batch_size=batch_size,
+        )
 
     raise ValueError(
-        "source must be physionet, csv, or api_range"
+        "source must be physionet, csv, incart, or api_range"
     )

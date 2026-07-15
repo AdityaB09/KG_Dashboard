@@ -132,6 +132,53 @@ class Settings:
     API_RANGE_API_KEY_HEADER = os.getenv(
         "API_RANGE_API_KEY_HEADER", "x-api-key"
     ).strip()
+    
+    INCART_PN_DIR = os.getenv(
+        "INCART_PN_DIR",
+        "incartdb/1.0.0",
+    ).strip()
+
+    INCART_RECORD = os.getenv(
+        "INCART_RECORD",
+        "I01",
+    ).strip()
+
+    INCART_ANNOTATOR = os.getenv(
+        "INCART_ANNOTATOR",
+        "atr",
+    ).strip()
+    
+    EPISODES_ENABLED = os.getenv(
+        "EPISODES_ENABLED",
+        "false",
+    ).lower() in {"1", "true", "yes", "on"}
+
+    ANALYTICS_EPISODE_MODE = os.getenv(
+        "ANALYTICS_EPISODE_MODE",
+        "false",
+    ).lower() in {"1", "true", "yes", "on"}
+
+    EPISODE_PRE_SECONDS = float(
+        os.getenv("EPISODE_PRE_SECONDS", "30")
+    )
+
+    EPISODE_POST_SECONDS = float(
+        os.getenv("EPISODE_POST_SECONDS", "30")
+    )
+
+    EPISODE_CATALOG_PATH = os.getenv(
+        "EPISODE_CATALOG_PATH",
+        "data/incart_episode_catalog.json",
+    ).strip()
+
+    EPISODE_STORAGE_PATH = os.getenv(
+        "EPISODE_STORAGE_PATH",
+        "data/episodes",
+    ).strip()
+
+    EPISODE_MAX_WAVEFORM_POINTS = int(
+        os.getenv("EPISODE_MAX_WAVEFORM_POINTS", "1800")
+    )
 
 
 settings = Settings()

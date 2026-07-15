@@ -2,7 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import "./ClinicalPhysiologyPage.css";
 import { connectFhirStream } from "../services/fhirStream";
 import WebGLWaveformCanvas from "./WebGLWaveformCanvas";
-
+import {
+  connectEpisodeEvents,
+  getEpisode,
+  getEpisodeWaveforms,
+  getLatestEpisode,
+} from "../services/episodeService";
 const MAX_POINTS = 360;
 const CURRENT_MARK_RATIO = 0.47;
 const STATIC_ANALYTICS_MODE = false;
@@ -681,10 +686,292 @@ function WaveformOverlay({ config, onClose }) {
   );
 }
 
-export default function ClinicalPhysiologyPage({ patient, onOpenLabs }) {
+
+function normalizeEpisodeValues(values = []) {
+  const clean = values
+    .map(Number)
+    .filter(Number.isFinite);
+
+  if (clean.length < 2) {
+    return Array.from(
+      { length: MAX_POINTS },
+      () => 0.5
+    );
+  }
+
+  const stride = Math.max(
+    1,
+    Math.floor(clean.length / MAX_POINTS)
+  );
+
+  const sampled = clean.filter(
+    (_, index) => index % stride === 0
+  );
+
+  const sorted = [...sampled].sort(
+    (a, b) => a - b
+  );
+
+  const center =
+    sorted[Math.floor(sorted.length / 2)];
+
+  const absoluteValues = sampled
+    .map((value) => Math.abs(value - center))
+    .sort((a, b) => a - b);
+
+  const scale =
+    absoluteValues[
+      Math.floor(
+        (absoluteValues.length - 1) * 0.98
+      )
+    ] || 1;
+
+  return sampled.map((value) =>
+    clamp(
+      0.5 + (value - center) / (scale * 2.4),
+      0.05,
+      0.95
+    )
+  );
+}
+
+function buildAnnotationSeries(
+  annotations = [],
+  durationSeconds = 1,
+) {
+  const values = Array.from(
+    { length: MAX_POINTS },
+    () => 0.2
+  );
+
+  for (const annotation of annotations) {
+    const seconds = Number(
+      annotation.captureOffsetSeconds
+    );
+
+    if (!Number.isFinite(seconds)) continue;
+
+    const ratio = clamp(
+      seconds / Math.max(durationSeconds, 1),
+      0,
+      1
+    );
+
+    const index = Math.min(
+      MAX_POINTS - 1,
+      Math.round(
+        ratio * (MAX_POINTS - 1)
+      )
+    );
+
+    values[index] = 0.9;
+
+    if (index > 0) {
+      values[index - 1] = 0.5;
+    }
+
+    if (index < MAX_POINTS - 1) {
+      values[index + 1] = 0.5;
+    }
+  }
+
+  return values;
+}
+
+function EpisodeWaveRow({
+  label,
+  values,
+  color,
+  compact = false,
+  eventStartRatio,
+  eventEndRatio,
+}) {
+  return (
+    <div
+      className={`kgen-episode-wave-row ${
+        compact ? "compact" : ""
+      }`}
+    >
+      <WaveChart
+        label={label}
+        color={color}
+        values={values}
+        compact={compact}
+      />
+
+      <span
+        className="kgen-episode-marker start"
+        style={{
+          left: `${eventStartRatio * 100}%`,
+        }}
+      />
+
+      <span
+        className="kgen-episode-marker end"
+        style={{
+          left: `${eventEndRatio * 100}%`,
+        }}
+      />
+    </div>
+  );
+}
+
+function EpisodePhysiology({
+  episode,
+  waveforms,
+}) {
+  const duration = Number(
+    waveforms.durationSeconds ||
+      episode.durationSeconds ||
+      1
+  );
+
+  const eventStart = Number(
+    waveforms.eventStartSeconds ||
+      episode.eventStartOffsetSeconds ||
+      0
+  );
+
+  const eventEnd = Number(
+    waveforms.eventEndSeconds ||
+      episode.eventEndOffsetSeconds ||
+      eventStart
+  );
+
+  const eventStartRatio = clamp(
+    eventStart / duration,
+    0,
+    1
+  );
+
+  const eventEndRatio = clamp(
+    eventEnd / duration,
+    eventStartRatio,
+    1
+  );
+
+  const lead2 = normalizeEpisodeValues(
+    waveforms.leadsMv?.lead2
+  );
+
+  const lead1 = normalizeEpisodeValues(
+    waveforms.leadsMv?.lead1
+  );
+
+  const avf = normalizeEpisodeValues(
+    waveforms.leadsMv?.avf
+  );
+
+  const annotationSeries =
+    buildAnnotationSeries(
+      waveforms.annotations,
+      duration
+    );
+
+  return (
+    <div className="kgen-live-content">
+      <div className="kgen-wave-stack">
+        <EpisodeWaveRow
+          label="Lead II"
+          color="red"
+          values={lead2}
+          eventStartRatio={eventStartRatio}
+          eventEndRatio={eventEndRatio}
+        />
+
+        <EpisodeWaveRow
+          label="Lead I"
+          color="red"
+          values={lead1}
+          compact
+          eventStartRatio={eventStartRatio}
+          eventEndRatio={eventEndRatio}
+        />
+
+        <EpisodeWaveRow
+          label="aVF"
+          color="blue"
+          values={avf}
+          eventStartRatio={eventStartRatio}
+          eventEndRatio={eventEndRatio}
+        />
+
+        <EpisodeWaveRow
+          label="Beat annotations"
+          color="yellow"
+          values={annotationSeries}
+          compact
+          eventStartRatio={eventStartRatio}
+          eventEndRatio={eventEndRatio}
+        />
+
+        <div className="kgen-time-axis">
+          <span>
+            −{episode.preSecondsCaptured}s
+          </span>
+          <span>Episode start</span>
+          <span>Episode end</span>
+          <span>
+            +{episode.postSecondsCaptured}s
+          </span>
+        </div>
+      </div>
+
+      <aside className="kgen-side-vitals">
+        <div className="kgen-side-vital">
+          <span>Trigger HR</span>
+          <strong>
+            {episode.triggerHeartRate ?? "--"}
+          </strong>
+          <small className="kgen-episode-vital-note">
+            bpm
+          </small>
+        </div>
+
+        <div className="kgen-side-vital">
+          <span>Episode</span>
+          <strong className="blue">
+            {Number(
+              episode.eventDurationSeconds || 0
+            ).toFixed(0)}
+            s
+          </strong>
+          <small className="kgen-episode-vital-note">
+            reviewed window
+          </small>
+        </div>
+
+        <div className="kgen-side-vital">
+          <span>Annotations</span>
+          <strong className="blue">
+            {episode.annotationCount ?? 0}
+          </strong>
+          <small className="kgen-episode-vital-note">
+            INCART atr
+          </small>
+        </div>
+      </aside>
+    </div>
+  );
+}
+
+export default function ClinicalPhysiologyPage({
+  patient,
+  episodeId,
+  onOpenLabs,
+}) {
   const [live, setLive] = useState(createInitialLiveState);
   const [activeWaveformId, setActiveWaveformId] = useState(null);
-
+  const [episode, setEpisode] = useState(null);
+const [
+  episodeWaveforms,
+  setEpisodeWaveforms,
+] = useState(null);
+const [
+  episodeStatus,
+  setEpisodeStatus,
+] = useState("loading");
+  
   useEffect(() => {
     const interval = setInterval(() => {
       setLive((prev) => nextLiveState(prev));
@@ -751,6 +1038,77 @@ useEffect(() => {
 
   return disconnect;
 }, [patient?.fhirId, patient?.id]);
+
+useEffect(() => {
+  let active = true;
+
+  async function loadEpisode(
+    targetEpisodeId = episodeId
+  ) {
+    try {
+      setEpisodeStatus("loading");
+
+      const metadata = targetEpisodeId
+        ? await getEpisode(targetEpisodeId)
+        : await getLatestEpisode();
+
+      if (!active) return;
+
+      if (!metadata?.id) {
+        setEpisode(null);
+        setEpisodeWaveforms(null);
+        setEpisodeStatus("empty");
+        return;
+      }
+
+      const waveforms =
+        await getEpisodeWaveforms(
+          metadata.id
+        );
+
+      if (!active) return;
+
+      setEpisode(metadata);
+      setEpisodeWaveforms(waveforms);
+      setEpisodeStatus("ready");
+
+    } catch (error) {
+      if (!active) return;
+
+      console.error(
+        "[KGEN EPISODE LOAD ERROR]",
+        error
+      );
+
+      setEpisode(null);
+      setEpisodeWaveforms(null);
+      setEpisodeStatus("error");
+    }
+  }
+
+  loadEpisode();
+
+  const disconnect =
+    connectEpisodeEvents({
+      onEvent: (event) => {
+        if (
+          event.type === "episode.captured" &&
+          (
+            !episodeId ||
+            event.episodeId === episodeId
+          )
+        ) {
+          loadEpisode(event.episodeId);
+        }
+      },
+      onError: () => {},
+    });
+
+  return () => {
+    active = false;
+    disconnect?.();
+  };
+}, [episodeId]);
 
   const currentPatient = useMemo(() => {
     if (!patient) return BASE_PATIENT;
@@ -970,7 +1328,40 @@ const interpretation =
 
 const alertColor = normalizeColor(live.alertColor, "red");
 
+const episodeReady = Boolean(
+  episode &&
+  episodeWaveforms &&
+  episodeStatus === "ready"
+);
 
+const episodeInterpretation = episodeReady
+  ? {
+      title: `${episode.display} captured`,
+      rhythm:
+        `${episode.annotationCount || 0} beat annotations were preserved from the INCART atr file.`,
+      ppg:
+        "PPG and SpO2 are not available in the INCART dataset.",
+      likelyEtiology:
+        "Deterministic signal analysis and clinical context are pending. No automated diagnosis has been generated.",
+    }
+  : {
+      title:
+        episodeStatus === "loading"
+          ? "Loading captured episode"
+          : "No captured episode selected",
+      rhythm:
+        episodeStatus === "loading"
+          ? "Retrieving the stored pre-event, event, and post-event ECG."
+          : "Monitoring continues on the Main page.",
+      ppg:
+        "INCART episode mode contains ECG and beat annotations only.",
+      likelyEtiology:
+        "Clinical interpretation will become available after deterministic signal analysis is implemented.",
+    };
+
+const episodeAlertColor = episodeReady
+  ? "yellow"
+  : "blue";
   return (
     <section className="kgen-page">
       <header className="kgen-topbar">
@@ -992,96 +1383,44 @@ const alertColor = normalizeColor(live.alertColor, "red");
       </header>
 
       <main className="kgen-grid">
-        <section className="kgen-panel kgen-live-panel">
-          <div className="kgen-panel-title-row">
-  <h2>01. Live Physiology</h2>
+       <section className="kgen-panel kgen-live-panel">
+  <div className="kgen-panel-title-row">
+    <h2>01. Episode Physiology</h2>
 
-  <span className="kgen-header-clock">
-    <span className="kgen-clock-dot" />
-    <span>Current time: {live.clockText || formatLiveClock()}</span>
-  </span>
-</div>
+    <span
+      className={`kgen-episode-status ${episodeStatus}`}
+    >
+      <span className="kgen-clock-dot" />
 
-          <div className="kgen-live-content">
-            <div className="kgen-wave-stack">
-<WaveChart
-  label="ECG"
-  color={getLiveColor(live, "heartRate", live.alertColor || "red")}
-  values={live.ecg}
-  onOpen={() => setActiveWaveformId("ecg")}
-  ariaLabel="Open ECG waveform popup"
-/>
+      {episodeStatus === "ready"
+        ? "Captured episode"
+        : episodeStatus === "loading"
+        ? "Loading episode"
+        : episodeStatus === "error"
+        ? "Episode unavailable"
+        : "Waiting for capture"}
+    </span>
+  </div>
 
-<WaveChart
-  color={getLiveColor(live, "respiratoryRate", "yellow")}
-  values={live.resp}
-  compact
-  onOpen={() => setActiveWaveformId("resp")}
-  ariaLabel="Open respiratory waveform popup"
-/>
+  {episodeReady ? (
+    <EpisodePhysiology
+      episode={episode}
+      waveforms={episodeWaveforms}
+    />
+  ) : (
+    <div className="kgen-episode-empty">
+      <strong>
+        No captured episode selected.
+      </strong>
 
-<WaveChart
-  label="PPG"
-  color={getLiveColor(live, "spo2", "blue")}
-  values={live.ppg}
-  onOpen={() => setActiveWaveformId("ppg")}
-  ariaLabel="Open PPG waveform popup"
-/>
-
-<WaveChart
-  color={getLiveColor(live, "spo2", "blue")}
-  values={live.ppgSoft}
-  compact
-  onOpen={() => setActiveWaveformId("ppgSoft")}
-  ariaLabel="Open secondary PPG waveform popup"
-/>
-
-              <div className="kgen-time-axis">
-                <span>0 mo</span>
-                <span>2s</span>
-                <span>4s</span>
-                <span>6s</span>
-                <span>12s</span>
-                <span>16s</span>
-              </div>
-            </div>
-
-            <aside className="kgen-side-vitals">
-              <div className="kgen-side-vital">
-                <span>Heart Rate</span>
-                <strong>{live.heartRate}</strong>
-              <MiniTrend
-  color={getLiveColor(live, "heartRate", "red")}
-  values={live.heartTrend}
-  onOpen={() => setActiveWaveformId("heartTrend")}
-  ariaLabel="Open heart rate trend popup"
-/>
-              </div>
-
-              <div className="kgen-side-vital">
-                <span>NIBR</span>
-                <strong className="blue">{live.respiratoryRate}</strong>
-         <MiniTrend
-  color={getLiveColor(live, "respiratoryRate", "yellow")}
-  values={live.respTrend}
-  onOpen={() => setActiveWaveformId("respTrend")}
-  ariaLabel="Open respiratory rate trend popup"
-/>
-              </div>
-
-              <div className="kgen-side-vital">
-                <span>SpO2</span>
-                <strong className="blue">{live.spo2}%</strong>
-                <MiniTrend
-  color={getLiveColor(live, "spo2", "blue")}
-  values={live.spo2Trend}
-  onOpen={() => setActiveWaveformId("spo2Trend")}
-  ariaLabel="Open SpO2 trend popup"
-/>
-              </div>
-            </aside>
-          </div>
-        </section>
+      <p>
+        Monitoring continues on the Main page.
+        Keep INCART selected until the configured
+        post-event interval is complete.
+      </p>
+    </div>
+  )}
+</section>
 
         <section className="kgen-panel kgen-labs-panel">
           <h2>03. Recent Lab Results &amp; Trends</h2>
@@ -1134,27 +1473,46 @@ const alertColor = normalizeColor(live.alertColor, "red");
           </button>
         </section>
 
-        <section className={`kgen-panel kgen-alert-panel ${alertColor}`}>
-  <h2>02. Critical Alerts &amp; Interpretation</h2>
+    <section
+  className={`kgen-panel kgen-alert-panel ${episodeAlertColor}`}
+>
+  <h2>
+    02. Critical Alerts &amp; Interpretation
+  </h2>
 
   <div className="kgen-alert-box">
     <div className="kgen-alert-icon">
-      {alertColor === "blue" ? "✓" : "!"}
+      {episodeReady ? "!" : "✓"}
     </div>
 
-    <h3>{interpretation.title}</h3>
+    <h3>{episodeInterpretation.title}</h3>
 
     <p>
-      <b>Rhythm:</b> {interpretation.rhythm}
+      <b>Detected Episode:</b>{" "}
+      {episodeInterpretation.rhythm}
     </p>
 
     <p>
-      <b>PPG Signal:</b> {interpretation.ppg}
+      <b>Available Signals:</b>{" "}
+      {episodeInterpretation.ppg}
     </p>
 
     <p>
-      <b>Likely Etiology:</b> {interpretation.likelyEtiology}
+      <b>Analysis Status:</b>{" "}
+      {episodeInterpretation.likelyEtiology}
     </p>
+
+    {episodeReady && (
+      <p className="kgen-episode-provenance">
+        <b>Source:</b>{" "}
+        {episode.provenance?.waveformSource}
+        {" • "}
+        {
+          episode.provenance
+            ?.annotationSource
+        }
+      </p>
+    )}
   </div>
 </section>
 

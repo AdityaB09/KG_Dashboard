@@ -1,0 +1,14 @@
+[
+  {
+    "id": "incart-I01-ep-001",
+    "record": "I01",
+    "startSeconds": 30,
+    "endSeconds": 38,
+    "label": "reviewed_annotation_window",
+    "display": "Reviewed annotated rhythm window",
+    "annotationSymbols": [],
+    "sourceType": "dataset_annotation",
+    "basis": "configured_research_review_window",
+    "severity": "warning"
+  }
+]
