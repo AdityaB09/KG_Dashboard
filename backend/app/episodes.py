@@ -16,7 +16,7 @@ from app.incart_waveforms import (
     get_incart_buffer,
     get_incart_segment,
 )
-
+from app.incidents import incident_coordinator
 
 def policy(
     category: str,
@@ -1434,6 +1434,65 @@ class EpisodeCoordinator:
                 capture.event_end_abs
                 - capture.capture_start_abs
             )
+            
+            requested_pre_seconds = float(
+    settings.EPISODE_PRE_SECONDS
+)
+
+            requested_post_seconds = float(
+                settings.EPISODE_POST_SECONDS
+            )
+
+            actual_pre_seconds = (
+                capture.event_start_abs
+                - capture.capture_start_abs
+            ) / sample_rate
+
+            actual_post_seconds = (
+                capture.capture_end_abs
+                - capture.event_end_abs
+            ) / sample_rate
+
+            capture_duration_seconds = (
+                len(centered_signals)
+                / sample_rate
+            )
+
+            tolerance = 2 / sample_rate
+
+            pre_context_complete = (
+                actual_pre_seconds + tolerance
+                >= requested_pre_seconds
+            )
+
+            post_context_complete = (
+                actual_post_seconds + tolerance
+                >= requested_post_seconds
+            )
+
+            capture_truncated_by_max = (
+                capture_duration_seconds + tolerance
+                >= float(
+                    settings.EPISODE_MAX_CAPTURE_SECONDS
+                )
+                and not post_context_complete
+            )
+
+            truncation_reasons = []
+
+            if not pre_context_complete:
+                truncation_reasons.append(
+                    "record_start_or_capture_boundary"
+                )
+
+            if not post_context_complete:
+                truncation_reasons.append(
+                    (
+                        "max_capture_duration"
+                        if capture_truncated_by_max
+                        else "record_end_or_capture_boundary"
+                    )
+                )
 
             np.savez_compressed(
                 episode_dir
@@ -1568,6 +1627,7 @@ class EpisodeCoordinator:
 
             metadata = {
                 "id": capture.episode_id,
+                "schemaVersion": "episode-v2",
                 "patientId": (
                     f"research-incart-"
                     f"{capture.record}"
@@ -1683,6 +1743,40 @@ class EpisodeCoordinator:
                     / sample_rate,
                     3,
                 ),
+                "captureCompleteness": {
+    "requestedPreSeconds": round(
+        requested_pre_seconds,
+        3,
+    ),
+    "actualPreSeconds": round(
+        actual_pre_seconds,
+        3,
+    ),
+    "preContextComplete": (
+        pre_context_complete
+    ),
+    "requestedPostSeconds": round(
+        requested_post_seconds,
+        3,
+    ),
+    "actualPostSeconds": round(
+        actual_post_seconds,
+        3,
+    ),
+    "postContextComplete": (
+        post_context_complete
+    ),
+    "captureComplete": (
+        pre_context_complete
+        and post_context_complete
+    ),
+    "captureTruncatedByMaxDuration": (
+        capture_truncated_by_max
+    ),
+    "truncationReasons": (
+        truncation_reasons
+    ),
+},
                 "triggerHeartRate": (
                     capture
                     .trigger_heart_rate
@@ -1769,13 +1863,33 @@ class EpisodeCoordinator:
                     ).isoformat()
                 ),
             }
+            if settings.INCIDENTS_ENABLED:
+                 incident = (
+        incident_coordinator
+        .register_episode(metadata)
+    )
 
+            metadata["incidentId"] = (
+                incident["id"]
+            )
+
+            metadata[
+                "incidentPrimaryEpisodeId"
+            ] = incident.get(
+                "primaryEpisodeId"
+            )
+
+            metadata[
+                "incidentBestContextEpisodeId"
+            ] = incident.get(
+                "bestContextEpisodeId"
+            )
             self.write_json(
                 episode_dir
                 / "metadata.json",
                 metadata,
             )
-
+            
             self.write_json(
                 episode_dir
                 / "clinical_context.json",
@@ -1809,6 +1923,9 @@ class EpisodeCoordinator:
                     "type": (
                         "episode.captured"
                     ),
+                    "incidentId": metadata.get(
+    "incidentId"
+),
                     "episodeId": (
                         capture.episode_id
                     ),

@@ -358,12 +358,12 @@ function getZeroLineTopPercent() {
 
 export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
   const [waveFrame, setWaveFrame] = useState(() =>
-  createEmptyFrame("physionet")
+  createEmptyFrame("incart")
 );
   const [leadWindows, setLeadWindows] = useState(EMPTY_LEADS);
   const [streamStatus, setStreamStatus] = useState("connecting");
   const [waveformSource, setWaveformSource] =
-  useState("physionet");
+  useState("incart");
   const [
   latestEpisodeId,
   setLatestEpisodeId,

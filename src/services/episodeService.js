@@ -3,11 +3,19 @@ const API_BASE = (
   "http://127.0.0.1:8000"
 ).replace(/\/$/, "");
 
-async function requestJson(path) {
+async function requestJson(
+  path,
+  options = {}
+) {
   const response = await fetch(
     `${API_BASE}${path}`,
     {
       credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        ...(options.headers || {}),
+      },
+      ...options,
     }
   );
 
@@ -18,6 +26,30 @@ async function requestJson(path) {
   }
 
   return response.json();
+}
+
+
+export async function getIncidentContext(
+  incidentId
+) {
+  return requestJson(
+    `/api/incidents/${encodeURIComponent(
+      incidentId
+    )}/context`
+  );
+}
+
+export async function loadIncidentContext(
+  incidentId
+) {
+  return requestJson(
+    `/api/incidents/${encodeURIComponent(
+      incidentId
+    )}/context/load`,
+    {
+      method: "POST",
+    }
+  );
 }
 
 export async function listEpisodes() {

@@ -22,8 +22,10 @@ import time
 from app.incart_waveforms import build_incart_frame
 
 from app.episodes import episode_coordinator
-from app.episode_routes import router as episode_router
-
+from app.episode_routes import (
+    router as episode_router,
+    incident_router,
+)
 app = FastAPI(title="KardioGenics FHIR Streaming Backend")
 
 app.add_middleware(
@@ -37,6 +39,8 @@ app.add_middleware(
 app.include_router(oracle_smart_router)
 
 app.include_router(episode_router)
+
+app.include_router(incident_router)
 
 def observe_episode_frame_safely(
     *,

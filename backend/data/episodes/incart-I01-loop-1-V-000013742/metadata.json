@@ -1,5 +1,6 @@
 {
   "id": "incart-I01-loop-1-V-000013742",
+  "schemaVersion": "episode-v2",
   "patientId": "research-incart-I01",
   "record": "I01",
   "loopNumber": 1,
@@ -51,6 +52,17 @@
   "eventDurationSeconds": 13.209,
   "preSecondsCaptured": 10.0,
   "postSecondsCaptured": 10.0,
+  "captureCompleteness": {
+    "requestedPreSeconds": 10.0,
+    "actualPreSeconds": 10.0,
+    "preContextComplete": true,
+    "requestedPostSeconds": 10.0,
+    "actualPostSeconds": 10.0,
+    "postContextComplete": true,
+    "captureComplete": true,
+    "captureTruncatedByMaxDuration": false,
+    "truncationReasons": []
+  },
   "triggerHeartRate": 99,
   "annotationCount": 54,
   "annotationCounts": {
@@ -923,5 +935,8 @@
     "annotationSource": "INCART atr reference annotations",
     "clinicalContextSource": null
   },
-  "capturedAt": "2026-07-15T04:55:54.138984+00:00"
+  "capturedAt": "2026-07-15T19:53:25.025086+00:00",
+  "incidentId": "inc-I01-loop-1-ventricular-ectopy-000013742",
+  "incidentPrimaryEpisodeId": "incart-I01-loop-1-V-000013742",
+  "incidentBestContextEpisodeId": "incart-I01-loop-1-V-000013742"
 }

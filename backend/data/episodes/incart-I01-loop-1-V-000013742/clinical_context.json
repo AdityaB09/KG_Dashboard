@@ -1,8 +1,1155 @@
 {
-  "status": "not_loaded",
+  "schemaVersion": "clinical-context-v1",
+  "incidentId": "inc-I01-loop-1-ventricular-ectopy-000013742",
+  "status": "ready",
+  "storedWithEpisodeId": "incart-I01-loop-1-V-000013742",
+  "waveformPatientId": "research-incart-I01",
+  "fhirPatientId": "12724070",
+  "linkageMode": "controlled_research_pairing",
+  "contextAnchor": {
+    "value": "2026-07-15T19:53:25.025086+00:00",
+    "basis": "capture_time_proxy"
+  },
+  "labTrends": [
+    {
+      "field": "potassium",
+      "label": "Potassium",
+      "loincCodes": [
+        "6298-4",
+        "2823-3"
+      ],
+      "latestValue": 5.8,
+      "unit": "mmol/L",
+      "latestAt": "2022-01-21T06:00:00+00:00",
+      "latestRelation": "before_anchor",
+      "latestRelationLabel": "2.35667e+06 min before",
+      "trendDirection": "falling",
+      "color": "red",
+      "points": [
+        {
+          "resourceId": "L-197602006",
+          "value": 6.3,
+          "unit": "mmol/L",
+          "observedAt": "2022-01-21T06:00:00+00:00",
+          "status": "final",
+          "codes": [
+            "21704910",
+            "2823-3"
+          ],
+          "minutesFromAnchor": -2356673.4,
+          "relation": "before_anchor",
+          "relationLabel": "2.35667e+06 min before"
+        },
+        {
+          "resourceId": "L-197602004",
+          "value": 6.3,
+          "unit": "mmol/L",
+          "observedAt": "2022-01-21T06:00:00+00:00",
+          "status": "final",
+          "codes": [
+            "21704910",
+            "2823-3"
+          ],
+          "minutesFromAnchor": -2356673.4,
+          "relation": "before_anchor",
+          "relationLabel": "2.35667e+06 min before"
+        },
+        {
+          "resourceId": "L-197602002",
+          "value": 6.3,
+          "unit": "mmol/L",
+          "observedAt": "2022-01-21T06:00:00+00:00",
+          "status": "final",
+          "codes": [
+            "21704910",
+            "2823-3"
+          ],
+          "minutesFromAnchor": -2356673.4,
+          "relation": "before_anchor",
+          "relationLabel": "2.35667e+06 min before"
+        },
+        {
+          "resourceId": "L-197602000",
+          "value": 5.8,
+          "unit": "mmol/L",
+          "observedAt": "2022-01-21T06:00:00+00:00",
+          "status": "final",
+          "codes": [
+            "21704910",
+            "2823-3"
+          ],
+          "minutesFromAnchor": -2356673.4,
+          "relation": "before_anchor",
+          "relationLabel": "2.35667e+06 min before"
+        }
+      ]
+    }
+  ],
+  "vitalTrends": [
+    {
+      "field": "heartRate",
+      "label": "Heart Rate",
+      "loincCodes": [
+        "8867-4"
+      ],
+      "latestValue": 74.0,
+      "unit": "bpm",
+      "latestAt": "2026-07-15T13:04:30+00:00",
+      "latestRelation": "before_anchor",
+      "latestRelationLabel": "408.9 min before",
+      "trendDirection": "stable",
+      "color": "blue",
+      "points": [
+        {
+          "resourceId": "VS-209016320",
+          "value": 75.0,
+          "unit": "bpm",
+          "observedAt": "2026-03-22T17:24:53+00:00",
+          "status": "final",
+          "codes": [
+            "1164554",
+            "69000-8",
+            "8867-4"
+          ],
+          "minutesFromAnchor": -165748.5,
+          "relation": "before_anchor",
+          "relationLabel": "165748 min before"
+        },
+        {
+          "resourceId": "VS-209016316",
+          "value": 75.0,
+          "unit": "bpm",
+          "observedAt": "2026-03-22T17:24:53+00:00",
+          "status": "final",
+          "codes": [
+            "1164554",
+            "69000-8",
+            "8867-4"
+          ],
+          "minutesFromAnchor": -165748.5,
+          "relation": "before_anchor",
+          "relationLabel": "165748 min before"
+        },
+        {
+          "resourceId": "VS-209016314",
+          "value": 75.0,
+          "unit": "bpm",
+          "observedAt": "2026-03-22T17:24:53+00:00",
+          "status": "final",
+          "codes": [
+            "1164554",
+            "69000-8",
+            "8867-4"
+          ],
+          "minutesFromAnchor": -165748.5,
+          "relation": "before_anchor",
+          "relationLabel": "165748 min before"
+        },
+        {
+          "resourceId": "VS-209016312",
+          "value": 75.0,
+          "unit": "bpm",
+          "observedAt": "2026-03-22T17:24:53+00:00",
+          "status": "final",
+          "codes": [
+            "1164554",
+            "69000-8",
+            "8867-4"
+          ],
+          "minutesFromAnchor": -165748.5,
+          "relation": "before_anchor",
+          "relationLabel": "165748 min before"
+        },
+        {
+          "resourceId": "VS-209016310",
+          "value": 75.0,
+          "unit": "bpm",
+          "observedAt": "2026-03-22T17:24:53+00:00",
+          "status": "final",
+          "codes": [
+            "1164554",
+            "69000-8",
+            "8867-4"
+          ],
+          "minutesFromAnchor": -165748.5,
+          "relation": "before_anchor",
+          "relationLabel": "165748 min before"
+        },
+        {
+          "resourceId": "VS-209066912",
+          "value": 74.0,
+          "unit": "bpm",
+          "observedAt": "2026-07-15T12:53:24+00:00",
+          "status": "final",
+          "codes": [
+            "1164554",
+            "69000-8",
+            "8867-4"
+          ],
+          "minutesFromAnchor": -420.0,
+          "relation": "before_anchor",
+          "relationLabel": "420 min before"
+        },
+        {
+          "resourceId": "VS-209067060",
+          "value": 74.0,
+          "unit": "bpm",
+          "observedAt": "2026-07-15T13:04:30+00:00",
+          "status": "final",
+          "codes": [
+            "1164554",
+            "69000-8",
+            "8867-4"
+          ],
+          "minutesFromAnchor": -408.9,
+          "relation": "before_anchor",
+          "relationLabel": "408.9 min before"
+        }
+      ]
+    },
+    {
+      "field": "respiratoryRate",
+      "label": "Respiratory Rate",
+      "loincCodes": [
+        "9279-1"
+      ],
+      "latestValue": 33.0,
+      "unit": "br/min",
+      "latestAt": "2026-07-15T13:04:30+00:00",
+      "latestRelation": "before_anchor",
+      "latestRelationLabel": "408.9 min before",
+      "trendDirection": "stable",
+      "color": "red",
+      "points": [
+        {
+          "resourceId": "VS-197508686",
+          "value": 15.0,
+          "unit": "br/min",
+          "observedAt": "2021-07-21T19:20:22+00:00",
+          "status": "final",
+          "codes": [
+            "703540",
+            "9279-1"
+          ],
+          "minutesFromAnchor": -2620833.1,
+          "relation": "before_anchor",
+          "relationLabel": "2.62083e+06 min before"
+        },
+        {
+          "resourceId": "VS-206729582",
+          "value": 30.0,
+          "unit": null,
+          "observedAt": "2024-03-05T00:00:00+00:00",
+          "status": "final",
+          "codes": [
+            "703540",
+            "9279-1"
+          ],
+          "minutesFromAnchor": -1242473.4,
+          "relation": "before_anchor",
+          "relationLabel": "1.24247e+06 min before"
+        },
+        {
+          "resourceId": "VS-206729572",
+          "value": 33.0,
+          "unit": null,
+          "observedAt": "2024-03-06T00:00:00+00:00",
+          "status": "final",
+          "codes": [
+            "703540",
+            "9279-1"
+          ],
+          "minutesFromAnchor": -1241033.4,
+          "relation": "before_anchor",
+          "relationLabel": "1.24103e+06 min before"
+        },
+        {
+          "resourceId": "VS-206729568",
+          "value": 40.0,
+          "unit": null,
+          "observedAt": "2024-03-06T00:00:00+00:00",
+          "status": "final",
+          "codes": [
+            "703540",
+            "9279-1"
+          ],
+          "minutesFromAnchor": -1241033.4,
+          "relation": "before_anchor",
+          "relationLabel": "1.24103e+06 min before"
+        },
+        {
+          "resourceId": "VS-209066916",
+          "value": 33.0,
+          "unit": "br/min",
+          "observedAt": "2026-07-15T12:53:24+00:00",
+          "status": "final",
+          "codes": [
+            "703540",
+            "9279-1"
+          ],
+          "minutesFromAnchor": -420.0,
+          "relation": "before_anchor",
+          "relationLabel": "420 min before"
+        },
+        {
+          "resourceId": "VS-209067064",
+          "value": 33.0,
+          "unit": "br/min",
+          "observedAt": "2026-07-15T13:04:30+00:00",
+          "status": "final",
+          "codes": [
+            "703540",
+            "9279-1"
+          ],
+          "minutesFromAnchor": -408.9,
+          "relation": "before_anchor",
+          "relationLabel": "408.9 min before"
+        }
+      ]
+    },
+    {
+      "field": "spo2",
+      "label": "SpO2",
+      "loincCodes": [
+        "2708-6",
+        "59408-5"
+      ],
+      "latestValue": 96.0,
+      "unit": "%",
+      "latestAt": "2026-07-15T13:04:30+00:00",
+      "latestRelation": "before_anchor",
+      "latestRelationLabel": "408.9 min before",
+      "trendDirection": "stable",
+      "color": "blue",
+      "points": [
+        {
+          "resourceId": "VS-209066914",
+          "value": 96.0,
+          "unit": "%",
+          "observedAt": "2026-07-15T12:53:24+00:00",
+          "status": "final",
+          "codes": [
+            "2566991073",
+            "2708-6",
+            "59418-4"
+          ],
+          "minutesFromAnchor": -420.0,
+          "relation": "before_anchor",
+          "relationLabel": "420 min before"
+        },
+        {
+          "resourceId": "VS-209067062",
+          "value": 96.0,
+          "unit": "%",
+          "observedAt": "2026-07-15T13:04:30+00:00",
+          "status": "final",
+          "codes": [
+            "2566991073",
+            "2708-6",
+            "59418-4"
+          ],
+          "minutesFromAnchor": -408.9,
+          "relation": "before_anchor",
+          "relationLabel": "408.9 min before"
+        }
+      ]
+    },
+    {
+      "field": "temperature",
+      "label": "Temperature",
+      "loincCodes": [
+        "8310-5"
+      ],
+      "latestValue": 37.2,
+      "unit": "degC",
+      "latestAt": "2026-07-15T13:04:30+00:00",
+      "latestRelation": "before_anchor",
+      "latestRelationLabel": "408.9 min before",
+      "trendDirection": "stable",
+      "color": "blue",
+      "points": [
+        {
+          "resourceId": "VS-208983443",
+          "value": 37.2,
+          "unit": "degC",
+          "observedAt": "2025-12-01T12:56:49+00:00",
+          "status": "final",
+          "codes": [
+            "703558",
+            "8310-5",
+            "8331-1"
+          ],
+          "minutesFromAnchor": -325856.6,
+          "relation": "before_anchor",
+          "relationLabel": "325857 min before"
+        },
+        {
+          "resourceId": "VS-208988446",
+          "value": 40.0,
+          "unit": "degC",
+          "observedAt": "2025-12-18T03:56:43+00:00",
+          "status": "final",
+          "codes": [
+            "703558",
+            "8310-5",
+            "8331-1"
+          ],
+          "minutesFromAnchor": -301916.7,
+          "relation": "before_anchor",
+          "relationLabel": "301917 min before"
+        },
+        {
+          "resourceId": "VS-208988448",
+          "value": 44.4,
+          "unit": "degC",
+          "observedAt": "2025-12-18T03:57:34+00:00",
+          "status": "final",
+          "codes": [
+            "703558",
+            "8310-5",
+            "8331-1"
+          ],
+          "minutesFromAnchor": -301915.9,
+          "relation": "before_anchor",
+          "relationLabel": "301916 min before"
+        },
+        {
+          "resourceId": "VS-208988454",
+          "value": 40.0,
+          "unit": "degC",
+          "observedAt": "2025-12-18T04:08:50+00:00",
+          "status": "final",
+          "codes": [
+            "703558",
+            "8310-5",
+            "8331-1"
+          ],
+          "minutesFromAnchor": -301904.6,
+          "relation": "before_anchor",
+          "relationLabel": "301905 min before"
+        },
+        {
+          "resourceId": "VS-208988827",
+          "value": 35.5,
+          "unit": "degC",
+          "observedAt": "2025-12-18T16:44:50+00:00",
+          "status": "final",
+          "codes": [
+            "703558",
+            "8310-5",
+            "8331-1"
+          ],
+          "minutesFromAnchor": -301148.6,
+          "relation": "before_anchor",
+          "relationLabel": "301149 min before"
+        },
+        {
+          "resourceId": "VS-208997656",
+          "value": 33.0,
+          "unit": "degC",
+          "observedAt": "2026-01-18T17:57:36+00:00",
+          "status": "final",
+          "codes": [
+            "703558",
+            "8310-5",
+            "8331-1"
+          ],
+          "minutesFromAnchor": -256435.8,
+          "relation": "before_anchor",
+          "relationLabel": "256436 min before"
+        },
+        {
+          "resourceId": "VS-208997658",
+          "value": 33.0,
+          "unit": "degC",
+          "observedAt": "2026-01-18T18:01:29+00:00",
+          "status": "final",
+          "codes": [
+            "703558",
+            "8310-5",
+            "8331-1"
+          ],
+          "minutesFromAnchor": -256431.9,
+          "relation": "before_anchor",
+          "relationLabel": "256432 min before"
+        },
+        {
+          "resourceId": "VS-208997660",
+          "value": 31.0,
+          "unit": "degC",
+          "observedAt": "2026-01-18T18:02:00+00:00",
+          "status": "final",
+          "codes": [
+            "703558",
+            "8310-5",
+            "8331-1"
+          ],
+          "minutesFromAnchor": -256431.4,
+          "relation": "before_anchor",
+          "relationLabel": "256431 min before"
+        },
+        {
+          "resourceId": "VS-209003804",
+          "value": 45.0,
+          "unit": "degC",
+          "observedAt": "2026-02-02T20:24:11+00:00",
+          "status": "final",
+          "codes": [
+            "703558",
+            "8310-5",
+            "8331-1"
+          ],
+          "minutesFromAnchor": -234689.2,
+          "relation": "before_anchor",
+          "relationLabel": "234689 min before"
+        },
+        {
+          "resourceId": "VS-209016330",
+          "value": 37.2,
+          "unit": "degC",
+          "observedAt": "2026-03-22T17:24:53+00:00",
+          "status": "final",
+          "codes": [
+            "703558",
+            "8310-5",
+            "8331-1"
+          ],
+          "minutesFromAnchor": -165748.5,
+          "relation": "before_anchor",
+          "relationLabel": "165748 min before"
+        },
+        {
+          "resourceId": "VS-209066918",
+          "value": 37.2,
+          "unit": "degC",
+          "observedAt": "2026-07-15T12:53:24+00:00",
+          "status": "final",
+          "codes": [
+            "703558",
+            "8310-5",
+            "8331-1"
+          ],
+          "minutesFromAnchor": -420.0,
+          "relation": "before_anchor",
+          "relationLabel": "420 min before"
+        },
+        {
+          "resourceId": "VS-209067066",
+          "value": 37.2,
+          "unit": "degC",
+          "observedAt": "2026-07-15T13:04:30+00:00",
+          "status": "final",
+          "codes": [
+            "703558",
+            "8310-5",
+            "8331-1"
+          ],
+          "minutesFromAnchor": -408.9,
+          "relation": "before_anchor",
+          "relationLabel": "408.9 min before"
+        }
+      ]
+    }
+  ],
+  "medicationTimeline": [
+    {
+      "id": "497586817",
+      "name": "template non-formulary (medication) (Template Non-formulary (Medication) (Latanoprost (Xalatan) OU QHS))",
+      "resourceType": "MedicationRequest",
+      "status": "active",
+      "evidenceLevel": "order",
+      "doseValue": null,
+      "doseUnit": null,
+      "doseDisplay": "0 Refill(s)",
+      "route": null,
+      "instructions": "0 Refill(s)",
+      "eventTime": "2026-06-22T23:27:47+00:00",
+      "minutesFromAnchor": -32905.6,
+      "relation": "before_anchor",
+      "relationLabel": "32905.6 min before"
+    },
+    {
+      "id": "497561969",
+      "name": "template non-formulary (medication) (Latanoprost (Xalatan) OU QHS)",
+      "resourceType": "MedicationRequest",
+      "status": "active",
+      "evidenceLevel": "order",
+      "doseValue": null,
+      "doseUnit": null,
+      "doseDisplay": "OPHTH, 0 Refill(s)",
+      "route": "OPHTH",
+      "instructions": "OPHTH, 0 Refill(s)",
+      "eventTime": "2026-06-22T20:58:41+00:00",
+      "minutesFromAnchor": -33054.7,
+      "relation": "before_anchor",
+      "relationLabel": "33054.7 min before"
+    },
+    {
+      "id": "418109113",
+      "name": "warfarin (warfarin 1 mg oral tablet)",
+      "resourceType": "MedicationRequest",
+      "status": "stopped",
+      "evidenceLevel": "order",
+      "doseValue": 1.0,
+      "doseUnit": "tab",
+      "doseDisplay": "1 tab",
+      "route": "Oral",
+      "instructions": "1 mg = 1 tab, Oral, Mon/Tu/Th/Fr/Sa, 30 tab, 0 Refill(s)",
+      "eventTime": "2024-04-16T12:01:04+00:00",
+      "minutesFromAnchor": -1181272.4,
+      "relation": "before_anchor",
+      "relationLabel": "1.18127e+06 min before"
+    },
+    {
+      "id": "413909099",
+      "name": "simvastatin (Zocor 5 mg oral tablet)",
+      "resourceType": "MedicationRequest",
+      "status": "active",
+      "evidenceLevel": "order",
+      "doseValue": 1.0,
+      "doseUnit": "tab",
+      "doseDisplay": "1 tab",
+      "route": "Oral",
+      "instructions": "5 mg = 1 tab, Oral, PRN: chest pain, 30 tab, 0 Refill(s)",
+      "eventTime": "2024-02-29T09:40:05+00:00",
+      "minutesFromAnchor": -1249093.3,
+      "relation": "before_anchor",
+      "relationLabel": "1.24909e+06 min before"
+    },
+    {
+      "id": "406626979",
+      "name": "5-hydroxytryptophan (5-hydroxytryptophan 100 mg oral capsule)",
+      "resourceType": "MedicationRequest",
+      "status": "active",
+      "evidenceLevel": "order",
+      "doseValue": null,
+      "doseUnit": null,
+      "doseDisplay": "0 Refill(s)",
+      "route": null,
+      "instructions": "0 Refill(s)",
+      "eventTime": "2023-12-08T22:10:18+00:00",
+      "minutesFromAnchor": -1367863.1,
+      "relation": "before_anchor",
+      "relationLabel": "1.36786e+06 min before"
+    },
+    {
+      "id": "398593881",
+      "name": "template non-formulary (medication) (digoxin)",
+      "resourceType": "MedicationRequest",
+      "status": "active",
+      "evidenceLevel": "order",
+      "doseValue": null,
+      "doseUnit": null,
+      "doseDisplay": "5.0, Oral, for 10 days, 5 mcg/kg, Oral, every 12 hr, 0 Refill(s)",
+      "route": "Oral",
+      "instructions": "5.0, Oral, for 10 days, 5 mcg/kg, Oral, every 12 hr, 0 Refill(s)",
+      "eventTime": "2023-09-08T13:44:22+00:00",
+      "minutesFromAnchor": -1499409.1,
+      "relation": "before_anchor",
+      "relationLabel": "1.49941e+06 min before"
+    },
+    {
+      "id": "397293129",
+      "name": "template non-formulary (medication) (furosemide (Lasix))",
+      "resourceType": "MedicationRequest",
+      "status": "active",
+      "evidenceLevel": "order",
+      "doseValue": 40.0,
+      "doseUnit": "mg",
+      "doseDisplay": "40 mg",
+      "route": "Oral",
+      "instructions": "40 mg, Oral, 40 mg = 1 tab, Oral, Daily, 0 Refill(s)",
+      "eventTime": "2023-08-24T18:50:35+00:00",
+      "minutesFromAnchor": -1520702.8,
+      "relation": "before_anchor",
+      "relationLabel": "1.5207e+06 min before"
+    },
+    {
+      "id": "397293119",
+      "name": "template non-formulary (medication) (furosemide (Lasix))",
+      "resourceType": "MedicationRequest",
+      "status": "active",
+      "evidenceLevel": "order",
+      "doseValue": 40.0,
+      "doseUnit": "mg",
+      "doseDisplay": "40 mg",
+      "route": "Oral",
+      "instructions": "40 mg, Oral, 40 mg = 1 tab, Oral, Daily, 0 Refill(s)",
+      "eventTime": "2023-08-24T18:38:45+00:00",
+      "minutesFromAnchor": -1520714.7,
+      "relation": "before_anchor",
+      "relationLabel": "1.52071e+06 min before"
+    },
+    {
+      "id": "397141465",
+      "name": "template non-formulary (medication) (warfarin (warfarin 2 mg oral tablet))",
+      "resourceType": "MedicationRequest",
+      "status": "active",
+      "evidenceLevel": "order",
+      "doseValue": null,
+      "doseUnit": null,
+      "doseDisplay": "1.0, Oral, 2 mg = 1 tab, Oral, Mon/Wed/Fri, 13 tab, 0 Refill(s), 0 Refill(s)",
+      "route": "Oral",
+      "instructions": "1.0, Oral, 2 mg = 1 tab, Oral, Mon/Wed/Fri, 13 tab, 0 Refill(s), 0 Refill(s)",
+      "eventTime": "2023-08-22T21:49:48+00:00",
+      "minutesFromAnchor": -1523403.6,
+      "relation": "before_anchor",
+      "relationLabel": "1.5234e+06 min before"
+    },
+    {
+      "id": "397117475",
+      "name": "template non-formulary (medication) (template non-formulary (medication) (template non-formulary (medication) (Lasix)))",
+      "resourceType": "MedicationRequest",
+      "status": "active",
+      "evidenceLevel": "order",
+      "doseValue": null,
+      "doseUnit": null,
+      "doseDisplay": "1.0, 200 mg = 1 cap, Oral, Daily, 0 Refill(s), 0 Refill(s), 0 Refill(s)",
+      "route": null,
+      "instructions": "1.0, 200 mg = 1 cap, Oral, Daily, 0 Refill(s), 0 Refill(s), 0 Refill(s)",
+      "eventTime": "2023-08-22T20:33:09+00:00",
+      "minutesFromAnchor": -1523480.3,
+      "relation": "before_anchor",
+      "relationLabel": "1.52348e+06 min before"
+    },
+    {
+      "id": "397029699",
+      "name": "template non-formulary (medication) (template non-formulary (medication) (template non-formulary (medication) (Lasix)))",
+      "resourceType": "MedicationRequest",
+      "status": "active",
+      "evidenceLevel": "order",
+      "doseValue": null,
+      "doseUnit": null,
+      "doseDisplay": "1.0, 200 mg = 1 cap, Oral, Daily, 0 Refill(s), 0 Refill(s), 0 Refill(s)",
+      "route": null,
+      "instructions": "1.0, 200 mg = 1 cap, Oral, Daily, 0 Refill(s), 0 Refill(s), 0 Refill(s)",
+      "eventTime": "2023-08-21T18:11:36+00:00",
+      "minutesFromAnchor": -1525061.8,
+      "relation": "before_anchor",
+      "relationLabel": "1.52506e+06 min before"
+    },
+    {
+      "id": "397011457",
+      "name": "template non-formulary (medication) (template non-formulary (medication) (template non-formulary (medication) (litium)))",
+      "resourceType": "MedicationRequest",
+      "status": "active",
+      "evidenceLevel": "order",
+      "doseValue": null,
+      "doseUnit": null,
+      "doseDisplay": "for 6 days, 4.0 tab, for 4 days, test, 0 Refill(s), 0 Refill(s), 0 Refill(s)",
+      "route": null,
+      "instructions": "for 6 days, 4.0 tab, for 4 days, test, 0 Refill(s), 0 Refill(s), 0 Refill(s)",
+      "eventTime": "2023-08-21T13:14:36+00:00",
+      "minutesFromAnchor": -1525358.8,
+      "relation": "before_anchor",
+      "relationLabel": "1.52536e+06 min before"
+    },
+    {
+      "id": "355543133",
+      "name": "pantoprazole (pantoprazole 20 mg oral delayed release tablet)",
+      "resourceType": "MedicationRequest",
+      "status": "active",
+      "evidenceLevel": "order",
+      "doseValue": null,
+      "doseUnit": null,
+      "doseDisplay": "every 4 hr, 20 mg DR Tab,PRN Nausea/ Vomiting, PRN, 0 Refill(s)",
+      "route": null,
+      "instructions": "every 4 hr, 20 mg DR Tab,PRN Nausea/ Vomiting, PRN, 0 Refill(s)",
+      "eventTime": "2022-05-27T11:28:05+00:00",
+      "minutesFromAnchor": -2174905.3,
+      "relation": "before_anchor",
+      "relationLabel": "2.17491e+06 min before"
+    },
+    {
+      "id": "354900239",
+      "name": "follicle stimulating hormone (Gonal-f RFF Pen 300 intl units subcutaneous solution)",
+      "resourceType": "MedicationRequest",
+      "status": "active",
+      "evidenceLevel": "order",
+      "doseValue": null,
+      "doseUnit": null,
+      "doseDisplay": "QID, 600 unt/ml Pen Injector 0.5 ml,PRN Chest Pain, PRN, 0 Refill(s)",
+      "route": null,
+      "instructions": "QID, 600 unt/ml Pen Injector 0.5 ml,PRN Chest Pain, PRN, 0 Refill(s)",
+      "eventTime": "2022-05-19T06:30:13+00:00",
+      "minutesFromAnchor": -2186723.2,
+      "relation": "before_anchor",
+      "relationLabel": "2.18672e+06 min before"
+    },
+    {
+      "id": "351247573",
+      "name": "template non-formulary (medication) (TYLENOL)",
+      "resourceType": "MedicationRequest",
+      "status": "active",
+      "evidenceLevel": "order",
+      "doseValue": null,
+      "doseUnit": null,
+      "doseDisplay": "every 2 hr, 160 mg/5ml Susp,PRN Pain Score 7-10, PRN, 0 Refill(s)",
+      "route": null,
+      "instructions": "every 2 hr, 160 mg/5ml Susp,PRN Pain Score 7-10, PRN, 0 Refill(s)",
+      "eventTime": "2022-04-08T08:44:34+00:00",
+      "minutesFromAnchor": -2245628.9,
+      "relation": "before_anchor",
+      "relationLabel": "2.24563e+06 min before"
+    },
+    {
+      "id": "328378507",
+      "name": "atenolol (atenolol 25 mg oral tablet)",
+      "resourceType": "MedicationRequest",
+      "status": "active",
+      "evidenceLevel": "order",
+      "doseValue": 1.0,
+      "doseUnit": "tab",
+      "doseDisplay": "1 tab",
+      "route": "Oral",
+      "instructions": "25 mg = 1 tab, Oral, BID, 60 tab, 0 Refill(s)",
+      "eventTime": "2021-04-29T20:51:34+00:00",
+      "minutesFromAnchor": -2740261.9,
+      "relation": "before_anchor",
+      "relationLabel": "2.74026e+06 min before"
+    },
+    {
+      "id": "325316105",
+      "name": "Durable Medical Equipment for Prescription (2 weeks)",
+      "resourceType": "MedicationRequest",
+      "status": "active",
+      "evidenceLevel": "order",
+      "doseValue": null,
+      "doseUnit": null,
+      "doseDisplay": "Not applicable, test, 0 Refill(s)",
+      "route": null,
+      "instructions": "Not applicable, test, 0 Refill(s)",
+      "eventTime": "2021-03-01T15:12:27+00:00",
+      "minutesFromAnchor": -2825561.0,
+      "relation": "before_anchor",
+      "relationLabel": "2.82556e+06 min before"
+    },
+    {
+      "id": "323991643",
+      "name": "tacrolimus (tacrolimus 0.5 mg oral capsule)",
+      "resourceType": "MedicationRequest",
+      "status": "active",
+      "evidenceLevel": "order",
+      "doseValue": 1.0,
+      "doseUnit": "cap",
+      "doseDisplay": "1 cap",
+      "route": "Oral",
+      "instructions": "0.5 mg = 1 cap, Oral, every 12 hr, 180 cap, 0 Refill(s)",
+      "eventTime": "2021-02-03T19:56:12+00:00",
+      "minutesFromAnchor": -2862717.2,
+      "relation": "before_anchor",
+      "relationLabel": "2.86272e+06 min before"
+    },
+    {
+      "id": "323621363",
+      "name": "hydrocodone-acetaminophen (Vicodin 5 mg-300 mg oral tablet)",
+      "resourceType": "MedicationRequest",
+      "status": "on-hold",
+      "evidenceLevel": "order",
+      "doseValue": 1.0,
+      "doseUnit": "tab",
+      "doseDisplay": "1 tab",
+      "route": "Oral",
+      "instructions": "1 tab, Oral, Daily",
+      "eventTime": "2021-01-27T15:14:04+00:00",
+      "minutesFromAnchor": -2873079.4,
+      "relation": "before_anchor",
+      "relationLabel": "2.87308e+06 min before"
+    },
+    {
+      "id": "197391459",
+      "name": "multivitamin (multivitamin adult, oral tablet)",
+      "resourceType": "MedicationAdministration",
+      "status": "completed",
+      "evidenceLevel": "administration",
+      "doseValue": 1,
+      "doseUnit": "tablets",
+      "doseDisplay": "1 tablets",
+      "route": "Oral",
+      "instructions": null,
+      "eventTime": "2020-11-11T21:52:00+00:00",
+      "minutesFromAnchor": -2983561.4,
+      "relation": "before_anchor",
+      "relationLabel": "2.98356e+06 min before"
+    },
+    {
+      "id": "318400009",
+      "name": "multivitamin (multivitamin adult, oral tablet)",
+      "resourceType": "MedicationRequest",
+      "status": "active",
+      "evidenceLevel": "order",
+      "doseValue": 1.0,
+      "doseUnit": "tab",
+      "doseDisplay": "1 tab",
+      "route": "Oral",
+      "instructions": "1 tab, Oral, Daily",
+      "eventTime": "2020-11-11T21:51:35+00:00",
+      "minutesFromAnchor": -2983561.8,
+      "relation": "before_anchor",
+      "relationLabel": "2.98356e+06 min before"
+    },
+    {
+      "id": "313977729",
+      "name": "warfarin (warfarin 2 mg oral tablet)",
+      "resourceType": "MedicationRequest",
+      "status": "active",
+      "evidenceLevel": "order",
+      "doseValue": 1.0,
+      "doseUnit": "tab",
+      "doseDisplay": "1 tab",
+      "route": "Oral",
+      "instructions": "2 mg = 1 tab, Oral, Mon/Wed/Fri, 13 tab, 0 Refill(s)",
+      "eventTime": "2020-07-13T14:09:27+00:00",
+      "minutesFromAnchor": -3158264.0,
+      "relation": "before_anchor",
+      "relationLabel": "3.15826e+06 min before"
+    },
+    {
+      "id": "313977727",
+      "name": "warfarin (warfarin 1 mg oral tablet)",
+      "resourceType": "MedicationRequest",
+      "status": "active",
+      "evidenceLevel": "order",
+      "doseValue": 1.0,
+      "doseUnit": "tab",
+      "doseDisplay": "1 tab",
+      "route": "Oral",
+      "instructions": "1 mg = 1 tab, Oral, Daily, 30 tab, 0 Refill(s)",
+      "eventTime": "2020-07-13T14:09:19+00:00",
+      "minutesFromAnchor": -3158264.1,
+      "relation": "before_anchor",
+      "relationLabel": "3.15826e+06 min before"
+    },
+    {
+      "id": "306923903",
+      "name": "digoxin",
+      "resourceType": "MedicationRequest",
+      "status": "stopped",
+      "evidenceLevel": "order",
+      "doseValue": 5.0,
+      "doseUnit": "mcg/kg",
+      "doseDisplay": "5 mcg/kg",
+      "route": "Oral",
+      "instructions": "5 mcg/kg, Oral, every 12 hr",
+      "eventTime": "2019-12-26T20:34:30+00:00",
+      "minutesFromAnchor": -3445878.9,
+      "relation": "before_anchor",
+      "relationLabel": "3.44588e+06 min before"
+    },
+    {
+      "id": "306923899",
+      "name": "hydrocodone-acetaminophen (HYDROcodone-acetaminophen 5 mg-300 mg oral tablet)",
+      "resourceType": "MedicationRequest",
+      "status": "stopped",
+      "evidenceLevel": "order",
+      "doseValue": 1.0,
+      "doseUnit": "tab",
+      "doseDisplay": "1 tab",
+      "route": "Oral",
+      "instructions": "1 tab, Oral, every 4 hr",
+      "eventTime": "2019-12-26T20:34:30+00:00",
+      "minutesFromAnchor": -3445878.9,
+      "relation": "before_anchor",
+      "relationLabel": "3.44588e+06 min before"
+    },
+    {
+      "id": "306923901",
+      "name": "insulin regular (human) IV additive 100 units [1 units/hr] + sodium chloride 0.9% drip 100 mL",
+      "resourceType": "MedicationRequest",
+      "status": "stopped",
+      "evidenceLevel": "order",
+      "doseValue": 100.0,
+      "doseUnit": "mL",
+      "doseDisplay": "100 mL",
+      "route": "IV",
+      "instructions": "1 mL/hr, IV",
+      "eventTime": "2019-12-26T20:34:30+00:00",
+      "minutesFromAnchor": -3445878.9,
+      "relation": "before_anchor",
+      "relationLabel": "3.44588e+06 min before"
+    }
+  ],
+  "conditions": [],
+  "encounters": [
+    {
+      "id": "97959298",
+      "status": "in-progress",
+      "class": "ambulatory",
+      "type": "Outpatient",
+      "start": null,
+      "end": null
+    },
+    {
+      "id": "97959311",
+      "status": "in-progress",
+      "class": "ambulatory",
+      "type": "Outpatient",
+      "start": null,
+      "end": null
+    },
+    {
+      "id": "97960166",
+      "status": "in-progress",
+      "class": "ambulatory",
+      "type": "Outpatient",
+      "start": null,
+      "end": null
+    },
+    {
+      "id": "97961006",
+      "status": "in-progress",
+      "class": "ambulatory",
+      "type": "Outpatient",
+      "start": null,
+      "end": null
+    },
+    {
+      "id": "97961020",
+      "status": "in-progress",
+      "class": "ambulatory",
+      "type": "Outpatient",
+      "start": null,
+      "end": null
+    },
+    {
+      "id": "97961085",
+      "status": "in-progress",
+      "class": "ambulatory",
+      "type": "Outpatient",
+      "start": null,
+      "end": null
+    },
+    {
+      "id": "97964132",
+      "status": "in-progress",
+      "class": "ambulatory",
+      "type": "Outpatient",
+      "start": null,
+      "end": null
+    },
+    {
+      "id": "97964133",
+      "status": "in-progress",
+      "class": "ambulatory",
+      "type": "Outpatient",
+      "start": null,
+      "end": null
+    },
+    {
+      "id": "97964176",
+      "status": "in-progress",
+      "class": "ambulatory",
+      "type": "Outpatient",
+      "start": null,
+      "end": null
+    },
+    {
+      "id": "97964189",
+      "status": "in-progress",
+      "class": "ambulatory",
+      "type": "Outpatient",
+      "start": null,
+      "end": null
+    },
+    {
+      "id": "97964264",
+      "status": "in-progress",
+      "class": "ambulatory",
+      "type": "Outpatient",
+      "start": null,
+      "end": null
+    },
+    {
+      "id": "97964309",
+      "status": "in-progress",
+      "class": "ambulatory",
+      "type": "Outpatient",
+      "start": null,
+      "end": null
+    },
+    {
+      "id": "97964345",
+      "status": "in-progress",
+      "class": "ambulatory",
+      "type": "Outpatient",
+      "start": null,
+      "end": null
+    },
+    {
+      "id": "97964375",
+      "status": "in-progress",
+      "class": "ambulatory",
+      "type": "Outpatient",
+      "start": null,
+      "end": null
+    },
+    {
+      "id": "97964376",
+      "status": "in-progress",
+      "class": "ambulatory",
+      "type": "Outpatient",
+      "start": null,
+      "end": null
+    },
+    {
+      "id": "97964413",
+      "status": "in-progress",
+      "class": "ambulatory",
+      "type": "Outpatient",
+      "start": null,
+      "end": null
+    },
+    {
+      "id": "97964414",
+      "status": "in-progress",
+      "class": "ambulatory",
+      "type": "Outpatient",
+      "start": null,
+      "end": null
+    },
+    {
+      "id": "97965205",
+      "status": "in-progress",
+      "class": "ambulatory",
+      "type": "Outpatient",
+      "start": null,
+      "end": null
+    },
+    {
+      "id": "97965212",
+      "status": "in-progress",
+      "class": "ambulatory",
+      "type": "Outpatient",
+      "start": null,
+      "end": null
+    },
+    {
+      "id": "97965213",
+      "status": "in-progress",
+      "class": "ambulatory",
+      "type": "Outpatient",
+      "start": null,
+      "end": null
+    }
+  ],
+  "dataQuality": {
+    "fallbackUsed": false,
+    "observationCount": 207,
+    "matchedLabCount": 4,
+    "matchedVitalCount": 27,
+    "medicationCount": 26,
+    "conditionCount": 0,
+    "encounterCount": 20
+  },
+  "limitations": [
+    "INCART waveform and FHIR context are a controlled research pairing, not verified same-patient clinical data.",
+    "FHIR timing is relative to the episode capture timestamp because the INCART record has no verified clinical event datetime."
+  ],
   "provenance": {
-    "waveformSource": "PhysioNet INCART",
-    "annotationSource": "INCART atr reference annotations",
-    "clinicalContextSource": null
+    "source": "Oracle SMART on FHIR",
+    "provider": "oracle",
+    "fhirBaseUrl": "https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d",
+    "loadedAt": "2026-07-15T19:54:03.412639+00:00",
+    "usesFallbackDemoValues": false
   }
 }

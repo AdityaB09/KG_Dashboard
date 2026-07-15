@@ -7,7 +7,11 @@ import {
   getEpisode,
   getEpisodeWaveforms,
   getLatestEpisode,
+  getIncidentContext,
+  loadIncidentContext,
 } from "../services/episodeService";
+
+
 const MAX_POINTS = 360;
 const CURRENT_MARK_RATIO = 0.47;
 const STATIC_ANALYTICS_MODE = false;
@@ -911,15 +915,19 @@ const annotationSeries =
         />
 
         <div className="kgen-time-axis">
-          <span>
-            −{episode.preSecondsCaptured}s
-          </span>
-          <span>Episode start</span>
-          <span>Episode end</span>
-          <span>
-            +{episode.postSecondsCaptured}s
-          </span>
-        </div>
+  <span>
+    {episode.captureCompleteness?.preContextComplete
+      ? `−${episode.preSecondsCaptured}s`
+      : `${episode.preSecondsCaptured}s available`}
+  </span>
+
+  <span>Event start</span>
+  <span>Event end</span>
+
+  <span>
+    +{episode.postSecondsCaptured}s
+  </span>
+</div>
       </div>
 
       <aside className="kgen-side-vitals">
@@ -933,18 +941,20 @@ const annotationSeries =
           </small>
         </div>
 
-        <div className="kgen-side-vital">
-          <span>Episode</span>
-          <strong className="blue">
-            {Number(
-              episode.eventDurationSeconds || 0
-            ).toFixed(0)}
-            s
-          </strong>
-          <small className="kgen-episode-vital-note">
-            reviewed window
-          </small>
-        </div>
+       <div className="kgen-side-vital">
+  <span>Event span</span>
+
+  <strong className="blue">
+    {Number(
+      episode.eventDurationSeconds || 0
+    ).toFixed(1)}
+    s
+  </strong>
+
+  <small className="kgen-episode-vital-note">
+    reference window
+  </small>
+</div>
 
         <div className="kgen-side-vital">
           <span>Annotations</span>
@@ -972,10 +982,62 @@ const [
   episodeWaveforms,
   setEpisodeWaveforms,
 ] = useState(null);
+
 const [
   episodeStatus,
   setEpisodeStatus,
 ] = useState("loading");
+
+const [
+  episodeContext,
+  setEpisodeContext,
+] = useState(null);
+
+const [
+  contextStatus,
+  setContextStatus,
+] = useState("not_loaded");
+
+async function ensureEpisodeContext(metadata) {
+  if (!metadata?.incidentId) {
+    setEpisodeContext(null);
+    setContextStatus("not_loaded");
+    return;
+  }
+
+  setContextStatus("loading");
+
+  try {
+    let context = await getIncidentContext(
+      metadata.incidentId
+    );
+
+    if (
+      !context ||
+      ["not_loaded", "unavailable", "error"].includes(
+        context.status
+      )
+    ) {
+      context = await loadIncidentContext(
+        metadata.incidentId
+      );
+    }
+
+    setEpisodeContext(context || null);
+
+    setContextStatus(
+      context?.status || "empty"
+    );
+  } catch (error) {
+    console.error(
+      "[KGEN CONTEXT LOAD ERROR]",
+      error
+    );
+
+    setEpisodeContext(null);
+    setContextStatus("error");
+  }
+}
   
   useEffect(() => {
     const interval = setInterval(() => {
@@ -1060,11 +1122,13 @@ useEffect(() => {
       if (!active) return;
 
       if (!metadata?.id) {
-        setEpisode(null);
-        setEpisodeWaveforms(null);
-        setEpisodeStatus("empty");
-        return;
-      }
+  setEpisode(null);
+  setEpisodeWaveforms(null);
+  setEpisodeContext(null);
+  setContextStatus("not_loaded");
+  setEpisodeStatus("empty");
+  return;
+}
 
       const waveforms =
         await getEpisodeWaveforms(
@@ -1074,9 +1138,10 @@ useEffect(() => {
       if (!active) return;
 
       setEpisode(metadata);
-      setEpisodeWaveforms(waveforms);
-      setEpisodeStatus("ready");
+setEpisodeWaveforms(waveforms);
+setEpisodeStatus("ready");
 
+void ensureEpisodeContext(metadata);
     } catch (error) {
       if (!active) return;
 
@@ -1175,6 +1240,44 @@ const labCards = useMemo(() => {
   live.colors,
   streamDate,
 ]);
+
+const episodeLabCards = useMemo(() => {
+  return (
+    episodeContext?.labTrends || []
+  ).map((item) => {
+    const values = (
+      item.points || []
+    )
+      .map((point) =>
+        Number(point.value)
+      )
+      .filter(Number.isFinite);
+
+    return {
+      name: item.label,
+      value: item.latestValue,
+      status: statusFromColor(
+        item.color || "blue"
+      ),
+      meta:
+        item.latestAt?.slice(5, 10) ||
+        item.latestRelationLabel ||
+        "FHIR",
+      trend: values,
+      color: item.color || "blue",
+      unit: item.unit,
+      relation:
+        item.latestRelationLabel,
+    };
+  });
+}, [episodeContext]);
+
+const displayedLabCards =
+  contextStatus === "ready" &&
+  episodeLabCards.length
+    ? episodeLabCards
+    : labCards;
+
 
 // const labCards = useMemo(() => {
 //   return STATIC_ANALYTICS_LABS;
@@ -1298,7 +1401,8 @@ const waveformOverlay = useMemo(() => {
     }
 
     const labName = activeWaveformId.replace("lab-", "");
-    const selectedLab = labCards.find((item) => item.name === labName);
+    const selectedLab =
+  displayedLabCards.find((item) => item.name === labName);
     
   
 
@@ -1326,7 +1430,7 @@ const waveformOverlay = useMemo(() => {
       footerLeft: "06/23",
       footerRight: "07/18"
     };
-  }, [activeWaveformId, currentPatient.name, live, labCards]);
+  }, [activeWaveformId, currentPatient.name, live, displayedLabCards]);
 
 const interpretation =
   live.alertInterpretation || DEFAULT_ALERT_INTERPRETATION;
@@ -1338,7 +1442,31 @@ const episodeReady = Boolean(
   episodeWaveforms &&
   episodeStatus === "ready"
 );
+const displayedMedicationRows =
+  useMemo(() => {
+    if (
+      contextStatus === "ready" &&
+      episodeContext?.medicationTimeline
+        ?.length
+    ) {
+      return (
+        episodeContext
+          .medicationTimeline
+      );
+    }
 
+    return (
+      live.medicationRows || []
+    ).filter(
+      (row) =>
+        row.med !== "Oral Temperature" &&
+        row.name !== "Oral Temperature"
+    );
+  }, [
+    contextStatus,
+    episodeContext,
+    live.medicationRows,
+  ]);
 const episodeInterpretation = episodeReady
   ? {
       title: `${episode.display} captured`,
@@ -1438,10 +1566,26 @@ const episodeAlertColor = episodeReady
 </section>
 
         <section className="kgen-panel kgen-labs-panel">
-          <h2>03. Recent Lab Results &amp; Trends</h2>
+  <div className="kgen-panel-title-row">
+    <h2>
+      03. Recent Lab Results &amp; Trends
+    </h2>
+
+    <span
+      className={`kgen-context-status ${contextStatus}`}
+    >
+      {contextStatus === "ready"
+        ? "Episode-linked FHIR"
+        : contextStatus === "loading"
+        ? "Loading FHIR context"
+        : contextStatus === "error"
+        ? "FHIR context error"
+        : "Not episode-linked"}
+    </span>
+  </div>
 
           <div className="kgen-lab-grid">
-           {labCards.map((item) => (
+           {displayedLabCards.map((item) => (
   <LabTile
     key={item.name}
     {...item}
@@ -1535,7 +1679,7 @@ const episodeAlertColor = episodeReady
           <h2>03. Recent Lab Results &amp; Trends</h2>
 
           <div className="kgen-lab-grid small">
-          {labCards.slice(0, 2).map((item) => (
+          {displayedLabCards.slice(0, 2).map((item) => (
   <LabTile
     key={item.name}
     {...item}
@@ -1576,48 +1720,79 @@ const episodeAlertColor = episodeReady
         </section>
 
         <section className="kgen-panel kgen-med-panel">
-          <h2>05. Medication Adherence</h2>
+          <h2>05. Medication Timeline</h2>
 
-          <table className="kgen-table meds">
-            <thead>
-              <tr>
-                <th>Med Name</th>
-                <th>Dosage</th>
-                <th>Not-Taken</th>
-                <th>Date</th>
-              </tr>
-            </thead>
+         <table className="kgen-table meds">
+  <thead>
+    <tr>
+      <th>Medication</th>
+      <th>Dose / Route</th>
+      <th>Status</th>
+      <th>Context Timing</th>
+    </tr>
+  </thead>
 
-            <tbody>
-             {(live.medicationRows?.length ? live.medicationRows : MEDICATION_ROWS).map((row, index) => (
-                <tr key={`${row.sourceResource || "med"}-${row.id || row.med || row.name || "row"}-${row.date || row.prescribed || ""}-${index}`}>
-                  <td>
-                    <strong>{row.med}</strong>
-                    {row.sub && <small>{row.sub}</small>}
-                  </td>
+  <tbody>
+    {displayedMedicationRows.length ? (
+      displayedMedicationRows.map(
+        (row, index) => (
+          <tr
+            key={
+              row.id ||
+              `${row.name || row.med}-${index}`
+            }
+          >
+            <td>
+              <strong>
+                {row.name || row.med}
+              </strong>
 
-                  <td>
-                    {row.warning && <span className="kgen-warning">▲</span>} {row.dose}
-                  </td>
+              <small>
+                {row.resourceType ||
+                  row.sourceResource ||
+                  "Medication"}
+              </small>
+            </td>
 
-                  <td>
-                    {(row.taken || []).map((item, takenIndex) => (
-  <div
-    key={`${row.sourceResource || "med"}-${row.id || index}-taken-${item.time || "time"}-${takenIndex}`}
-  >
-    <span className={item.ok ? "kgen-ok" : "kgen-no"}>
-      {item.ok ? "✓" : "×"}
-    </span>{" "}
-    {item.time}
-  </div>
-))}
-                  </td>
+            <td>
+              {row.doseDisplay ||
+                row.dose ||
+                "Unavailable"}
 
-                  <td>{row.date}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+              {row.route && (
+                <small>{row.route}</small>
+              )}
+            </td>
+
+            <td>
+              {row.status || "available"}
+
+              {row.evidenceLevel && (
+                <small>
+                  {row.evidenceLevel}
+                </small>
+              )}
+            </td>
+
+            <td>
+              {row.relationLabel ||
+                row.date ||
+                row.prescribed ||
+                "Time unavailable"}
+            </td>
+          </tr>
+        )
+      )
+    ) : (
+      <tr>
+        <td colSpan="4">
+          No episode-linked medication
+          resources were returned.
+        </td>
+      </tr>
+    )}
+  </tbody>
+</table>
         </section>
       </main>
 
