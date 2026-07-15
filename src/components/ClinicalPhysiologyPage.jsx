@@ -862,11 +862,16 @@ function EpisodePhysiology({
     waveforms.leadsMv?.avf
   );
 
-  const annotationSeries =
-    buildAnnotationSeries(
-      waveforms.annotations,
-      duration
-    );
+ const triggerAnnotations =
+  waveforms.triggerAnnotations ||
+  episode.triggerAnnotations ||
+  [];
+
+const annotationSeries =
+  buildAnnotationSeries(
+    triggerAnnotations,
+    duration
+  );
 
   return (
     <div className="kgen-live-content">
@@ -897,7 +902,7 @@ function EpisodePhysiology({
         />
 
         <EpisodeWaveRow
-          label="Beat annotations"
+       label="Reference triggers"
           color="yellow"
           values={annotationSeries}
           compact
@@ -944,11 +949,11 @@ function EpisodePhysiology({
         <div className="kgen-side-vital">
           <span>Annotations</span>
           <strong className="blue">
-            {episode.annotationCount ?? 0}
-          </strong>
+  {episode.triggerAnnotationCount ?? 0}
+</strong>
           <small className="kgen-episode-vital-note">
-            INCART atr
-          </small>
+  automatic triggers
+</small>
         </div>
       </aside>
     </div>
@@ -1338,25 +1343,35 @@ const episodeInterpretation = episodeReady
   ? {
       title: `${episode.display} captured`,
       rhythm:
-        `${episode.annotationCount || 0} beat annotations were preserved from the INCART atr file.`,
+        `${episode.triggerAnnotationCount || 0} INCART reference annotation trigger(s) automatically created this episode. ` +
+        `Trigger types: ${
+          Object.entries(
+            episode.triggerAnnotationCounts || {}
+          )
+            .map(
+              ([symbol, count]) =>
+                `${symbol}: ${count}`
+            )
+            .join(", ") || "Unavailable"
+        }.`,
       ppg:
-        "PPG and SpO2 are not available in the INCART dataset.",
+        "PPG and SpO2 are not included in the INCART recording.",
       likelyEtiology:
-        "Deterministic signal analysis and clinical context are pending. No automated diagnosis has been generated.",
+        "This is an automatically selected reference-annotation episode. It is not an independently generated diagnosis. Deterministic ECG analysis and clinical context are still pending.",
     }
   : {
       title:
         episodeStatus === "loading"
           ? "Loading captured episode"
-          : "No captured episode selected",
+          : "No automatic episode captured",
       rhythm:
         episodeStatus === "loading"
-          ? "Retrieving the stored pre-event, event, and post-event ECG."
-          : "Monitoring continues on the Main page.",
+          ? "Retrieving stored waveform and annotation data."
+          : "Keep INCART running until a qualifying reference annotation is received.",
       ppg:
-        "INCART episode mode contains ECG and beat annotations only.",
+        "INCART provides ECG and reference annotations.",
       likelyEtiology:
-        "Clinical interpretation will become available after deterministic signal analysis is implemented.",
+        "No episode is currently available for analysis.",
     };
 
 const episodeAlertColor = episodeReady

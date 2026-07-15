@@ -166,10 +166,7 @@ class Settings:
         os.getenv("EPISODE_POST_SECONDS", "30")
     )
 
-    EPISODE_CATALOG_PATH = os.getenv(
-        "EPISODE_CATALOG_PATH",
-        "data/incart_episode_catalog.json",
-    ).strip()
+    
 
     EPISODE_STORAGE_PATH = os.getenv(
         "EPISODE_STORAGE_PATH",
@@ -179,6 +176,34 @@ class Settings:
     EPISODE_MAX_WAVEFORM_POINTS = int(
         os.getenv("EPISODE_MAX_WAVEFORM_POINTS", "1800")
     )
+    
+    
+    EPISODE_EVENT_PADDING_SECONDS = float(
+        os.getenv(
+            "EPISODE_EVENT_PADDING_SECONDS",
+            "1",
+        )
+    )
 
+    EPISODE_MERGE_GAP_SECONDS = float(
+        os.getenv(
+            "EPISODE_MERGE_GAP_SECONDS",
+            "3",
+        )
+    )
 
+    EPISODE_MAX_CAPTURE_SECONDS = float(
+        os.getenv(
+            "EPISODE_MAX_CAPTURE_SECONDS",
+            "60",
+        )
+    )
+
+    EPISODE_PERSISTENT_COOLDOWN_SECONDS = float(
+        os.getenv(
+            "EPISODE_PERSISTENT_COOLDOWN_SECONDS",
+            "60",
+        )
+    )
+    
 settings = Settings()

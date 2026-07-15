@@ -16,7 +16,7 @@ from app.providers import (
     fetch_provider_observations,
     test_provider_status,
 )
-
+import traceback
 import math
 import time
 from app.incart_waveforms import build_incart_frame
@@ -37,6 +37,25 @@ app.add_middleware(
 app.include_router(oracle_smart_router)
 
 app.include_router(episode_router)
+
+def observe_episode_frame_safely(
+    *,
+    session_id: str,
+    source: str,
+    frame: dict[str, Any],
+) -> None:
+    try:
+        episode_coordinator.observe_frame(
+            session_id=f"{session_id}:{source}",
+            frame=frame,
+        )
+    except Exception as error:
+        print(
+            "[KGEN EPISODE OBSERVER ERROR]",
+            type(error).__name__,
+            str(error),
+        )
+        traceback.print_exc()
 
 @app.get("/health")
 async def health():
@@ -526,8 +545,9 @@ async def stream_waveform_frame(
                         cursor + batch_size,
                     )
                 )
-                episode_coordinator.observe_frame(
-    session_id=f"{session_id}:{source}",
+                observe_episode_frame_safely(
+    session_id=session_id,
+    source=source,
     frame=frame,
 )
 

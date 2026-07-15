@@ -99,6 +99,14 @@ async def episode_events(
     )
 
 
+@router.get("/incart/annotation-summary")
+async def incart_annotation_summary():
+    return await asyncio.to_thread(
+        episode_coordinator
+        .get_annotation_summary
+    )
+    
+
 @router.get("/{episode_id}/waveforms")
 async def episode_waveforms(
     episode_id: str,

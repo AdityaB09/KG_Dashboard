@@ -76,6 +76,10 @@ class IncartBuffer:
     display_indexes: list[int]
     annotation_samples: np.ndarray
     annotation_symbols: np.ndarray
+    annotation_aux_notes: np.ndarray
+    annotation_subtypes: np.ndarray
+    annotation_channels: np.ndarray
+    annotation_numbers: np.ndarray
     estimated_hr: int
 
     @property
@@ -174,19 +178,30 @@ class IncartBuffer:
     
 
     def annotations_for_window(
-        self,
-        cursor: int,
-        batch_size: int,
-    ) -> list[dict[str, Any]]:
+    self,
+    cursor: int,
+    batch_size: int,
+) -> list[dict[str, Any]]:
         start = int(cursor)
         end = start + int(batch_size)
+
         first_loop = start // self.total_samples
         last_loop = (end - 1) // self.total_samples
+
         output: list[dict[str, Any]] = []
 
-        for loop_index in range(first_loop, last_loop + 1):
-            loop_offset = loop_index * self.total_samples
-            absolute_samples = self.annotation_samples + loop_offset
+        for loop_index in range(
+            first_loop,
+            last_loop + 1,
+        ):
+            loop_offset = (
+                loop_index * self.total_samples
+            )
+
+            absolute_samples = (
+                self.annotation_samples
+                + loop_offset
+            )
 
             mask = (
                 (absolute_samples >= start)
@@ -196,25 +211,58 @@ class IncartBuffer:
             indexes = np.flatnonzero(mask)
 
             for index in indexes:
-                record_sample = int(self.annotation_samples[index])
-                absolute_sample = int(absolute_samples[index])
+                record_sample = int(
+                    self.annotation_samples[index]
+                )
+
+                absolute_sample = int(
+                    absolute_samples[index]
+                )
 
                 output.append(
                     {
-                        "symbol": str(self.annotation_symbols[index]),
+                        "symbol": str(
+                            self.annotation_symbols[index]
+                        ),
                         "sample": record_sample,
                         "absoluteSample": absolute_sample,
-                        "frameOffset": absolute_sample - start,
+                        "frameOffset": (
+                            absolute_sample - start
+                        ),
                         "seconds": round(
-                            record_sample / self.sample_rate,
+                            record_sample
+                            / self.sample_rate,
                             3,
                         ),
                         "loopNumber": loop_index + 1,
+                        "auxNote": str(
+                            self.annotation_aux_notes[
+                                index
+                            ]
+                        ),
+                        "subtype": int(
+                            self.annotation_subtypes[
+                                index
+                            ]
+                        ),
+                        "channel": int(
+                            self.annotation_channels[
+                                index
+                            ]
+                        ),
+                        "annotationNumber": int(
+                            self.annotation_numbers[
+                                index
+                            ]
+                        ),
                     }
                 )
 
         return output
 
+
+    
+    
     def read(
         self,
         cursor: int,
@@ -309,7 +357,50 @@ def center_ecg_for_display(
     return filtered.astype(np.float32)
 
 
+def annotation_text_values(
+    annotation: Any,
+    field_name: str,
+    count: int,
+) -> np.ndarray:
+    values = getattr(
+        annotation,
+        field_name,
+        None,
+    )
 
+    if values is None or len(values) != count:
+        return np.asarray(
+            [""] * count,
+            dtype=object,
+        )
+
+    return np.asarray(
+        [str(value or "") for value in values],
+        dtype=object,
+    )
+
+
+def annotation_int_values(
+    annotation: Any,
+    field_name: str,
+    count: int,
+) -> np.ndarray:
+    values = getattr(
+        annotation,
+        field_name,
+        None,
+    )
+
+    if values is None or len(values) != count:
+        return np.zeros(
+            count,
+            dtype=np.int32,
+        )
+
+    return np.asarray(
+        values,
+        dtype=np.int32,
+    )
   
 
 def load_incart_buffer() -> IncartBuffer:
@@ -394,7 +485,35 @@ def load_incart_buffer() -> IncartBuffer:
         annotation.symbol,
         dtype=object,
     )
+    
+    
+    annotation_count = len(
+        mapped_annotation_samples
+    )
 
+    annotation_aux_notes = annotation_text_values(
+        annotation,
+        "aux_note",
+        annotation_count,
+    )
+
+    annotation_subtypes = annotation_int_values(
+        annotation,
+        "subtype",
+        annotation_count,
+    )
+
+    annotation_channels = annotation_int_values(
+        annotation,
+        "chan",
+        annotation_count,
+    )
+
+    annotation_numbers = annotation_int_values(
+        annotation,
+        "num",
+        annotation_count,
+    )
     valid_annotations = (
         (mapped_annotation_samples >= 0)
         & (
@@ -410,7 +529,22 @@ def load_incart_buffer() -> IncartBuffer:
     annotation_symbols = annotation_symbols[
         valid_annotations
     ]
+    
+    annotation_aux_notes = annotation_aux_notes[
+        valid_annotations
+    ]
 
+    annotation_subtypes = annotation_subtypes[
+        valid_annotations
+    ]
+
+    annotation_channels = annotation_channels[
+        valid_annotations
+    ]
+
+    annotation_numbers = annotation_numbers[
+        valid_annotations
+    ]
     display_indexes = [
         selected_ids.index(lead_id)
         for lead_id in DISPLAY_LEADS
@@ -446,6 +580,10 @@ def load_incart_buffer() -> IncartBuffer:
     annotation_samples=mapped_annotation_samples,
     annotation_symbols=annotation_symbols,
     estimated_hr=estimated_hr,
+            annotation_aux_notes=annotation_aux_notes,
+        annotation_subtypes=annotation_subtypes,
+        annotation_channels=annotation_channels,
+        annotation_numbers=annotation_numbers,
 )
 
 def get_incart_buffer() -> IncartBuffer:

@@ -2,7 +2,7 @@
   "status": "not_loaded",
   "provenance": {
     "waveformSource": "PhysioNet INCART",
-    "annotationSource": "Reviewed INCART annotation-derived window",
+    "annotationSource": "INCART atr reference annotations",
     "clinicalContextSource": null
   }
 }
