@@ -206,4 +206,56 @@ class Settings:
         )
     )
     
+    INCIDENTS_ENABLED = os.getenv(
+        "INCIDENTS_ENABLED",
+        "true",
+    ).lower() in {"1", "true", "yes", "on"}
+
+    INCIDENT_STORAGE_PATH = os.getenv(
+        "INCIDENT_STORAGE_PATH",
+        "data/incidents",
+    ).strip()
+
+    INCIDENT_MERGE_GAP_SECONDS = float(
+        os.getenv(
+            "INCIDENT_MERGE_GAP_SECONDS",
+            "15",
+        )
+    )
+
+    INCIDENT_MAX_SECONDS = float(
+        os.getenv(
+            "INCIDENT_MAX_SECONDS",
+            "300",
+        )
+    )
+    
+    CLINICAL_CONTEXT_ENABLED = os.getenv(
+        "CLINICAL_CONTEXT_ENABLED",
+        "true",
+    ).lower() in {"1", "true", "yes", "on"}
+
+    CLINICAL_CONTEXT_PROVIDER = os.getenv(
+        "CLINICAL_CONTEXT_PROVIDER",
+        "oracle",
+    ).strip().lower()
+
+    CLINICAL_CONTEXT_OBSERVATION_COUNT = int(
+        os.getenv(
+            "CLINICAL_CONTEXT_OBSERVATION_COUNT",
+            "200",
+        )
+    )
+
+    CLINICAL_CONTEXT_RESOURCE_COUNT = int(
+        os.getenv(
+            "CLINICAL_CONTEXT_RESOURCE_COUNT",
+            "100",
+        )
+    )
+
+    ALLOW_RESEARCH_FHIR_PAIRING = os.getenv(
+        "ALLOW_RESEARCH_FHIR_PAIRING",
+        "false",
+    ).lower() in {"1", "true", "yes", "on"}
 settings = Settings()

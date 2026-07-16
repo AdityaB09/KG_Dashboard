@@ -19,9 +19,14 @@ from app.normalizer import (
     get_quantity_value,
 )
 from app.providers import (
+    fetch_oracle_observations_by_codes,
+    fetch_oracle_patient,
     fetch_oracle_patient_resources,
     fetch_provider_medications,
     fetch_provider_observations,
+    merge_fhir_bundles,
+    fetch_oracle_paginated_observations,
+
 )
 
 
@@ -691,11 +696,22 @@ class ClinicalContextService:
                 ),
                 "incidentId": incident_id,
                 "status": "not_loaded",
+                "patientSummary": {},
                 "labTrends": [],
                 "vitalTrends": [],
                 "medicationTimeline": [],
                 "conditions": [],
                 "encounters": [],
+                "diagnosticReports": [],
+                "documents": [],
+                "dataQuality": {
+                    "fallbackUsed": False,
+                    "observationCount": 0,
+                    "targetedObservationCount": 0,
+                    "patientLoaded": False,
+                    "diagnosticReportCount": 0,
+                    "documentCount": 0,
+                },
             }
 
         return incident_coordinator.read_json(
@@ -862,11 +878,22 @@ class ClinicalContextService:
                         ),
                         "basis": anchor_basis,
                     },
+                    "patientSummary": {},
                     "labTrends": [],
                     "vitalTrends": [],
                     "medicationTimeline": [],
                     "conditions": [],
                     "encounters": [],
+                    "diagnosticReports": [],
+                    "documents": [],
+                    "dataQuality": {
+                        "fallbackUsed": False,
+                        "observationCount": 0,
+                        "targetedObservationCount": 0,
+                        "patientLoaded": False,
+                        "diagnosticReportCount": 0,
+                        "documentCount": 0,
+                    },
                     "limitations": [
                         *limitations,
                         "Research FHIR pairing is disabled.",
@@ -897,11 +924,22 @@ class ClinicalContextService:
                     "value": anchor.isoformat(),
                     "basis": anchor_basis,
                 },
+                "patientSummary": {},
                 "labTrends": [],
                 "vitalTrends": [],
                 "medicationTimeline": [],
                 "conditions": [],
                 "encounters": [],
+                "diagnosticReports": [],
+                "documents": [],
+                "dataQuality": {
+                    "fallbackUsed": False,
+                    "observationCount": 0,
+                    "targetedObservationCount": 0,
+                    "patientLoaded": False,
+                    "diagnosticReportCount": 0,
+                    "documentCount": 0,
+                },
                 "limitations": [
                     *limitations,
                     "No Oracle SMART patient context or configured test patient was available.",
@@ -918,11 +956,27 @@ class ClinicalContextService:
 
             return context
 
+        targeted_lab_codes = {
+    field: list(LOINC[field])
+    for field in (
+        "glucose",
+        "creatinine",
+        "wbc",
+    )
+}
+
+         
+
         (
-            observation_bundle,
+            general_observation_bundle,
+            targeted_lab_bundle,
+            laboratory_observation_bundle,
             medications,
+            patient_resource,
             conditions,
             encounters,
+            diagnostic_reports,
+            documents,
         ) = await asyncio.gather(
             fetch_provider_observations(
                 settings.CLINICAL_CONTEXT_PROVIDER,
@@ -930,12 +984,36 @@ class ClinicalContextService:
                 access_token=access_token,
                 fhir_base_url=fhir_base_url,
             ),
+
+            safely_fetch_targeted_labs(
+                patient_id,
+                targeted_lab_codes,
+                access_token=access_token,
+                fhir_base_url=fhir_base_url,
+            ),
+
+            fetch_oracle_paginated_observations(
+                patient_id,
+                access_token=access_token,
+                fhir_base_url=fhir_base_url,
+                category="laboratory",
+                count=100,
+                max_pages=10,
+            ),
+
             fetch_provider_medications(
                 settings.CLINICAL_CONTEXT_PROVIDER,
                 patient_id,
                 access_token=access_token,
                 fhir_base_url=fhir_base_url,
             ),
+
+            fetch_oracle_patient(
+                patient_id,
+                access_token=access_token,
+                fhir_base_url=fhir_base_url,
+            ),
+
             fetch_oracle_patient_resources(
                 "Condition",
                 patient_id,
@@ -946,6 +1024,7 @@ class ClinicalContextService:
                     .CLINICAL_CONTEXT_RESOURCE_COUNT
                 ),
             ),
+
             fetch_oracle_patient_resources(
                 "Encounter",
                 patient_id,
@@ -956,7 +1035,35 @@ class ClinicalContextService:
                     .CLINICAL_CONTEXT_RESOURCE_COUNT
                 ),
             ),
+
+            fetch_oracle_patient_resources(
+                "DiagnosticReport",
+                patient_id,
+                access_token=access_token,
+                fhir_base_url=fhir_base_url,
+                count=(
+                    settings
+                    .CLINICAL_CONTEXT_RESOURCE_COUNT
+                ),
+            ),
+
+            fetch_oracle_patient_resources(
+                "DocumentReference",
+                patient_id,
+                access_token=access_token,
+                fhir_base_url=fhir_base_url,
+                count=(
+                    settings
+                    .CLINICAL_CONTEXT_RESOURCE_COUNT
+                ),
+            ),
         )
+
+        observation_bundle = merge_fhir_bundles(
+    general_observation_bundle,
+    targeted_lab_bundle,
+    laboratory_observation_bundle,
+)
 
         points = extract_observation_points(
             observation_bundle,
@@ -988,13 +1095,33 @@ class ClinicalContextService:
             encounters
         )
 
+        patient_summary = build_patient_summary(
+            patient_resource,
+            anchor,
+        )
+
+        diagnostic_report_rows = (
+            build_diagnostic_reports(
+                diagnostic_reports
+            )
+        )
+
+        document_rows = (
+            build_document_references(
+                documents
+            )
+        )
+
         has_context = any(
             (
+                bool(patient_resource),
                 lab_trends,
                 vital_trends,
                 medication_timeline,
                 condition_rows,
                 encounter_rows,
+                diagnostic_report_rows,
+                document_rows,
             )
         )
 
@@ -1030,6 +1157,7 @@ class ClinicalContextService:
                 "value": anchor.isoformat(),
                 "basis": anchor_basis,
             },
+            "patientSummary": patient_summary,
             "labTrends": lab_trends,
             "vitalTrends": vital_trends,
             "medicationTimeline": (
@@ -1037,11 +1165,34 @@ class ClinicalContextService:
             ),
             "conditions": condition_rows,
             "encounters": encounter_rows,
+            "diagnosticReports": (
+                diagnostic_report_rows
+            ),
+            "documents": document_rows,
             "dataQuality": {
                 "fallbackUsed": False,
                 "observationCount": len(
                     bundle_resources(
                         observation_bundle,
+                        "Observation",
+                    )
+                ),
+                "laboratoryObservationCount": len(
+    bundle_resources(
+        laboratory_observation_bundle,
+        "Observation",
+    )
+),
+
+"laboratoryPagesFetched": (
+    laboratory_observation_bundle.get(
+        "pagesFetched",
+        0,
+    )
+),
+                "targetedObservationCount": len(
+                    bundle_resources(
+                        targeted_lab_bundle,
                         "Observation",
                     )
                 ),
@@ -1061,6 +1212,21 @@ class ClinicalContextService:
                 ),
                 "encounterCount": len(
                     encounter_rows
+                ),
+                "patientLoaded": bool(
+                    patient_resource
+                ),
+                "diagnosticReportCount": len(
+                    diagnostic_reports
+                ),
+                "documentCount": len(
+                    documents
+                ),
+                "laboratoryObservationCount": len(
+                    bundle_resources(
+                        laboratory_observation_bundle,
+                        "Observation",
+                    )
                 ),
             },
             "limitations": limitations,
@@ -1085,6 +1251,279 @@ class ClinicalContextService:
 
         return context
 
+
+def build_patient_summary(
+    patient: dict[str, Any],
+    anchor: datetime,
+) -> dict[str, Any]:
+    birth_date_text = patient.get(
+        "birthDate"
+    )
+
+    birth_date = None
+
+    if birth_date_text:
+        try:
+            birth_date = datetime.fromisoformat(
+                birth_date_text
+            ).replace(
+                tzinfo=timezone.utc
+            )
+        except ValueError:
+            birth_date = None
+
+    age = None
+
+    if birth_date:
+        age = (
+            anchor.year
+            - birth_date.year
+            - (
+                (
+                    anchor.month,
+                    anchor.day,
+                )
+                <
+                (
+                    birth_date.month,
+                    birth_date.day,
+                )
+            )
+        )
+
+    languages = []
+
+    for item in (
+        patient.get(
+            "communication",
+            [],
+        )
+        or []
+    ):
+        language = codeable_text(
+            item.get("language")
+        )
+
+        if language:
+            languages.append(language)
+
+    return {
+        "gender": patient.get("gender"),
+        "birthDate": birth_date_text,
+        "ageAtContextAnchor": age,
+        "deceased": (
+            patient.get("deceasedBoolean")
+            if "deceasedBoolean" in patient
+            else patient.get(
+                "deceasedDateTime"
+            )
+        ),
+        "maritalStatus": codeable_text(
+            patient.get(
+                "maritalStatus"
+            )
+        ),
+        "languages": sorted(
+            set(languages)
+        ),
+    }
+
+
+def build_diagnostic_reports(
+    resources: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    output = []
+
+    for resource in resources:
+        effective = (
+            resource.get(
+                "effectiveDateTime"
+            )
+            or (
+                resource.get(
+                    "effectivePeriod"
+                )
+                or {}
+            ).get("start")
+            or resource.get("issued")
+        )
+
+        output.append(
+            {
+                "id": resource.get("id"),
+                "status": resource.get(
+                    "status"
+                ),
+                "category": [
+                    codeable_text(item)
+                    for item in (
+                        resource.get(
+                            "category",
+                            [],
+                        )
+                        or []
+                    )
+                    if codeable_text(item)
+                ],
+                "name": codeable_text(
+                    resource.get("code")
+                ),
+                "effectiveAt": effective,
+                "issuedAt": resource.get(
+                    "issued"
+                ),
+                "conclusion": resource.get(
+                    "conclusion"
+                ),
+                "conclusionCodes": [
+                    codeable_text(item)
+                    for item in (
+                        resource.get(
+                            "conclusionCode",
+                            [],
+                        )
+                        or []
+                    )
+                    if codeable_text(item)
+                ],
+                "resultReferences": [
+                    item.get("reference")
+                    for item in (
+                        resource.get(
+                            "result",
+                            [],
+                        )
+                        or []
+                    )
+                    if item.get("reference")
+                ],
+            }
+        )
+
+    return output[:30]
+
+
+
+def build_document_references(
+    resources: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    output = []
+
+    for resource in resources:
+        content = []
+
+        for item in (
+            resource.get("content", [])
+            or []
+        ):
+            attachment = item.get(
+                "attachment",
+                {},
+            ) or {}
+
+            content.append(
+                {
+                    "contentType": (
+                        attachment.get(
+                            "contentType"
+                        )
+                    ),
+                    "title": attachment.get(
+                        "title"
+                    ),
+                    "creation": attachment.get(
+                        "creation"
+                    ),
+                    "hasUrl": bool(
+                        attachment.get("url")
+                    ),
+                    "hasInlineData": bool(
+                        attachment.get("data")
+                    ),
+                }
+            )
+
+        output.append(
+            {
+                "id": resource.get("id"),
+                "status": resource.get(
+                    "status"
+                ),
+                "type": codeable_text(
+                    resource.get("type")
+                ),
+                "category": [
+                    codeable_text(item)
+                    for item in (
+                        resource.get(
+                            "category",
+                            [],
+                        )
+                        or []
+                    )
+                    if codeable_text(item)
+                ],
+                "date": resource.get("date"),
+                "description": resource.get(
+                    "description"
+                ),
+                "content": content,
+            }
+        )
+
+    return output[:30]
+
+def empty_observation_bundle() -> dict[str, Any]:
+    return {
+        "resourceType": "Bundle",
+        "type": "searchset",
+        "total": 0,
+        "entry": [],
+    }
+
+async def safely_fetch_targeted_labs(
+    patient_id: str,
+    targeted_lab_codes: dict[
+        str,
+        list[str],
+    ],
+    *,
+    access_token: str | None,
+    fhir_base_url: str | None,
+) -> dict[str, Any]:
+    try:
+        return await asyncio.wait_for(
+            fetch_oracle_observations_by_codes(
+                patient_id,
+                targeted_lab_codes,
+                access_token=access_token,
+                fhir_base_url=fhir_base_url,
+                count=100,
+            ),
+            timeout=30,
+        )
+
+    except asyncio.TimeoutError:
+        print(
+            "[KGEN TARGETED LAB SEARCH TIMEOUT]",
+            {
+                "patientId": patient_id,
+                "fields": list(
+                    targeted_lab_codes
+                ),
+            },
+        )
+
+        return empty_observation_bundle()
+
+    except Exception as error:
+        print(
+            "[KGEN TARGETED LAB SEARCH ERROR]",
+            type(error).__name__,
+            str(error),
+        )
+
+        return empty_observation_bundle()
 
 clinical_context_service = (
     ClinicalContextService()

@@ -14,7 +14,7 @@ from app.config import settings
 from app.oracle_smart import (
     get_token_for_request,
 )
-
+import traceback
 router = APIRouter(
     prefix="/api/episodes",
     tags=["episodes"],
@@ -369,6 +369,23 @@ async def load_incident_context(
         raise HTTPException(
             status_code=404,
             detail="Incident not found.",
+        )
+    except Exception as error:
+        print(
+            "[KGEN CLINICAL CONTEXT LOAD ERROR]",
+            type(error).__name__,
+            str(error),
+        )
+
+        traceback.print_exc()
+
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "errorType": type(error).__name__,
+                "message": str(error),
+                "incidentId": incident_id,
+            },
         )
 
 

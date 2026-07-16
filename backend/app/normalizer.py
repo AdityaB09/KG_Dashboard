@@ -6,7 +6,12 @@ from typing import Any
 from app.config import settings
 from app.fhir_http import bundle_resources
 
-
+ORACLE_CODE_SYSTEM_72 = (
+    
+    "https://fhir.cerner.com/"
+    "ec2458f2-1e24-41c8-b71b-"
+    "0e701af7583d/codeSet/72"
+)
 LOINC = {
     "heartRate": ["8867-4"],
     "respiratoryRate": ["9279-1"],
@@ -15,10 +20,44 @@ LOINC = {
     "systolic": ["8480-6"],
     "diastolic": ["8462-4"],
     "bloodPressurePanel": ["85354-9"],
-    "glucose": ["2339-0", "15074-8", "2345-7"],
-    "potassium": ["6298-4", "2823-3"],
-    "creatinine": ["2160-0", "38483-4"],
-    "wbc": ["6690-2", "26464-8"],
+  
+    
+    "glucose": [
+        "2339-0",
+        "15074-8",
+        "2345-7",
+        "http://loinc.org|2345-7",
+        (
+            f"{ORACLE_CODE_SYSTEM_72}"
+            "|21702839"
+        ),
+    ],
+
+    "potassium": [
+        "6298-4",
+        "2823-3",
+        "http://loinc.org|2823-3",
+    ],
+
+    "creatinine": [
+        "2160-0",
+        "38483-4",
+        "http://loinc.org|2160-0",
+        (
+            f"{ORACLE_CODE_SYSTEM_72}"
+            "|2700655"
+        ),
+    ],
+
+    "wbc": [
+        "6690-2",
+        "26464-8",
+        "http://loinc.org|6690-2",
+        (
+            f"{ORACLE_CODE_SYSTEM_72}"
+            "|20136426"
+        ),
+    ],
 }
 
 
@@ -87,18 +126,34 @@ def clinically_plausible(field: str, value: float | int | None, unit: str | None
 
 
 
-def get_codes(codeable: dict[str, Any] | None) -> set[str]:
+def get_codes(
+    codeable: dict[str, Any] | None,
+) -> set[str]:
     if not codeable:
         return set()
 
     codes = set()
-    for coding in codeable.get("coding", []) or []:
+
+    for coding in (
+        codeable.get("coding", [])
+        or []
+    ):
         code = coding.get("code")
-        if code:
-            codes.add(str(code))
+        system = coding.get("system")
+
+        if not code:
+            continue
+
+        code_text = str(code)
+
+        codes.add(code_text)
+
+        if system:
+            codes.add(
+                f"{system}|{code_text}"
+            )
 
     return codes
-
 
 def has_any_code(resource_or_component: dict[str, Any], target_codes: list[str]) -> bool:
     codes = get_codes(resource_or_component.get("code"))

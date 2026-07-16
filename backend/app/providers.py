@@ -1,10 +1,159 @@
+import json
 from typing import Any
 
 import httpx
 from fastapi import HTTPException
-
+from urllib.parse import urljoin
 from app.config import settings
 from app.fhir_http import fhir_get, bundle_resources
+
+async def fetch_oracle_paginated_observations(
+    patient_id: str,
+    *,
+    access_token: str | None = None,
+    fhir_base_url: str | None = None,
+    category: str | None = None,
+    count: int = 100,
+    max_pages: int = 10,
+) -> dict[str, Any]:
+    base_url = (
+        fhir_base_url
+        or settings.ORACLE_FHIR_BASE_URL
+    ).rstrip("/")
+
+    if (
+        not base_url
+        or not patient_id
+        or not access_token
+    ):
+        return {
+            "resourceType": "Bundle",
+            "type": "searchset",
+            "total": 0,
+            "entry": [],
+        }
+
+    headers = {
+        "Accept": (
+            "application/fhir+json, "
+            "application/json"
+        ),
+        "Authorization": (
+            f"Bearer {access_token}"
+        ),
+    }
+
+    params = {
+        "patient": patient_id,
+        "_count": str(count),
+        "_sort": "-date",
+    }
+
+    if category:
+        params["category"] = category
+
+    current_url = (
+        f"{base_url}/Observation"
+    )
+
+    current_params: (
+        dict[str, Any] | None
+    ) = params
+
+    page_count = 0
+    result_bundles = []
+
+    async with httpx.AsyncClient(
+        timeout=30,
+        follow_redirects=True,
+    ) as client:
+        while (
+            current_url
+            and page_count < max_pages
+        ):
+            try:
+                response = await client.get(
+                    current_url,
+                    params=current_params,
+                    headers=headers,
+                )
+
+                response.raise_for_status()
+
+                bundle = response.json()
+
+                result_bundles.append(bundle)
+                page_count += 1
+
+                next_url = None
+
+                for link in (
+                    bundle.get("link", [])
+                    or []
+                ):
+                    if (
+                        link.get("relation")
+                        == "next"
+                    ):
+                        next_url = link.get(
+                            "url"
+                        )
+                        break
+
+                if not next_url:
+                    break
+
+                current_url = urljoin(
+                    current_url,
+                    next_url,
+                )
+
+                current_params = None
+
+            except httpx.TimeoutException as error:
+                print(
+                    "[KGEN PAGINATED LAB TIMEOUT]",
+                    {
+                        "page": page_count + 1,
+                        "message": str(error),
+                    },
+                )
+                break
+
+            except httpx.HTTPStatusError as error:
+                print(
+                    "[KGEN PAGINATED LAB HTTP ERROR]",
+                    {
+                        "page": page_count + 1,
+                        "status": (
+                            error.response
+                            .status_code
+                        ),
+                    },
+                )
+                break
+
+            except Exception as error:
+                print(
+                    "[KGEN PAGINATED LAB ERROR]",
+                    {
+                        "page": page_count + 1,
+                        "errorType": (
+                            type(error).__name__
+                        ),
+                        "message": str(error),
+                    },
+                )
+                break
+
+    merged = merge_fhir_bundles(
+        *result_bundles
+    )
+
+    merged["pagesFetched"] = page_count
+    merged["categoryRequested"] = category
+
+    return merged
 
 
 async def fetch_firely_observations(patient_id: str | None = None) -> dict[str, Any]:
@@ -99,19 +248,48 @@ async def fetch_oracle_observations(
             print("TOKEN:", "present" if access_token else "missing")
 
         try:
-            return await fhir_get(
-                base_url,
-                "/Observation",
-                params=params,
-                access_token=access_token,
-            )
+             return await fhir_get(
+        base_url,
+        "/Observation",
+        params=params,
+        access_token=access_token,
+    )
+
         except httpx.HTTPStatusError as error:
             last_error = error
 
-            if error.response.status_code in {400, 404}:
+            status_code = (
+        error.response.status_code
+    )
+
+            print(
+        "[KGEN ORACLE OBSERVATION HTTP ERROR]",
+        {
+            "status": status_code,
+            "params": params,
+        },
+    )
+
+            if status_code in {
+        400,
+        404,
+    }:
                 continue
 
             raise
+
+        except httpx.TimeoutException as error:
+            last_error = error
+
+            print(
+        "[KGEN ORACLE OBSERVATION TIMEOUT]",
+        {
+            "params": params,
+            "message": str(error),
+        },
+    )
+
+            continue
 
     return {
         "resourceType": "Bundle",
@@ -129,6 +307,210 @@ async def fetch_oracle_observations(
             }
         ],
     }
+
+
+def merge_fhir_bundles(
+    *bundles: dict[str, Any],
+) -> dict[str, Any]:
+    entries = []
+    seen = set()
+
+    for bundle in bundles:
+        for entry in (
+            bundle.get("entry", [])
+            or []
+        ):
+            resource = entry.get("resource")
+
+            if not isinstance(
+                resource,
+                dict,
+            ):
+                continue
+
+            resource_type = resource.get(
+                "resourceType"
+            )
+
+            resource_id = resource.get("id")
+
+            if resource_type and resource_id:
+                key = (
+                    resource_type,
+                    resource_id,
+                )
+            else:
+                key = json.dumps(
+                    resource,
+                    sort_keys=True,
+                    default=str,
+                )
+
+            if key in seen:
+                continue
+
+            seen.add(key)
+            entries.append(entry)
+
+    return {
+        "resourceType": "Bundle",
+        "type": "searchset",
+        "total": len(entries),
+        "entry": entries,
+    }
+
+
+async def fetch_oracle_patient(
+    patient_id: str,
+    *,
+    access_token: str | None = None,
+    fhir_base_url: str | None = None,
+) -> dict[str, Any]:
+    base_url = (
+        fhir_base_url
+        or settings.ORACLE_FHIR_BASE_URL
+    ).rstrip("/")
+
+    if not base_url or not patient_id:
+        return {}
+
+    try:
+        return await fhir_get(
+            base_url,
+            f"/Patient/{patient_id}",
+            access_token=access_token,
+        )
+    except Exception:
+        return {}
+
+
+async def fetch_oracle_observations_by_codes(
+    patient_id: str,
+    code_groups: dict[
+        str,
+        list[str],
+    ],
+    *,
+    access_token: str | None = None,
+    fhir_base_url: str | None = None,
+    count: int = 100,
+) -> dict[str, Any]:
+    base_url = (
+        fhir_base_url
+        or settings.ORACLE_FHIR_BASE_URL
+    ).rstrip("/")
+
+    if not base_url or not patient_id:
+        return {
+            "resourceType": "Bundle",
+            "type": "searchset",
+            "total": 0,
+            "entry": [],
+        }
+
+    result_bundles = []
+
+    for field, codes in code_groups.items():
+        for code in codes:
+            tokens = [
+                f"http://loinc.org|{code}",
+                code,
+            ]
+
+            found_for_code = False
+
+            for token in tokens:
+                attempts = [
+                    {
+                        "patient": patient_id,
+                        "code": token,
+                        "_count": str(count),
+                        "_sort": "-date",
+                    },
+                    {
+                        "patient": patient_id,
+                        "code": token,
+                        "_count": str(count),
+                    },
+                    {
+                        "subject": (
+                            f"Patient/{patient_id}"
+                        ),
+                        "code": token,
+                        "_count": str(count),
+                    },
+                ]
+
+                for params in attempts:
+                    try:
+                        bundle = await fhir_get(
+                            base_url,
+                            "/Observation",
+                            params=params,
+                            access_token=(
+                                access_token
+                            ),
+                        )
+
+                        resources = bundle_resources(
+                            bundle,
+                            "Observation",
+                        )
+
+                        if resources:
+                            result_bundles.append(
+                                bundle
+                            )
+
+                            found_for_code = True
+                            break
+
+                    except httpx.HTTPStatusError as error:
+                        print(
+                            "[KGEN ORACLE CODE SEARCH SKIPPED]",
+                            {
+                                "field": field,
+                                "code": code,
+                                "status": (
+                                    error.response.status_code
+                                ),
+                            },
+                        )
+
+                        continue
+
+                    except httpx.TimeoutException as error:
+                        print(
+                            "[KGEN ORACLE CODE SEARCH TIMEOUT]",
+                            {
+                                "field": field,
+                                "code": code,
+                                "message": str(error),
+                            },
+                        )
+
+                        continue
+
+                    except Exception as error:
+                        print(
+                            "[KGEN ORACLE CODE SEARCH ERROR]",
+                            {
+                                "field": field,
+                                "code": code,
+                                "errorType": (
+                                    type(error).__name__
+                                ),
+                                "message": str(error),
+                            },
+                        )
+
+                        continue
+                if found_for_code:
+                    break
+
+    return merge_fhir_bundles(
+        *result_bundles
+    )
 
 
 async def fetch_oracle_patient_resources(
