@@ -7,3 +7,4 @@ wfdb
 numpy
 scipy
 pytest
+pymongo>=4.6,<5

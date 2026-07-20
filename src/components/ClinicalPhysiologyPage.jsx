@@ -9,7 +9,15 @@ import {
   getLatestEpisode,
   getIncidentContext,
   loadIncidentContext,
+  listIncidents,
+  getIncidentEpisodes,
+  getSlmWidget,
 } from "../services/episodeService";
+import IncidentEpisodeCarousel
+  from "./IncidentEpisodeCarousel";
+
+import CriticalInterpretationWidget
+  from "./CriticalInterpretationWidget";
 
 
 const MAX_POINTS = 360;
@@ -973,8 +981,43 @@ const annotationSeries =
 export default function ClinicalPhysiologyPage({
   patient,
   episodeId,
+  incidentId,
   onOpenLabs,
 }) {
+  const [
+    incidentList,
+    setIncidentList,
+  ] = useState([]);
+
+  const [
+    activeIncidentId,
+    setActiveIncidentId,
+  ] = useState(incidentId || null);
+
+  const [
+    activeEpisodeId,
+    setActiveEpisodeId,
+  ] = useState(episodeId || null);
+
+  const [
+    incidentEpisodes,
+    setIncidentEpisodes,
+  ] = useState([]);
+
+  const [
+    activeEpisodeIndex,
+    setActiveEpisodeIndex,
+  ] = useState(0);
+
+  const [
+    slmWidgetResult,
+    setSlmWidgetResult,
+  ] = useState(null);
+
+  const [
+    slmWidgetStatus,
+    setSlmWidgetStatus,
+  ] = useState("loading");
   const [live, setLive] = useState(createInitialLiveState);
   const [activeWaveformId, setActiveWaveformId] = useState(null);
   const [episode, setEpisode] = useState(null);
@@ -997,6 +1040,156 @@ const [
   contextStatus,
   setContextStatus,
 ] = useState("not_loaded");
+
+function incidentIdentity(item) {
+  return (
+    item?.id ||
+    item?.incidentId ||
+    null
+  );
+}
+
+function episodeIdentity(item) {
+  return (
+    item?.id ||
+    item?.episodeId ||
+    null
+  );
+}
+
+function openIncident(index) {
+  const selected =
+    incidentList[index];
+
+  const selectedIncidentId =
+    incidentIdentity(selected);
+
+  if (!selectedIncidentId) return;
+
+  const preferredEpisodeId =
+    selected?.bestContextEpisodeId ||
+    selected?.primaryEpisodeId ||
+    null;
+
+  setActiveIncidentId(
+    selectedIncidentId
+  );
+
+  setActiveEpisodeId(
+    preferredEpisodeId
+  );
+
+  setActiveEpisodeIndex(0);
+  setIncidentEpisodes([]);
+
+  setEpisode(null);
+  setEpisodeWaveforms(null);
+  setEpisodeContext(null);
+
+  setEpisodeStatus("loading");
+  setContextStatus("loading");
+  setSlmWidgetResult(null);
+  setSlmWidgetStatus("loading");
+}
+
+function openIncidentEpisode(index) {
+  const selected =
+    incidentEpisodes[index];
+
+  const selectedId =
+    episodeIdentity(selected);
+
+  if (!selectedId) return;
+
+  setActiveEpisodeIndex(index);
+  setActiveEpisodeId(selectedId);
+}
+
+const activeIncidentIndex =
+  useMemo(() => {
+    const index =
+      incidentList.findIndex(
+        (item) =>
+          incidentIdentity(item) ===
+          activeIncidentId
+      );
+
+    return index >= 0
+      ? index
+      : 0;
+  }, [
+    incidentList,
+    activeIncidentId,
+  ]);
+
+useEffect(() => {
+  const resolvedIncidentId =
+    activeIncidentId ||
+    episode?.incidentId ||
+    incidentId;
+
+  if (!resolvedIncidentId) {
+    setSlmWidgetResult(null);
+    setSlmWidgetStatus("empty");
+    return undefined;
+  }
+
+  let active = true;
+
+  async function loadWidget() {
+    try {
+      setSlmWidgetStatus("loading");
+
+      const result =
+        await getSlmWidget(
+          resolvedIncidentId
+        );
+
+      if (!active) return;
+
+      setSlmWidgetResult(result);
+      setSlmWidgetStatus("ready");
+    } catch (error) {
+      if (!active) return;
+
+      console.error(
+        "[KGEN SLM WIDGET ERROR]",
+        error
+      );
+
+      setSlmWidgetResult(null);
+      setSlmWidgetStatus("error");
+    }
+  }
+
+  loadWidget();
+
+  const disconnect =
+    connectEpisodeEvents({
+      onEvent: (event) => {
+        if (
+          event.incidentId ===
+            resolvedIncidentId &&
+          [
+            "phase7.ready",
+            "clinical.context.updated",
+          ].includes(event.type)
+        ) {
+          loadWidget();
+        }
+      },
+      onError: () => {},
+    });
+
+  return () => {
+    active = false;
+    disconnect?.();
+  };
+}, [
+  activeIncidentId,
+  episode?.incidentId,
+  incidentId,
+]);
 
 async function ensureEpisodeContext(metadata) {
   if (!metadata?.incidentId) {
@@ -1038,7 +1231,155 @@ async function ensureEpisodeContext(metadata) {
     setContextStatus("error");
   }
 }
-  
+  useEffect(() => {
+    if (incidentId) {
+      setActiveIncidentId(
+        incidentId
+      );
+    }
+  }, [incidentId]);
+
+  useEffect(() => {
+    if (episodeId) {
+      setActiveEpisodeId(
+        episodeId
+      );
+    }
+  }, [episodeId]);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadIncidentList() {
+      try {
+        const items =
+          await listIncidents();
+
+        if (!active) return;
+
+        setIncidentList(items);
+
+        const requestedIncident =
+          incidentId ||
+          activeIncidentId ||
+          episode?.incidentId;
+
+        if (
+          requestedIncident &&
+          items.some(
+            (item) =>
+              incidentIdentity(item) ===
+              requestedIncident
+          )
+        ) {
+          setActiveIncidentId(
+            requestedIncident
+          );
+          return;
+        }
+
+        const firstIncidentId =
+          incidentIdentity(items[0]);
+
+        if (
+          !activeIncidentId &&
+          firstIncidentId
+        ) {
+          setActiveIncidentId(
+            firstIncidentId
+          );
+        }
+      } catch (error) {
+        console.error(
+          "[KGEN INCIDENT LIST ERROR]",
+          error
+        );
+      }
+    }
+
+    loadIncidentList();
+
+    return () => {
+      active = false;
+    };
+  }, [
+    incidentId,
+  ]);
+
+  useEffect(() => {
+    if (!activeIncidentId) {
+      setIncidentEpisodes([]);
+      return undefined;
+    }
+
+    let active = true;
+
+    async function loadIncidentViews() {
+      try {
+        const views =
+          await getIncidentEpisodes(
+            activeIncidentId
+          );
+
+        if (!active) return;
+
+        setIncidentEpisodes(views);
+
+        const selectedIndex =
+          views.findIndex(
+            (item) =>
+              episodeIdentity(item) ===
+              activeEpisodeId
+          );
+
+        if (selectedIndex >= 0) {
+          setActiveEpisodeIndex(
+            selectedIndex
+          );
+          return;
+        }
+
+        const incident =
+          incidentList.find(
+            (item) =>
+              incidentIdentity(item) ===
+              activeIncidentId
+          );
+
+        const preferredEpisodeId =
+          incident?.bestContextEpisodeId ||
+          incident?.primaryEpisodeId ||
+          episodeIdentity(views[0]);
+
+        setActiveEpisodeIndex(0);
+
+        if (preferredEpisodeId) {
+          setActiveEpisodeId(
+            preferredEpisodeId
+          );
+        }
+      } catch (error) {
+        if (!active) return;
+
+        console.error(
+          "[KGEN INCIDENT EPISODES ERROR]",
+          error
+        );
+
+        setIncidentEpisodes([]);
+      }
+    }
+
+    loadIncidentViews();
+
+    return () => {
+      active = false;
+    };
+  }, [
+    activeIncidentId,
+    incidentList,
+  ]);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setLive((prev) => nextLiveState(prev));
@@ -1107,11 +1448,19 @@ useEffect(() => {
 }, [patient?.fhirId, patient?.id]);
 
 useEffect(() => {
+  if (
+    activeIncidentId &&
+    !activeEpisodeId
+  ) {
+    setEpisodeStatus("loading");
+    return undefined;
+  }
+
   let active = true;
 
-  async function loadEpisode(
-    targetEpisodeId = episodeId
-  ) {
+ async function loadEpisode(
+  targetEpisodeId = activeEpisodeId
+ ){
     try {
       setEpisodeStatus("loading");
 
@@ -1140,6 +1489,18 @@ useEffect(() => {
       setEpisode(metadata);
 setEpisodeWaveforms(waveforms);
 setEpisodeStatus("ready");
+const metadataIncidentId =
+  metadata.incidentId || null;
+
+if (
+  metadataIncidentId &&
+  metadataIncidentId !==
+    activeIncidentId
+) {
+  setActiveIncidentId(
+    metadataIncidentId
+  );
+}
 
 void ensureEpisodeContext(metadata);
     } catch (error) {
@@ -1164,8 +1525,8 @@ void ensureEpisodeContext(metadata);
         if (
           event.type === "episode.captured" &&
           (
-            !episodeId ||
-            event.episodeId === episodeId
+            !activeEpisodeId ||
+            event.episodeId === activeEpisodeId
           )
         ) {
           loadEpisode(event.episodeId);
@@ -1178,7 +1539,10 @@ void ensureEpisodeContext(metadata);
     active = false;
     disconnect?.();
   };
-}, [episodeId]);
+}, [
+  activeEpisodeId,
+  activeIncidentId,
+]);
 
   const currentPatient = useMemo(() => {
     if (!patient) return BASE_PATIENT;
@@ -1544,12 +1908,33 @@ const episodeAlertColor = episodeReady
         : "Waiting for capture"}
     </span>
   </div>
+  
 
   {episodeReady ? (
-    <EpisodePhysiology
-      episode={episode}
-      waveforms={episodeWaveforms}
-    />
+    
+    <IncidentEpisodeCarousel
+      incidents={incidentList}
+      activeIncidentIndex={
+        activeIncidentIndex
+      }
+      onIncidentChange={
+        openIncident
+      }
+      episodes={incidentEpisodes}
+      activeEpisodeIndex={
+        activeEpisodeIndex
+      }
+      onEpisodeChange={
+        openIncidentEpisode
+      }
+    >
+      <EpisodePhysiology
+        episode={episode}
+        waveforms={episodeWaveforms}
+      />
+    </IncidentEpisodeCarousel>
+    
+    
   ) : (
     <div className="kgen-episode-empty">
       <strong>
@@ -1640,39 +2025,12 @@ const episodeAlertColor = episodeReady
   </h2>
 
   <div className="kgen-alert-box">
-    <div className="kgen-alert-icon">
-      {episodeReady ? "!" : "✓"}
-    </div>
-
-    <h3>{episodeInterpretation.title}</h3>
-
-    <p>
-      <b>Detected Episode:</b>{" "}
-      {episodeInterpretation.rhythm}
-    </p>
-
-    <p>
-      <b>Available Signals:</b>{" "}
-      {episodeInterpretation.ppg}
-    </p>
-
-    <p>
-      <b>Analysis Status:</b>{" "}
-      {episodeInterpretation.likelyEtiology}
-    </p>
-
-    {episodeReady && (
-      <p className="kgen-episode-provenance">
-        <b>Source:</b>{" "}
-        {episode.provenance?.waveformSource}
-        {" • "}
-        {
-          episode.provenance
-            ?.annotationSource
-        }
-      </p>
-    )}
-  </div>
+  <CriticalInterpretationWidget
+    result={slmWidgetResult}
+    status={slmWidgetStatus}
+    fallback={episodeInterpretation}
+  />
+</div>
 </section>
 
         <section className="kgen-panel kgen-labs-small-panel">

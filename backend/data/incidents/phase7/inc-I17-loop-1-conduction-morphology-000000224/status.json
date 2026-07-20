@@ -1,22 +1,17 @@
 {
   "schemaVersion": "phase-7-v1",
-  "incidentId": "inc-I01-loop-1-ventricular-ectopy-000013742",
+  "incidentId": "inc-I17-loop-1-conduction-morphology-000000224",
   "state": "ready_for_slm",
   "stage": "complete",
   "detail": "Automatic Phase 7 processing completed.",
-  "createdAt": "2026-07-16T17:24:30.021380+00:00",
-  "updatedAt": "2026-07-16T17:40:36.500086+00:00",
+  "createdAt": "2026-07-20T18:14:57.054982+00:00",
+  "updatedAt": "2026-07-20T18:15:29.704517+00:00",
   "automatic": true,
   "error": null,
   "outputs": {
     "episodeResults": [
       {
-        "episodeId": "incart-I01-loop-1-V-000013742",
-        "status": "ready",
-        "algorithmVersion": "phase-6-v1.1.1"
-      },
-      {
-        "episodeId": "incart-I01-loop-1-V-000019068",
+        "episodeId": "incart-I17-loop-1-R-000000224",
         "status": "partial",
         "algorithmVersion": "phase-6-v1.1.1"
       }

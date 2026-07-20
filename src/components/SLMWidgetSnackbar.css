@@ -1,0 +1,191 @@
+/* Append to the END of SLMWidgetAdditions.css */
+
+.kgen-snackbar-layer {
+  position: fixed;
+  top: 84px;
+  right: 0;
+  left: 0;
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  padding: 0 18px;
+  pointer-events: none;
+}
+
+.kgen-analytics-snackbar {
+  position: relative;
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+  width: min(680px, calc(100vw - 36px));
+  min-height: 66px;
+  padding: 11px 12px 11px 14px;
+  overflow: hidden;
+  border: 1px solid rgba(36, 99, 74, 0.28);
+  border-left: 5px solid #21865f;
+  border-radius: 13px;
+  background: rgba(245, 255, 250, 0.98);
+  box-shadow:
+    0 18px 45px rgba(12, 32, 47, 0.2),
+    0 3px 10px rgba(12, 32, 47, 0.1);
+  opacity: 0;
+  transform: translateY(-24px) scale(0.98);
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
+  pointer-events: auto;
+  backdrop-filter: blur(12px);
+}
+
+.kgen-analytics-snackbar.captured {
+  border-color: rgba(191, 126, 20, 0.34);
+  border-left-color: #d99019;
+  background: rgba(255, 250, 235, 0.98);
+}
+
+.kgen-analytics-snackbar.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.kgen-snackbar-icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #d8f5e6;
+  color: #16734e;
+  font-size: 0.92rem;
+  font-weight: 900;
+}
+
+.kgen-analytics-snackbar.captured .kgen-snackbar-icon {
+  background: #ffedc8;
+  color: #a76300;
+  font-size: 0.7rem;
+}
+
+.kgen-snackbar-copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.kgen-snackbar-copy strong {
+  overflow: hidden;
+  color: #124934;
+  font-size: 0.93rem;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kgen-analytics-snackbar.captured .kgen-snackbar-copy strong {
+  color: #744607;
+}
+
+.kgen-snackbar-copy span {
+  overflow: hidden;
+  color: #42695a;
+  font-size: 0.76rem;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kgen-analytics-snackbar.captured .kgen-snackbar-copy span {
+  color: #795b2b;
+}
+
+.kgen-snackbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.kgen-snackbar-open {
+  min-height: 34px;
+  padding: 7px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: #1e6798;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.kgen-snackbar-open:hover {
+  background: #15577f;
+}
+
+.kgen-snackbar-close {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #31594a;
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.kgen-snackbar-close:hover {
+  background: rgba(28, 87, 65, 0.08);
+}
+
+.kgen-snackbar-progress {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: #3da77c;
+  transform-origin: left;
+  animation-name: kgen-snackbar-countdown;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+.kgen-analytics-snackbar.captured .kgen-snackbar-progress {
+  background: #dc941f;
+}
+
+@keyframes kgen-snackbar-countdown {
+  from {
+    transform: scaleX(1);
+  }
+
+  to {
+    transform: scaleX(0);
+  }
+}
+
+@media (max-width: 720px) {
+  .kgen-snackbar-layer {
+    top: 72px;
+    padding: 0 10px;
+  }
+
+  .kgen-analytics-snackbar {
+    grid-template-columns: 28px minmax(0, 1fr) auto;
+    width: calc(100vw - 20px);
+    padding: 10px;
+  }
+
+  .kgen-snackbar-copy span {
+    white-space: normal;
+  }
+
+  .kgen-snackbar-open {
+    padding: 7px 9px;
+    font-size: 0.68rem;
+  }
+}

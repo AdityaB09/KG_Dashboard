@@ -1,0 +1,115 @@
+{
+  "schemaVersion": "incident-v1",
+  "id": "inc-I17-loop-1-conduction-morphology-000000224",
+  "patientId": "research-incart-I17",
+  "mode": "research",
+  "record": "I17",
+  "loopNumber": 1,
+  "primaryCategory": "conduction_morphology",
+  "episodeViews": [
+    {
+      "episodeId": "incart-I17-loop-1-R-000000224",
+      "display": "Right bundle branch block beat",
+      "severity": "warning",
+      "captureStartSeconds": 0.0,
+      "captureEndSeconds": 12.018,
+      "eventStartSeconds": 0.018,
+      "eventEndSeconds": 2.018,
+      "eventDurationSeconds": 2.0,
+      "triggerHeartRate": 72,
+      "triggerAnnotationCount": 1,
+      "triggerAnnotationCounts": {
+        "R": 1
+      },
+      "triggerCategoryCounts": {
+        "conduction_morphology": 1
+      },
+      "leadIds": [
+        "lead1",
+        "lead2",
+        "lead3",
+        "avr",
+        "avl",
+        "avf",
+        "v1",
+        "v2",
+        "v3",
+        "v4",
+        "v5",
+        "v6"
+      ],
+      "analysisStatus": "pending",
+      "contextStatus": "not_loaded",
+      "captureCompleteness": {
+        "requestedPreSeconds": 10.0,
+        "actualPreSeconds": 0.018,
+        "preContextComplete": false,
+        "requestedPostSeconds": 10.0,
+        "actualPostSeconds": 10.0,
+        "postContextComplete": true,
+        "captureComplete": false,
+        "captureTruncatedByMaxDuration": false,
+        "truncationReasons": [
+          "record_start_or_capture_boundary"
+        ]
+      },
+      "capturedAt": "2026-07-20T18:14:55.039907+00:00"
+    }
+  ],
+  "uniqueTriggerAnnotations": [
+    {
+      "symbol": "R",
+      "absoluteSample": 224,
+      "recordSample": 224,
+      "recordSeconds": 1.018,
+      "auxNote": "",
+      "subtype": 0,
+      "channel": 0,
+      "annotationNumber": 0,
+      "category": "conduction_morphology",
+      "label": "right_bundle_branch_block_beat",
+      "display": "Right bundle branch block beat",
+      "severity": "warning",
+      "mode": "transition",
+      "captureOffsetSamples": 224,
+      "captureOffsetSeconds": 1.018
+    }
+  ],
+  "analysisStatus": "analyzing",
+  "contextStatus": "ready",
+  "summaryStatus": "not_started",
+  "provenance": {
+    "waveformSource": "PhysioNet INCART",
+    "triggerSource": "INCART atr reference annotations",
+    "clinicalContextSource": "Oracle SMART on FHIR"
+  },
+  "createdAt": "2026-07-20T18:14:55.040907+00:00",
+  "state": "CAPTURED",
+  "display": "Conduction Morphology incident",
+  "severity": "warning",
+  "incidentStartSeconds": 0.018,
+  "incidentEndSeconds": 2.018,
+  "durationSeconds": 2.0,
+  "captureStartSeconds": 0.0,
+  "captureEndSeconds": 12.018,
+  "captureSpanSeconds": 12.018,
+  "episodeIds": [
+    "incart-I17-loop-1-R-000000224"
+  ],
+  "episodeCount": 1,
+  "primaryEpisodeId": "incart-I17-loop-1-R-000000224",
+  "bestContextEpisodeId": "incart-I17-loop-1-R-000000224",
+  "uniqueTriggerCount": 1,
+  "triggerAnnotationCounts": {
+    "R": 1
+  },
+  "triggerCategoryCounts": {
+    "conduction_morphology": 1
+  },
+  "incompleteEpisodeCount": 1,
+  "completeEpisodeCount": 0,
+  "updatedAt": "2026-07-20T18:15:29.578169+00:00",
+  "bestQualityEpisodeId": "incart-I17-loop-1-R-000000224",
+  "bestMorphologyEpisodeId": "incart-I17-loop-1-R-000000224",
+  "clinicalContextEpisodeId": "incart-I17-loop-1-R-000000224"
+}

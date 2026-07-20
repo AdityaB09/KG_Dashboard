@@ -547,6 +547,8 @@ class Phase7Orchestrator:
 
                 final_state = (
                     "ready_for_slm"
+                    
+                    
                     if not should_run_model
                     else (
                         "complete"
@@ -624,7 +626,6 @@ class Phase7Orchestrator:
                         **outputs,
                     }
                 )
-
                 return {
                     "status": status,
                     "evidence": evidence,

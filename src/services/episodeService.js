@@ -167,11 +167,16 @@ export function connectEpisodeEvents({
   );
 
   const eventNames = [
-    "episode.detected",
-    "episode.captured",
-    "episode.analysis_ready",
-    "episode.error",
-  ];
+  "episode.detected",
+  "episode.captured",
+  "episode.analysis_ready",
+  "episode.error",
+  "phase7.started",
+  "phase7.ready",
+  "phase7.failed",
+  "clinical.context.updated",
+  "clinical.context.checked",
+];
 
   const handlers = eventNames.map(
     (eventName) => {
@@ -217,4 +222,53 @@ export function connectEpisodeEvents({
 
     eventSource.close();
   };
+}
+
+
+export async function listIncidents() {
+  const result = await requestJson(
+    "/api/incidents"
+  );
+
+  if (Array.isArray(result)) {
+    return result;
+  }
+
+  return (
+    result?.incidents ||
+    result?.items ||
+    []
+  );
+}
+
+export async function getIncidentEpisodes(
+  incidentId
+) {
+  const result = await requestJson(
+    `/api/incidents/${encodeURIComponent(
+      incidentId
+    )}/episodes`
+  );
+
+  return result?.episodes || [];
+}
+
+export async function getSlmWidget(
+  incidentId
+) {
+  return requestJson(
+    `/api/slm-widget/incidents/${encodeURIComponent(
+      incidentId
+    )}`
+  );
+}
+
+export async function getPhase7Status(
+  incidentId
+) {
+  return requestJson(
+    `/api/phase7/incidents/${encodeURIComponent(
+      incidentId
+    )}/status`
+  );
 }

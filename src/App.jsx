@@ -14,7 +14,10 @@ import TimelineFeed from "./components/TimelineFeed";
 import MultiPatientMonitor from "./components/MultiPatientMonitor";
 import ClinicalPhysiologyPage from "./components/ClinicalPhysiologyPage";
 import SevenLeadWaveformPage from "./components/SevenLeadWaveformPage";
-
+import AnalyticsIncidentNotice from "./components/AnalyticsIncidentNotice";
+import {
+  connectEpisodeEvents,
+} from "./services/episodeService";
 import "./index.css";
 
 import { createInitialTelemetry, nextTelemetryFrame } from "./services/telemetryService";
@@ -46,6 +49,15 @@ export default function App() {
   const [
   selectedEpisodeId,
   setSelectedEpisodeId,
+] = useState(null);
+const [
+  selectedIncidentId,
+  setSelectedIncidentId,
+] = useState(null);
+
+const [
+  analyticsNotice,
+  setAnalyticsNotice,
 ] = useState(null);
   const [monitorPatientIds, setMonitorPatientIds] = useState([]);
   
@@ -89,7 +101,60 @@ export default function App() {
 
     return () => clearInterval(interval);
   }, [patients]);
+useEffect(() => {
+  const disconnect = connectEpisodeEvents({
+    onEvent: (event) => {
+      if (event.type === "episode.captured") {
+        setSelectedEpisodeId(
+          event.episodeId || null
+        );
 
+        setSelectedIncidentId(
+          event.incidentId || null
+        );
+
+        setAnalyticsNotice({
+          status: "captured",
+          title: "ECG episode captured",
+          message:
+            "An episode was stored and the incident analysis is running.",
+          episodeId:
+            event.episodeId || null,
+          incidentId:
+            event.incidentId || null,
+        });
+      }
+
+      if (event.type === "phase7.ready") {
+        setSelectedEpisodeId(
+          event.episodeId ||
+            event.primaryEpisodeId ||
+            null
+        );
+
+        setSelectedIncidentId(
+          event.incidentId || null
+        );
+
+        setAnalyticsNotice({
+          status: "ready",
+          title: "Incident ready in Analytics",
+          message:
+            "Episode analysis and the interpretation package are available.",
+          episodeId:
+            event.episodeId ||
+            event.primaryEpisodeId ||
+            null,
+          incidentId:
+            event.incidentId || null,
+        });
+      }
+    },
+    onError: () => {},
+  });
+
+  return disconnect;
+}, []);
   const selectedPatient = useMemo(
     () => patients.find((patient) => patient.id === selectedPatientId) ?? patients[0],
     [selectedPatientId]
@@ -374,7 +439,10 @@ function renderPhysiologyPage() {
     <ClinicalPhysiologyPage
       patient={selectedPatient}
       episodeId={selectedEpisodeId}
-      onOpenLabs={() => openModal("labs")}
+      incidentId={selectedIncidentId}
+      onOpenLabs={() =>
+        openModal("labs")
+      }
     />
   );
 }
@@ -402,6 +470,24 @@ function renderActivePage() {
   }}
   onSearchFocus={() => setGlobalSearchOpen(true)}
   onToggleSidebar={() => setSidebarCollapsed((value) => !value)}
+/>
+<AnalyticsIncidentNotice
+  notice={analyticsNotice}
+  onOpen={() => {
+    setSelectedEpisodeId(
+      analyticsNotice?.episodeId || null
+    );
+
+    setSelectedIncidentId(
+      analyticsNotice?.incidentId || null
+    );
+
+    setActivePage("physiology");
+    setAnalyticsNotice(null);
+  }}
+  onDismiss={() =>
+    setAnalyticsNotice(null)
+  }
 />
 
         {globalSearchOpen && (

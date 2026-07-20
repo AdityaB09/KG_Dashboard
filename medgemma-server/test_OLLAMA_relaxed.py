@@ -22,7 +22,6 @@ INPUT_FILE = SCRIPT_DIRECTORY / "SLM_Input_Package.json"
 OLLAMA_CHAT_URL = "http://127.0.0.1:11434/api/chat"
 
 AVAILABLE_MODELS: dict[str, str] = {
-    "medgemma27": "medgemma:27b",
     "q8": "medgemma1.5:4b-it-q8_0",
     "bf16": "medgemma1.5:4b-it-bf16",
     "biomistral": "cniongolo/biomistral",
@@ -34,19 +33,6 @@ AVAILABLE_MODELS: dict[str, str] = {
     "apollo": "hf.co/FreedomIntelligence/Apollo-7B-GGUF:Q4_K_M",
     "mistral_nemo": "mistral-nemo:12b-instruct-2407-q4_K_M",
     "llama31": "llama3.1:8b",
-
-    # Additional medical model aliases.
-    # Use --model-name to override any alias with an exact Ollama model name.
-    "meditron3": "hf.co/QuantFactory/Meditron3-8B-GGUF:Q4_K_M",
-    "medreason8": "hf.co/SuperMaker/MedReason-8B-GGUF:Q4_K_M",
-    "medical_qwen25": "hf.co/mradermacher/Medical-Qwen2.5-7B-Instruct-GGUF:Q4_K_M",
-    "med_qwen2": "hf.co/mradermacher/Med-Qwen2-7B-GGUF:Q4_K_M",
-    "meerkat7": "hf.co/mradermacher/meerkat-7b-v1.0-GGUF:Q4_K_M",
-    "mediphi": "hf.co/surya-ravindra/MediPhi-Instruct-Q4_K_M-GGUF:Q4_K_M",
-    "clinical_llama_v21": "hf.co/mradermacher/llama-3.1-8b-clinical-V2.1-GGUF:Q4_K_M",
-    "clinical_llama_v20": "hf.co/mradermacher/llama-3.1-8b-clinical-V2.0-GGUF:Q4_K_M",
-    "clinical_llama_v14": "hf.co/mradermacher/llama-3.1-8b-clinical-V1.4-GGUF:Q4_K_M",
-    "medgemma4_q4": "hf.co/mradermacher/medgemma-4b-it-GGUF:Q4_K_M",
 }
 
 DEFAULT_CONTEXT_SIZE = 16384
@@ -159,10 +145,7 @@ def parse_arguments() -> argparse.Namespace:
         choices=AVAILABLE_MODELS.keys(),
         help=(
             "Model alias. Examples: q8, biomistral_q5, openbiollm_q5, "
-            "huatuo7, huatuo8, apollo, mistral_nemo, llama31, "
-            "meditron3, medreason8, medical_qwen25, med_qwen2, "
-            "meerkat7, mediphi, clinical_llama_v21, clinical_llama_v20, "
-            "clinical_llama_v14, medgemma4_q4."
+            "huatuo7, huatuo8, apollo, mistral_nemo, llama31."
         ),
     )
 

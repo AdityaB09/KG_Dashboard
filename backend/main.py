@@ -54,13 +54,7 @@ from app.slm_widget.routes import (
     router as slm_widget_router,
 )
 
-app.include_router(
-    fhir_cache_router
-)
 
-app.include_router(
-    slm_widget_router
-)
 
 app = FastAPI(title="KardioGenics FHIR Streaming Backend")
 
@@ -78,6 +72,14 @@ app.include_router(episode_router)
 
 app.include_router(incident_router)
 app.include_router(phase7_router)
+
+app.include_router(
+    fhir_cache_router
+)
+
+app.include_router(
+    slm_widget_router
+)
 def observe_episode_frame_safely(
     *,
     session_id: str,
