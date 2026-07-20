@@ -258,4 +258,63 @@ class Settings:
         "ALLOW_RESEARCH_FHIR_PAIRING",
         "false",
     ).lower() in {"1", "true", "yes", "on"}
+    
+    
+    MONGODB_ENABLED = os.getenv(
+    "MONGODB_ENABLED",
+    "false",
+).lower() in {
+    "1",
+    "true",
+    "yes",
+    "on",
+}
+
+    MONGODB_URI = os.getenv(
+        "MONGODB_URI",
+        "mongodb://127.0.0.1:27017",
+    ).strip()
+
+    MONGODB_DATABASE = os.getenv(
+        "MONGODB_DATABASE",
+        "kardiogenics",
+    ).strip()
+
+    MONGODB_FHIR_COLLECTION = os.getenv(
+        "MONGODB_FHIR_COLLECTION",
+        "fhir_patient_snapshots",
+    ).strip()
+
+    MONGODB_SERVER_SELECTION_TIMEOUT_MS = int(
+        os.getenv(
+            "MONGODB_SERVER_SELECTION_TIMEOUT_MS",
+            "1500",
+        )
+    )
+
+    FHIR_CACHE_SOFT_REFRESH_SECONDS = int(
+        os.getenv(
+            "FHIR_CACHE_SOFT_REFRESH_SECONDS",
+            "300",
+        )
+    )
+
+    FHIR_CACHE_MAX_STALE_SECONDS = int(
+        os.getenv(
+            "FHIR_CACHE_MAX_STALE_SECONDS",
+            "86400",
+        )
+    )
+
+    FHIR_CACHE_BACKGROUND_REFRESH = os.getenv(
+        "FHIR_CACHE_BACKGROUND_REFRESH",
+        "true",
+    ).lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
+
+
 settings = Settings()

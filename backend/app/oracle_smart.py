@@ -213,6 +213,33 @@ async def oracle_callback(
         "id_token": token_response.get("id_token"),
         "created_at_epoch": time.time(),
     }
+    try:
+        from app.fhir_cache.service import (
+            fhir_cache_service,
+        )
+
+        SMART_TOKEN_STORE[session_id][
+            "fhir_cache"
+        ] = await fhir_cache_service.probe(
+            patient_id=SMART_TOKEN_STORE[
+                session_id
+            ].get("patient_id"),
+            fhir_base_url=SMART_TOKEN_STORE[
+                session_id
+            ].get("fhir_base_url"),
+        )
+
+    except Exception as cache_error:
+        SMART_TOKEN_STORE[session_id][
+            "fhir_cache"
+        ] = {
+            "enabled": False,
+            "available": False,
+            "cacheHit": False,
+            "reason": str(cache_error),
+        }
+    
+    
 
     frontend_app_url = os.getenv("FRONTEND_APP_URL", "http://127.0.0.1:5173")
 

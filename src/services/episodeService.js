@@ -1,5 +1,6 @@
 const API_BASE = (
   import.meta.env.VITE_API_BASE_URL ||
+  import.meta.env.VITE_BACKEND_URL ||
   "http://127.0.0.1:8000"
 ).replace(/\/$/, "");
 
@@ -19,15 +20,29 @@ async function requestJson(
     }
   );
 
+  const payload = await response
+    .json()
+    .catch(() => null);
+
   if (!response.ok) {
-    throw new Error(
-      `Episode request failed: ${response.status}`
-    );
+    const detail = payload?.detail;
+
+    const message =
+      typeof detail === "string"
+        ? detail
+        : detail?.message ||
+          `Episode request failed: ${response.status}`;
+
+    const error = new Error(message);
+
+    error.status = response.status;
+    error.detail = detail;
+
+    throw error;
   }
 
-  return response.json();
+  return payload;
 }
-
 
 export async function getIncidentContext(
   incidentId
@@ -68,7 +83,9 @@ export async function getLatestEpisode() {
   return result.episode || null;
 }
 
-export async function getEpisode(episodeId) {
+export async function getEpisode(
+  episodeId
+) {
   return requestJson(
     `/api/episodes/${encodeURIComponent(
       episodeId
@@ -83,6 +100,58 @@ export async function getEpisodeWaveforms(
     `/api/episodes/${encodeURIComponent(
       episodeId
     )}/waveforms?leads=lead2,lead1,avf&max_points=1800`
+  );
+}
+
+export async function getEpisodeAnalysis(
+  episodeId
+) {
+  return requestJson(
+    `/api/episodes/${encodeURIComponent(
+      episodeId
+    )}/analysis`
+  );
+}
+
+export async function analyzeEpisode(
+  episodeId,
+  { force = false } = {}
+) {
+  return requestJson(
+    `/api/episodes/${encodeURIComponent(
+      episodeId
+    )}/analyze?force=${
+      force ? "true" : "false"
+    }`,
+    {
+      method: "POST",
+    }
+  );
+}
+
+export async function getIncidentAnalysis(
+  incidentId
+) {
+  return requestJson(
+    `/api/incidents/${encodeURIComponent(
+      incidentId
+    )}/analysis`
+  );
+}
+
+export async function analyzeIncident(
+  incidentId,
+  { force = false } = {}
+) {
+  return requestJson(
+    `/api/incidents/${encodeURIComponent(
+      incidentId
+    )}/analyze?force=${
+      force ? "true" : "false"
+    }`,
+    {
+      method: "POST",
+    }
   );
 }
 
@@ -108,7 +177,9 @@ export function connectEpisodeEvents({
     (eventName) => {
       const handler = (event) => {
         try {
-          onEvent?.(JSON.parse(event.data));
+          onEvent?.(
+            JSON.parse(event.data)
+          );
         } catch (error) {
           onError?.(error);
         }
@@ -119,7 +190,10 @@ export function connectEpisodeEvents({
         handler
       );
 
-      return [eventName, handler];
+      return [
+        eventName,
+        handler,
+      ];
     }
   );
 
@@ -129,11 +203,15 @@ export function connectEpisodeEvents({
 
   return () => {
     handlers.forEach(
-      ([eventName, handler]) => {
-        eventSource.removeEventListener(
-          eventName,
-          handler
-        );
+      ([
+        eventName,
+        handler,
+      ]) => {
+        eventSource
+          .removeEventListener(
+            eventName,
+            handler
+          );
       }
     );
 

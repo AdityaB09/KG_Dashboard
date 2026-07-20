@@ -6,3 +6,4 @@ itsdangerous
 wfdb
 numpy
 scipy
+pytest

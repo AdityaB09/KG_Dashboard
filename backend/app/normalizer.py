@@ -19,7 +19,8 @@ LOINC = {
     "temperature": ["8310-5"],
     "systolic": ["8480-6"],
     "diastolic": ["8462-4"],
-    "bloodPressurePanel": ["85354-9"],
+    "bloodPressurePanel": ["85354-9"],\
+    "potassium": ["6298-4", "2823-3"],
   
     
     "glucose": [
@@ -33,12 +34,7 @@ LOINC = {
         ),
     ],
 
-    "potassium": [
-        "6298-4",
-        "2823-3",
-        "http://loinc.org|2823-3",
-    ],
-
+    
     "creatinine": [
         "2160-0",
         "38483-4",

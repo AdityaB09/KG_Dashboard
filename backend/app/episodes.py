@@ -1941,7 +1941,28 @@ class EpisodeCoordinator:
                     ),
                 }
             )
+            try:
+                    from app.phase7.orchestrator import (
+                        phase7_orchestrator,
+                    )
 
+                    phase7_orchestrator.schedule_captured_episode(
+                        episode_id=capture.episode_id,
+                        incident_id=metadata.get(
+                            "incidentId"
+                        ),
+                    )
+
+            except Exception as phase7_error:
+                    # Scheduling failure must never break
+                    # waveform capture or persistence.
+                    print(
+                        "[KGEN PHASE7 SCHEDULE ERROR]",
+                        type(phase7_error).__name__,
+                        str(phase7_error),
+                    )
+            
+        
         except Exception as error:
             print(
                 "[KGEN EPISODE "

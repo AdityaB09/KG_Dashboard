@@ -1,0 +1,1083 @@
+{
+  "modelVariant": "huatuo8",
+  "model": "hf.co/QuantFactory/HuatuoGPT-o1-8B-GGUF:Q5_K_M",
+  "validationStatus": "passed",
+  "validationMode": "widget_v3_with_deterministic_fact_overlay",
+  "caseMode": "synthetic_unified_case_benchmark",
+  "notForClinicalUse": true,
+  "attemptsUsed": 1,
+  "response": {
+    "schemaVersion": "phase-7-widget-interpretation-v3",
+    "caseMode": "synthetic_unified_case_benchmark",
+    "incidentOverview": {
+      "incidentId": "inc-I01-loop-1-ventricular-ectopy-000013742",
+      "display": "Ventricular Ectopy incident",
+      "category": "ventricular_ectopy",
+      "severity": "warning",
+      "analysisStatus": "partial",
+      "contextStatus": "ready",
+      "incidentStartSeconds": 61.464,
+      "incidentEndSeconds": 131.123,
+      "durationSeconds": 69.659,
+      "episodeCount": 2,
+      "contextAnchor": {
+        "value": "2026-07-16T17:24:28.013860+00:00",
+        "basis": "capture_time_proxy"
+      }
+    },
+    "patientContext": {
+      "gender": "male",
+      "birthDate": "1990-09-15",
+      "ageAtContextAnchor": 35,
+      "deceased": false,
+      "maritalStatus": "Single",
+      "languages": [
+        "English"
+      ]
+    },
+    "ecgEvidence": {
+      "signalQuality": {
+        "status": "ready",
+        "meanScore": 100.0,
+        "medianScore": 100.0,
+        "minimumScore": 100.0,
+        "crossEpisodeAgreement": 1.0
+      },
+      "rhythm": {
+        "medianHeartRateBpm": 94.25,
+        "heartRateRangeBpm": [
+          90.72,
+          97.78
+        ]
+      },
+      "qrs": {
+        "medianTriggerQrsDurationMilliseconds": 93.182,
+        "medianBaselineQrsDurationMilliseconds": 65.909,
+        "crossEpisodeAgreement": 0.9242
+      },
+      "morphology": {
+        "status": "ready",
+        "medianDifferenceScore": 0.2996,
+        "crossEpisodeAgreement": 0.9686
+      },
+      "leadAgreement": {
+        "medianScore": 72.14
+      },
+      "crossEpisodeAgreement": {
+        "score": 96.43,
+        "qualityAgreement": 1.0,
+        "qrsAgreement": 0.9242,
+        "morphologyAgreement": 0.9686
+      },
+      "deterministicConfidence": {
+        "score": 83.41,
+        "grade": "high",
+        "episodeConfidenceScores": [
+          97.83,
+          69.0
+        ]
+      },
+      "independentCandidateDetection": {
+        "abnormalMorphologyCandidateCount": 0,
+        "candidatePercent": 0.0,
+        "doesNotNegateReferenceAnnotations": true
+      },
+      "referenceAnnotations": {
+        "source": "PhysioNet INCART",
+        "sourceType": "dataset_reference_annotation",
+        "triggerCounts": {
+          "V": 19
+        },
+        "uniqueReferenceTriggerCount": 19,
+        "isIndependentDiagnosis": false
+      }
+    },
+    "verifiedMedicationOrders": [
+      {
+        "sourceId": "497586817",
+        "medicationName": "Latanoprost (Xalatan) OU QHS",
+        "resourceType": "MedicationRequest",
+        "orderStatus": "active",
+        "evidenceLevel": "order",
+        "exposureStatus": "ordered_only",
+        "dose": {
+          "value": null,
+          "unit": null,
+          "display": "0 Refill(s)",
+          "route": null,
+          "instructions": "0 Refill(s)"
+        },
+        "eventTime": "2026-06-22T23:27:47+00:00",
+        "minutesFromAnchor": -34196.7,
+        "relation": "before_anchor",
+        "relationLabel": "34196.7 min before",
+        "temporalBucket": "historical",
+        "dashboardWarning": "Order only; dispensing, administration and adherence are not confirmed."
+      },
+      {
+        "sourceId": "497561969",
+        "medicationName": "Latanoprost (Xalatan) OU QHS",
+        "resourceType": "MedicationRequest",
+        "orderStatus": "active",
+        "evidenceLevel": "order",
+        "exposureStatus": "ordered_only",
+        "dose": {
+          "value": null,
+          "unit": null,
+          "display": "OPHTH, 0 Refill(s)",
+          "route": "OPHTH",
+          "instructions": "OPHTH, 0 Refill(s)"
+        },
+        "eventTime": "2026-06-22T20:58:41+00:00",
+        "minutesFromAnchor": -34345.8,
+        "relation": "before_anchor",
+        "relationLabel": "34345.8 min before",
+        "temporalBucket": "historical",
+        "dashboardWarning": "Order only; dispensing, administration and adherence are not confirmed."
+      },
+      {
+        "sourceId": "418109113",
+        "medicationName": "warfarin (warfarin 1 mg oral tablet)",
+        "resourceType": "MedicationRequest",
+        "orderStatus": "stopped",
+        "evidenceLevel": "order",
+        "exposureStatus": "ordered_only",
+        "dose": {
+          "value": 1.0,
+          "unit": "tab",
+          "display": "1 tab",
+          "route": "Oral",
+          "instructions": "1 mg = 1 tab, Oral, Mon/Tu/Th/Fr/Sa, 30 tab, 0 Refill(s)"
+        },
+        "eventTime": "2024-04-16T12:01:04+00:00",
+        "minutesFromAnchor": -1182563.4,
+        "relation": "before_anchor",
+        "relationLabel": "1.18256e+06 min before",
+        "temporalBucket": "historical_remote",
+        "dashboardWarning": "Order only; dispensing, administration and adherence are not confirmed."
+      },
+      {
+        "sourceId": "413909099",
+        "medicationName": "simvastatin (Zocor 5 mg oral tablet)",
+        "resourceType": "MedicationRequest",
+        "orderStatus": "active",
+        "evidenceLevel": "order",
+        "exposureStatus": "ordered_only",
+        "dose": {
+          "value": 1.0,
+          "unit": "tab",
+          "display": "1 tab",
+          "route": "Oral",
+          "instructions": "5 mg = 1 tab, Oral, PRN: chest pain, 30 tab, 0 Refill(s)"
+        },
+        "eventTime": "2024-02-29T09:40:05+00:00",
+        "minutesFromAnchor": -1250384.4,
+        "relation": "before_anchor",
+        "relationLabel": "1.25038e+06 min before",
+        "temporalBucket": "historical_remote",
+        "dashboardWarning": "Order only; dispensing, administration and adherence are not confirmed."
+      },
+      {
+        "sourceId": "406626979",
+        "medicationName": "5-hydroxytryptophan (5-hydroxytryptophan 100 mg oral capsule)",
+        "resourceType": "MedicationRequest",
+        "orderStatus": "active",
+        "evidenceLevel": "order",
+        "exposureStatus": "ordered_only",
+        "dose": {
+          "value": null,
+          "unit": null,
+          "display": "0 Refill(s)",
+          "route": null,
+          "instructions": "0 Refill(s)"
+        },
+        "eventTime": "2023-12-08T22:10:18+00:00",
+        "minutesFromAnchor": -1369154.2,
+        "relation": "before_anchor",
+        "relationLabel": "1.36915e+06 min before",
+        "temporalBucket": "historical_remote",
+        "dashboardWarning": "Order only; dispensing, administration and adherence are not confirmed."
+      },
+      {
+        "sourceId": "398593881",
+        "medicationName": "digoxin",
+        "resourceType": "MedicationRequest",
+        "orderStatus": "active",
+        "evidenceLevel": "order",
+        "exposureStatus": "ordered_only",
+        "dose": {
+          "value": null,
+          "unit": null,
+          "display": "5.0, Oral, for 10 days, 5 mcg/kg, Oral, every 12 hr, 0 Refill(s)",
+          "route": "Oral",
+          "instructions": "5.0, Oral, for 10 days, 5 mcg/kg, Oral, every 12 hr, 0 Refill(s)"
+        },
+        "eventTime": "2023-09-08T13:44:22+00:00",
+        "minutesFromAnchor": -1500700.1,
+        "relation": "before_anchor",
+        "relationLabel": "1.5007e+06 min before",
+        "temporalBucket": "historical_remote",
+        "dashboardWarning": "Order only; dispensing, administration and adherence are not confirmed."
+      },
+      {
+        "sourceId": "397293129",
+        "medicationName": "furosemide (Lasix)",
+        "resourceType": "MedicationRequest",
+        "orderStatus": "active",
+        "evidenceLevel": "order",
+        "exposureStatus": "ordered_only",
+        "dose": {
+          "value": 40.0,
+          "unit": "mg",
+          "display": "40 mg",
+          "route": "Oral",
+          "instructions": "40 mg, Oral, 40 mg = 1 tab, Oral, Daily, 0 Refill(s)"
+        },
+        "eventTime": "2023-08-24T18:50:35+00:00",
+        "minutesFromAnchor": -1521993.9,
+        "relation": "before_anchor",
+        "relationLabel": "1.52199e+06 min before",
+        "temporalBucket": "historical_remote",
+        "dashboardWarning": "Order only; dispensing, administration and adherence are not confirmed."
+      },
+      {
+        "sourceId": "397293119",
+        "medicationName": "furosemide (Lasix)",
+        "resourceType": "MedicationRequest",
+        "orderStatus": "active",
+        "evidenceLevel": "order",
+        "exposureStatus": "ordered_only",
+        "dose": {
+          "value": 40.0,
+          "unit": "mg",
+          "display": "40 mg",
+          "route": "Oral",
+          "instructions": "40 mg, Oral, 40 mg = 1 tab, Oral, Daily, 0 Refill(s)"
+        },
+        "eventTime": "2023-08-24T18:38:45+00:00",
+        "minutesFromAnchor": -1522005.7,
+        "relation": "before_anchor",
+        "relationLabel": "1.52201e+06 min before",
+        "temporalBucket": "historical_remote",
+        "dashboardWarning": "Order only; dispensing, administration and adherence are not confirmed."
+      },
+      {
+        "sourceId": "397141465",
+        "medicationName": "warfarin (warfarin 2 mg oral tablet)",
+        "resourceType": "MedicationRequest",
+        "orderStatus": "active",
+        "evidenceLevel": "order",
+        "exposureStatus": "ordered_only",
+        "dose": {
+          "value": null,
+          "unit": null,
+          "display": "1.0, Oral, 2 mg = 1 tab, Oral, Mon/Wed/Fri, 13 tab, 0 Refill(s), 0 Refill(s)",
+          "route": "Oral",
+          "instructions": "1.0, Oral, 2 mg = 1 tab, Oral, Mon/Wed/Fri, 13 tab, 0 Refill(s), 0 Refill(s)"
+        },
+        "eventTime": "2023-08-22T21:49:48+00:00",
+        "minutesFromAnchor": -1524694.7,
+        "relation": "before_anchor",
+        "relationLabel": "1.52469e+06 min before",
+        "temporalBucket": "historical_remote",
+        "dashboardWarning": "Order only; dispensing, administration and adherence are not confirmed."
+      },
+      {
+        "sourceId": "397117475",
+        "medicationName": "Lasix",
+        "resourceType": "MedicationRequest",
+        "orderStatus": "active",
+        "evidenceLevel": "order",
+        "exposureStatus": "ordered_only",
+        "dose": {
+          "value": null,
+          "unit": null,
+          "display": "1.0, 200 mg = 1 cap, Oral, Daily, 0 Refill(s), 0 Refill(s), 0 Refill(s)",
+          "route": null,
+          "instructions": "1.0, 200 mg = 1 cap, Oral, Daily, 0 Refill(s), 0 Refill(s), 0 Refill(s)"
+        },
+        "eventTime": "2023-08-22T20:33:09+00:00",
+        "minutesFromAnchor": -1524771.3,
+        "relation": "before_anchor",
+        "relationLabel": "1.52477e+06 min before",
+        "temporalBucket": "historical_remote",
+        "dashboardWarning": "Order only; dispensing, administration and adherence are not confirmed."
+      }
+    ],
+    "verifiedLaboratoryResults": [
+      {
+        "field": "glucose",
+        "label": "Glucose",
+        "latestValue": 397.0,
+        "unit": "mg/dL",
+        "latestAt": "2020-03-13T17:35:00+00:00",
+        "minutesFromAnchor": -3335029.5,
+        "relation": "before_anchor",
+        "relationLabel": "3.33503e+06 min before",
+        "temporalBucket": "historical_remote",
+        "trendDirection": "insufficient_data",
+        "classification": "red",
+        "points": [
+          {
+            "sourceId": "L-197281756",
+            "value": 397.0,
+            "unit": "mg/dL",
+            "observedAt": "2020-03-13T17:35:00+00:00",
+            "status": "final",
+            "minutesFromAnchor": -3335029.5,
+            "relation": "before_anchor",
+            "relationLabel": "3.33503e+06 min before",
+            "temporalBucket": "historical_remote"
+          }
+        ]
+      },
+      {
+        "field": "potassium",
+        "label": "Potassium",
+        "latestValue": 5.8,
+        "unit": "mmol/L",
+        "latestAt": "2022-01-21T06:00:00+00:00",
+        "minutesFromAnchor": -2357964.5,
+        "relation": "before_anchor",
+        "relationLabel": "2.35796e+06 min before",
+        "temporalBucket": "historical_remote",
+        "trendDirection": "falling",
+        "classification": "red",
+        "points": [
+          {
+            "sourceId": "L-197281742",
+            "value": 5.8,
+            "unit": "mmol/L",
+            "observedAt": "2020-03-13T17:35:00+00:00",
+            "status": "final",
+            "minutesFromAnchor": -3335029.5,
+            "relation": "before_anchor",
+            "relationLabel": "3.33503e+06 min before",
+            "temporalBucket": "historical_remote"
+          },
+          {
+            "sourceId": "L-197602006",
+            "value": 6.3,
+            "unit": "mmol/L",
+            "observedAt": "2022-01-21T06:00:00+00:00",
+            "status": "final",
+            "minutesFromAnchor": -2357964.5,
+            "relation": "before_anchor",
+            "relationLabel": "2.35796e+06 min before",
+            "temporalBucket": "historical_remote"
+          },
+          {
+            "sourceId": "L-197602004",
+            "value": 6.3,
+            "unit": "mmol/L",
+            "observedAt": "2022-01-21T06:00:00+00:00",
+            "status": "final",
+            "minutesFromAnchor": -2357964.5,
+            "relation": "before_anchor",
+            "relationLabel": "2.35796e+06 min before",
+            "temporalBucket": "historical_remote"
+          },
+          {
+            "sourceId": "L-197602002",
+            "value": 6.3,
+            "unit": "mmol/L",
+            "observedAt": "2022-01-21T06:00:00+00:00",
+            "status": "final",
+            "minutesFromAnchor": -2357964.5,
+            "relation": "before_anchor",
+            "relationLabel": "2.35796e+06 min before",
+            "temporalBucket": "historical_remote"
+          }
+        ]
+      },
+      {
+        "field": "creatinine",
+        "label": "Creatinine",
+        "latestValue": 1.3,
+        "unit": "mg/dL",
+        "latestAt": "2020-12-15T17:29:48+00:00",
+        "minutesFromAnchor": -2936154.7,
+        "relation": "before_anchor",
+        "relationLabel": "2.93615e+06 min before",
+        "temporalBucket": "historical_remote",
+        "trendDirection": "falling",
+        "classification": "yellow",
+        "points": [
+          {
+            "sourceId": "L-197281758",
+            "value": 2.6,
+            "unit": "mg/dL",
+            "observedAt": "2020-03-13T17:35:00+00:00",
+            "status": "final",
+            "minutesFromAnchor": -3335029.5,
+            "relation": "before_anchor",
+            "relationLabel": "3.33503e+06 min before",
+            "temporalBucket": "historical_remote"
+          },
+          {
+            "sourceId": "L-197414144",
+            "value": 1.3,
+            "unit": "mg/dL",
+            "observedAt": "2020-12-15T17:29:48+00:00",
+            "status": "final",
+            "minutesFromAnchor": -2936154.7,
+            "relation": "before_anchor",
+            "relationLabel": "2.93615e+06 min before",
+            "temporalBucket": "historical_remote"
+          }
+        ]
+      },
+      {
+        "field": "wbc",
+        "label": "WBC",
+        "latestValue": 21.0,
+        "unit": "x10^9/L",
+        "latestAt": "2020-03-13T17:35:00+00:00",
+        "minutesFromAnchor": -3335029.5,
+        "relation": "before_anchor",
+        "relationLabel": "3.33503e+06 min before",
+        "temporalBucket": "historical_remote",
+        "trendDirection": "insufficient_data",
+        "classification": "red",
+        "points": [
+          {
+            "sourceId": "L-197281716",
+            "value": 21.0,
+            "unit": "x10^9/L",
+            "observedAt": "2020-03-13T17:35:00+00:00",
+            "status": "final",
+            "minutesFromAnchor": -3335029.5,
+            "relation": "before_anchor",
+            "relationLabel": "3.33503e+06 min before",
+            "temporalBucket": "historical_remote"
+          }
+        ]
+      }
+    ],
+    "verifiedVitalSigns": [
+      {
+        "field": "heartRate",
+        "label": "Heart Rate",
+        "latestValue": 78.0,
+        "unit": "bpm",
+        "latestAt": "2026-07-16T11:24:49+00:00",
+        "relation": "before_anchor",
+        "relationLabel": "359.7 min before",
+        "temporalBucket": "within_one_day",
+        "trendDirection": "stable",
+        "classification": "blue",
+        "observedRange": [
+          74.0,
+          89.0
+        ],
+        "points": [
+          {
+            "sourceId": "VS-209069578",
+            "value": 74.0,
+            "unit": "bpm",
+            "observedAt": "2026-07-16T07:38:07+00:00",
+            "status": "final",
+            "minutesFromAnchor": -586.4,
+            "relation": "before_anchor",
+            "relationLabel": "586.4 min before",
+            "temporalBucket": "within_one_day"
+          },
+          {
+            "sourceId": "VS-209069784",
+            "value": 74.0,
+            "unit": "bpm",
+            "observedAt": "2026-07-16T07:38:13+00:00",
+            "status": "final",
+            "minutesFromAnchor": -586.3,
+            "relation": "before_anchor",
+            "relationLabel": "586.3 min before",
+            "temporalBucket": "within_one_day"
+          },
+          {
+            "sourceId": "VS-209069712",
+            "value": 89.0,
+            "unit": "bpm",
+            "observedAt": "2026-07-16T07:42:52+00:00",
+            "status": "final",
+            "minutesFromAnchor": -581.6,
+            "relation": "before_anchor",
+            "relationLabel": "581.6 min before",
+            "temporalBucket": "within_one_day"
+          },
+          {
+            "sourceId": "VS-209070002",
+            "value": 89.0,
+            "unit": "bpm",
+            "observedAt": "2026-07-16T08:28:16+00:00",
+            "status": "final",
+            "minutesFromAnchor": -536.2,
+            "relation": "before_anchor",
+            "relationLabel": "536.2 min before",
+            "temporalBucket": "within_one_day"
+          }
+        ]
+      },
+      {
+        "field": "respiratoryRate",
+        "label": "Respiratory Rate",
+        "latestValue": 15.0,
+        "unit": "br/min",
+        "latestAt": "2026-07-16T11:24:49+00:00",
+        "relation": "before_anchor",
+        "relationLabel": "359.7 min before",
+        "temporalBucket": "within_one_day",
+        "trendDirection": "stable",
+        "classification": "blue",
+        "observedRange": [
+          18.0,
+          33.0
+        ],
+        "points": [
+          {
+            "sourceId": "VS-209069376",
+            "value": 33.0,
+            "unit": "br/min",
+            "observedAt": "2026-07-16T07:24:04+00:00",
+            "status": "final",
+            "minutesFromAnchor": -600.4,
+            "relation": "before_anchor",
+            "relationLabel": "600.4 min before",
+            "temporalBucket": "within_one_day"
+          },
+          {
+            "sourceId": "VS-209069582",
+            "value": 33.0,
+            "unit": "br/min",
+            "observedAt": "2026-07-16T07:38:07+00:00",
+            "status": "final",
+            "minutesFromAnchor": -586.4,
+            "relation": "before_anchor",
+            "relationLabel": "586.4 min before",
+            "temporalBucket": "within_one_day"
+          },
+          {
+            "sourceId": "VS-209069790",
+            "value": 33.0,
+            "unit": "br/min",
+            "observedAt": "2026-07-16T07:38:13+00:00",
+            "status": "final",
+            "minutesFromAnchor": -586.3,
+            "relation": "before_anchor",
+            "relationLabel": "586.3 min before",
+            "temporalBucket": "within_one_day"
+          },
+          {
+            "sourceId": "VS-209069718",
+            "value": 18.0,
+            "unit": "br/min",
+            "observedAt": "2026-07-16T07:42:52+00:00",
+            "status": "final",
+            "minutesFromAnchor": -581.6,
+            "relation": "before_anchor",
+            "relationLabel": "581.6 min before",
+            "temporalBucket": "within_one_day"
+          }
+        ]
+      },
+      {
+        "field": "spo2",
+        "label": "SpO2",
+        "latestValue": 99.0,
+        "unit": "%",
+        "latestAt": "2026-07-16T11:24:49+00:00",
+        "relation": "before_anchor",
+        "relationLabel": "359.7 min before",
+        "temporalBucket": "within_one_day",
+        "trendDirection": "stable",
+        "classification": "blue",
+        "observedRange": [
+          96.0,
+          96.0
+        ],
+        "points": [
+          {
+            "sourceId": "VS-209069492",
+            "value": 96.0,
+            "unit": "%",
+            "observedAt": "2026-07-16T07:24:12+00:00",
+            "status": "final",
+            "minutesFromAnchor": -600.3,
+            "relation": "before_anchor",
+            "relationLabel": "600.3 min before",
+            "temporalBucket": "within_one_day"
+          },
+          {
+            "sourceId": "VS-209069580",
+            "value": 96.0,
+            "unit": "%",
+            "observedAt": "2026-07-16T07:38:07+00:00",
+            "status": "final",
+            "minutesFromAnchor": -586.4,
+            "relation": "before_anchor",
+            "relationLabel": "586.4 min before",
+            "temporalBucket": "within_one_day"
+          },
+          {
+            "sourceId": "VS-209069786",
+            "value": 96.0,
+            "unit": "%",
+            "observedAt": "2026-07-16T07:38:13+00:00",
+            "status": "final",
+            "minutesFromAnchor": -586.3,
+            "relation": "before_anchor",
+            "relationLabel": "586.3 min before",
+            "temporalBucket": "within_one_day"
+          },
+          {
+            "sourceId": "VS-209069714",
+            "value": 96.0,
+            "unit": "%",
+            "observedAt": "2026-07-16T07:42:52+00:00",
+            "status": "final",
+            "minutesFromAnchor": -581.6,
+            "relation": "before_anchor",
+            "relationLabel": "581.6 min before",
+            "temporalBucket": "within_one_day"
+          }
+        ]
+      },
+      {
+        "field": "temperature",
+        "label": "Temperature",
+        "latestValue": 36.4,
+        "unit": "degC",
+        "latestAt": "2026-07-16T11:24:49+00:00",
+        "relation": "before_anchor",
+        "relationLabel": "359.7 min before",
+        "temporalBucket": "within_one_day",
+        "trendDirection": "stable",
+        "classification": "blue",
+        "observedRange": [
+          36.0,
+          37.2
+        ],
+        "points": [
+          {
+            "sourceId": "VS-209069378",
+            "value": 37.2,
+            "unit": "degC",
+            "observedAt": "2026-07-16T07:24:04+00:00",
+            "status": "final",
+            "minutesFromAnchor": -600.4,
+            "relation": "before_anchor",
+            "relationLabel": "600.4 min before",
+            "temporalBucket": "within_one_day"
+          },
+          {
+            "sourceId": "VS-209069584",
+            "value": 37.2,
+            "unit": "degC",
+            "observedAt": "2026-07-16T07:38:07+00:00",
+            "status": "final",
+            "minutesFromAnchor": -586.4,
+            "relation": "before_anchor",
+            "relationLabel": "586.4 min before",
+            "temporalBucket": "within_one_day"
+          },
+          {
+            "sourceId": "VS-209069792",
+            "value": 37.2,
+            "unit": "degC",
+            "observedAt": "2026-07-16T07:38:13+00:00",
+            "status": "final",
+            "minutesFromAnchor": -586.3,
+            "relation": "before_anchor",
+            "relationLabel": "586.3 min before",
+            "temporalBucket": "within_one_day"
+          },
+          {
+            "sourceId": "VS-209069722",
+            "value": 36.0,
+            "unit": "degC",
+            "observedAt": "2026-07-16T07:42:52+00:00",
+            "status": "final",
+            "minutesFromAnchor": -581.6,
+            "relation": "before_anchor",
+            "relationLabel": "581.6 min before",
+            "temporalBucket": "within_one_day"
+          }
+        ]
+      }
+    ],
+    "temporalEvidenceSummary": {
+      "countsByTemporalBucket": {
+        "medications": {
+          "historical": 2,
+          "historical_remote": 8
+        },
+        "labs": {
+          "historical_remote": 4
+        },
+        "vitals": {
+          "within_one_day": 4
+        }
+      },
+      "closestMedicationOrderMinutesFromAnchor": 34196.7,
+      "closestLaboratoryResultMinutesFromAnchor": 2357964.5,
+      "closestVitalObservationMinutesFromAnchor": 536.2,
+      "episodeNearMedicationAdministrationCount": 0,
+      "episodeNearLaboratoryResultCount": 0
+    },
+    "dataIntegrityFlags": [
+      {
+        "type": "lab_latest_value_mismatch",
+        "severity": "high",
+        "field": "potassium",
+        "detail": "latestValue=5.8 does not match values [6.3, 6.3, 6.3] recorded at latestAt=2022-01-21T06:00:00+00:00."
+      },
+      {
+        "type": "missing_evidence_scope_ambiguity",
+        "severity": "medium",
+        "fields": [
+          "spo2",
+          "temperature"
+        ],
+        "detail": "These fields are listed as missing waveform channels while FHIR vital observations with similar names are present. The dashboard must label waveform-channel availability separately from clinical-observation availability."
+      },
+      {
+        "type": "evidence_truncated",
+        "severity": "high",
+        "detail": "The input package reports evidenceWasTruncated=true; root-cause ranking may omit relevant context."
+      }
+    ],
+    "evidenceSummary": "The strongest supported ECG evidence is the presence of ventricular ectopy, as indicated by PhysioNet INCART dataset reference annotations. This suggests a possible arrhythmia scenario.",
+    "rootCauseAssessment": {
+      "conclusion": "possible_contributors_only",
+      "conclusionConfidence": 50.0,
+      "primaryHypothesisId": "hyp-1",
+      "candidates": [
+        {
+          "id": "hyp-1",
+          "category": "electrolyte imbalance",
+          "title": "Potassium level",
+          "hypothesis": "The patient's potassium levels may be contributing to the arrhythmia.",
+          "likelihood": "indeterminate",
+          "causalStrength": "indeterminate",
+          "confidence": 70.0,
+          "temporalFit": "unknown",
+          "evidenceFor": [
+            "potassium"
+          ],
+          "evidenceAgainst": [],
+          "sourceReferences": [],
+          "verificationNeeded": []
+        },
+        {
+          "id": "hyp-2",
+          "category": "medication effect",
+          "title": "Warfarin",
+          "hypothesis": "The patient's warfarin medication may be affecting the heart rhythm.",
+          "likelihood": "indeterminate",
+          "causalStrength": "indeterminate",
+          "confidence": 60.0,
+          "temporalFit": "unknown",
+          "evidenceFor": [
+            "warfarin"
+          ],
+          "evidenceAgainst": [],
+          "sourceReferences": [],
+          "verificationNeeded": []
+        },
+        {
+          "id": "hyp-3",
+          "category": "underlying condition",
+          "title": "Cardiac disease",
+          "hypothesis": "The patient's underlying cardiac condition may be contributing to the arrhythmia.",
+          "likelihood": "indeterminate",
+          "causalStrength": "indeterminate",
+          "confidence": 40.0,
+          "temporalFit": "unknown",
+          "evidenceFor": [
+            "CBC w/ Auto Diff"
+          ],
+          "evidenceAgainst": [],
+          "sourceReferences": [],
+          "verificationNeeded": []
+        }
+      ]
+    },
+    "medicationRiskAssessment": [
+      {
+        "sourceId": "418109113",
+        "medicationName": "warfarin (warfarin 1 mg oral tablet)",
+        "resourceType": "MedicationRequest",
+        "orderStatus": "stopped",
+        "evidenceLevel": "order",
+        "exposureStatus": "ordered_only",
+        "dose": {
+          "value": 1.0,
+          "unit": "tab",
+          "display": "1 tab",
+          "route": "Oral",
+          "instructions": "1 mg = 1 tab, Oral, Mon/Tu/Th/Fr/Sa, 30 tab, 0 Refill(s)"
+        },
+        "eventTime": "2024-04-16T12:01:04+00:00",
+        "minutesFromAnchor": -1182563.4,
+        "relation": "before_anchor",
+        "relationLabel": "1.18256e+06 min before",
+        "temporalBucket": "historical_remote",
+        "possibleRelevance": ".5",
+        "rationale": "The patient's warfarin medication may be affecting the heart rhythm.",
+        "confidence": 45.0,
+        "evidenceFor": [
+          "MedicationRequest"
+        ],
+        "evidenceAgainst": [
+          "MedicationRequest confirms an order only; administration, adherence and exposure at the incident time are unconfirmed."
+        ],
+        "monitoringOrVerificationNeeded": []
+      },
+      {
+        "sourceId": "413909099",
+        "medicationName": "simvastatin (Zocor 5 mg oral tablet)",
+        "resourceType": "MedicationRequest",
+        "orderStatus": "active",
+        "evidenceLevel": "order",
+        "exposureStatus": "ordered_only",
+        "dose": {
+          "value": 1.0,
+          "unit": "tab",
+          "display": "1 tab",
+          "route": "Oral",
+          "instructions": "5 mg = 1 tab, Oral, PRN: chest pain, 30 tab, 0 Refill(s)"
+        },
+        "eventTime": "2024-02-29T09:40:05+00:00",
+        "minutesFromAnchor": -1250384.4,
+        "relation": "before_anchor",
+        "relationLabel": "1.25038e+06 min before",
+        "temporalBucket": "historical_remote",
+        "possibleRelevance": ".3",
+        "rationale": "The patient's simvastatin medication may have a minor effect on the heart rhythm.",
+        "confidence": 45.0,
+        "evidenceFor": [
+          "MedicationRequest"
+        ],
+        "evidenceAgainst": [
+          "MedicationRequest confirms an order only; administration, adherence and exposure at the incident time are unconfirmed."
+        ],
+        "monitoringOrVerificationNeeded": []
+      }
+    ],
+    "contradictionsAndUncertainty": [
+      "The incident was triggered from INCART reference annotations and is not an independent diagnosis.",
+      "Raw ECG arrays remain in waveform storage and are not included in the SLM input.",
+      "1 episode view(s) contain incomplete requested pre-event or post-event context."
+    ],
+    "missingEvidence": [
+      {
+        "evidenceType": "ppg",
+        "reason": "Not available in this dataset.",
+        "impactOnRootCause": "Moderate",
+        "priority": "high"
+      },
+      {
+        "evidenceType": "arterial_blood_pressure",
+        "reason": "Not captured during the incident.",
+        "impactOnRootCause": "Low",
+        "priority": "medium"
+      },
+      {
+        "evidenceType": "spo2",
+        "reason": "Listed as unavailable in the supplied incident package.",
+        "impactOnRootCause": "Reduces ability to correlate the ECG episode with other physiological changes. Check whether this means a missing waveform channel or a missing clinical observation.",
+        "priority": "medium"
+      },
+      {
+        "evidenceType": "respiration",
+        "reason": "Listed as unavailable in the supplied incident package.",
+        "impactOnRootCause": "Reduces ability to correlate the ECG episode with other physiological changes. Check whether this means a missing waveform channel or a missing clinical observation.",
+        "priority": "medium"
+      },
+      {
+        "evidenceType": "temperature",
+        "reason": "Listed as unavailable in the supplied incident package.",
+        "impactOnRootCause": "Reduces ability to correlate the ECG episode with other physiological changes. Check whether this means a missing waveform channel or a missing clinical observation.",
+        "priority": "medium"
+      }
+    ],
+    "recommendedClinicalReview": [
+      {
+        "priority": "high",
+        "action": "Verify potassium levels and consider adjusting medication.",
+        "rationale": "The patient's potassium level may be contributing to the arrhythmia, so it is important to verify this and adjust treatment if necessary.",
+        "basedOnEvidence": [
+          "potassium"
+        ]
+      },
+      {
+        "priority": "medium",
+        "action": "Review warfarin medication for potential effects on heart rhythm.",
+        "rationale": "The patient's warfarin medication may be affecting the heart rhythm, so it is important to review this and consider adjustments if necessary.",
+        "basedOnEvidence": [
+          "warfarin"
+        ]
+      }
+    ],
+    "widgetInterpretation": {
+      "headline": "Ventricular Ectopy Incident",
+      "statusCode": "review_required",
+      "statusLabel": "Clinical review required",
+      "episodeNarrative": "The patient experienced a ventricular ectopy episode, which is characterized by premature ventricular contractions. This suggests an arrhythmia scenario.",
+      "arrhythmiaNarrative": "The rhythm measurements indicate a median heart rate of 94.25 bpm with a range of 90.72 to 97.78 bpm. The QRS duration has a median of 93.182 ms and a baseline of 65.909 ms, indicating normal intervals.",
+      "morphologyNarrative": "There are no independent abnormal morphology candidates detected in the ECG signals, suggesting that the morphology is within normal limits.",
+      "currentSituation": {
+        "status": "insufficient_current_data",
+        "narrative": "The current situation suggests possible electrolyte imbalance as a contributing factor to the arrhythmia. The potassium level may be affecting the heart rhythm.",
+        "ongoingArrhythmiaStatus": "unknown",
+        "hemodynamicStatus": "unknown",
+        "latestSupportingEvidenceAgeMinutes": 536.2
+      },
+      "rootCauseNarrative": "No confirmed root cause has been established for this episode, but it is important to verify the patient's potassium levels and consider adjusting medication if necessary.",
+      "possibleContributors": [
+        {
+          "rank": 1,
+          "id": "hyp-1",
+          "title": "Potassium level",
+          "category": "electrolyte imbalance",
+          "explanation": "The patient's potassium levels may be contributing to the arrhythmia.",
+          "supportLevel": "unassessed",
+          "causalStrength": "indeterminate",
+          "confidenceScore": 70.0,
+          "temporalFit": "unknown",
+          "supportingEvidenceReferences": [],
+          "evidenceAgainst": [],
+          "confirmationNeeded": []
+        },
+        {
+          "rank": 2,
+          "id": "hyp-2",
+          "title": "Warfarin",
+          "category": "medication effect",
+          "explanation": "The patient's warfarin medication may be affecting the heart rhythm.",
+          "supportLevel": "unassessed",
+          "causalStrength": "indeterminate",
+          "confidenceScore": 60.0,
+          "temporalFit": "unknown",
+          "supportingEvidenceReferences": [],
+          "evidenceAgainst": [],
+          "confirmationNeeded": []
+        },
+        {
+          "rank": 3,
+          "id": "hyp-3",
+          "title": "Cardiac disease",
+          "category": "underlying condition",
+          "explanation": "The patient's underlying cardiac condition may be contributing to the arrhythmia.",
+          "supportLevel": "unassessed",
+          "causalStrength": "indeterminate",
+          "confidenceScore": 40.0,
+          "temporalFit": "unknown",
+          "supportingEvidenceReferences": [],
+          "evidenceAgainst": [],
+          "confirmationNeeded": []
+        }
+      ],
+      "importantFindings": [
+        "The PhysioNet INCART dataset reference annotations indicate ventricular ectopy as a possible arrhythmia scenario.",
+        "There are no independent abnormal morphology candidates detected in the ECG signals, suggesting that the morphology is within normal limits."
+      ],
+      "importantLimitations": [
+        "The incident was triggered from INCART reference annotations and is not an independent diagnosis.",
+        "Raw ECG arrays remain in waveform storage and are not included in the SLM input.",
+        "The incident analysis is partial.",
+        "Raw ECG waveform arrays were not included in the SLM input.",
+        "No episode-near laboratory results are available."
+      ],
+      "recommendedNextChecks": [
+        {
+          "priority": 1,
+          "action": "Verify potassium levels and consider adjusting medication.",
+          "reason": "The patient's potassium level may be contributing to the arrhythmia, so it is important to verify this and adjust treatment if necessary."
+        },
+        {
+          "priority": 2,
+          "action": "Review warfarin medication for potential effects on heart rhythm.",
+          "reason": "The patient's warfarin medication may be affecting the heart rhythm, so it is important to review this and consider adjustments if necessary."
+        }
+      ],
+      "keyMetrics": [
+        {
+          "id": "median_heart_rate",
+          "label": "Median HR",
+          "value": 94.25,
+          "displayValue": "94 bpm",
+          "unit": "bpm",
+          "source": "deterministic"
+        },
+        {
+          "id": "trigger_qrs",
+          "label": "Trigger QRS",
+          "value": 93.182,
+          "displayValue": "93 ms",
+          "unit": "ms",
+          "source": "deterministic"
+        },
+        {
+          "id": "baseline_qrs",
+          "label": "Baseline QRS",
+          "value": 65.909,
+          "displayValue": "66 ms",
+          "unit": "ms",
+          "source": "deterministic"
+        },
+        {
+          "id": "morphology_agreement",
+          "label": "Morphology Agreement",
+          "value": 96.86,
+          "displayValue": "96.9%",
+          "unit": "%",
+          "source": "deterministic"
+        }
+      ],
+      "confidence": {
+        "ecgEvidenceScore": 83.41,
+        "ecgEvidenceLabel": "high",
+        "rootCauseConfidenceScore": 50.0,
+        "rootCauseConfidenceLabel": "moderate"
+      },
+      "rootCauseConclusion": "possible_contributors_only",
+      "displayDisclaimer": "Evidence-grounded research interpretation. Not an independent diagnosis."
+    },
+    "dataQuality": {
+      "fallbackUsed": false,
+      "observationCount": 334,
+      "laboratoryObservationCount": 154,
+      "laboratoryPagesFetched": 2,
+      "targetedObservationCount": 0,
+      "matchedLabCount": 9,
+      "matchedVitalCount": 48,
+      "medicationCount": 26,
+      "conditionCount": 0,
+      "encounterCount": 20,
+      "patientLoaded": true,
+      "diagnosticReportCount": 2,
+      "documentCount": 0,
+      "rawWaveformsIncluded": false,
+      "evidenceWasTruncated": true,
+      "promptCharacters": 21409,
+      "estimatedPromptTokens": 5352
+    },
+    "safetyStatement": "This is an evidence-grounded research summary and not an independent diagnosis. It's important to verify the patient's potassium levels and consider adjusting medication if necessary, as it may be contributing to the arrhythmia."
+  },
+  "warnings": [
+    "Removed 1 unsupported source reference(s) from root-cause candidate 1.",
+    "Removed 2 unsupported source reference(s) from root-cause candidate 2.",
+    "Removed 1 unsupported source reference(s) from root-cause candidate 3."
+  ],
+  "runtime": {
+    "wallClockSeconds": 1212.71,
+    "ollamaTotalSeconds": 1212.62,
+    "modelLoadSeconds": 34.58,
+    "promptEvaluationSeconds": 739.99,
+    "generationSeconds": 422.4,
+    "promptTokens": 6522,
+    "generatedTokens": 1327,
+    "generationTokensPerSecond": 3.14,
+    "finishReason": "stop"
+  }
+}

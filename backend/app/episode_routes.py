@@ -2,33 +2,62 @@ from __future__ import annotations
 
 import asyncio
 import json
+import traceback
 
-from fastapi import APIRouter, HTTPException, Query, Request
-from fastapi.responses import StreamingResponse
-from app.incidents import incident_coordinator
-from app.episodes import episode_coordinator
+from fastapi import (
+    APIRouter,
+    HTTPException,
+    Query,
+    Request,
+)
+from fastapi.responses import (
+    StreamingResponse,
+)
+
+from app.analysis.episode_analyzer import (
+    episode_analyzer,
+)
+from app.analysis.incident_analyzer import (
+    incident_analyzer,
+)
+from app.analysis.models import (
+    AnalysisInputError,
+)
+from app.analysis.slm_context import (
+    build_phase6_slm_context,
+)
 from app.clinical_context import (
     clinical_context_service,
 )
 from app.config import settings
+from app.episodes import (
+    episode_coordinator,
+)
+from app.incidents import (
+    incident_coordinator,
+)
 from app.oracle_smart import (
     get_token_for_request,
 )
-import traceback
+
+
 router = APIRouter(
     prefix="/api/episodes",
     tags=["episodes"],
 )
+
 incident_router = APIRouter(
     prefix="/api/incidents",
     tags=["incidents"],
 )
 
 
-
 @router.get("")
 async def list_episodes():
-    episodes = episode_coordinator.list_episodes()
+    episodes = (
+        episode_coordinator
+        .list_episodes()
+    )
 
     return {
         "count": len(episodes),
@@ -40,7 +69,8 @@ async def list_episodes():
 async def latest_episode():
     return {
         "episode": (
-            episode_coordinator.get_latest_episode()
+            episode_coordinator
+            .get_latest_episode()
         )
     }
 
@@ -49,76 +79,121 @@ async def latest_episode():
 async def episode_events(
     request: Request,
 ):
-    queue = episode_coordinator.subscribe()
+    queue = (
+        episode_coordinator
+        .subscribe()
+    )
 
     async def generator():
         try:
             connected = {
-                "type": "episode.connected",
+                "type": (
+                    "episode.connected"
+                ),
             }
 
-            yield "event: episode.connected\n"
             yield (
-                f"data: "
-                f"{json.dumps(connected)}\n\n"
+                "event: "
+                "episode.connected\n"
+            )
+
+            yield (
+                "data: "
+                f"{json.dumps(connected)}"
+                "\n\n"
             )
 
             while True:
-                if await request.is_disconnected():
+                if (
+                    await request
+                    .is_disconnected()
+                ):
                     break
 
                 try:
-                    event = await asyncio.wait_for(
-                        queue.get(),
-                        timeout=15,
+                    event = (
+                        await asyncio
+                        .wait_for(
+                            queue.get(),
+                            timeout=15,
+                        )
                     )
 
-                    event_type = event.get(
-                        "type",
-                        "episode.event",
+                    event_type = (
+                        event.get(
+                            "type",
+                            "episode.event",
+                        )
                     )
 
-                    yield f"event: {event_type}\n"
                     yield (
-                        f"data: "
-                        f"{json.dumps(event, separators=(',', ':'))}"
-                        f"\n\n"
+                        f"event: "
+                        f"{event_type}\n"
                     )
 
-                except asyncio.TimeoutError:
+                    yield (
+                        "data: "
+                        f"{json.dumps(event, separators=(',', ':'))}"
+                        "\n\n"
+                    )
+
+                except (
+                    asyncio.TimeoutError
+                ):
                     heartbeat = {
-                        "type": "episode.heartbeat",
+                        "type": (
+                            "episode.heartbeat"
+                        ),
                     }
 
-                    yield "event: episode.heartbeat\n"
                     yield (
-                        f"data: "
-                        f"{json.dumps(heartbeat)}\n\n"
+                        "event: "
+                        "episode.heartbeat\n"
+                    )
+
+                    yield (
+                        "data: "
+                        f"{json.dumps(heartbeat)}"
+                        "\n\n"
                     )
 
         finally:
-            episode_coordinator.unsubscribe(queue)
+            episode_coordinator.unsubscribe(
+                queue
+            )
 
     return StreamingResponse(
         generator(),
-        media_type="text/event-stream",
+        media_type=(
+            "text/event-stream"
+        ),
         headers={
-            "Cache-Control": "no-cache",
-            "Connection": "keep-alive",
-            "X-Accel-Buffering": "no",
+            "Cache-Control": (
+                "no-cache"
+            ),
+            "Connection": (
+                "keep-alive"
+            ),
+            "X-Accel-Buffering": (
+                "no"
+            ),
         },
     )
 
 
-@router.get("/incart/annotation-summary")
+@router.get(
+    "/incart/annotation-summary"
+)
 async def incart_annotation_summary():
     return await asyncio.to_thread(
         episode_coordinator
         .get_annotation_summary
     )
-    
 
-@router.get("/{episode_id}/waveforms")
+
+@router.get(
+    "/{episode_id}/waveforms"
+)
 async def episode_waveforms(
     episode_id: str,
     leads: str = Query(
@@ -133,73 +208,180 @@ async def episode_waveforms(
     try:
         requested_leads = [
             item.strip()
-            for item in leads.split(",")
+            for item
+            in leads.split(",")
             if item.strip()
         ]
 
-        return episode_coordinator.get_waveforms(
-            episode_id,
-            requested_leads=requested_leads,
-            max_points=max_points,
+        return (
+            episode_coordinator
+            .get_waveforms(
+                episode_id,
+                requested_leads=(
+                    requested_leads
+                ),
+                max_points=max_points,
+            )
         )
 
     except FileNotFoundError:
         raise HTTPException(
             status_code=404,
-            detail="Episode not found.",
+            detail=(
+                "Episode not found."
+            ),
         )
 
 
-@router.get("/{episode_id}/context")
+@router.get(
+    "/{episode_id}/context"
+)
 async def episode_context(
     episode_id: str,
 ):
     try:
-        return episode_coordinator.get_context(
-            episode_id
+        return (
+            episode_coordinator
+            .get_context(
+                episode_id
+            )
         )
+
     except FileNotFoundError:
         raise HTTPException(
             status_code=404,
-            detail="Episode context not found.",
+            detail=(
+                "Episode context "
+                "not found."
+            ),
         )
 
 
-@router.get("/{episode_id}/analysis")
+@router.get(
+    "/{episode_id}/analysis"
+)
 async def episode_analysis(
     episode_id: str,
 ):
     try:
-        return episode_coordinator.get_analysis(
-            episode_id
+        return await asyncio.to_thread(
+            episode_analyzer.get,
+            episode_id,
         )
+
     except FileNotFoundError:
         raise HTTPException(
             status_code=404,
-            detail="Episode analysis not found.",
+            detail=(
+                "Episode not found."
+            ),
+        )
+
+    except AnalysisInputError as error:
+        raise HTTPException(
+            status_code=422,
+            detail={
+                "errorType": (
+                    type(
+                        error
+                    ).__name__
+                ),
+                "message": str(error),
+                "episodeId": (
+                    episode_id
+                ),
+                "details": (
+                    error.details
+                ),
+            },
         )
 
 
-@router.post("/{episode_id}/analyze")
+@router.post(
+    "/{episode_id}/analyze"
+)
 async def analyze_episode(
     episode_id: str,
+    force: bool = Query(
+        default=False
+    ),
 ):
     try:
-        episode_coordinator.get_episode(episode_id)
+        result = (
+            await asyncio.to_thread(
+                episode_analyzer
+                .analyze,
+                episode_id,
+                force=force,
+            )
+        )
 
-        return {
-            "episodeId": episode_id,
-            "status": "pending",
-            "message": (
-                "Signal analysis is introduced "
-                "in the next phase."
-            ),
-        }
+        episode_coordinator.publish(
+            {
+                "type": (
+                    "episode.analysis_ready"
+                ),
+                "episodeId": (
+                    episode_id
+                ),
+                "status": (
+                    result.get(
+                        "status"
+                    )
+                ),
+                "algorithmVersion": (
+                    result.get(
+                        "algorithmVersion"
+                    )
+                ),
+            }
+        )
+
+        return result
 
     except FileNotFoundError:
         raise HTTPException(
             status_code=404,
-            detail="Episode not found.",
+            detail=(
+                "Episode not found."
+            ),
+        )
+
+    except AnalysisInputError as error:
+        raise HTTPException(
+            status_code=422,
+            detail={
+                "errorType": (
+                    type(
+                        error
+                    ).__name__
+                ),
+                "message": str(error),
+                "episodeId": (
+                    episode_id
+                ),
+                "details": (
+                    error.details
+                ),
+            },
+        )
+
+    except Exception as error:
+        traceback.print_exc()
+
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "errorType": (
+                    type(
+                        error
+                    ).__name__
+                ),
+                "message": str(error),
+                "episodeId": (
+                    episode_id
+                ),
+            },
         )
 
 
@@ -208,15 +390,21 @@ async def episode_details(
     episode_id: str,
 ):
     try:
-        return episode_coordinator.get_episode(
-            episode_id
+        return (
+            episode_coordinator
+            .get_episode(
+                episode_id
+            )
         )
+
     except FileNotFoundError:
         raise HTTPException(
             status_code=404,
-            detail="Episode not found.",
+            detail=(
+                "Episode not found."
+            ),
         )
-        
+
 
 @incident_router.get("")
 async def list_incidents():
@@ -271,7 +459,92 @@ async def incident_episodes(
     except FileNotFoundError:
         raise HTTPException(
             status_code=404,
-            detail="Incident not found.",
+            detail=(
+                "Incident not found."
+            ),
+        )
+
+
+@incident_router.get(
+    "/{incident_id}/analysis"
+)
+async def incident_analysis(
+    incident_id: str,
+):
+    try:
+        return await asyncio.to_thread(
+            incident_analyzer.get,
+            incident_id,
+        )
+
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=404,
+            detail=(
+                "Incident not found."
+            ),
+        )
+
+
+@incident_router.post(
+    "/{incident_id}/analyze"
+)
+async def analyze_incident(
+    incident_id: str,
+    force: bool = Query(
+        default=False
+    ),
+):
+    try:
+        return await asyncio.to_thread(
+            incident_analyzer.analyze,
+            incident_id,
+            force=force,
+        )
+
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=404,
+            detail=(
+                "Incident not found."
+            ),
+        )
+
+    except AnalysisInputError as error:
+        raise HTTPException(
+            status_code=422,
+            detail={
+                "errorType": (
+                    type(
+                        error
+                    ).__name__
+                ),
+                "message": str(error),
+                "incidentId": (
+                    incident_id
+                ),
+                "details": (
+                    error.details
+                ),
+            },
+        )
+
+    except Exception as error:
+        traceback.print_exc()
+
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "errorType": (
+                    type(
+                        error
+                    ).__name__
+                ),
+                "message": str(error),
+                "incidentId": (
+                    incident_id
+                ),
+            },
         )
 
 
@@ -283,15 +556,16 @@ async def incident_slm_context(
 ):
     try:
         return await asyncio.to_thread(
-            incident_coordinator
-            .build_slm_context,
+            build_phase6_slm_context,
             incident_id,
         )
 
     except FileNotFoundError:
         raise HTTPException(
             status_code=404,
-            detail="Incident not found.",
+            detail=(
+                "Incident not found."
+            ),
         )
 
 
@@ -304,13 +578,17 @@ async def incident_context(
     try:
         return (
             clinical_context_service
-            .get(incident_id)
+            .get(
+                incident_id
+            )
         )
 
     except FileNotFoundError:
         raise HTTPException(
             status_code=404,
-            detail="Incident not found.",
+            detail=(
+                "Incident not found."
+            ),
         )
 
 
@@ -326,7 +604,9 @@ async def load_incident_context(
 ):
     try:
         token_state = (
-            get_token_for_request(request)
+            get_token_for_request(
+                request
+            )
         )
 
         effective_patient_id = (
@@ -338,13 +618,19 @@ async def load_incident_context(
                 if token_state
                 else None
             )
-            or settings.ORACLE_TEST_PATIENT_ID
+            or (
+                settings
+                .ORACLE_TEST_PATIENT_ID
+            )
             or None
         )
 
         return await (
-            clinical_context_service.load(
-                incident_id=incident_id,
+            clinical_context_service
+            .load(
+                incident_id=(
+                    incident_id
+                ),
                 patient_id=(
                     effective_patient_id
                 ),
@@ -368,11 +654,17 @@ async def load_incident_context(
     except FileNotFoundError:
         raise HTTPException(
             status_code=404,
-            detail="Incident not found.",
+            detail=(
+                "Incident not found."
+            ),
         )
+
     except Exception as error:
         print(
-            "[KGEN CLINICAL CONTEXT LOAD ERROR]",
+            (
+                "[KGEN CLINICAL "
+                "CONTEXT LOAD ERROR]"
+            ),
             type(error).__name__,
             str(error),
         )
@@ -382,12 +674,17 @@ async def load_incident_context(
         raise HTTPException(
             status_code=500,
             detail={
-                "errorType": type(error).__name__,
+                "errorType": (
+                    type(
+                        error
+                    ).__name__
+                ),
                 "message": str(error),
-                "incidentId": incident_id,
+                "incidentId": (
+                    incident_id
+                ),
             },
         )
-
 
 
 @incident_router.get(
@@ -407,5 +704,7 @@ async def incident_details(
     except FileNotFoundError:
         raise HTTPException(
             status_code=404,
-            detail="Incident not found.",
+            detail=(
+                "Incident not found."
+            ),
         )

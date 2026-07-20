@@ -12,7 +12,9 @@ import httpx
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
-
+from app.phase7.routes import (
+    router as phase7_router,
+)
 from app.api_range_waveforms import build_api_range_frame
 from app.config import settings
 from app.csv_waveforms import build_csv_waveform_frame
@@ -44,6 +46,21 @@ from app.providers import (
     fetch_oracle_observations_by_codes,
 )
 
+from app.fhir_cache.routes import (
+    router as fhir_cache_router,
+)
+
+from app.slm_widget.routes import (
+    router as slm_widget_router,
+)
+
+app.include_router(
+    fhir_cache_router
+)
+
+app.include_router(
+    slm_widget_router
+)
 
 app = FastAPI(title="KardioGenics FHIR Streaming Backend")
 
@@ -60,7 +77,7 @@ app.include_router(oracle_smart_router)
 app.include_router(episode_router)
 
 app.include_router(incident_router)
-
+app.include_router(phase7_router)
 def observe_episode_frame_safely(
     *,
     session_id: str,
