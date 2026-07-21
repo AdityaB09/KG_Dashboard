@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "phase-7-v1",
+  "incidentId": "inc-I01-loop-1-ventricular-ectopy-000321221",
+  "state": "ready_for_slm",
+  "stage": "complete",
+  "detail": "Automatic Phase 7 processing completed.",
+  "createdAt": "2026-07-20T20:44:51.195493+00:00",
+  "updatedAt": "2026-07-20T20:49:29.009676+00:00",
+  "automatic": true,
+  "error": null,
+  "outputs": {
+    "episodeResults": [
+      {
+        "episodeId": "incart-I01-loop-1-V-000321221",
+        "status": "ready",
+        "algorithmVersion": "phase-6-v1.1.1"
+      },
+      {
+        "episodeId": "incart-I01-loop-1-V-000324883",
+        "status": "ready",
+        "algorithmVersion": "phase-6-v1.1.1"
+      },
+      {
+        "episodeId": "incart-I01-loop-1-V-000327496",
+        "status": "ready",
+        "algorithmVersion": "phase-6-v1.1.1"
+      },
+      {
+        "episodeId": "incart-I01-loop-1-V-000339185",
+        "status": "ready",
+        "algorithmVersion": "phase-6-v1.1.1"
+      },
+      {
+        "episodeId": "incart-I01-loop-1-V-000351278",
+        "status": "partial",
+        "algorithmVersion": "phase-6-v1.1.1"
+      },
+      {
+        "episodeId": "incart-I01-loop-1-V-000362401",
+        "status": "partial",
+        "algorithmVersion": "phase-6-v1.1.1"
+      }
+    ],
+    "incidentAnalysisStatus": "partial",
+    "clinicalContextStatus": "unavailable",
+    "promptMode": "ECG_ONLY",
+    "promptValidationStatus": "ready",
+    "slmStatus": "not_run"
+  }
+}

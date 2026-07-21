@@ -1,0 +1,172 @@
+{
+  "schemaVersion": "incident-analysis-v1",
+  "incidentId": "inc-I01-loop-1-ventricular-ectopy-000000608",
+  "status": "partial",
+  "inputFingerprint": "8237608931a99ca4b4a2bb43c806934e40f2822572f9cc2f5e8ca524c30e5bb2",
+  "createdAt": "2026-07-20T20:16:43.520644+00:00",
+  "updatedAt": "2026-07-20T20:16:43.520644+00:00",
+  "algorithmVersion": "phase-6-v1.1.1",
+  "primaryEpisodeId": "incart-I01-loop-1-V-000000608",
+  "bestContextEpisodeId": "incart-I01-loop-1-V-000007311",
+  "bestQualityEpisodeId": "incart-I01-loop-1-V-000000608",
+  "bestMorphologyEpisodeId": "incart-I01-loop-1-V-000000608",
+  "episodeCounts": {
+    "listed": 2,
+    "analyzed": 2,
+    "usable": 2,
+    "ready": 1,
+    "failed": 0
+  },
+  "episodeResults": [
+    {
+      "episodeId": "incart-I01-loop-1-V-000000608",
+      "status": "ready",
+      "qualityScore": 100.0,
+      "morphologyGrade": "mildly_different",
+      "confidence": {
+        "score": 95.28,
+        "grade": "high",
+        "positiveReasons": [
+          "signalQuality",
+          "usableLeadCount",
+          "rPeakAgreementAndDetection",
+          "annotationToPeakAlignment",
+          "referenceBeatCount",
+          "qrsConfidence",
+          "morphologyAgreement"
+        ],
+        "negativeReasons": [],
+        "components": {
+          "signalQuality": 100.0,
+          "usableLeadCount": 100.0,
+          "rPeakAgreementAndDetection": 94.56,
+          "annotationToPeakAlignment": 93.18,
+          "referenceBeatCount": 100.0,
+          "qrsConfidence": 75.0,
+          "morphologyAgreement": 100.0,
+          "captureCompleteness": 65.0,
+          "boundaryCompleteness": 70.0
+        },
+        "limitations": [],
+        "excludedEvidence": [],
+        "essentialMeasurementsMissing": false,
+        "prePenaltyScore": 95.28,
+        "penalties": []
+      }
+    },
+    {
+      "episodeId": "incart-I01-loop-1-V-000007311",
+      "status": "partial",
+      "qualityScore": 100.0,
+      "morphologyGrade": "mildly_different",
+      "confidence": {
+        "score": 69.0,
+        "grade": "moderate",
+        "positiveReasons": [
+          "signalQuality",
+          "usableLeadCount",
+          "rPeakAgreementAndDetection",
+          "annotationToPeakAlignment",
+          "referenceBeatCount",
+          "morphologyAgreement",
+          "captureCompleteness"
+        ],
+        "negativeReasons": [
+          "moderateMultiLeadAgreement",
+          "lowQrsDurationAgreement"
+        ],
+        "components": {
+          "signalQuality": 100.0,
+          "usableLeadCount": 100.0,
+          "rPeakAgreementAndDetection": 98.18,
+          "annotationToPeakAlignment": 95.45,
+          "referenceBeatCount": 100.0,
+          "qrsConfidence": 50.0,
+          "morphologyAgreement": 100.0,
+          "captureCompleteness": 100.0,
+          "boundaryCompleteness": 70.0
+        },
+        "limitations": [
+          "Overall multi-lead agreement is only moderate.",
+          "QRS duration has low inter-lead agreement."
+        ],
+        "excludedEvidence": [],
+        "essentialMeasurementsMissing": false,
+        "prePenaltyScore": 97.83,
+        "penalties": [
+          {
+            "reason": "moderateMultiLeadAgreement",
+            "points": 10.0
+          },
+          {
+            "reason": "lowQrsDurationAgreement",
+            "points": 15.0
+          }
+        ]
+      }
+    }
+  ],
+  "signalQuality": {
+    "status": "ready",
+    "meanScore": 100.0,
+    "medianScore": 100.0,
+    "minimumScore": 100.0,
+    "crossEpisodeAgreement": 1.0
+  },
+  "rhythm": {
+    "medianHeartRateBpm": 97.08,
+    "heartRateRangeBpm": [
+      95.65,
+      98.51
+    ]
+  },
+  "qrs": {
+    "medianTriggerQrsDurationMilliseconds": 89.773,
+    "medianBaselineQrsDurationMilliseconds": 72.727,
+    "crossEpisodeAgreement": 0.8864
+  },
+  "morphology": {
+    "status": "ready",
+    "medianDifferenceScore": 0.3148,
+    "crossEpisodeAgreement": 0.9802
+  },
+  "leadAgreement": {
+    "medianScore": 73.56
+  },
+  "ectopicBurden": {
+    "uniqueTriggerCount": 5,
+    "referenceVAnnotationCount": 5,
+    "totalAnalyzedBeatsAcrossEpisodeViews": 100,
+    "uniqueAnalyzedBeatCount": 86,
+    "uniqueAbnormalMorphologyCandidateCount": 0,
+    "incidentEctopicBurdenPercent": 0.0,
+    "overlappingEpisodeViewsDeduplicated": true
+  },
+  "crossEpisodeAgreement": {
+    "score": 95.55,
+    "qualityAgreement": 1.0,
+    "qrsAgreement": 0.8864,
+    "morphologyAgreement": 0.9802
+  },
+  "confidence": {
+    "score": 82.14,
+    "grade": "high",
+    "episodeConfidenceScores": [
+      95.28,
+      69.0
+    ]
+  },
+  "limitations": [
+    "The incident is grouped from overlapping episode views; trigger and beat evidence is deduplicated by record, loop, and absolute sample.",
+    "INCART V annotations remain dataset reference evidence and are not an independent diagnosis.",
+    "FHIR context is a controlled research pairing and is not verified as same-patient clinical data."
+  ],
+  "errors": [],
+  "provenance": {
+    "source": "deterministic_backend_incident_analysis",
+    "algorithmVersion": "phase-6-v1.1.1",
+    "datasetAnnotationSource": "PhysioNet INCART atr",
+    "overlapDeduplicationKey": "record + loopNumber + absolute sample",
+    "isIndependentDiagnosis": false
+  }
+}

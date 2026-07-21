@@ -1,0 +1,1925 @@
+{
+  "conditions": [],
+  "dataQuality": {
+    "conditionCount": 0,
+    "diagnosticReportCount": 2,
+    "documentCount": 0,
+    "encounterCount": 20,
+    "fallbackUsed": false,
+    "laboratoryObservationCount": 154,
+    "laboratoryPagesFetched": 2,
+    "matchedLabCount": 9,
+    "matchedVitalCount": 48,
+    "medicationCount": 26,
+    "observationCount": 359,
+    "patientLoaded": true,
+    "targetedObservationCount": 0,
+    "cacheUsed": true,
+    "cacheStale": true
+  },
+  "diagnosticReports": [
+    {
+      "category": [
+        "Laboratory"
+      ],
+      "conclusion": null,
+      "conclusionCodes": [],
+      "effectiveAt": "2020-03-13T17:35:00Z",
+      "id": "197281714",
+      "issuedAt": "2020-03-13T17:49:41Z",
+      "name": "CBC w/ Auto Diff",
+      "resultReferences": [
+        "Observation/L-197281716",
+        "Observation/L-197281718",
+        "Observation/L-197281720",
+        "Observation/L-197281722",
+        "Observation/L-197281724",
+        "Observation/L-197281726",
+        "Observation/L-197281728",
+        "Observation/L-197281730",
+        "Observation/L-197281732",
+        "Observation/L-197281734",
+        "Observation/L-197281736"
+      ],
+      "status": "final"
+    },
+    {
+      "category": [
+        "Laboratory"
+      ],
+      "conclusion": null,
+      "conclusionCodes": [],
+      "effectiveAt": "2020-03-13T17:35:00Z",
+      "id": "197281738",
+      "issuedAt": "2022-12-15T10:21:24Z",
+      "name": "Comprehensive Metabolic Panel",
+      "resultReferences": [
+        "Observation/L-197281768",
+        "Observation/L-197281740",
+        "Observation/L-197281742",
+        "Observation/L-197281744",
+        "Observation/L-197281746",
+        "Observation/L-197281748",
+        "Observation/L-197281750",
+        "Observation/L-197281752",
+        "Observation/L-197281754",
+        "Observation/L-197281756",
+        "Observation/L-197281758",
+        "Observation/L-197281762",
+        "Observation/L-197281764",
+        "Observation/L-197281766",
+        "Observation/L-197281760"
+      ],
+      "status": "amended"
+    }
+  ],
+  "documents": [],
+  "encounters": [
+    {
+      "class": "ambulatory",
+      "end": null,
+      "id": "97959298",
+      "start": null,
+      "status": "in-progress",
+      "type": "Outpatient"
+    },
+    {
+      "class": "ambulatory",
+      "end": null,
+      "id": "97959311",
+      "start": null,
+      "status": "in-progress",
+      "type": "Outpatient"
+    },
+    {
+      "class": "ambulatory",
+      "end": null,
+      "id": "97960166",
+      "start": null,
+      "status": "in-progress",
+      "type": "Outpatient"
+    },
+    {
+      "class": "ambulatory",
+      "end": null,
+      "id": "97961006",
+      "start": null,
+      "status": "in-progress",
+      "type": "Outpatient"
+    },
+    {
+      "class": "ambulatory",
+      "end": null,
+      "id": "97961020",
+      "start": null,
+      "status": "in-progress",
+      "type": "Outpatient"
+    },
+    {
+      "class": "ambulatory",
+      "end": null,
+      "id": "97961085",
+      "start": null,
+      "status": "in-progress",
+      "type": "Outpatient"
+    },
+    {
+      "class": "ambulatory",
+      "end": null,
+      "id": "97964132",
+      "start": null,
+      "status": "in-progress",
+      "type": "Outpatient"
+    },
+    {
+      "class": "ambulatory",
+      "end": null,
+      "id": "97964133",
+      "start": null,
+      "status": "in-progress",
+      "type": "Outpatient"
+    },
+    {
+      "class": "ambulatory",
+      "end": null,
+      "id": "97964176",
+      "start": null,
+      "status": "in-progress",
+      "type": "Outpatient"
+    },
+    {
+      "class": "ambulatory",
+      "end": null,
+      "id": "97964189",
+      "start": null,
+      "status": "in-progress",
+      "type": "Outpatient"
+    },
+    {
+      "class": "ambulatory",
+      "end": null,
+      "id": "97964264",
+      "start": null,
+      "status": "in-progress",
+      "type": "Outpatient"
+    },
+    {
+      "class": "ambulatory",
+      "end": null,
+      "id": "97964309",
+      "start": null,
+      "status": "in-progress",
+      "type": "Outpatient"
+    },
+    {
+      "class": "ambulatory",
+      "end": null,
+      "id": "97964345",
+      "start": null,
+      "status": "in-progress",
+      "type": "Outpatient"
+    },
+    {
+      "class": "ambulatory",
+      "end": null,
+      "id": "97964375",
+      "start": null,
+      "status": "in-progress",
+      "type": "Outpatient"
+    },
+    {
+      "class": "ambulatory",
+      "end": null,
+      "id": "97964376",
+      "start": null,
+      "status": "in-progress",
+      "type": "Outpatient"
+    },
+    {
+      "class": "ambulatory",
+      "end": null,
+      "id": "97964413",
+      "start": null,
+      "status": "in-progress",
+      "type": "Outpatient"
+    },
+    {
+      "class": "ambulatory",
+      "end": null,
+      "id": "97964414",
+      "start": null,
+      "status": "in-progress",
+      "type": "Outpatient"
+    },
+    {
+      "class": "ambulatory",
+      "end": null,
+      "id": "97965205",
+      "start": null,
+      "status": "in-progress",
+      "type": "Outpatient"
+    },
+    {
+      "class": "ambulatory",
+      "end": null,
+      "id": "97965212",
+      "start": null,
+      "status": "in-progress",
+      "type": "Outpatient"
+    },
+    {
+      "class": "ambulatory",
+      "end": null,
+      "id": "97965213",
+      "start": null,
+      "status": "in-progress",
+      "type": "Outpatient"
+    }
+  ],
+  "fhirPatientId": "12724070",
+  "labTrends": [
+    {
+      "color": "yellow",
+      "field": "creatinine",
+      "label": "Creatinine",
+      "latestAt": "2020-12-15T17:29:48+00:00",
+      "latestValue": 1.3,
+      "loincCodes": [
+        "2160-0",
+        "38483-4",
+        "http://loinc.org|2160-0",
+        "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|2700655"
+      ],
+      "points": [
+        {
+          "codes": [
+            "2160-0",
+            "2700655",
+            "http://loinc.org|2160-0",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|2700655"
+          ],
+          "observedAt": "2020-03-13T17:35:00+00:00",
+          "resourceId": "L-197281758",
+          "status": "final",
+          "unit": "mg/dL",
+          "value": 2.6,
+          "minutesFromAnchor": -3340961.2,
+          "relation": "before_anchor",
+          "relationLabel": "3.34096e+06 min before",
+          "temporalBucket": "historical_remote"
+        },
+        {
+          "codes": [
+            "2160-0",
+            "2700655",
+            "http://loinc.org|2160-0",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|2700655"
+          ],
+          "observedAt": "2020-12-15T17:29:48+00:00",
+          "resourceId": "L-197414144",
+          "status": "final",
+          "unit": "mg/dL",
+          "value": 1.3,
+          "minutesFromAnchor": -2942086.4,
+          "relation": "before_anchor",
+          "relationLabel": "2.94209e+06 min before",
+          "temporalBucket": "historical_remote"
+        }
+      ],
+      "trendDirection": "falling",
+      "unit": "mg/dL",
+      "latestRelation": "before_anchor",
+      "latestRelationLabel": "2.94209e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "color": "red",
+      "field": "glucose",
+      "label": "Glucose",
+      "latestAt": "2020-03-13T17:35:00+00:00",
+      "latestValue": 397.0,
+      "loincCodes": [
+        "2339-0",
+        "15074-8",
+        "2345-7",
+        "http://loinc.org|2345-7",
+        "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|21702839"
+      ],
+      "points": [
+        {
+          "codes": [
+            "21702839",
+            "2345-7",
+            "http://loinc.org|2345-7",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|21702839"
+          ],
+          "observedAt": "2020-03-13T17:35:00+00:00",
+          "resourceId": "L-197281756",
+          "status": "final",
+          "unit": "mg/dL",
+          "value": 397.0,
+          "minutesFromAnchor": -3340961.2,
+          "relation": "before_anchor",
+          "relationLabel": "3.34096e+06 min before",
+          "temporalBucket": "historical_remote"
+        }
+      ],
+      "trendDirection": "insufficient_data",
+      "unit": "mg/dL",
+      "latestRelation": "before_anchor",
+      "latestRelationLabel": "3.34096e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "color": "red",
+      "field": "potassium",
+      "label": "Potassium",
+      "latestAt": "2022-01-21T06:00:00+00:00",
+      "latestValue": 6.3,
+      "loincCodes": [
+        "6298-4",
+        "2823-3"
+      ],
+      "points": [
+        {
+          "codes": [
+            "21704910",
+            "2823-3",
+            "http://loinc.org|2823-3",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|21704910"
+          ],
+          "observedAt": "2020-03-13T17:35:00+00:00",
+          "resourceId": "L-197281742",
+          "status": "final",
+          "unit": "mmol/L",
+          "value": 5.8,
+          "minutesFromAnchor": -3340961.2,
+          "relation": "before_anchor",
+          "relationLabel": "3.34096e+06 min before",
+          "temporalBucket": "historical_remote"
+        },
+        {
+          "codes": [
+            "21704910",
+            "2823-3",
+            "http://loinc.org|2823-3",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|21704910"
+          ],
+          "observedAt": "2022-01-21T06:00:00+00:00",
+          "resourceId": "L-197602000",
+          "status": "final",
+          "unit": "mmol/L",
+          "value": 5.8,
+          "minutesFromAnchor": -2363896.2,
+          "relation": "before_anchor",
+          "relationLabel": "2.3639e+06 min before",
+          "temporalBucket": "historical_remote"
+        },
+        {
+          "codes": [
+            "21704910",
+            "2823-3",
+            "http://loinc.org|2823-3",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|21704910"
+          ],
+          "observedAt": "2022-01-21T06:00:00+00:00",
+          "resourceId": "L-197602002",
+          "status": "final",
+          "unit": "mmol/L",
+          "value": 6.3,
+          "minutesFromAnchor": -2363896.2,
+          "relation": "before_anchor",
+          "relationLabel": "2.3639e+06 min before",
+          "temporalBucket": "historical_remote"
+        },
+        {
+          "codes": [
+            "21704910",
+            "2823-3",
+            "http://loinc.org|2823-3",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|21704910"
+          ],
+          "observedAt": "2022-01-21T06:00:00+00:00",
+          "resourceId": "L-197602004",
+          "status": "final",
+          "unit": "mmol/L",
+          "value": 6.3,
+          "minutesFromAnchor": -2363896.2,
+          "relation": "before_anchor",
+          "relationLabel": "2.3639e+06 min before",
+          "temporalBucket": "historical_remote"
+        },
+        {
+          "codes": [
+            "21704910",
+            "2823-3",
+            "http://loinc.org|2823-3",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|21704910"
+          ],
+          "observedAt": "2022-01-21T06:00:00+00:00",
+          "resourceId": "L-197602006",
+          "status": "final",
+          "unit": "mmol/L",
+          "value": 6.3,
+          "minutesFromAnchor": -2363896.2,
+          "relation": "before_anchor",
+          "relationLabel": "2.3639e+06 min before",
+          "temporalBucket": "historical_remote"
+        }
+      ],
+      "trendDirection": "falling",
+      "unit": "mmol/L",
+      "latestRelation": "before_anchor",
+      "latestRelationLabel": "2.3639e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "color": "red",
+      "field": "wbc",
+      "label": "WBC",
+      "latestAt": "2020-03-13T17:35:00+00:00",
+      "latestValue": 21.0,
+      "loincCodes": [
+        "6690-2",
+        "26464-8",
+        "http://loinc.org|6690-2",
+        "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|20136426"
+      ],
+      "points": [
+        {
+          "codes": [
+            "20136426",
+            "6690-2",
+            "http://loinc.org|6690-2",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|20136426"
+          ],
+          "observedAt": "2020-03-13T17:35:00+00:00",
+          "resourceId": "L-197281716",
+          "status": "final",
+          "unit": "x10^9/L",
+          "value": 21.0,
+          "minutesFromAnchor": -3340961.2,
+          "relation": "before_anchor",
+          "relationLabel": "3.34096e+06 min before",
+          "temporalBucket": "historical_remote"
+        }
+      ],
+      "trendDirection": "insufficient_data",
+      "unit": "x10^9/L",
+      "latestRelation": "before_anchor",
+      "latestRelationLabel": "3.34096e+06 min before",
+      "temporalBucket": "historical_remote"
+    }
+  ],
+  "limitations": [
+    "INCART waveform and FHIR context are a controlled research pairing, not verified same-patient clinical data.",
+    "FHIR timing is relative to the episode capture timestamp because the INCART record has no verified clinical event datetime.",
+    "Oracle/FHIR clinical context was served from the MongoDB cache while a background refresh was scheduled."
+  ],
+  "linkageMode": "controlled_research_pairing",
+  "medicationTimeline": [
+    {
+      "doseDisplay": "1 tablets",
+      "doseUnit": "tablets",
+      "doseValue": 1,
+      "eventTime": "2020-11-11T21:52:00+00:00",
+      "evidenceLevel": "administration",
+      "id": "197391459",
+      "instructions": null,
+      "name": "multivitamin (multivitamin adult, oral tablet)",
+      "resourceType": "MedicationAdministration",
+      "route": "Oral",
+      "status": "completed",
+      "minutesFromAnchor": -2990784.2,
+      "relation": "before_anchor",
+      "relationLabel": "2.99078e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "doseDisplay": "1 tab",
+      "doseUnit": "tab",
+      "doseValue": 1.0,
+      "eventTime": "2019-12-26T20:34:30+00:00",
+      "evidenceLevel": "order",
+      "id": "306923899",
+      "instructions": "1 tab, Oral, every 4 hr",
+      "name": "hydrocodone-acetaminophen (HYDROcodone-acetaminophen 5 mg-300 mg oral tablet)",
+      "resourceType": "MedicationRequest",
+      "route": "Oral",
+      "status": "stopped",
+      "minutesFromAnchor": -3453101.7,
+      "relation": "before_anchor",
+      "relationLabel": "3.4531e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "doseDisplay": "100 mL",
+      "doseUnit": "mL",
+      "doseValue": 100.0,
+      "eventTime": "2019-12-26T20:34:30+00:00",
+      "evidenceLevel": "order",
+      "id": "306923901",
+      "instructions": "1 mL/hr, IV",
+      "name": "insulin regular (human) IV additive 100 units [1 units/hr] + sodium chloride 0.9% drip 100 mL",
+      "resourceType": "MedicationRequest",
+      "route": "IV",
+      "status": "stopped",
+      "minutesFromAnchor": -3453101.7,
+      "relation": "before_anchor",
+      "relationLabel": "3.4531e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "doseDisplay": "5 mcg/kg",
+      "doseUnit": "mcg/kg",
+      "doseValue": 5.0,
+      "eventTime": "2019-12-26T20:34:30+00:00",
+      "evidenceLevel": "order",
+      "id": "306923903",
+      "instructions": "5 mcg/kg, Oral, every 12 hr",
+      "name": "digoxin",
+      "resourceType": "MedicationRequest",
+      "route": "Oral",
+      "status": "stopped",
+      "minutesFromAnchor": -3453101.7,
+      "relation": "before_anchor",
+      "relationLabel": "3.4531e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "doseDisplay": "1 tab",
+      "doseUnit": "tab",
+      "doseValue": 1.0,
+      "eventTime": "2020-07-13T14:09:19+00:00",
+      "evidenceLevel": "order",
+      "id": "313977727",
+      "instructions": "1 mg = 1 tab, Oral, Daily, 30 tab, 0 Refill(s)",
+      "name": "warfarin (warfarin 1 mg oral tablet)",
+      "resourceType": "MedicationRequest",
+      "route": "Oral",
+      "status": "active",
+      "minutesFromAnchor": -3165486.9,
+      "relation": "before_anchor",
+      "relationLabel": "3.16549e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "doseDisplay": "1 tab",
+      "doseUnit": "tab",
+      "doseValue": 1.0,
+      "eventTime": "2020-07-13T14:09:27+00:00",
+      "evidenceLevel": "order",
+      "id": "313977729",
+      "instructions": "2 mg = 1 tab, Oral, Mon/Wed/Fri, 13 tab, 0 Refill(s)",
+      "name": "warfarin (warfarin 2 mg oral tablet)",
+      "resourceType": "MedicationRequest",
+      "route": "Oral",
+      "status": "active",
+      "minutesFromAnchor": -3165486.8,
+      "relation": "before_anchor",
+      "relationLabel": "3.16549e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "doseDisplay": "1 tab",
+      "doseUnit": "tab",
+      "doseValue": 1.0,
+      "eventTime": "2020-11-11T21:51:35+00:00",
+      "evidenceLevel": "order",
+      "id": "318400009",
+      "instructions": "1 tab, Oral, Daily",
+      "name": "multivitamin (multivitamin adult, oral tablet)",
+      "resourceType": "MedicationRequest",
+      "route": "Oral",
+      "status": "active",
+      "minutesFromAnchor": -2990784.6,
+      "relation": "before_anchor",
+      "relationLabel": "2.99078e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "doseDisplay": "1 tab",
+      "doseUnit": "tab",
+      "doseValue": 1.0,
+      "eventTime": "2021-01-27T15:14:04+00:00",
+      "evidenceLevel": "order",
+      "id": "323621363",
+      "instructions": "1 tab, Oral, Daily",
+      "name": "hydrocodone-acetaminophen (Vicodin 5 mg-300 mg oral tablet)",
+      "resourceType": "MedicationRequest",
+      "route": "Oral",
+      "status": "on-hold",
+      "minutesFromAnchor": -2880302.1,
+      "relation": "before_anchor",
+      "relationLabel": "2.8803e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "doseDisplay": "1 cap",
+      "doseUnit": "cap",
+      "doseValue": 1.0,
+      "eventTime": "2021-02-03T19:56:12+00:00",
+      "evidenceLevel": "order",
+      "id": "323991643",
+      "instructions": "0.5 mg = 1 cap, Oral, every 12 hr, 180 cap, 0 Refill(s)",
+      "name": "tacrolimus (tacrolimus 0.5 mg oral capsule)",
+      "resourceType": "MedicationRequest",
+      "route": "Oral",
+      "status": "active",
+      "minutesFromAnchor": -2869940.0,
+      "relation": "before_anchor",
+      "relationLabel": "2.86994e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "doseDisplay": "Not applicable, test, 0 Refill(s)",
+      "doseUnit": null,
+      "doseValue": null,
+      "eventTime": "2021-03-01T15:12:27+00:00",
+      "evidenceLevel": "order",
+      "id": "325316105",
+      "instructions": "Not applicable, test, 0 Refill(s)",
+      "name": "Durable Medical Equipment for Prescription (2 weeks)",
+      "resourceType": "MedicationRequest",
+      "route": null,
+      "status": "active",
+      "minutesFromAnchor": -2832783.8,
+      "relation": "before_anchor",
+      "relationLabel": "2.83278e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "doseDisplay": "1 tab",
+      "doseUnit": "tab",
+      "doseValue": 1.0,
+      "eventTime": "2021-04-29T20:51:34+00:00",
+      "evidenceLevel": "order",
+      "id": "328378507",
+      "instructions": "25 mg = 1 tab, Oral, BID, 60 tab, 0 Refill(s)",
+      "name": "atenolol (atenolol 25 mg oral tablet)",
+      "resourceType": "MedicationRequest",
+      "route": "Oral",
+      "status": "active",
+      "minutesFromAnchor": -2747484.6,
+      "relation": "before_anchor",
+      "relationLabel": "2.74748e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "doseDisplay": "every 2 hr, 160 mg/5ml Susp,PRN Pain Score 7-10, PRN, 0 Refill(s)",
+      "doseUnit": null,
+      "doseValue": null,
+      "eventTime": "2022-04-08T08:44:34+00:00",
+      "evidenceLevel": "order",
+      "id": "351247573",
+      "instructions": "every 2 hr, 160 mg/5ml Susp,PRN Pain Score 7-10, PRN, 0 Refill(s)",
+      "name": "template non-formulary (medication) (TYLENOL)",
+      "resourceType": "MedicationRequest",
+      "route": null,
+      "status": "active",
+      "minutesFromAnchor": -2252851.6,
+      "relation": "before_anchor",
+      "relationLabel": "2.25285e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "doseDisplay": "QID, 600 unt/ml Pen Injector 0.5 ml,PRN Chest Pain, PRN, 0 Refill(s)",
+      "doseUnit": null,
+      "doseValue": null,
+      "eventTime": "2022-05-19T06:30:13+00:00",
+      "evidenceLevel": "order",
+      "id": "354900239",
+      "instructions": "QID, 600 unt/ml Pen Injector 0.5 ml,PRN Chest Pain, PRN, 0 Refill(s)",
+      "name": "follicle stimulating hormone (Gonal-f RFF Pen 300 intl units subcutaneous solution)",
+      "resourceType": "MedicationRequest",
+      "route": null,
+      "status": "active",
+      "minutesFromAnchor": -2193946.0,
+      "relation": "before_anchor",
+      "relationLabel": "2.19395e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "doseDisplay": "every 4 hr, 20 mg DR Tab,PRN Nausea/ Vomiting, PRN, 0 Refill(s)",
+      "doseUnit": null,
+      "doseValue": null,
+      "eventTime": "2022-05-27T11:28:05+00:00",
+      "evidenceLevel": "order",
+      "id": "355543133",
+      "instructions": "every 4 hr, 20 mg DR Tab,PRN Nausea/ Vomiting, PRN, 0 Refill(s)",
+      "name": "pantoprazole (pantoprazole 20 mg oral delayed release tablet)",
+      "resourceType": "MedicationRequest",
+      "route": null,
+      "status": "active",
+      "minutesFromAnchor": -2182128.1,
+      "relation": "before_anchor",
+      "relationLabel": "2.18213e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "doseDisplay": "for 6 days, 4.0 tab, for 4 days, test, 0 Refill(s), 0 Refill(s), 0 Refill(s)",
+      "doseUnit": null,
+      "doseValue": null,
+      "eventTime": "2023-08-21T13:14:36+00:00",
+      "evidenceLevel": "order",
+      "id": "397011457",
+      "instructions": "for 6 days, 4.0 tab, for 4 days, test, 0 Refill(s), 0 Refill(s), 0 Refill(s)",
+      "name": "template non-formulary (medication) (template non-formulary (medication) (template non-formulary (medication) (litium)))",
+      "resourceType": "MedicationRequest",
+      "route": null,
+      "status": "active",
+      "minutesFromAnchor": -1532581.6,
+      "relation": "before_anchor",
+      "relationLabel": "1.53258e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "doseDisplay": "1.0, 200 mg = 1 cap, Oral, Daily, 0 Refill(s), 0 Refill(s), 0 Refill(s)",
+      "doseUnit": null,
+      "doseValue": null,
+      "eventTime": "2023-08-21T18:11:36+00:00",
+      "evidenceLevel": "order",
+      "id": "397029699",
+      "instructions": "1.0, 200 mg = 1 cap, Oral, Daily, 0 Refill(s), 0 Refill(s), 0 Refill(s)",
+      "name": "template non-formulary (medication) (template non-formulary (medication) (template non-formulary (medication) (Lasix)))",
+      "resourceType": "MedicationRequest",
+      "route": null,
+      "status": "active",
+      "minutesFromAnchor": -1532284.6,
+      "relation": "before_anchor",
+      "relationLabel": "1.53228e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "doseDisplay": "1.0, 200 mg = 1 cap, Oral, Daily, 0 Refill(s), 0 Refill(s), 0 Refill(s)",
+      "doseUnit": null,
+      "doseValue": null,
+      "eventTime": "2023-08-22T20:33:09+00:00",
+      "evidenceLevel": "order",
+      "id": "397117475",
+      "instructions": "1.0, 200 mg = 1 cap, Oral, Daily, 0 Refill(s), 0 Refill(s), 0 Refill(s)",
+      "name": "template non-formulary (medication) (template non-formulary (medication) (template non-formulary (medication) (Lasix)))",
+      "resourceType": "MedicationRequest",
+      "route": null,
+      "status": "active",
+      "minutesFromAnchor": -1530703.1,
+      "relation": "before_anchor",
+      "relationLabel": "1.5307e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "doseDisplay": "1.0, Oral, 2 mg = 1 tab, Oral, Mon/Wed/Fri, 13 tab, 0 Refill(s), 0 Refill(s)",
+      "doseUnit": null,
+      "doseValue": null,
+      "eventTime": "2023-08-22T21:49:48+00:00",
+      "evidenceLevel": "order",
+      "id": "397141465",
+      "instructions": "1.0, Oral, 2 mg = 1 tab, Oral, Mon/Wed/Fri, 13 tab, 0 Refill(s), 0 Refill(s)",
+      "name": "template non-formulary (medication) (warfarin (warfarin 2 mg oral tablet))",
+      "resourceType": "MedicationRequest",
+      "route": "Oral",
+      "status": "active",
+      "minutesFromAnchor": -1530626.4,
+      "relation": "before_anchor",
+      "relationLabel": "1.53063e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "doseDisplay": "40 mg",
+      "doseUnit": "mg",
+      "doseValue": 40.0,
+      "eventTime": "2023-08-24T18:38:45+00:00",
+      "evidenceLevel": "order",
+      "id": "397293119",
+      "instructions": "40 mg, Oral, 40 mg = 1 tab, Oral, Daily, 0 Refill(s)",
+      "name": "template non-formulary (medication) (furosemide (Lasix))",
+      "resourceType": "MedicationRequest",
+      "route": "Oral",
+      "status": "active",
+      "minutesFromAnchor": -1527937.5,
+      "relation": "before_anchor",
+      "relationLabel": "1.52794e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "doseDisplay": "40 mg",
+      "doseUnit": "mg",
+      "doseValue": 40.0,
+      "eventTime": "2023-08-24T18:50:35+00:00",
+      "evidenceLevel": "order",
+      "id": "397293129",
+      "instructions": "40 mg, Oral, 40 mg = 1 tab, Oral, Daily, 0 Refill(s)",
+      "name": "template non-formulary (medication) (furosemide (Lasix))",
+      "resourceType": "MedicationRequest",
+      "route": "Oral",
+      "status": "active",
+      "minutesFromAnchor": -1527925.6,
+      "relation": "before_anchor",
+      "relationLabel": "1.52793e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "doseDisplay": "5.0, Oral, for 10 days, 5 mcg/kg, Oral, every 12 hr, 0 Refill(s)",
+      "doseUnit": null,
+      "doseValue": null,
+      "eventTime": "2023-09-08T13:44:22+00:00",
+      "evidenceLevel": "order",
+      "id": "398593881",
+      "instructions": "5.0, Oral, for 10 days, 5 mcg/kg, Oral, every 12 hr, 0 Refill(s)",
+      "name": "template non-formulary (medication) (digoxin)",
+      "resourceType": "MedicationRequest",
+      "route": "Oral",
+      "status": "active",
+      "minutesFromAnchor": -1506631.8,
+      "relation": "before_anchor",
+      "relationLabel": "1.50663e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "doseDisplay": "0 Refill(s)",
+      "doseUnit": null,
+      "doseValue": null,
+      "eventTime": "2023-12-08T22:10:18+00:00",
+      "evidenceLevel": "order",
+      "id": "406626979",
+      "instructions": "0 Refill(s)",
+      "name": "5-hydroxytryptophan (5-hydroxytryptophan 100 mg oral capsule)",
+      "resourceType": "MedicationRequest",
+      "route": null,
+      "status": "active",
+      "minutesFromAnchor": -1375085.9,
+      "relation": "before_anchor",
+      "relationLabel": "1.37509e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "doseDisplay": "1 tab",
+      "doseUnit": "tab",
+      "doseValue": 1.0,
+      "eventTime": "2024-02-29T09:40:05+00:00",
+      "evidenceLevel": "order",
+      "id": "413909099",
+      "instructions": "5 mg = 1 tab, Oral, PRN: chest pain, 30 tab, 0 Refill(s)",
+      "name": "simvastatin (Zocor 5 mg oral tablet)",
+      "resourceType": "MedicationRequest",
+      "route": "Oral",
+      "status": "active",
+      "minutesFromAnchor": -1256316.1,
+      "relation": "before_anchor",
+      "relationLabel": "1.25632e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "doseDisplay": "1 tab",
+      "doseUnit": "tab",
+      "doseValue": 1.0,
+      "eventTime": "2024-04-16T12:01:04+00:00",
+      "evidenceLevel": "order",
+      "id": "418109113",
+      "instructions": "1 mg = 1 tab, Oral, Mon/Tu/Th/Fr/Sa, 30 tab, 0 Refill(s)",
+      "name": "warfarin (warfarin 1 mg oral tablet)",
+      "resourceType": "MedicationRequest",
+      "route": "Oral",
+      "status": "stopped",
+      "minutesFromAnchor": -1188495.1,
+      "relation": "before_anchor",
+      "relationLabel": "1.1885e+06 min before",
+      "temporalBucket": "historical_remote"
+    },
+    {
+      "doseDisplay": "OPHTH, 0 Refill(s)",
+      "doseUnit": null,
+      "doseValue": null,
+      "eventTime": "2026-06-22T20:58:41+00:00",
+      "evidenceLevel": "order",
+      "id": "497561969",
+      "instructions": "OPHTH, 0 Refill(s)",
+      "name": "template non-formulary (medication) (Latanoprost (Xalatan) OU QHS)",
+      "resourceType": "MedicationRequest",
+      "route": "OPHTH",
+      "status": "active",
+      "minutesFromAnchor": -40277.5,
+      "relation": "before_anchor",
+      "relationLabel": "40277.5 min before",
+      "temporalBucket": "historical"
+    },
+    {
+      "doseDisplay": "0 Refill(s)",
+      "doseUnit": null,
+      "doseValue": null,
+      "eventTime": "2026-06-22T23:27:47+00:00",
+      "evidenceLevel": "order",
+      "id": "497586817",
+      "instructions": "0 Refill(s)",
+      "name": "template non-formulary (medication) (Template Non-formulary (Medication) (Latanoprost (Xalatan) OU QHS))",
+      "resourceType": "MedicationRequest",
+      "route": null,
+      "status": "active",
+      "minutesFromAnchor": -40128.4,
+      "relation": "before_anchor",
+      "relationLabel": "40128.4 min before",
+      "temporalBucket": "historical"
+    }
+  ],
+  "patientSummary": {
+    "ageAtContextAnchor": 35,
+    "birthDate": "1990-09-15",
+    "deceased": false,
+    "gender": "male",
+    "languages": [
+      "English"
+    ],
+    "maritalStatus": "Single"
+  },
+  "provenance": {
+    "fhirBaseUrl": "https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d",
+    "provider": "oracle",
+    "source": "Oracle SMART on FHIR",
+    "usesFallbackDemoValues": false
+  },
+  "schemaVersion": "clinical-context-v1",
+  "status": "ready",
+  "vitalTrends": [
+    {
+      "color": "blue",
+      "field": "heartRate",
+      "label": "Heart Rate",
+      "latestAt": "2026-07-20T12:21:12+00:00",
+      "latestValue": 66.0,
+      "loincCodes": [
+        "8867-4"
+      ],
+      "points": [
+        {
+          "codes": [
+            "1164554",
+            "69000-8",
+            "8867-4",
+            "http://loinc.org|69000-8",
+            "http://loinc.org|8867-4",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|1164554"
+          ],
+          "observedAt": "2026-07-17T10:28:25+00:00",
+          "resourceId": "VS-209072353",
+          "status": "final",
+          "unit": "bpm",
+          "value": 89.0,
+          "minutesFromAnchor": -4907.8,
+          "relation": "before_anchor",
+          "relationLabel": "4907.8 min before",
+          "temporalBucket": "recent"
+        },
+        {
+          "codes": [
+            "1164554",
+            "69000-8",
+            "8867-4",
+            "http://loinc.org|69000-8",
+            "http://loinc.org|8867-4",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|1164554"
+          ],
+          "observedAt": "2026-07-17T10:38:02+00:00",
+          "resourceId": "VS-209072479",
+          "status": "final",
+          "unit": "bpm",
+          "value": 89.0,
+          "minutesFromAnchor": -4898.2,
+          "relation": "before_anchor",
+          "relationLabel": "4898.2 min before",
+          "temporalBucket": "recent"
+        },
+        {
+          "codes": [
+            "1164554",
+            "69000-8",
+            "8867-4",
+            "http://loinc.org|69000-8",
+            "http://loinc.org|8867-4",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|1164554"
+          ],
+          "observedAt": "2026-07-17T10:38:02+00:00",
+          "resourceId": "VS-209072653",
+          "status": "final",
+          "unit": "bpm",
+          "value": 88.0,
+          "minutesFromAnchor": -4898.2,
+          "relation": "before_anchor",
+          "relationLabel": "4898.2 min before",
+          "temporalBucket": "recent"
+        },
+        {
+          "codes": [
+            "1164554",
+            "69000-8",
+            "8867-4",
+            "http://loinc.org|69000-8",
+            "http://loinc.org|8867-4",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|1164554"
+          ],
+          "observedAt": "2026-07-17T10:42:41+00:00",
+          "resourceId": "VS-209072661",
+          "status": "final",
+          "unit": "bpm",
+          "value": 89.0,
+          "minutesFromAnchor": -4893.5,
+          "relation": "before_anchor",
+          "relationLabel": "4893.5 min before",
+          "temporalBucket": "recent"
+        },
+        {
+          "codes": [
+            "1164554",
+            "69000-8",
+            "8867-4",
+            "http://loinc.org|69000-8",
+            "http://loinc.org|8867-4",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|1164554"
+          ],
+          "observedAt": "2026-07-20T06:18:25+00:00",
+          "resourceId": "VS-209074385",
+          "status": "final",
+          "unit": "bpm",
+          "value": 89.0,
+          "minutesFromAnchor": -837.8,
+          "relation": "before_anchor",
+          "relationLabel": "837.8 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "1164554",
+            "69000-8",
+            "8867-4",
+            "http://loinc.org|69000-8",
+            "http://loinc.org|8867-4",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|1164554"
+          ],
+          "observedAt": "2026-07-20T06:33:04+00:00",
+          "resourceId": "VS-209074551",
+          "status": "final",
+          "unit": "bpm",
+          "value": 89.0,
+          "minutesFromAnchor": -823.1,
+          "relation": "before_anchor",
+          "relationLabel": "823.1 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "1164554",
+            "69000-8",
+            "8867-4",
+            "http://loinc.org|69000-8",
+            "http://loinc.org|8867-4",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|1164554"
+          ],
+          "observedAt": "2026-07-20T07:30:06+00:00",
+          "resourceId": "VS-209074649",
+          "status": "final",
+          "unit": "bpm",
+          "value": 64.0,
+          "minutesFromAnchor": -766.1,
+          "relation": "before_anchor",
+          "relationLabel": "766.1 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "1164554",
+            "69000-8",
+            "8867-4",
+            "http://loinc.org|69000-8",
+            "http://loinc.org|8867-4",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|1164554"
+          ],
+          "observedAt": "2026-07-20T07:41:08+00:00",
+          "resourceId": "VS-209074795",
+          "status": "final",
+          "unit": "bpm",
+          "value": 64.0,
+          "minutesFromAnchor": -755.1,
+          "relation": "before_anchor",
+          "relationLabel": "755.1 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "1164554",
+            "69000-8",
+            "8867-4",
+            "http://loinc.org|69000-8",
+            "http://loinc.org|8867-4",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|1164554"
+          ],
+          "observedAt": "2026-07-20T07:45:35+00:00",
+          "resourceId": "VS-209074867",
+          "status": "final",
+          "unit": "bpm",
+          "value": 65.0,
+          "minutesFromAnchor": -750.6,
+          "relation": "before_anchor",
+          "relationLabel": "750.6 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "1164554",
+            "69000-8",
+            "8867-4",
+            "http://loinc.org|69000-8",
+            "http://loinc.org|8867-4",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|1164554"
+          ],
+          "observedAt": "2026-07-20T11:41:18+00:00",
+          "resourceId": "VS-209075215",
+          "status": "final",
+          "unit": "bpm",
+          "value": 65.0,
+          "minutesFromAnchor": -514.9,
+          "relation": "before_anchor",
+          "relationLabel": "514.9 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "1164554",
+            "69000-8",
+            "8867-4",
+            "http://loinc.org|69000-8",
+            "http://loinc.org|8867-4",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|1164554"
+          ],
+          "observedAt": "2026-07-20T12:11:10+00:00",
+          "resourceId": "VS-209075351",
+          "status": "final",
+          "unit": "bpm",
+          "value": 65.0,
+          "minutesFromAnchor": -485.0,
+          "relation": "before_anchor",
+          "relationLabel": "485 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "1164554",
+            "69000-8",
+            "8867-4",
+            "http://loinc.org|69000-8",
+            "http://loinc.org|8867-4",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|1164554"
+          ],
+          "observedAt": "2026-07-20T12:21:12+00:00",
+          "resourceId": "VS-209075435",
+          "status": "final",
+          "unit": "bpm",
+          "value": 66.0,
+          "minutesFromAnchor": -475.0,
+          "relation": "before_anchor",
+          "relationLabel": "475 min before",
+          "temporalBucket": "within_one_day"
+        }
+      ],
+      "trendDirection": "stable",
+      "unit": "bpm",
+      "latestRelation": "before_anchor",
+      "latestRelationLabel": "475 min before",
+      "temporalBucket": "within_one_day"
+    },
+    {
+      "color": "blue",
+      "field": "respiratoryRate",
+      "label": "Respiratory Rate",
+      "latestAt": "2026-07-20T12:21:12+00:00",
+      "latestValue": 16.0,
+      "loincCodes": [
+        "9279-1"
+      ],
+      "points": [
+        {
+          "codes": [
+            "703540",
+            "9279-1",
+            "http://loinc.org|9279-1",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|703540"
+          ],
+          "observedAt": "2026-07-17T10:23:07+00:00",
+          "resourceId": "VS-209072187",
+          "status": "final",
+          "unit": "br/min",
+          "value": 15.0,
+          "minutesFromAnchor": -4913.1,
+          "relation": "before_anchor",
+          "relationLabel": "4913.1 min before",
+          "temporalBucket": "recent"
+        },
+        {
+          "codes": [
+            "703540",
+            "9279-1",
+            "http://loinc.org|9279-1",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|703540"
+          ],
+          "observedAt": "2026-07-17T10:28:25+00:00",
+          "resourceId": "VS-209072357",
+          "status": "final",
+          "unit": "br/min",
+          "value": 15.0,
+          "minutesFromAnchor": -4907.8,
+          "relation": "before_anchor",
+          "relationLabel": "4907.8 min before",
+          "temporalBucket": "recent"
+        },
+        {
+          "codes": [
+            "703540",
+            "9279-1",
+            "http://loinc.org|9279-1",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|703540"
+          ],
+          "observedAt": "2026-07-17T10:38:02+00:00",
+          "resourceId": "VS-209072483",
+          "status": "final",
+          "unit": "br/min",
+          "value": 15.0,
+          "minutesFromAnchor": -4898.2,
+          "relation": "before_anchor",
+          "relationLabel": "4898.2 min before",
+          "temporalBucket": "recent"
+        },
+        {
+          "codes": [
+            "703540",
+            "9279-1",
+            "http://loinc.org|9279-1",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|703540"
+          ],
+          "observedAt": "2026-07-17T10:42:41+00:00",
+          "resourceId": "VS-209072665",
+          "status": "final",
+          "unit": "br/min",
+          "value": 15.0,
+          "minutesFromAnchor": -4893.5,
+          "relation": "before_anchor",
+          "relationLabel": "4893.5 min before",
+          "temporalBucket": "recent"
+        },
+        {
+          "codes": [
+            "703540",
+            "9279-1",
+            "http://loinc.org|9279-1",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|703540"
+          ],
+          "observedAt": "2026-07-20T06:18:25+00:00",
+          "resourceId": "VS-209074389",
+          "status": "final",
+          "unit": "br/min",
+          "value": 15.0,
+          "minutesFromAnchor": -837.8,
+          "relation": "before_anchor",
+          "relationLabel": "837.8 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "703540",
+            "9279-1",
+            "http://loinc.org|9279-1",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|703540"
+          ],
+          "observedAt": "2026-07-20T06:33:04+00:00",
+          "resourceId": "VS-209074555",
+          "status": "final",
+          "unit": "br/min",
+          "value": 15.0,
+          "minutesFromAnchor": -823.1,
+          "relation": "before_anchor",
+          "relationLabel": "823.1 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "703540",
+            "9279-1",
+            "http://loinc.org|9279-1",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|703540"
+          ],
+          "observedAt": "2026-07-20T07:30:06+00:00",
+          "resourceId": "VS-209074653",
+          "status": "final",
+          "unit": "br/min",
+          "value": 16.0,
+          "minutesFromAnchor": -766.1,
+          "relation": "before_anchor",
+          "relationLabel": "766.1 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "703540",
+            "9279-1",
+            "http://loinc.org|9279-1",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|703540"
+          ],
+          "observedAt": "2026-07-20T07:41:08+00:00",
+          "resourceId": "VS-209074799",
+          "status": "final",
+          "unit": "br/min",
+          "value": 16.0,
+          "minutesFromAnchor": -755.1,
+          "relation": "before_anchor",
+          "relationLabel": "755.1 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "703540",
+            "9279-1",
+            "http://loinc.org|9279-1",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|703540"
+          ],
+          "observedAt": "2026-07-20T07:45:35+00:00",
+          "resourceId": "VS-209074871",
+          "status": "final",
+          "unit": "br/min",
+          "value": 16.0,
+          "minutesFromAnchor": -750.6,
+          "relation": "before_anchor",
+          "relationLabel": "750.6 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "703540",
+            "9279-1",
+            "http://loinc.org|9279-1",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|703540"
+          ],
+          "observedAt": "2026-07-20T11:41:18+00:00",
+          "resourceId": "VS-209075219",
+          "status": "final",
+          "unit": "br/min",
+          "value": 16.0,
+          "minutesFromAnchor": -514.9,
+          "relation": "before_anchor",
+          "relationLabel": "514.9 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "703540",
+            "9279-1",
+            "http://loinc.org|9279-1",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|703540"
+          ],
+          "observedAt": "2026-07-20T12:11:10+00:00",
+          "resourceId": "VS-209075355",
+          "status": "final",
+          "unit": "br/min",
+          "value": 16.0,
+          "minutesFromAnchor": -485.0,
+          "relation": "before_anchor",
+          "relationLabel": "485 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "703540",
+            "9279-1",
+            "http://loinc.org|9279-1",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|703540"
+          ],
+          "observedAt": "2026-07-20T12:21:12+00:00",
+          "resourceId": "VS-209075439",
+          "status": "final",
+          "unit": "br/min",
+          "value": 16.0,
+          "minutesFromAnchor": -475.0,
+          "relation": "before_anchor",
+          "relationLabel": "475 min before",
+          "temporalBucket": "within_one_day"
+        }
+      ],
+      "trendDirection": "stable",
+      "unit": "br/min",
+      "latestRelation": "before_anchor",
+      "latestRelationLabel": "475 min before",
+      "temporalBucket": "within_one_day"
+    },
+    {
+      "color": "blue",
+      "field": "spo2",
+      "label": "SpO2",
+      "latestAt": "2026-07-20T12:21:12+00:00",
+      "latestValue": 100.0,
+      "loincCodes": [
+        "2708-6",
+        "59408-5"
+      ],
+      "points": [
+        {
+          "codes": [
+            "2566991073",
+            "2708-6",
+            "59418-4",
+            "http://loinc.org|2708-6",
+            "http://loinc.org|59418-4",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|2566991073"
+          ],
+          "observedAt": "2026-07-17T10:23:07+00:00",
+          "resourceId": "VS-209072185",
+          "status": "final",
+          "unit": "%",
+          "value": 99.0,
+          "minutesFromAnchor": -4913.1,
+          "relation": "before_anchor",
+          "relationLabel": "4913.1 min before",
+          "temporalBucket": "recent"
+        },
+        {
+          "codes": [
+            "2566991073",
+            "2708-6",
+            "59418-4",
+            "http://loinc.org|2708-6",
+            "http://loinc.org|59418-4",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|2566991073"
+          ],
+          "observedAt": "2026-07-17T10:28:25+00:00",
+          "resourceId": "VS-209072355",
+          "status": "final",
+          "unit": "%",
+          "value": 99.0,
+          "minutesFromAnchor": -4907.8,
+          "relation": "before_anchor",
+          "relationLabel": "4907.8 min before",
+          "temporalBucket": "recent"
+        },
+        {
+          "codes": [
+            "2566991073",
+            "2708-6",
+            "59418-4",
+            "http://loinc.org|2708-6",
+            "http://loinc.org|59418-4",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|2566991073"
+          ],
+          "observedAt": "2026-07-17T10:38:02+00:00",
+          "resourceId": "VS-209072481",
+          "status": "final",
+          "unit": "%",
+          "value": 99.0,
+          "minutesFromAnchor": -4898.2,
+          "relation": "before_anchor",
+          "relationLabel": "4898.2 min before",
+          "temporalBucket": "recent"
+        },
+        {
+          "codes": [
+            "2566991073",
+            "2708-6",
+            "59418-4",
+            "http://loinc.org|2708-6",
+            "http://loinc.org|59418-4",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|2566991073"
+          ],
+          "observedAt": "2026-07-17T10:42:41+00:00",
+          "resourceId": "VS-209072663",
+          "status": "final",
+          "unit": "%",
+          "value": 99.0,
+          "minutesFromAnchor": -4893.5,
+          "relation": "before_anchor",
+          "relationLabel": "4893.5 min before",
+          "temporalBucket": "recent"
+        },
+        {
+          "codes": [
+            "2566991073",
+            "2708-6",
+            "59418-4",
+            "http://loinc.org|2708-6",
+            "http://loinc.org|59418-4",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|2566991073"
+          ],
+          "observedAt": "2026-07-20T06:18:25+00:00",
+          "resourceId": "VS-209074387",
+          "status": "final",
+          "unit": "%",
+          "value": 99.0,
+          "minutesFromAnchor": -837.8,
+          "relation": "before_anchor",
+          "relationLabel": "837.8 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "2566991073",
+            "2708-6",
+            "59418-4",
+            "http://loinc.org|2708-6",
+            "http://loinc.org|59418-4",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|2566991073"
+          ],
+          "observedAt": "2026-07-20T06:33:04+00:00",
+          "resourceId": "VS-209074553",
+          "status": "final",
+          "unit": "%",
+          "value": 99.0,
+          "minutesFromAnchor": -823.1,
+          "relation": "before_anchor",
+          "relationLabel": "823.1 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "2566991073",
+            "2708-6",
+            "59418-4",
+            "http://loinc.org|2708-6",
+            "http://loinc.org|59418-4",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|2566991073"
+          ],
+          "observedAt": "2026-07-20T07:30:06+00:00",
+          "resourceId": "VS-209074651",
+          "status": "final",
+          "unit": "%",
+          "value": 100.0,
+          "minutesFromAnchor": -766.1,
+          "relation": "before_anchor",
+          "relationLabel": "766.1 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "2566991073",
+            "2708-6",
+            "59418-4",
+            "http://loinc.org|2708-6",
+            "http://loinc.org|59418-4",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|2566991073"
+          ],
+          "observedAt": "2026-07-20T07:41:08+00:00",
+          "resourceId": "VS-209074797",
+          "status": "final",
+          "unit": "%",
+          "value": 100.0,
+          "minutesFromAnchor": -755.1,
+          "relation": "before_anchor",
+          "relationLabel": "755.1 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "2566991073",
+            "2708-6",
+            "59418-4",
+            "http://loinc.org|2708-6",
+            "http://loinc.org|59418-4",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|2566991073"
+          ],
+          "observedAt": "2026-07-20T07:45:35+00:00",
+          "resourceId": "VS-209074869",
+          "status": "final",
+          "unit": "%",
+          "value": 100.0,
+          "minutesFromAnchor": -750.6,
+          "relation": "before_anchor",
+          "relationLabel": "750.6 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "2566991073",
+            "2708-6",
+            "59418-4",
+            "http://loinc.org|2708-6",
+            "http://loinc.org|59418-4",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|2566991073"
+          ],
+          "observedAt": "2026-07-20T11:41:18+00:00",
+          "resourceId": "VS-209075217",
+          "status": "final",
+          "unit": "%",
+          "value": 100.0,
+          "minutesFromAnchor": -514.9,
+          "relation": "before_anchor",
+          "relationLabel": "514.9 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "2566991073",
+            "2708-6",
+            "59418-4",
+            "http://loinc.org|2708-6",
+            "http://loinc.org|59418-4",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|2566991073"
+          ],
+          "observedAt": "2026-07-20T12:11:10+00:00",
+          "resourceId": "VS-209075353",
+          "status": "final",
+          "unit": "%",
+          "value": 100.0,
+          "minutesFromAnchor": -485.0,
+          "relation": "before_anchor",
+          "relationLabel": "485 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "2566991073",
+            "2708-6",
+            "59418-4",
+            "http://loinc.org|2708-6",
+            "http://loinc.org|59418-4",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|2566991073"
+          ],
+          "observedAt": "2026-07-20T12:21:12+00:00",
+          "resourceId": "VS-209075437",
+          "status": "final",
+          "unit": "%",
+          "value": 100.0,
+          "minutesFromAnchor": -475.0,
+          "relation": "before_anchor",
+          "relationLabel": "475 min before",
+          "temporalBucket": "within_one_day"
+        }
+      ],
+      "trendDirection": "stable",
+      "unit": "%",
+      "latestRelation": "before_anchor",
+      "latestRelationLabel": "475 min before",
+      "temporalBucket": "within_one_day"
+    },
+    {
+      "color": "blue",
+      "field": "temperature",
+      "label": "Temperature",
+      "latestAt": "2026-07-20T12:21:12+00:00",
+      "latestValue": 36.8,
+      "loincCodes": [
+        "8310-5"
+      ],
+      "points": [
+        {
+          "codes": [
+            "703558",
+            "8310-5",
+            "8331-1",
+            "http://loinc.org|8310-5",
+            "http://loinc.org|8331-1",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|703558"
+          ],
+          "observedAt": "2026-07-17T10:23:07+00:00",
+          "resourceId": "VS-209072189",
+          "status": "final",
+          "unit": "degC",
+          "value": 36.4,
+          "minutesFromAnchor": -4913.1,
+          "relation": "before_anchor",
+          "relationLabel": "4913.1 min before",
+          "temporalBucket": "recent"
+        },
+        {
+          "codes": [
+            "703558",
+            "8310-5",
+            "8331-1",
+            "http://loinc.org|8310-5",
+            "http://loinc.org|8331-1",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|703558"
+          ],
+          "observedAt": "2026-07-17T10:28:25+00:00",
+          "resourceId": "VS-209072359",
+          "status": "final",
+          "unit": "degC",
+          "value": 36.4,
+          "minutesFromAnchor": -4907.8,
+          "relation": "before_anchor",
+          "relationLabel": "4907.8 min before",
+          "temporalBucket": "recent"
+        },
+        {
+          "codes": [
+            "703558",
+            "8310-5",
+            "8331-1",
+            "http://loinc.org|8310-5",
+            "http://loinc.org|8331-1",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|703558"
+          ],
+          "observedAt": "2026-07-17T10:38:02+00:00",
+          "resourceId": "VS-209072485",
+          "status": "final",
+          "unit": "degC",
+          "value": 36.4,
+          "minutesFromAnchor": -4898.2,
+          "relation": "before_anchor",
+          "relationLabel": "4898.2 min before",
+          "temporalBucket": "recent"
+        },
+        {
+          "codes": [
+            "703558",
+            "8310-5",
+            "8331-1",
+            "http://loinc.org|8310-5",
+            "http://loinc.org|8331-1",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|703558"
+          ],
+          "observedAt": "2026-07-17T10:42:41+00:00",
+          "resourceId": "VS-209072667",
+          "status": "final",
+          "unit": "degC",
+          "value": 36.4,
+          "minutesFromAnchor": -4893.5,
+          "relation": "before_anchor",
+          "relationLabel": "4893.5 min before",
+          "temporalBucket": "recent"
+        },
+        {
+          "codes": [
+            "703558",
+            "8310-5",
+            "8331-1",
+            "http://loinc.org|8310-5",
+            "http://loinc.org|8331-1",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|703558"
+          ],
+          "observedAt": "2026-07-20T06:18:25+00:00",
+          "resourceId": "VS-209074391",
+          "status": "final",
+          "unit": "degC",
+          "value": 36.4,
+          "minutesFromAnchor": -837.8,
+          "relation": "before_anchor",
+          "relationLabel": "837.8 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "703558",
+            "8310-5",
+            "8331-1",
+            "http://loinc.org|8310-5",
+            "http://loinc.org|8331-1",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|703558"
+          ],
+          "observedAt": "2026-07-20T06:33:04+00:00",
+          "resourceId": "VS-209074557",
+          "status": "final",
+          "unit": "degC",
+          "value": 36.4,
+          "minutesFromAnchor": -823.1,
+          "relation": "before_anchor",
+          "relationLabel": "823.1 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "703558",
+            "8310-5",
+            "8331-1",
+            "http://loinc.org|8310-5",
+            "http://loinc.org|8331-1",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|703558"
+          ],
+          "observedAt": "2026-07-20T07:30:06+00:00",
+          "resourceId": "VS-209074655",
+          "status": "final",
+          "unit": "degC",
+          "value": 36.8,
+          "minutesFromAnchor": -766.1,
+          "relation": "before_anchor",
+          "relationLabel": "766.1 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "703558",
+            "8310-5",
+            "8331-1",
+            "http://loinc.org|8310-5",
+            "http://loinc.org|8331-1",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|703558"
+          ],
+          "observedAt": "2026-07-20T07:41:08+00:00",
+          "resourceId": "VS-209074801",
+          "status": "final",
+          "unit": "degC",
+          "value": 36.8,
+          "minutesFromAnchor": -755.1,
+          "relation": "before_anchor",
+          "relationLabel": "755.1 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "703558",
+            "8310-5",
+            "8331-1",
+            "http://loinc.org|8310-5",
+            "http://loinc.org|8331-1",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|703558"
+          ],
+          "observedAt": "2026-07-20T07:45:35+00:00",
+          "resourceId": "VS-209074873",
+          "status": "final",
+          "unit": "degC",
+          "value": 36.8,
+          "minutesFromAnchor": -750.6,
+          "relation": "before_anchor",
+          "relationLabel": "750.6 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "703558",
+            "8310-5",
+            "8331-1",
+            "http://loinc.org|8310-5",
+            "http://loinc.org|8331-1",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|703558"
+          ],
+          "observedAt": "2026-07-20T11:41:18+00:00",
+          "resourceId": "VS-209075221",
+          "status": "final",
+          "unit": "degC",
+          "value": 36.8,
+          "minutesFromAnchor": -514.9,
+          "relation": "before_anchor",
+          "relationLabel": "514.9 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "703558",
+            "8310-5",
+            "8331-1",
+            "http://loinc.org|8310-5",
+            "http://loinc.org|8331-1",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|703558"
+          ],
+          "observedAt": "2026-07-20T12:11:10+00:00",
+          "resourceId": "VS-209075357",
+          "status": "final",
+          "unit": "degC",
+          "value": 36.8,
+          "minutesFromAnchor": -485.0,
+          "relation": "before_anchor",
+          "relationLabel": "485 min before",
+          "temporalBucket": "within_one_day"
+        },
+        {
+          "codes": [
+            "703558",
+            "8310-5",
+            "8331-1",
+            "http://loinc.org|8310-5",
+            "http://loinc.org|8331-1",
+            "https://fhir.cerner.com/ec2458f2-1e24-41c8-b71b-0e701af7583d/codeSet/72|703558"
+          ],
+          "observedAt": "2026-07-20T12:21:12+00:00",
+          "resourceId": "VS-209075441",
+          "status": "final",
+          "unit": "degC",
+          "value": 36.8,
+          "minutesFromAnchor": -475.0,
+          "relation": "before_anchor",
+          "relationLabel": "475 min before",
+          "temporalBucket": "within_one_day"
+        }
+      ],
+      "trendDirection": "stable",
+      "unit": "degC",
+      "latestRelation": "before_anchor",
+      "latestRelationLabel": "475 min before",
+      "temporalBucket": "within_one_day"
+    }
+  ],
+  "waveformPatientId": "research-incart-I17",
+  "incidentId": "inc-I01-loop-1-ventricular-ectopy-000000608",
+  "storedWithEpisodeId": "incart-I01-loop-1-V-000000608",
+  "contextAnchor": {
+    "value": "2026-07-20T20:16:12.178915+00:00",
+    "basis": "capture_time_proxy"
+  },
+  "clinicalCache": {
+    "status": "hit",
+    "source": "mongodb",
+    "fingerprint": "cbff2dc6cf6d13b64e6b839f9f85df3a6cc0bb373bc231677b4b1324c500814d",
+    "version": 2,
+    "fetchedAt": "2026-07-20T23:15:27.485000+00:00",
+    "checkedAt": "2026-07-20T23:15:27.485000+00:00",
+    "ageSeconds": 7249.5,
+    "stale": true,
+    "staleBeyondPreferredWindow": false,
+    "refreshScheduled": true
+  },
+  "sourceResolution": {
+    "source": "mongodb_cache",
+    "underlyingSource": null,
+    "cacheFingerprint": "cbff2dc6cf6d13b64e6b839f9f85df3a6cc0bb373bc231677b4b1324c500814d"
+  }
+}

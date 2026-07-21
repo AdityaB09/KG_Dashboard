@@ -1,0 +1,179 @@
+{
+  "schemaVersion": "phase-7-v1",
+  "incidentId": "inc-I01-loop-1-ventricular-ectopy-000135588",
+  "promptMode": "ECG_ONLY",
+  "analysisStatus": "partial",
+  "contextStatus": "unavailable",
+  "incident": {
+    "display": "Ventricular Ectopy incident",
+    "category": "ventricular_ectopy",
+    "severity": "warning",
+    "incidentStartSeconds": 615.309,
+    "incidentEndSeconds": 633.273,
+    "durationSeconds": 17.964,
+    "episodeCount": 1,
+    "primaryEpisodeId": "incart-I01-loop-1-V-000135588",
+    "bestContextEpisodeId": "incart-I01-loop-1-V-000135588",
+    "captureCompleteness": {}
+  },
+  "evidence": {
+    "independentlyMeasuredEcg": {
+      "signalQuality": {
+        "status": "ready",
+        "meanScore": 100.0,
+        "medianScore": 100.0,
+        "minimumScore": 100.0,
+        "crossEpisodeAgreement": 1.0
+      },
+      "rhythm": {
+        "medianHeartRateBpm": 98.51,
+        "heartRateRangeBpm": [
+          98.51,
+          98.51
+        ]
+      },
+      "qrs": {
+        "medianTriggerQrsDurationMilliseconds": 113.636,
+        "medianBaselineQrsDurationMilliseconds": 68.182,
+        "crossEpisodeAgreement": 1.0
+      },
+      "morphology": {
+        "status": "ready",
+        "medianDifferenceScore": 0.3759,
+        "crossEpisodeAgreement": 1.0
+      },
+      "leadAgreement": {
+        "medianScore": 54.57
+      },
+      "crossEpisodeAgreement": {
+        "score": 100.0,
+        "qualityAgreement": 1.0,
+        "qrsAgreement": 1.0,
+        "morphologyAgreement": 1.0
+      },
+      "confidence": {
+        "score": 51.57,
+        "grade": "low",
+        "episodeConfidenceScores": [
+          51.57
+        ]
+      },
+      "independentCandidateDetection": {
+        "abnormalMorphologyCandidateCount": 0,
+        "candidatePercent": 0.0,
+        "doesNotNegateReferenceAnnotations": true
+      },
+      "episodeSummaries": []
+    },
+    "datasetReference": {
+      "source": "PhysioNet INCART",
+      "sourceType": "dataset_reference_annotation",
+      "triggerCounts": {
+        "V": 3
+      },
+      "uniqueReferenceTriggerCount": 3,
+      "isIndependentDiagnosis": false
+    },
+    "clinicalContext": {
+      "status": "unavailable",
+      "contextAnchor": {
+        "value": "2026-07-20T20:28:22.560797+00:00",
+        "basis": "capture_time_proxy"
+      },
+      "patientSummary": {},
+      "labTrends": [],
+      "vitalTrends": [],
+      "medicationTimeline": [],
+      "conditions": [],
+      "encounters": [],
+      "diagnosticReports": [],
+      "documents": [],
+      "dataQuality": {
+        "fallbackUsed": false,
+        "observationCount": 0,
+        "targetedObservationCount": 0,
+        "patientLoaded": false,
+        "diagnosticReportCount": 0,
+        "documentCount": 0
+      },
+      "sourceResolution": {
+        "patient_id": null,
+        "fhir_base_url": "https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d",
+        "source": "no_oracle_context",
+        "session_count": 0,
+        "limitation": "No unexpired Oracle SMART session was available to the automatic background pipeline."
+      }
+    }
+  },
+  "contradictionsAndDistinctions": [
+    {
+      "type": "different_measurement_definitions",
+      "referenceEvidence": {
+        "source": "PhysioNet INCART atr",
+        "referenceVAnnotationCount": 3
+      },
+      "independentEvidence": {
+        "abnormalMorphologyCandidateCount": 0
+      },
+      "interpretationRule": "A zero independent abnormal-morphology-candidate count does not negate dataset V reference annotations. These measure different concepts."
+    },
+    {
+      "type": "measurement_uncertainty",
+      "detail": "Incident analysis is partial. Use section-level confidence and limitations."
+    }
+  ],
+  "missingEvidence": [
+    "ppg",
+    "spo2",
+    "respiration",
+    "temperature",
+    "arterial_blood_pressure",
+    "patientSummary",
+    "labTrends",
+    "vitalTrends",
+    "medicationTimeline",
+    "conditions",
+    "encounters",
+    "diagnosticReports",
+    "documents"
+  ],
+  "limitations": [
+    "The incident was triggered from INCART reference annotations and is not an independent diagnosis.",
+    "Raw ECG arrays remain in waveform storage and are not included in the SLM input.",
+    "Episode-linked clinical context is not loaded.",
+    "The incident is grouped from overlapping episode views; trigger and beat evidence is deduplicated by record, loop, and absolute sample.",
+    "INCART V annotations remain dataset reference evidence and are not an independent diagnosis.",
+    "FHIR context is a controlled research pairing and is not verified as same-patient clinical data.",
+    "INCART waveform and FHIR context are a controlled research pairing, not verified same-patient clinical data.",
+    "No Oracle SMART patient context or configured test patient was available.",
+    "No unexpired Oracle SMART session was available to the automatic background pipeline."
+  ],
+  "provenance": {
+    "waveformSource": "PhysioNet INCART",
+    "triggerSource": "INCART atr reference annotations",
+    "clinicalContextSource": null,
+    "deterministicAnalysis": {
+      "source": "deterministic_backend_incident_analysis",
+      "algorithmVersion": "phase-6-v1.1.1",
+      "datasetAnnotationSource": "PhysioNet INCART atr",
+      "overlapDeduplicationKey": "record + loopNumber + absolute sample",
+      "isIndependentDiagnosis": false
+    }
+  },
+  "safety": {
+    "mode": "research",
+    "isIndependentDiagnosis": false,
+    "rawWaveformsIncluded": false,
+    "samePatientVerified": false,
+    "requiredOutputBehavior": [
+      "Distinguish deterministic measurements from dataset reference annotations.",
+      "Distinguish episode-near clinical data from historical or remote clinical data.",
+      "Do not infer causation from the controlled INCART and Oracle research pairing.",
+      "Do not provide an independent diagnosis."
+    ]
+  },
+  "validation": {
+    "rawWaveformKeyDetected": false,
+    "isIndependentDiagnosis": false
+  }
+}

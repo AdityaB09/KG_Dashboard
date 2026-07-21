@@ -1,0 +1,177 @@
+{
+  "schemaVersion": "phase-7-v1",
+  "incidentId": "inc-I01-loop-1-ventricular-ectopy-000205719",
+  "promptMode": "ECG_ONLY",
+  "analysisStatus": "ready",
+  "contextStatus": "unavailable",
+  "incident": {
+    "display": "Ventricular Ectopy incident",
+    "category": "ventricular_ectopy",
+    "severity": "warning",
+    "incidentStartSeconds": 934.086,
+    "incidentEndSeconds": 995.286,
+    "durationSeconds": 61.2,
+    "episodeCount": 2,
+    "primaryEpisodeId": "incart-I01-loop-1-V-000205719",
+    "bestContextEpisodeId": "incart-I01-loop-1-V-000216917",
+    "captureCompleteness": {}
+  },
+  "evidence": {
+    "independentlyMeasuredEcg": {
+      "signalQuality": {
+        "status": "ready",
+        "meanScore": 100.0,
+        "medianScore": 100.0,
+        "minimumScore": 100.0,
+        "crossEpisodeAgreement": 1.0
+      },
+      "rhythm": {
+        "medianHeartRateBpm": 86.85,
+        "heartRateRangeBpm": [
+          86.27,
+          87.42
+        ]
+      },
+      "qrs": {
+        "medianTriggerQrsDurationMilliseconds": 106.818,
+        "medianBaselineQrsDurationMilliseconds": 67.045,
+        "crossEpisodeAgreement": 0.8485
+      },
+      "morphology": {
+        "status": "ready",
+        "medianDifferenceScore": 0.3379,
+        "crossEpisodeAgreement": 0.8638
+      },
+      "leadAgreement": {
+        "medianScore": 71.13
+      },
+      "crossEpisodeAgreement": {
+        "score": 90.41,
+        "qualityAgreement": 1.0,
+        "qrsAgreement": 0.8485,
+        "morphologyAgreement": 0.8638
+      },
+      "confidence": {
+        "score": 96.38,
+        "grade": "high",
+        "episodeConfidenceScores": [
+          96.08,
+          96.69
+        ]
+      },
+      "independentCandidateDetection": {
+        "abnormalMorphologyCandidateCount": 0,
+        "candidatePercent": 0.0,
+        "doesNotNegateReferenceAnnotations": true
+      },
+      "episodeSummaries": []
+    },
+    "datasetReference": {
+      "source": "PhysioNet INCART",
+      "sourceType": "dataset_reference_annotation",
+      "triggerCounts": {
+        "V": 17
+      },
+      "uniqueReferenceTriggerCount": 17,
+      "isIndependentDiagnosis": false
+    },
+    "clinicalContext": {
+      "status": "unavailable",
+      "contextAnchor": {
+        "value": "2026-07-20T20:35:36.489634+00:00",
+        "basis": "capture_time_proxy"
+      },
+      "patientSummary": {},
+      "labTrends": [],
+      "vitalTrends": [],
+      "medicationTimeline": [],
+      "conditions": [],
+      "encounters": [],
+      "diagnosticReports": [],
+      "documents": [],
+      "dataQuality": {
+        "fallbackUsed": false,
+        "observationCount": 0,
+        "targetedObservationCount": 0,
+        "patientLoaded": false,
+        "diagnosticReportCount": 0,
+        "documentCount": 0
+      },
+      "sourceResolution": {
+        "patient_id": null,
+        "fhir_base_url": "https://fhir-ehr-code.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d",
+        "source": "no_oracle_context",
+        "session_count": 0,
+        "limitation": "No unexpired Oracle SMART session was available to the automatic background pipeline."
+      }
+    }
+  },
+  "contradictionsAndDistinctions": [
+    {
+      "type": "different_measurement_definitions",
+      "referenceEvidence": {
+        "source": "PhysioNet INCART atr",
+        "referenceVAnnotationCount": 17
+      },
+      "independentEvidence": {
+        "abnormalMorphologyCandidateCount": 0
+      },
+      "interpretationRule": "A zero independent abnormal-morphology-candidate count does not negate dataset V reference annotations. These measure different concepts."
+    }
+  ],
+  "missingEvidence": [
+    "ppg",
+    "spo2",
+    "respiration",
+    "temperature",
+    "arterial_blood_pressure",
+    "patientSummary",
+    "labTrends",
+    "vitalTrends",
+    "medicationTimeline",
+    "conditions",
+    "encounters",
+    "diagnosticReports",
+    "documents"
+  ],
+  "limitations": [
+    "The incident was triggered from INCART reference annotations and is not an independent diagnosis.",
+    "Raw ECG arrays remain in waveform storage and are not included in the SLM input.",
+    "Episode-linked clinical context is not loaded.",
+    "1 episode view(s) contain incomplete requested pre-event or post-event context.",
+    "The incident is grouped from overlapping episode views; trigger and beat evidence is deduplicated by record, loop, and absolute sample.",
+    "INCART V annotations remain dataset reference evidence and are not an independent diagnosis.",
+    "FHIR context is a controlled research pairing and is not verified as same-patient clinical data.",
+    "INCART waveform and FHIR context are a controlled research pairing, not verified same-patient clinical data.",
+    "No Oracle SMART patient context or configured test patient was available.",
+    "No unexpired Oracle SMART session was available to the automatic background pipeline."
+  ],
+  "provenance": {
+    "waveformSource": "PhysioNet INCART",
+    "triggerSource": "INCART atr reference annotations",
+    "clinicalContextSource": null,
+    "deterministicAnalysis": {
+      "source": "deterministic_backend_incident_analysis",
+      "algorithmVersion": "phase-6-v1.1.1",
+      "datasetAnnotationSource": "PhysioNet INCART atr",
+      "overlapDeduplicationKey": "record + loopNumber + absolute sample",
+      "isIndependentDiagnosis": false
+    }
+  },
+  "safety": {
+    "mode": "research",
+    "isIndependentDiagnosis": false,
+    "rawWaveformsIncluded": false,
+    "samePatientVerified": false,
+    "requiredOutputBehavior": [
+      "Distinguish deterministic measurements from dataset reference annotations.",
+      "Distinguish episode-near clinical data from historical or remote clinical data.",
+      "Do not infer causation from the controlled INCART and Oracle research pairing.",
+      "Do not provide an independent diagnosis."
+    ]
+  },
+  "validation": {
+    "rawWaveformKeyDetected": false,
+    "isIndependentDiagnosis": false
+  }
+}

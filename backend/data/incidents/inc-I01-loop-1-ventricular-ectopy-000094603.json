@@ -1,0 +1,130 @@
+{
+  "schemaVersion": "incident-v1",
+  "id": "inc-I01-loop-1-ventricular-ectopy-000094603",
+  "patientId": "research-incart-I01",
+  "mode": "research",
+  "record": "I01",
+  "loopNumber": 1,
+  "primaryCategory": "ventricular_ectopy",
+  "episodeViews": [
+    {
+      "episodeId": "incart-I01-loop-1-V-000094603",
+      "display": "Premature ventricular contraction (2 triggers)",
+      "severity": "warning",
+      "captureStartSeconds": 419.014,
+      "captureEndSeconds": 452.014,
+      "eventStartSeconds": 429.014,
+      "eventEndSeconds": 442.014,
+      "eventDurationSeconds": 13.0,
+      "triggerHeartRate": 100,
+      "triggerAnnotationCount": 2,
+      "triggerAnnotationCounts": {
+        "V": 2
+      },
+      "triggerCategoryCounts": {
+        "ventricular_ectopy": 2
+      },
+      "leadIds": [
+        "lead1",
+        "lead2",
+        "lead3",
+        "avr",
+        "avl",
+        "avf",
+        "v1",
+        "v2",
+        "v3",
+        "v4",
+        "v5",
+        "v6"
+      ],
+      "analysisStatus": "pending",
+      "contextStatus": "not_loaded",
+      "captureCompleteness": {
+        "requestedPreSeconds": 10.0,
+        "actualPreSeconds": 10.0,
+        "preContextComplete": true,
+        "requestedPostSeconds": 10.0,
+        "actualPostSeconds": 10.0,
+        "postContextComplete": true,
+        "captureComplete": true,
+        "captureTruncatedByMaxDuration": false,
+        "truncationReasons": []
+      },
+      "capturedAt": "2026-07-20T20:24:40.438706+00:00"
+    }
+  ],
+  "uniqueTriggerAnnotations": [
+    {
+      "symbol": "V",
+      "absoluteSample": 94603,
+      "recordSample": 94603,
+      "recordSeconds": 430.014,
+      "auxNote": "",
+      "subtype": 0,
+      "channel": 0,
+      "annotationNumber": 0,
+      "category": "ventricular_ectopy",
+      "label": "premature_ventricular_contraction",
+      "display": "Premature ventricular contraction",
+      "severity": "warning",
+      "mode": "beat",
+      "captureOffsetSamples": 2420,
+      "captureOffsetSeconds": 11.0
+    },
+    {
+      "symbol": "V",
+      "absoluteSample": 97023,
+      "recordSample": 97023,
+      "recordSeconds": 441.014,
+      "auxNote": "",
+      "subtype": 0,
+      "channel": 0,
+      "annotationNumber": 0,
+      "category": "ventricular_ectopy",
+      "label": "premature_ventricular_contraction",
+      "display": "Premature ventricular contraction",
+      "severity": "warning",
+      "mode": "beat",
+      "captureOffsetSamples": 4840,
+      "captureOffsetSeconds": 22.0
+    }
+  ],
+  "analysisStatus": "ready",
+  "contextStatus": "unavailable",
+  "summaryStatus": "not_started",
+  "provenance": {
+    "waveformSource": "PhysioNet INCART",
+    "triggerSource": "INCART atr reference annotations",
+    "clinicalContextSource": null
+  },
+  "createdAt": "2026-07-20T20:24:40.440312+00:00",
+  "state": "CAPTURED",
+  "display": "Ventricular Ectopy incident",
+  "severity": "warning",
+  "incidentStartSeconds": 429.014,
+  "incidentEndSeconds": 442.014,
+  "durationSeconds": 13.0,
+  "captureStartSeconds": 419.014,
+  "captureEndSeconds": 452.014,
+  "captureSpanSeconds": 33.0,
+  "episodeIds": [
+    "incart-I01-loop-1-V-000094603"
+  ],
+  "episodeCount": 1,
+  "primaryEpisodeId": "incart-I01-loop-1-V-000094603",
+  "bestContextEpisodeId": "incart-I01-loop-1-V-000094603",
+  "uniqueTriggerCount": 2,
+  "triggerAnnotationCounts": {
+    "V": 2
+  },
+  "triggerCategoryCounts": {
+    "ventricular_ectopy": 2
+  },
+  "incompleteEpisodeCount": 0,
+  "completeEpisodeCount": 1,
+  "updatedAt": "2026-07-20T20:24:45.682387+00:00",
+  "bestQualityEpisodeId": "incart-I01-loop-1-V-000094603",
+  "bestMorphologyEpisodeId": "incart-I01-loop-1-V-000094603",
+  "clinicalContextEpisodeId": "incart-I01-loop-1-V-000094603"
+}

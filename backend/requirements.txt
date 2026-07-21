@@ -1,10 +1,12 @@
 fastapi
 uvicorn[standard]
 httpx
-python-dotenv
-itsdangerous
-wfdb
 numpy
 scipy
-pytest
+wfdb
+python-dotenv
+pydantic
+pydantic-settings
+
 pymongo>=4.6,<5
+dnspython>=2.6,<3

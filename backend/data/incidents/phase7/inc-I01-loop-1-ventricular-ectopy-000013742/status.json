@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "phase-7-v1",
+  "incidentId": "inc-I01-loop-1-ventricular-ectopy-000013742",
+  "state": "ready_for_slm",
+  "stage": "complete",
+  "detail": "Automatic Phase 7 processing completed.",
+  "createdAt": "2026-07-20T20:17:16.693986+00:00",
+  "updatedAt": "2026-07-20T20:20:23.596781+00:00",
+  "automatic": true,
+  "error": null,
+  "outputs": {
+    "episodeResults": [
+      {
+        "episodeId": "incart-I01-loop-1-V-000013742",
+        "status": "ready",
+        "algorithmVersion": "phase-6-v1.1.1"
+      },
+      {
+        "episodeId": "incart-I01-loop-1-V-000019068",
+        "status": "partial",
+        "algorithmVersion": "phase-6-v1.1.1"
+      },
+      {
+        "episodeId": "incart-I01-loop-1-V-000031059",
+        "status": "partial",
+        "algorithmVersion": "phase-6-v1.1.1"
+      },
+      {
+        "episodeId": "incart-I01-loop-1-V-000041898",
+        "status": "ready",
+        "algorithmVersion": "phase-6-v1.1.1"
+      }
+    ],
+    "incidentAnalysisStatus": "partial",
+    "clinicalContextStatus": "ready",
+    "promptMode": "ECG_PLUS_FHIR",
+    "promptValidationStatus": "ready",
+    "slmStatus": "not_run"
+  }
+}
