@@ -1,8 +1,0 @@
-{
-  "status": "not_loaded",
-  "provenance": {
-    "waveformSource": "PhysioNet INCART",
-    "annotationSource": "INCART atr reference annotations",
-    "clinicalContextSource": null
-  }
-}
