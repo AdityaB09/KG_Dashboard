@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "evidence-consistency-review-v1",
+  "status": "consistent",
+  "scenarioId": "SVT-PSVT-007",
+  "hardConflicts": [],
+  "warnings": [],
+  "normalizationsApplied": [],
+  "qualifiedMeasurementConflictCount": 1
+}

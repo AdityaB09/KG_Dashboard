@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "measurement-conflicts-v4",
+  "episodeId": "evalflow-SVT-PSVT-007-20260731-191646-4d8420",
+  "items": [
+    {
+      "id": "controlled-vs-phase6-qrsDurationMs",
+      "metric": "qrsDurationMs",
+      "controlledEventValue": 88.0,
+      "phase6EventValue": 54.545,
+      "controlledValue": 88.0,
+      "independentValue": 54.545,
+      "unit": "ms",
+      "difference": 33.455,
+      "confidenceGrade": "high",
+      "sameWindow": true,
+      "sameMetric": true,
+      "unitCompatible": true,
+      "measurementValid": true,
+      "material": true,
+      "requiredAcknowledgement": true
+    }
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "attempt": 1,
+  "createdAt": "2026-08-02T01:32:14.074951+00:00",
+  "model": {
+    "provider": "google_colab_file",
+    "name": "google/medgemma-27b-it",
+    "endpoint": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\be6bec1fbfa547bc17907449dec4694c54849101c33249ebde9b0047d9526930.json",
+    "sourceFile": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\be6bec1fbfa547bc17907449dec4694c54849101c33249ebde9b0047d9526930.json",
+    "colabRun": 1,
+    "promptFingerprint": "be6bec1fbfa547bc17907449dec4694c54849101c33249ebde9b0047d9526930",
+    "elapsedSeconds": 49.06,
+    "promptEvalCount": 3550,
+    "evalCount": 315,
+    "peakGpuMemoryGiB": 17.532,
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "quantization": "4-bit-nf4",
+    "structuredOutput": true,
+    "schema": "grounded-etiology-context-universal-v1",
+    "recommendedActionsRequired": false
+  },
+  "rawModelResponse": {
+    "episodeSummary": "The patient experienced an episode of frequent PVCs with a non-sustained VT run, classified as stable. The event lasted 8 seconds, with a ventricular rate of 78 bpm. The patient is post-operative day 1 after abdominal surgery, taking hydrochlorothiazide and lisinopril. Labs show hypokalemia (3.1 mmol/L) and hypomagnesemia (1.5 mg/dL).",
+    "detectedEpisodeContext": "Ventricular ectopy occurred in a post-operative patient on a thiazide diuretic, with evidence of electrolyte abnormalities (low potassium and magnesium). The episode was hemodynamically stable.",
+    "mostLikelyEtiology": "Electrolyte imbalance (hypokalemia and hypomagnesemia) secondary to diuretic therapy (hydrochlorothiazide) in a post-operative patient.",
+    "contributingFactors": [
+      "Post-operative state",
+      "Hydrochlorothiazide use",
+      "Hypokalemia",
+      "Hypomagnesemia"
+    ],
+    "uncertaintyAndMissingData": [
+      "Sodium level is unavailable, which could contribute to electrolyte imbalance assessment.",
+      "Detailed surgical history and specific post-operative course are not provided.",
+      "Baseline potassium and magnesium levels are unknown.",
+      "Other potential causes of VT (e.g., ischemia, structural heart disease) are not fully evaluated based on available data."
+    ]
+  },
+  "modelResponse": {
+    "episodeSummary": "The patient experienced an episode of frequent PVCs with a non-sustained VT run, classified as stable. The event lasted 8 seconds, with a ventricular rate of 78 bpm. The patient is post-operative day 1 after abdominal surgery, taking hydrochlorothiazide and lisinopril. Labs show hypokalemia (3.1 mmol/L) and hypomagnesemia (1.5 mg/dL).",
+    "detectedEpisodeContext": "Ventricular ectopy occurred in a post-operative patient on a thiazide diuretic, with evidence of electrolyte abnormalities (low potassium and magnesium). The episode was hemodynamically stable.",
+    "mostLikelyEtiology": "Electrolyte imbalance (hypokalemia and hypomagnesemia) secondary to diuretic therapy (hydrochlorothiazide) in a post-operative patient.",
+    "contributingFactors": [
+      "Post-operative state",
+      "Hydrochlorothiazide use",
+      "Hypokalemia",
+      "Hypomagnesemia"
+    ],
+    "uncertaintyAndMissingData": [
+      "Sodium level is unavailable, which could contribute to electrolyte imbalance assessment.",
+      "Detailed surgical history and specific post-operative course are not provided.",
+      "Baseline potassium and magnesium levels are unknown.",
+      "Other potential causes of VT (e.g., ischemia, structural heart disease) are not fully evaluated based on available data."
+    ]
+  },
+  "normalizationChanges": [],
+  "validation": {
+    "status": "accepted_with_review",
+    "accepted": false,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": true,
+    "qualityReviewRequired": true,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "NONSUSTAINED_VENTRICULAR_TACHYCARDIA",
+    "authoritativeDiagnosisDisplay": "Frequent PVCs with non-sustained VT run",
+    "errors": [
+      "Material measurement conflict was not acknowledged: controlled-vs-phase6-qrsDurationMs."
+    ],
+    "hardErrors": [],
+    "qualityErrors": [
+      "Material measurement conflict was not acknowledged: controlled-vs-phase6-qrsDurationMs."
+    ],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "validatorInternalConflicts": [],
+    "adjudicationEligible": true,
+    "evidenceCoverage": {
+      "rhythmEvidence": true,
+      "hemodynamicContext": true,
+      "electrolyteInterpretation": true,
+      "ischemiaInterpretation": true,
+      "infectionContext": false,
+      "qtContext": false,
+      "renalContext": true,
+      "medicationToxicityContext": false,
+      "medicationContext": true,
+      "episodePackClinicalContext": true
+    },
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 7,
+    "evidenceCoverageRequired": 2,
+    "correctionEvidence": [
+      "Use source-qualified language: 'controlled-event evidence did not support X'.",
+      "For partial electrolyte panels, name the supplied analytes instead of saying all electrolytes were normal."
+    ],
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-v4.3",
+    "groundingStatus": "accepted_with_review",
+    "clinicalPromptMode": "episode_pack_only",
+    "evidenceFingerprint": "4566f1af11206cbe789c409917d57268dbe59b0b82bbe3fb3985a00a514cfbce"
+  }
+}

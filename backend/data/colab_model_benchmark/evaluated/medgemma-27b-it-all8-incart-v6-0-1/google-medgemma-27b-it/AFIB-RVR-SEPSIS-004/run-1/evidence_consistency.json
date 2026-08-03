@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "evidence-consistency-review-v1",
+  "status": "consistent",
+  "scenarioId": "AFIB-RVR-SEPSIS-004",
+  "hardConflicts": [],
+  "warnings": [],
+  "normalizationsApplied": [],
+  "qualifiedMeasurementConflictCount": 1
+}

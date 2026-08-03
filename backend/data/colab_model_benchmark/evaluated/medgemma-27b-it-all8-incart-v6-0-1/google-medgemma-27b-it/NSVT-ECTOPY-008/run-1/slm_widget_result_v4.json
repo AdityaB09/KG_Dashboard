@@ -1,0 +1,130 @@
+{
+  "schemaVersion": "slm-widget-result-v4",
+  "scenarioId": "NSVT-ECTOPY-008",
+  "episodeId": "evalflow-NSVT-ECTOPY-008-20260731-193752-f75aa3",
+  "incidentId": "inc-INCART-EVAL-NSVT-ECTOPY-008-loop-1-nonsustained-ventricular-tachycardia-000001650-IVd74VSLICeLh8Ud",
+  "status": "complete",
+  "validationStatus": "accepted_with_review",
+  "displayPolicy": "always_show_model_response",
+  "validationSummary": {
+    "status": "accepted_with_review",
+    "strictlyAccepted": false,
+    "hardAccepted": true,
+    "displayableWithReview": true,
+    "validatorPassed": true,
+    "hardErrorCount": 0,
+    "qualityErrorCount": 1,
+    "contradictionCount": 0,
+    "unsupportedFactCount": 0,
+    "errors": [
+      "Material measurement conflict was not acknowledged: controlled-vs-phase6-qrsDurationMs."
+    ],
+    "hardErrors": [],
+    "qualityErrors": [
+      "Material measurement conflict was not acknowledged: controlled-vs-phase6-qrsDurationMs."
+    ],
+    "contradictions": [],
+    "unsupportedFacts": []
+  },
+  "headline": "Frequent PVCs with non-sustained VT run",
+  "narrative": {
+    "episodeSummary": "The patient experienced an episode of frequent PVCs with a non-sustained VT run, classified as stable. The event lasted 8 seconds, with a ventricular rate of 78 bpm. The patient is post-operative day 1 after abdominal surgery, taking hydrochlorothiazide and lisinopril. Labs show hypokalemia (3.1 mmol/L) and hypomagnesemia (1.5 mg/dL).",
+    "clinicalContext": "Ventricular ectopy occurred in a post-operative patient on a thiazide diuretic, with evidence of electrolyte abnormalities (low potassium and magnesium). The episode was hemodynamically stable.",
+    "mostLikelyEtiology": "Electrolyte imbalance (hypokalemia and hypomagnesemia) secondary to diuretic therapy (hydrochlorothiazide) in a post-operative patient.",
+    "contributingFactors": [
+      "Post-operative state",
+      "Hydrochlorothiazide use",
+      "Hypokalemia",
+      "Hypomagnesemia"
+    ],
+    "uncertaintyAndMissingData": [
+      "Sodium level is unavailable, which could contribute to electrolyte imbalance assessment.",
+      "Detailed surgical history and specific post-operative course are not provided.",
+      "Baseline potassium and magnesium levels are unknown.",
+      "Other potential causes of VT (e.g., ischemia, structural heart disease) are not fully evaluated based on available data."
+    ]
+  },
+  "grounding": {
+    "status": "accepted_with_review",
+    "pass": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "accepted": false,
+    "displayableWithReview": true,
+    "hardErrorCount": 0,
+    "qualityErrorCount": 1
+  },
+  "benchmark": {
+    "score": 50,
+    "grade": "below_target",
+    "conceptGrade": "fail",
+    "alignmentMode": "full_scenario",
+    "informationalOnly": false,
+    "pass": false,
+    "disposition": "below_target"
+  },
+  "evaluationStatistics": {
+    "scenarioScore": 50,
+    "overallPass": false,
+    "safetyPass": false,
+    "attemptCount": 1,
+    "generationLatencySeconds": 49.06,
+    "rawResponseDisplayed": true
+  },
+  "measurementConflicts": [
+    {
+      "id": "controlled-vs-phase6-qrsDurationMs",
+      "metric": "qrsDurationMs",
+      "controlledEventValue": 94.0,
+      "phase6EventValue": 59.091,
+      "controlledValue": 94.0,
+      "independentValue": 59.091,
+      "unit": "ms",
+      "difference": 34.909,
+      "confidenceGrade": "high",
+      "sameWindow": true,
+      "sameMetric": true,
+      "unitCompatible": true,
+      "measurementValid": true,
+      "material": true,
+      "requiredAcknowledgement": true
+    }
+  ],
+  "sourceManifest": {
+    "patientContextSource": "complete_episode_pack",
+    "episodeContextSource": "complete_episode_pack",
+    "controlledEventSource": "complete_episode_pack",
+    "waveformAnalysisSource": "phase6_deterministic_analysis",
+    "detectorSource": "evaluation_detector",
+    "oracleSmartRole": "authentication_and_scenario_routing_only",
+    "oracleFhirClinicalContextUsed": false
+  },
+  "clinicalPromptMode": "episode_pack_only",
+  "model": {
+    "provider": "google_colab_file",
+    "name": "google/medgemma-27b-it",
+    "endpoint": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\be6bec1fbfa547bc17907449dec4694c54849101c33249ebde9b0047d9526930.json",
+    "sourceFile": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\be6bec1fbfa547bc17907449dec4694c54849101c33249ebde9b0047d9526930.json",
+    "colabRun": 1,
+    "promptFingerprint": "be6bec1fbfa547bc17907449dec4694c54849101c33249ebde9b0047d9526930",
+    "elapsedSeconds": 49.06,
+    "promptEvalCount": 3550,
+    "evalCount": 315,
+    "peakGpuMemoryGiB": 17.532,
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "quantization": "4-bit-nf4",
+    "structuredOutput": true,
+    "schema": "grounded-etiology-context-universal-v1",
+    "recommendedActionsRequired": false
+  },
+  "manualReviewRequired": true,
+  "medicalAdjudication": {
+    "status": "disabled",
+    "advisoryOnly": true,
+    "model": null,
+    "decision": null,
+    "issueReviewCount": 0,
+    "validatorFalsePositiveCount": 0
+  },
+  "medicalReviewRecommended": true
+}

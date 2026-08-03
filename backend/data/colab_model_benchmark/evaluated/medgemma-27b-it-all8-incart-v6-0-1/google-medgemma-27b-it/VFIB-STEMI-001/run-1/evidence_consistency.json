@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "evidence-consistency-review-v1",
+  "status": "consistent",
+  "scenarioId": "VFIB-STEMI-001",
+  "hardConflicts": [],
+  "warnings": [],
+  "normalizationsApplied": [],
+  "qualifiedMeasurementConflictCount": 0
+}

@@ -1,0 +1,288 @@
+{
+  "schemaVersion": "diagnostic-event-universal-v2",
+  "eventDetected": true,
+  "episodeId": "evalflow-TORSADES-LQT-002-20260731-191927-44081e",
+  "incidentId": "inc-INCART-EVAL-TORSADES-LQT-002-loop-1-polymorphic-ventricular-tachycardia-000001584-6bOcUoz1vGzRTvi1",
+  "diagnosis": {
+    "code": "TORSADES_DE_POINTES",
+    "display": "Torsades de pointes",
+    "authoritative": true
+  },
+  "source": {
+    "type": "controlled_evaluation_scenario",
+    "name": "SLM_Eval",
+    "identifier": "TORSADES-LQT-002",
+    "futureReplacement": "ecg_ml_diagnostic_model"
+  },
+  "confidence": {
+    "value": 1.0,
+    "basis": "controlled_evaluation_label"
+  },
+  "measurements": {
+    "ventricularRateBpm": 228.0,
+    "atrialRateBpm": null,
+    "qrsDurationMs": 150.0,
+    "qtcMs": 618.0,
+    "prIntervalMs": null,
+    "regularity": "irregular",
+    "axisDegrees": null,
+    "pWavePresent": false,
+    "atrialActivityPresent": false,
+    "atrioventricularAssociation": null
+  },
+  "rhythmFeatures": {
+    "ventricularRateBpm": 228.0,
+    "atrialRateBpm": null,
+    "qrsDurationMs": 150.0,
+    "qtcMs": 618.0,
+    "qtcEvidenceSource": "complete_episode_pack.ecg.measurements.preEventNote",
+    "prIntervalMs": null,
+    "regularity": "irregular",
+    "axisDegrees": null,
+    "pWavePresent": false,
+    "atrialActivityPresent": false,
+    "atrioventricularAssociation": null,
+    "findings": [
+      "Twisting QRS axis"
+    ]
+  },
+  "hemodynamicStatus": {
+    "available": true,
+    "classification": "unstable",
+    "conscious": null,
+    "pulseless": null,
+    "pulsePresent": null,
+    "shockSupported": null,
+    "vasopressorSupport": null,
+    "systolicBloodPressure": 68.0,
+    "diastolicBloodPressure": 40.0,
+    "map": 49.0,
+    "oxygenSaturationPct": 88.0,
+    "temperatureC": 36.7,
+    "sourceNote": "Hypotensive during run"
+  },
+  "electrolyteContext": {
+    "available": true,
+    "potassium": {
+      "available": true,
+      "value": 2.9,
+      "unit": "mmol/L",
+      "withinReference": false,
+      "reference": {
+        "low": 3.5,
+        "high": 5.1
+      },
+      "note": "LOW"
+    },
+    "magnesium": {
+      "available": true,
+      "value": 1.2,
+      "unit": "mg/dL",
+      "withinReference": false,
+      "reference": {
+        "low": 1.7,
+        "high": 2.2
+      },
+      "note": "LOW"
+    },
+    "calcium": {
+      "available": true,
+      "value": 7.9,
+      "unit": "mg/dL",
+      "withinReference": false,
+      "reference": {
+        "low": 8.5,
+        "high": 10.2
+      },
+      "note": "LOW"
+    },
+    "sodium": {
+      "available": false,
+      "value": null,
+      "unit": null,
+      "withinReference": null,
+      "reference": null
+    },
+    "abnormalElectrolytes": [
+      "potassium",
+      "magnesium",
+      "calcium"
+    ],
+    "electrolyteAbnormalityPresent": true,
+    "majorElectrolyteTriggerSupported": true
+  },
+  "ischemiaContext": {
+    "available": true,
+    "acuteChestPain": null,
+    "stElevationSupported": null,
+    "troponinValue": 0.02,
+    "troponinPattern": "measured_unspecified_pattern",
+    "acuteStemiSupported": null
+  },
+  "infectionContext": {
+    "available": true,
+    "temperatureC": 36.7,
+    "wbc": null,
+    "procalcitonin": null,
+    "lactate": null,
+    "feverSupported": null,
+    "inflammatoryResponseSupported": null,
+    "infectionSupported": null,
+    "sepsisSupported": null,
+    "infectionExplicitlyDenied": null,
+    "suspectedSource": null
+  },
+  "qtContext": {
+    "available": true,
+    "qtcMs": 618.0,
+    "prolonged": true,
+    "thresholdMs": 500,
+    "qtProlongingMedications": [
+      "Azithromycin",
+      "Ondansetron",
+      "Sotalol"
+    ],
+    "acquiredLongQtSupported": true,
+    "evidenceSource": "complete_episode_pack.ecg.measurements.preEventNote"
+  },
+  "renalContext": {
+    "available": true,
+    "creatinine": 1.4,
+    "bun": null,
+    "egfr": null,
+    "esrd": null,
+    "dialysis": null,
+    "missedDialysis": null,
+    "chronicKidneyDiseaseSupported": null,
+    "acuteKidneyInjurySupported": null,
+    "renalImpairmentSupported": null,
+    "sourceTextContainsRenalImpairment": null
+  },
+  "medicationContext": {
+    "available": true,
+    "homeMedications": [
+      "Sotalol 120 mg BID",
+      "Lisinopril 20 mg"
+    ],
+    "activeMedications": [
+      "Sotalol 120 mg BID",
+      "Lisinopril 20 mg"
+    ],
+    "infusions": [],
+    "qtProlongingMedications": [
+      "Azithromycin",
+      "Ondansetron",
+      "Sotalol"
+    ],
+    "digoxinExposure": false,
+    "potassiumRaisingMedicationExposure": false,
+    "thiazideExposure": false
+  },
+  "toxicityContext": {
+    "available": true,
+    "digoxinLevel": null,
+    "symptoms": [
+      "vomiting"
+    ],
+    "digoxinToxicitySupported": false,
+    "reducedClearanceSupported": false
+  },
+  "patientContext": {
+    "available": true,
+    "age": 74,
+    "sex": "F",
+    "primaryDiagnosis": "Palpitations and syncope",
+    "history": [
+      "Atrial fibrillation (on sotalol)",
+      "Hypertension",
+      "Recent gastroenteritis with vomiting/diarrhea"
+    ],
+    "leftVentricularEjectionFraction": null,
+    "priorAtrialFibrillation": null
+  },
+  "structuralHeartContext": {
+    "available": false,
+    "findings": [],
+    "lvefPct": null,
+    "severeLvDysfunction": null
+  },
+  "laboratoryContext": {
+    "potassium": {
+      "value": 2.9,
+      "unit": "mmol/L",
+      "reference": "3.5–5.1",
+      "flag": "LOW"
+    },
+    "magnesium": {
+      "value": 1.2,
+      "unit": "mg/dL",
+      "reference": "1.7–2.2",
+      "flag": "LOW"
+    },
+    "calcium": {
+      "value": 7.9,
+      "unit": "mg/dL",
+      "reference": "8.5–10.2",
+      "flag": "LOW"
+    },
+    "troponinT": {
+      "value": 0.02,
+      "unit": "ng/mL",
+      "reference": "<0.014",
+      "flag": "mildly high (rate-related)"
+    },
+    "creatinine": {
+      "value": 1.4,
+      "unit": "mg/dL",
+      "reference": "0.6–1.1",
+      "flag": "HIGH"
+    },
+    "tsh": {
+      "value": 2.1,
+      "unit": "mIU/L",
+      "reference": "0.4–4.0",
+      "flag": ""
+    }
+  },
+  "recentClinicalContext": {
+    "recentEvents": [
+      "Recent added azithromycin (5 d) and ondansetron for gastroenteritis",
+      "Vomiting/diarrhea x3 days",
+      "Syncopal episode witnessed"
+    ]
+  },
+  "pairedOraclePatientContext": {
+    "available": false,
+    "sourceType": "oracle_smart_fhir"
+  },
+  "detector": {
+    "ruleId": "multilead-waveform-change-v1",
+    "estimatedRateBpm": 228.0,
+    "triggerLatencySeconds": 1.2,
+    "referenceOnsetOffsetSeconds": 6.0,
+    "detectedTriggerOffsetSeconds": 7.2
+  },
+  "capture": {
+    "durationSeconds": 20.0,
+    "preSeconds": 6.0,
+    "eventSeconds": 8.0,
+    "postSeconds": 6.0,
+    "complete": true,
+    "sampleRateHz": 220.0,
+    "leads": [
+      "I",
+      "II",
+      "III",
+      "aVR",
+      "aVL",
+      "aVF"
+    ]
+  },
+  "provenance": {
+    "isIndependentDiagnosis": false,
+    "evaluationControlled": true,
+    "diagnosisOwnedByUpstreamSource": true,
+    "timingOwnedByDeterministicDetector": true,
+    "slmMayReclassify": false
+  }
+}

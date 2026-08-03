@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "evidence-consistency-review-v1",
+  "status": "consistent",
+  "scenarioId": "TORSADES-LQT-002",
+  "hardConflicts": [],
+  "warnings": [],
+  "normalizationsApplied": [],
+  "qualifiedMeasurementConflictCount": 0
+}

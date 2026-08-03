@@ -1,0 +1,97 @@
+{
+  "attempt": 1,
+  "createdAt": "2026-08-02T01:32:17.611315+00:00",
+  "model": {
+    "provider": "google_colab_file",
+    "name": "google/medgemma-27b-it",
+    "endpoint": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\bd980f392b2bc814b1a90266d09b680ee7d9a4b8ed859a38842624a6856dd768.json",
+    "sourceFile": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\bd980f392b2bc814b1a90266d09b680ee7d9a4b8ed859a38842624a6856dd768.json",
+    "colabRun": 1,
+    "promptFingerprint": "bd980f392b2bc814b1a90266d09b680ee7d9a4b8ed859a38842624a6856dd768",
+    "elapsedSeconds": 60.56,
+    "promptEvalCount": 3290,
+    "evalCount": 393,
+    "peakGpuMemoryGiB": 17.374,
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "quantization": "4-bit-nf4",
+    "structuredOutput": true,
+    "schema": "grounded-etiology-context-universal-v1",
+    "recommendedActionsRequired": false
+  },
+  "rawModelResponse": {
+    "episodeSummary": "A 34-year-old female with a history of similar self-terminating episodes presented with palpitations. Vitals showed a heart rate of 190 bpm, stable blood pressure (118/76 mmHg), and normal oxygen saturation (98%). ECG revealed a regular narrow-complex tachycardia with a ventricular rate of 190 bpm, no clear P waves, and no ST deviation. Electrolytes (potassium, magnesium) were within normal limits. Troponin was negative. The episode was captured and classified as stable supraventricular tachycardia.",
+    "detectedEpisodeContext": "The patient experienced an episode of regular narrow-complex tachycardia (supraventricular tachycardia) characterized by a rapid heart rate (190 bpm) and hemodynamic stability. The ECG showed a regular rhythm, narrow QRS complexes, and absence of clear P waves. The event occurred after consuming caffeine.",
+    "mostLikelyEtiology": "The most likely etiology is caffeine-induced paroxysmal supraventricular tachycardia (PSVT), possibly atrioventricular nodal reentrant tachycardia (AVNRT) or atrioventricular reentrant tachycardia (AVRT), given the abrupt onset, narrow QRS morphology, and history of similar episodes.",
+    "contributingFactors": [
+      "Caffeine ingestion",
+      "History of prior similar self-terminating episodes"
+    ],
+    "uncertaintyAndMissingData": [
+      "Specific type of SVT (e.g., AVNRT vs AVRT) cannot be definitively determined without further investigation (e.g., adenosine challenge, electrophysiology study).",
+      "No information on other potential triggers (e.g., stress, dehydration, underlying structural heart disease).",
+      "No information on prior cardiac evaluation or structural heart disease."
+    ]
+  },
+  "modelResponse": {
+    "episodeSummary": "A 34-year-old female with a history of similar self-terminating episodes presented with palpitations. Vitals showed a heart rate of 190 bpm, stable blood pressure (118/76 mmHg), and normal oxygen saturation (98%). ECG revealed a regular narrow-complex tachycardia with a ventricular rate of 190 bpm, no clear P waves, and no ST deviation. Electrolytes (potassium, magnesium) were within normal limits. Troponin was negative. The episode was captured and classified as stable supraventricular tachycardia.",
+    "detectedEpisodeContext": "The patient experienced an episode of regular narrow-complex tachycardia (supraventricular tachycardia) characterized by a rapid heart rate (190 bpm) and hemodynamic stability. The ECG showed a regular rhythm, narrow QRS complexes, and absence of clear P waves. The event occurred after consuming caffeine.",
+    "mostLikelyEtiology": "The most likely etiology is caffeine-induced paroxysmal supraventricular tachycardia (PSVT), possibly atrioventricular nodal reentrant tachycardia (AVNRT) or atrioventricular reentrant tachycardia (AVRT), given the abrupt onset, narrow QRS morphology, and history of similar episodes.",
+    "contributingFactors": [
+      "Caffeine ingestion",
+      "History of prior similar self-terminating episodes"
+    ],
+    "uncertaintyAndMissingData": [
+      "Specific type of SVT (e.g., AVNRT vs AVRT) cannot be definitively determined without further investigation (e.g., adenosine challenge, electrophysiology study).",
+      "No information on other potential triggers (e.g., stress, dehydration, underlying structural heart disease).",
+      "No information on prior cardiac evaluation or structural heart disease."
+    ]
+  },
+  "normalizationChanges": [],
+  "validation": {
+    "status": "accepted_with_review",
+    "accepted": false,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": true,
+    "qualityReviewRequired": true,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "SUPRAVENTRICULAR_TACHYCARDIA",
+    "authoritativeDiagnosisDisplay": "Paroxysmal supraventricular tachycardia",
+    "errors": [
+      "Material measurement conflict was not acknowledged: controlled-vs-phase6-qrsDurationMs."
+    ],
+    "hardErrors": [],
+    "qualityErrors": [
+      "Material measurement conflict was not acknowledged: controlled-vs-phase6-qrsDurationMs."
+    ],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "validatorInternalConflicts": [],
+    "adjudicationEligible": true,
+    "evidenceCoverage": {
+      "rhythmEvidence": true,
+      "hemodynamicContext": true,
+      "electrolyteInterpretation": true,
+      "ischemiaInterpretation": true,
+      "infectionContext": false,
+      "qtContext": false,
+      "renalContext": false,
+      "medicationToxicityContext": false,
+      "medicationContext": false,
+      "episodePackClinicalContext": true
+    },
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 5,
+    "evidenceCoverageRequired": 1,
+    "correctionEvidence": [
+      "Use source-qualified language: 'controlled-event evidence did not support X'.",
+      "For partial electrolyte panels, name the supplied analytes instead of saying all electrolytes were normal."
+    ],
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-v4.3",
+    "groundingStatus": "accepted_with_review",
+    "clinicalPromptMode": "episode_pack_only",
+    "evidenceFingerprint": "a675913aa26190d3fc4020461fdc496f62309c605800a570859e55880985cb25"
+  }
+}

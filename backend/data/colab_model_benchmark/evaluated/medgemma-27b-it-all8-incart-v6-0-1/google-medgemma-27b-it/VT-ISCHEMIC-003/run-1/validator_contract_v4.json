@@ -1,0 +1,604 @@
+{
+  "schemaVersion": "validator-contract-v4",
+  "clinicalPromptMode": "episode_pack_only",
+  "evidenceFingerprint": "2f4c55df47e9d9287a7d00b94f6b6a149efbb08d7af3c6d581afddcdf1852b39",
+  "requiredCoverage": [
+    "rhythmEvidence",
+    "structuralSubstrate",
+    "hemodynamicContext",
+    "ischemiaInterpretation"
+  ],
+  "optionalCoverage": [
+    "electrolyteInterpretation",
+    "infectionContext",
+    "qtContext",
+    "renalContext",
+    "medicationToxicityContext",
+    "medicationContext",
+    "episodePackClinicalContext"
+  ],
+  "coverageRequirements": [
+    {
+      "id": "rhythmEvidence",
+      "instruction": "Use the supplied controlled-event rate, regularity, QRS, atrial activity, AV association, or morphology evidence.",
+      "matchTerms": [
+        "182.0",
+        "regular",
+        "Wide monomorphic QRS",
+        "AV dissociation",
+        "Capture beats",
+        "Fusion beats",
+        "dissociated"
+      ],
+      "matchAllGroups": [],
+      "clinicallyApplicable": true,
+      "evidenceAvailable": true,
+      "materiallyRelevantToEtiology": true,
+      "requiredInResponse": true
+    },
+    {
+      "id": "structuralSubstrate",
+      "instruction": "Explain how the supplied structural-heart substrate relates to the episode.",
+      "matchTerms": [
+        "Ischemic cardiomyopathy",
+        "Prior inferior myocardial infarction",
+        "LVEF 25%"
+      ],
+      "matchAllGroups": [],
+      "clinicallyApplicable": true,
+      "evidenceAvailable": true,
+      "materiallyRelevantToEtiology": true,
+      "requiredInResponse": true
+    },
+    {
+      "id": "hemodynamicContext",
+      "instruction": "Interpret the supplied controlled-event hemodynamic state.",
+      "matchTerms": [
+        "borderline",
+        "88.0",
+        "68.0"
+      ],
+      "matchAllGroups": [],
+      "clinicallyApplicable": true,
+      "evidenceAvailable": true,
+      "materiallyRelevantToEtiology": true,
+      "requiredInResponse": true
+    },
+    {
+      "id": "electrolyteInterpretation",
+      "instruction": "Explain whether supplied electrolyte values support or argue against an electrolyte contribution.",
+      "matchTerms": [
+        "potassium",
+        "magnesium",
+        "electrolyte",
+        "within reference"
+      ],
+      "matchAllGroups": [],
+      "clinicallyApplicable": true,
+      "evidenceAvailable": true,
+      "materiallyRelevantToEtiology": true,
+      "requiredInResponse": false
+    },
+    {
+      "id": "ischemiaInterpretation",
+      "instruction": "Interpret supplied chest-pain, ST-segment, and troponin evidence.",
+      "matchTerms": [
+        "troponin",
+        "ischemia",
+        "stemi",
+        "chest pain",
+        "demand"
+      ],
+      "matchAllGroups": [],
+      "clinicallyApplicable": true,
+      "evidenceAvailable": true,
+      "materiallyRelevantToEtiology": true,
+      "requiredInResponse": true
+    },
+    {
+      "id": "infectionContext",
+      "instruction": "Interpret supplied infection or sepsis evidence.",
+      "matchTerms": [
+        "infection",
+        "sepsis",
+        "fever",
+        "wbc",
+        "procalcitonin",
+        "lactate"
+      ],
+      "matchAllGroups": [],
+      "clinicallyApplicable": false,
+      "evidenceAvailable": true,
+      "materiallyRelevantToEtiology": false,
+      "requiredInResponse": false
+    },
+    {
+      "id": "qtContext",
+      "instruction": "Interpret QT duration and relevant medication exposure.",
+      "matchTerms": [
+        "qt",
+        "qtc",
+        "long-qt",
+        "prolonged"
+      ],
+      "matchAllGroups": [],
+      "clinicallyApplicable": false,
+      "evidenceAvailable": true,
+      "materiallyRelevantToEtiology": true,
+      "requiredInResponse": false
+    },
+    {
+      "id": "renalContext",
+      "instruction": "Interpret renal function, dialysis status, or reduced drug clearance when relevant.",
+      "matchTerms": [
+        "renal",
+        "creatinine",
+        "dialysis",
+        "esrd",
+        "clearance"
+      ],
+      "matchAllGroups": [],
+      "clinicallyApplicable": false,
+      "evidenceAvailable": true,
+      "materiallyRelevantToEtiology": true,
+      "requiredInResponse": false
+    },
+    {
+      "id": "medicationToxicityContext",
+      "instruction": "Interpret medication exposure, level, clearance, and toxicity evidence.",
+      "matchTerms": [
+        "digoxin",
+        "toxicity",
+        "clearance"
+      ],
+      "matchAllGroups": [],
+      "clinicallyApplicable": false,
+      "evidenceAvailable": true,
+      "materiallyRelevantToEtiology": true,
+      "requiredInResponse": false
+    },
+    {
+      "id": "medicationContext",
+      "instruction": "Use clinically relevant medication exposure without inventing treatment recommendations.",
+      "matchTerms": [
+        "Carvedilol 25 mg",
+        "Sacubitril-valsartan",
+        "Spironolactone 25 mg",
+        "Furosemide 40 mg",
+        "Carvedilol 25 mg",
+        "Sacubitril-valsartan",
+        "Spironolactone 25 mg",
+        "Furosemide 40 mg"
+      ],
+      "matchAllGroups": [],
+      "clinicallyApplicable": false,
+      "evidenceAvailable": true,
+      "materiallyRelevantToEtiology": false,
+      "requiredInResponse": false
+    },
+    {
+      "id": "episodePackClinicalContext",
+      "instruction": "Use the episode-pack patient, history, vitals, labs, medications, and clinical context when relevant.",
+      "requiredInResponse": false,
+      "matchTerms": [
+        "history",
+        "vital",
+        "laboratory",
+        "medication",
+        "clinical context",
+        "patient"
+      ],
+      "matchAllGroups": [],
+      "evidencePaths": [
+        "episodePackContext"
+      ]
+    }
+  ],
+  "forbiddenClaims": [
+    "independent_competing_rhythm",
+    "treatment_recommendation",
+    "unsupported_patient_fact",
+    "unsupported_numeric_claim",
+    "oracle_fhir_clinical_fact",
+    "phase6_as_diagnosis"
+  ],
+  "numericEvidence": [
+    {
+      "value": 220.0,
+      "path": "episode.sampleRateHz"
+    },
+    {
+      "value": 20.0,
+      "path": "episode.captureSeconds"
+    },
+    {
+      "value": 6.0,
+      "path": "episode.preEventSeconds"
+    },
+    {
+      "value": 8.0,
+      "path": "episode.eventSeconds"
+    },
+    {
+      "value": 6.0,
+      "path": "episode.postEventSeconds"
+    },
+    {
+      "value": 182.0,
+      "path": "controlledRhythm.ventricularRateBpm"
+    },
+    {
+      "value": 96.0,
+      "path": "controlledRhythm.atrialRateBpm"
+    },
+    {
+      "value": 168.0,
+      "path": "controlledRhythm.qrsDurationMs"
+    },
+    {
+      "value": 460.0,
+      "path": "controlledRhythm.qtcMs"
+    },
+    {
+      "value": -120.0,
+      "path": "controlledRhythm.axisDegrees"
+    },
+    {
+      "value": 88.0,
+      "path": "controlledEventContext.hemodynamics.systolicBloodPressure"
+    },
+    {
+      "value": 58.0,
+      "path": "controlledEventContext.hemodynamics.diastolicBloodPressure"
+    },
+    {
+      "value": 68.0,
+      "path": "controlledEventContext.hemodynamics.map"
+    },
+    {
+      "value": 94.0,
+      "path": "controlledEventContext.hemodynamics.oxygenSaturationPct"
+    },
+    {
+      "value": 36.8,
+      "path": "controlledEventContext.hemodynamics.temperatureC"
+    },
+    {
+      "value": 0.09,
+      "path": "controlledEventContext.ischemia.troponinValue"
+    },
+    {
+      "value": 4.3,
+      "path": "controlledEventContext.electrolytes.potassium.value"
+    },
+    {
+      "value": 3.5,
+      "path": "controlledEventContext.electrolytes.potassium.reference.low"
+    },
+    {
+      "value": 5.1,
+      "path": "controlledEventContext.electrolytes.potassium.reference.high"
+    },
+    {
+      "value": 2.1,
+      "path": "controlledEventContext.electrolytes.magnesium.value"
+    },
+    {
+      "value": 1.7,
+      "path": "controlledEventContext.electrolytes.magnesium.reference.low"
+    },
+    {
+      "value": 2.2,
+      "path": "controlledEventContext.electrolytes.magnesium.reference.high"
+    },
+    {
+      "value": 36.8,
+      "path": "controlledEventContext.infection.temperatureC"
+    },
+    {
+      "value": 1.9,
+      "path": "controlledEventContext.renal.creatinine"
+    },
+    {
+      "value": 460.0,
+      "path": "controlledEventContext.qt.qtcMs"
+    },
+    {
+      "value": 500.0,
+      "path": "controlledEventContext.qt.thresholdMs"
+    },
+    {
+      "value": 61.0,
+      "path": "episodePackContext.patient.age"
+    },
+    {
+      "value": 175.0,
+      "path": "episodePackContext.patient.heightCm"
+    },
+    {
+      "value": 84.0,
+      "path": "episodePackContext.patient.weightKg"
+    },
+    {
+      "value": 182.0,
+      "path": "episodePackContext.episode.triggerHeartRate"
+    },
+    {
+      "value": 8.0,
+      "path": "episodePackContext.episode.durationSeconds"
+    },
+    {
+      "value": 25.0,
+      "path": "episodePackContext.structuralHeart.lvefPct"
+    },
+    {
+      "value": 88.0,
+      "path": "episodePackContext.hemodynamics.systolicBloodPressure"
+    },
+    {
+      "value": 58.0,
+      "path": "episodePackContext.hemodynamics.diastolicBloodPressure"
+    },
+    {
+      "value": 68.0,
+      "path": "episodePackContext.hemodynamics.map"
+    },
+    {
+      "value": 94.0,
+      "path": "episodePackContext.hemodynamics.oxygenSaturationPct"
+    },
+    {
+      "value": 36.8,
+      "path": "episodePackContext.hemodynamics.temperatureC"
+    },
+    {
+      "value": 94.0,
+      "path": "episodePackContext.vitals.spo2Pct"
+    },
+    {
+      "value": 182.0,
+      "path": "episodePackContext.vitals.heartRateBpm"
+    },
+    {
+      "value": 22.0,
+      "path": "episodePackContext.vitals.respiratoryRateBpm"
+    },
+    {
+      "value": 36.8,
+      "path": "episodePackContext.vitals.temperatureC"
+    },
+    {
+      "value": 88.0,
+      "path": "episodePackContext.vitals.bloodPressure.systolic"
+    },
+    {
+      "value": 58.0,
+      "path": "episodePackContext.vitals.bloodPressure.diastolic"
+    },
+    {
+      "value": 68.0,
+      "path": "episodePackContext.vitals.bloodPressure.map"
+    },
+    {
+      "value": 4.3,
+      "path": "episodePackContext.labs.potassium.value"
+    },
+    {
+      "value": 2.1,
+      "path": "episodePackContext.labs.magnesium.value"
+    },
+    {
+      "value": 0.09,
+      "path": "episodePackContext.labs.troponinT.value"
+    },
+    {
+      "value": 1840.0,
+      "path": "episodePackContext.labs.bnp.value"
+    },
+    {
+      "value": 1.9,
+      "path": "episodePackContext.labs.creatinine.value"
+    },
+    {
+      "value": 4.3,
+      "path": "episodePackContext.electrolytes.potassium.value"
+    },
+    {
+      "value": 3.5,
+      "path": "episodePackContext.electrolytes.potassium.reference.low"
+    },
+    {
+      "value": 5.1,
+      "path": "episodePackContext.electrolytes.potassium.reference.high"
+    },
+    {
+      "value": 2.1,
+      "path": "episodePackContext.electrolytes.magnesium.value"
+    },
+    {
+      "value": 1.7,
+      "path": "episodePackContext.electrolytes.magnesium.reference.low"
+    },
+    {
+      "value": 2.2,
+      "path": "episodePackContext.electrolytes.magnesium.reference.high"
+    },
+    {
+      "value": 1.9,
+      "path": "episodePackContext.renal.creatinine"
+    },
+    {
+      "value": 0.09,
+      "path": "episodePackContext.ischemia.troponinValue"
+    },
+    {
+      "value": 36.8,
+      "path": "episodePackContext.infection.temperatureC"
+    },
+    {
+      "value": 460.0,
+      "path": "episodePackContext.qt.qtcMs"
+    },
+    {
+      "value": 500.0,
+      "path": "episodePackContext.qt.thresholdMs"
+    },
+    {
+      "value": 182.0,
+      "path": "episodePackContext.ecgMeasurements.ventricularRateBpm"
+    },
+    {
+      "value": 96.0,
+      "path": "episodePackContext.ecgMeasurements.atrialRateBpm"
+    },
+    {
+      "value": 168.0,
+      "path": "episodePackContext.ecgMeasurements.qrsDurationMs"
+    },
+    {
+      "value": -120.0,
+      "path": "episodePackContext.ecgMeasurements.axisDeg"
+    },
+    {
+      "value": 182.0,
+      "path": "episodePackContext.ecgMeasurements.heartRateBpm"
+    },
+    {
+      "value": 180.8,
+      "path": "detector.estimatedRateBpm"
+    },
+    {
+      "value": 1.2,
+      "path": "detector.triggerLatencySeconds"
+    },
+    {
+      "value": 6.0,
+      "path": "detector.referenceOnsetOffsetSeconds"
+    },
+    {
+      "value": 7.2,
+      "path": "detector.detectedTriggerOffsetSeconds"
+    },
+    {
+      "value": 100.0,
+      "path": "deterministicAnalysis.signalQuality.meanScore"
+    },
+    {
+      "value": 100.0,
+      "path": "deterministicAnalysis.signalQuality.medianScore"
+    },
+    {
+      "value": 100.0,
+      "path": "deterministicAnalysis.signalQuality.minimumScore"
+    },
+    {
+      "value": 1.0,
+      "path": "deterministicAnalysis.signalQuality.crossEpisodeAgreement"
+    },
+    {
+      "value": 74.59,
+      "path": "deterministicAnalysis.rhythm.medianHeartRateBpm"
+    },
+    {
+      "value": 74.59,
+      "path": "deterministicAnalysis.rhythm.heartRateRangeBpm[0]"
+    },
+    {
+      "value": 74.59,
+      "path": "deterministicAnalysis.rhythm.heartRateRangeBpm[1]"
+    },
+    {
+      "value": 0.0,
+      "path": "deterministicAnalysis.qrs.crossEpisodeAgreement"
+    },
+    {
+      "value": 0.1507,
+      "path": "deterministicAnalysis.morphology.medianDifferenceScore"
+    },
+    {
+      "value": 1.0,
+      "path": "deterministicAnalysis.morphology.crossEpisodeAgreement"
+    },
+    {
+      "value": 42.19,
+      "path": "deterministicAnalysis.leadAgreement.medianScore"
+    },
+    {
+      "value": 66.67,
+      "path": "deterministicAnalysis.crossEpisodeAgreement.score"
+    },
+    {
+      "value": 1.0,
+      "path": "deterministicAnalysis.crossEpisodeAgreement.qualityAgreement"
+    },
+    {
+      "value": 0.0,
+      "path": "deterministicAnalysis.crossEpisodeAgreement.qrsAgreement"
+    },
+    {
+      "value": 1.0,
+      "path": "deterministicAnalysis.crossEpisodeAgreement.morphologyAgreement"
+    },
+    {
+      "value": 0.0,
+      "path": "deterministicAnalysis.confidence.score"
+    },
+    {
+      "value": 0.0,
+      "path": "deterministicAnalysis.confidence.episodeConfidenceScores[0]"
+    },
+    {
+      "value": 0.0,
+      "path": "deterministicAnalysis.independentCandidateDetection.abnormalMorphologyCandidateCount"
+    },
+    {
+      "value": 0.0,
+      "path": "deterministicAnalysis.independentCandidateDetection.candidatePercent"
+    },
+    {
+      "value": 1.0,
+      "path": "deterministicAnalysis.datasetReference.triggerCounts.VT"
+    },
+    {
+      "value": 1.0,
+      "path": "deterministicAnalysis.datasetReference.uniqueReferenceTriggerCount"
+    },
+    {
+      "value": 182.0,
+      "path": "measurementConflicts[0].controlledValue"
+    },
+    {
+      "value": 74.59,
+      "path": "measurementConflicts[0].independentValue"
+    },
+    {
+      "value": 107.41,
+      "path": "measurementConflicts[0].difference"
+    },
+    {
+      "value": 182.0,
+      "path": "coverageRequirements[0].matchTerms[0]"
+    },
+    {
+      "value": 88.0,
+      "path": "coverageRequirements[2].matchTerms[1]"
+    },
+    {
+      "value": 68.0,
+      "path": "coverageRequirements[2].matchTerms[2]"
+    }
+  ],
+  "temporalRules": [],
+  "causalRules": [
+    "Use only causal relationships supported by the complete episode pack.",
+    "Do not introduce Oracle FHIR facts or external patient history."
+  ],
+  "sourceRules": [
+    "The complete episode pack owns all patient and clinical context.",
+    "Oracle SMART is launch and routing only; Oracle FHIR clinical context is excluded.",
+    "The controlled diagnosis is fixed.",
+    "Phase 6 supplies measurements and limitations, not diagnosis.",
+    "The SLM supplies etiology and context only."
+  ],
+  "evidenceConsistencyStatus": "consistent"
+}

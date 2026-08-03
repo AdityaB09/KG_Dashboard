@@ -1,0 +1,102 @@
+{
+  "attempt": 1,
+  "createdAt": "2026-08-02T01:32:03.748007+00:00",
+  "model": {
+    "provider": "google_colab_file",
+    "name": "google/medgemma-27b-it",
+    "endpoint": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\1682aaa32f0f21a3986388751ebb89d2aecc4caf122a542157e995f4f44da08e.json",
+    "sourceFile": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\1682aaa32f0f21a3986388751ebb89d2aecc4caf122a542157e995f4f44da08e.json",
+    "colabRun": 1,
+    "promptFingerprint": "1682aaa32f0f21a3986388751ebb89d2aecc4caf122a542157e995f4f44da08e",
+    "elapsedSeconds": 85.377,
+    "promptEvalCount": 3637,
+    "evalCount": 549,
+    "peakGpuMemoryGiB": 17.584,
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "quantization": "4-bit-nf4",
+    "structuredOutput": true,
+    "schema": "grounded-etiology-context-universal-v1",
+    "recommendedActionsRequired": false
+  },
+  "rawModelResponse": {
+    "episodeSummary": "The patient, a 79-year-old female with a history of hypertension and chronic kidney disease, presented with urosepsis. She developed new onset atrial fibrillation with rapid ventricular response (RVR) at a rate of 150 bpm, coinciding with a fever spike to 38.9°C. Hemodynamically, she is unstable, requiring low-dose norepinephrine, with a MAP of 67 mmHg and systolic BP of 92 mmHg. Labs show elevated WBC (18.4), lactate (3.1 mmol/L), creatinine (1.7 mg/dL), and procalcitonin (6.2 ng/mL). Electrolytes (potassium, magnesium) are within normal limits. ECG shows narrow QRS complexes, absent P waves, and rate-related ST depression.",
+    "detectedEpisodeContext": "Unstable atrial fibrillation with rapid ventricular response (RVR) in the context of sepsis.",
+    "mostLikelyEtiology": "Sepsis-induced atrial fibrillation with rapid ventricular response. The patient has clinical and laboratory evidence of sepsis (fever, elevated WBC, elevated lactate, elevated procalcitonin) and developed new onset atrial fibrillation with RVR during this acute illness.",
+    "contributingFactors": [
+      "Sepsis",
+      "Fever",
+      "Elevated lactate",
+      "Chronic kidney disease",
+      "Advanced age"
+    ],
+    "uncertaintyAndMissingData": [
+      "Calcium level is unavailable, which could potentially contribute to arrhythmia or affect response to vasopressors, but its absence does not change the primary etiology.",
+      "Sodium level is unavailable, which could potentially contribute to arrhythmia or affect response to vasopressors, but its absence does not change the primary etiology.",
+      "Specific source of infection (e.g., urinalysis details, blood culture results) is not fully detailed, but the overall clinical picture strongly supports sepsis.",
+      "Detailed cardiac history (e.g., prior AFib, structural heart disease) is limited to hypertension and CKD, which are risk factors but not definitive causes.",
+      "Medication list is incomplete (only Amlodipine listed, but patient is on Norepinephrine and Piperacillin-tazobactam).",
+      "Phase 6 analysis shows a difference in QRS duration (controlled event 92ms vs phase6 54.545ms) which is marked as valid, comparable, and material, but the authoritative diagnosis and clinical context remain consistent."
+    ]
+  },
+  "modelResponse": {
+    "episodeSummary": "The patient, a 79-year-old female with a history of hypertension and chronic kidney disease, presented with urosepsis. She developed new onset atrial fibrillation with rapid ventricular response (RVR) at a rate of 150 bpm, coinciding with a fever spike to 38.9°C. Hemodynamically, she is unstable, requiring low-dose norepinephrine, with a MAP of 67 mmHg and systolic BP of 92 mmHg. Labs show elevated WBC (18.4), lactate (3.1 mmol/L), creatinine (1.7 mg/dL), and procalcitonin (6.2 ng/mL). Electrolytes (potassium, magnesium) are within normal limits. ECG shows narrow QRS complexes, absent P waves, and rate-related ST depression.",
+    "detectedEpisodeContext": "Unstable atrial fibrillation with rapid ventricular response (RVR) in the context of sepsis.",
+    "mostLikelyEtiology": "Sepsis-induced atrial fibrillation with rapid ventricular response. The patient has clinical and laboratory evidence of sepsis (fever, elevated WBC, elevated lactate, elevated procalcitonin) and developed new onset atrial fibrillation with RVR during this acute illness.",
+    "contributingFactors": [
+      "Sepsis",
+      "Fever",
+      "Elevated lactate",
+      "Chronic kidney disease",
+      "Advanced age"
+    ],
+    "uncertaintyAndMissingData": [
+      "Calcium level is unavailable, which could potentially contribute to arrhythmia or affect response to vasopressors, but its absence does not change the primary etiology.",
+      "Sodium level is unavailable, which could potentially contribute to arrhythmia or affect response to vasopressors, but its absence does not change the primary etiology.",
+      "Specific source of infection (e.g., urinalysis details, blood culture results) is not fully detailed, but the overall clinical picture strongly supports sepsis.",
+      "Detailed cardiac history (e.g., prior AFib, structural heart disease) is limited to hypertension and CKD, which are risk factors but not definitive causes.",
+      "Medication list is incomplete (only Amlodipine listed, but patient is on Norepinephrine and Piperacillin-tazobactam).",
+      "Phase 6 analysis shows a difference in QRS duration (controlled event 92ms vs phase6 54.545ms) which is marked as valid, comparable, and material, but the authoritative diagnosis and clinical context remain consistent."
+    ]
+  },
+  "normalizationChanges": [],
+  "validation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "ATRIAL_FIBRILLATION_RVR",
+    "authoritativeDiagnosisDisplay": "Atrial fibrillation with rapid ventricular response",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "validatorInternalConflicts": [],
+    "adjudicationEligible": false,
+    "evidenceCoverage": {
+      "rhythmEvidence": true,
+      "hemodynamicContext": true,
+      "electrolyteInterpretation": true,
+      "ischemiaInterpretation": false,
+      "infectionContext": true,
+      "qtContext": false,
+      "renalContext": true,
+      "medicationToxicityContext": false,
+      "medicationContext": true,
+      "episodePackClinicalContext": true
+    },
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 7,
+    "evidenceCoverageRequired": 3,
+    "correctionEvidence": [],
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-v4.3",
+    "groundingStatus": "accepted",
+    "clinicalPromptMode": "episode_pack_only",
+    "evidenceFingerprint": "0ed90e80e93dfda927fa056828efb88b9dd4588e1bf92970c7518d0ea9c2a582"
+  }
+}

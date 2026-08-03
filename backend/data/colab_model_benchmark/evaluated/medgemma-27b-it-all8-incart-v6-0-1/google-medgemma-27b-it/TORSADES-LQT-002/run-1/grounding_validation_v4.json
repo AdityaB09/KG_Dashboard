@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "grounding-validation-v4",
+  "status": "rejected",
+  "accepted": false,
+  "hardAccepted": false,
+  "validatorPassed": false,
+  "displayableWithReview": false,
+  "qualityReviewRequired": false,
+  "retryable": true,
+  "authoritativeDiagnosisCode": "TORSADES_DE_POINTES",
+  "authoritativeDiagnosisDisplay": "Torsades de pointes",
+  "errors": [
+    "Unsupported numeric claims: 3"
+  ],
+  "hardErrors": [
+    "Unsupported numeric claims: 3"
+  ],
+  "qualityErrors": [],
+  "warnings": [],
+  "contradictions": [],
+  "unsupportedFacts": [
+    "Unsupported numeric claims: 3"
+  ],
+  "validatorInternalConflicts": [],
+  "adjudicationEligible": false,
+  "evidenceCoverage": {
+    "rhythmEvidence": true,
+    "hemodynamicContext": true,
+    "electrolyteInterpretation": true,
+    "ischemiaInterpretation": true,
+    "infectionContext": false,
+    "qtContext": true,
+    "renalContext": true,
+    "medicationToxicityContext": true,
+    "medicationContext": true,
+    "episodePackClinicalContext": true
+  },
+  "missingRequiredCoverage": [],
+  "evidenceCoverageCount": 9,
+  "evidenceCoverageRequired": 4,
+  "correctionEvidence": [],
+  "recommendedActionsRequired": false,
+  "policyVersion": "grounded-response-validator-v4.3",
+  "groundingStatus": "rejected",
+  "clinicalPromptMode": "episode_pack_only",
+  "evidenceFingerprint": "af612abd746de37ec72a55f577aefad8b642abeab4a271a59ec1c8a123773c99",
+  "medicalAdjudication": {
+    "schemaVersion": "medical-validator-review-v2",
+    "status": "disabled",
+    "advisoryOnly": true
+  },
+  "medicalReviewRecommended": false
+}

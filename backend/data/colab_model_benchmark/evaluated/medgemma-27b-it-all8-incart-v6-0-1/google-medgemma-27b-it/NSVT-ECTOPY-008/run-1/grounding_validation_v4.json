@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "grounding-validation-v4",
+  "status": "accepted_with_review",
+  "accepted": false,
+  "hardAccepted": true,
+  "validatorPassed": true,
+  "displayableWithReview": true,
+  "qualityReviewRequired": true,
+  "retryable": false,
+  "authoritativeDiagnosisCode": "NONSUSTAINED_VENTRICULAR_TACHYCARDIA",
+  "authoritativeDiagnosisDisplay": "Frequent PVCs with non-sustained VT run",
+  "errors": [
+    "Material measurement conflict was not acknowledged: controlled-vs-phase6-qrsDurationMs."
+  ],
+  "hardErrors": [],
+  "qualityErrors": [
+    "Material measurement conflict was not acknowledged: controlled-vs-phase6-qrsDurationMs."
+  ],
+  "warnings": [],
+  "contradictions": [],
+  "unsupportedFacts": [],
+  "validatorInternalConflicts": [],
+  "adjudicationEligible": true,
+  "evidenceCoverage": {
+    "rhythmEvidence": true,
+    "hemodynamicContext": true,
+    "electrolyteInterpretation": true,
+    "ischemiaInterpretation": true,
+    "infectionContext": false,
+    "qtContext": false,
+    "renalContext": true,
+    "medicationToxicityContext": false,
+    "medicationContext": true,
+    "episodePackClinicalContext": true
+  },
+  "missingRequiredCoverage": [],
+  "evidenceCoverageCount": 7,
+  "evidenceCoverageRequired": 2,
+  "correctionEvidence": [
+    "Use source-qualified language: 'controlled-event evidence did not support X'.",
+    "For partial electrolyte panels, name the supplied analytes instead of saying all electrolytes were normal."
+  ],
+  "recommendedActionsRequired": false,
+  "policyVersion": "grounded-response-validator-v4.3",
+  "groundingStatus": "accepted_with_review",
+  "clinicalPromptMode": "episode_pack_only",
+  "evidenceFingerprint": "4566f1af11206cbe789c409917d57268dbe59b0b82bbe3fb3985a00a514cfbce",
+  "medicalAdjudication": {
+    "schemaVersion": "medical-validator-review-v2",
+    "status": "disabled",
+    "advisoryOnly": true
+  },
+  "medicalReviewRecommended": true
+}

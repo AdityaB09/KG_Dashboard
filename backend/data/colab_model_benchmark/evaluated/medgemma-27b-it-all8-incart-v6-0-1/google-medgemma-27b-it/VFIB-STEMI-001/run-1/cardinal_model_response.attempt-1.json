@@ -1,0 +1,100 @@
+{
+  "attempt": 1,
+  "createdAt": "2026-08-02T01:32:24.898853+00:00",
+  "model": {
+    "provider": "google_colab_file",
+    "name": "google/medgemma-27b-it",
+    "endpoint": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\b965a21ceaa38607acb16ed6ba6ca6efe041b52ed36c8a6980366a1097c125dc.json",
+    "sourceFile": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\b965a21ceaa38607acb16ed6ba6ca6efe041b52ed36c8a6980366a1097c125dc.json",
+    "colabRun": 1,
+    "promptFingerprint": "b965a21ceaa38607acb16ed6ba6ca6efe041b52ed36c8a6980366a1097c125dc",
+    "elapsedSeconds": 55.927,
+    "promptEvalCount": 3292,
+    "evalCount": 360,
+    "peakGpuMemoryGiB": 17.375,
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "quantization": "4-bit-nf4",
+    "structuredOutput": true,
+    "schema": "grounded-etiology-context-universal-v1",
+    "recommendedActionsRequired": false
+  },
+  "rawModelResponse": {
+    "episodeSummary": "A 68-year-old male with a history of coronary artery disease, prior MI, hyperlipidemia, and type 2 diabetes experienced sudden loss of consciousness, preceded by crescendo chest pain and ST elevation. He was found to be pulseless with arterial line flatlining. The rhythm is ventricular fibrillation. Labs show elevated troponin (1.85 ng/mL) and CK-MB (48 ng/mL), high lactate (4.8 mmol/L), low pH (7.21), and hyperglycemia (212 mg/dL). Electrolytes (potassium, magnesium) are within normal limits.",
+    "detectedEpisodeContext": "Cardiac arrest due to ventricular fibrillation in a patient with acute chest pain and ST elevation, suggestive of an acute myocardial infarction. The patient was pulseless and apneic, requiring BLS/ACLS.",
+    "mostLikelyEtiology": "Acute myocardial infarction (STEMI) leading to ventricular fibrillation.",
+    "contributingFactors": [
+      "Acute ST-elevation myocardial infarction (STEMI)",
+      "History of coronary artery disease",
+      "Elevated troponin and CK-MB",
+      "Hyperglycemia",
+      "Acidosis (low pH)"
+    ],
+    "uncertaintyAndMissingData": [
+      "Calcium level is unavailable.",
+      "Sodium level is unavailable.",
+      "Detailed troponin pattern is unspecified.",
+      "Specific coronary anatomy or lesion details are unavailable.",
+      "Phase 6 analysis reports insufficient confidence for controlled event heart rate and QRS duration measurements due to lack of reliable organized beat sequence in the ventricular fibrillation window."
+    ]
+  },
+  "modelResponse": {
+    "episodeSummary": "A 68-year-old male with a history of coronary artery disease, prior MI, hyperlipidemia, and type 2 diabetes experienced sudden loss of consciousness, preceded by crescendo chest pain and ST elevation. He was found to be pulseless with arterial line flatlining. The rhythm is ventricular fibrillation. Labs show elevated troponin (1.85 ng/mL) and CK-MB (48 ng/mL), high lactate (4.8 mmol/L), low pH (7.21), and hyperglycemia (212 mg/dL). Electrolytes (potassium, magnesium) are within normal limits.",
+    "detectedEpisodeContext": "Cardiac arrest due to ventricular fibrillation in a patient with acute chest pain and ST elevation, suggestive of an acute myocardial infarction. The patient was pulseless and apneic, requiring BLS/ACLS.",
+    "mostLikelyEtiology": "Acute myocardial infarction (STEMI) leading to ventricular fibrillation.",
+    "contributingFactors": [
+      "Acute ST-elevation myocardial infarction (STEMI)",
+      "History of coronary artery disease",
+      "Elevated troponin and CK-MB",
+      "Hyperglycemia",
+      "Acidosis (low pH)"
+    ],
+    "uncertaintyAndMissingData": [
+      "Calcium level is unavailable.",
+      "Sodium level is unavailable.",
+      "Detailed troponin pattern is unspecified.",
+      "Specific coronary anatomy or lesion details are unavailable.",
+      "Phase 6 analysis reports insufficient confidence for controlled event heart rate and QRS duration measurements due to lack of reliable organized beat sequence in the ventricular fibrillation window."
+    ]
+  },
+  "normalizationChanges": [],
+  "validation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "VENTRICULAR_FIBRILLATION",
+    "authoritativeDiagnosisDisplay": "Ventricular fibrillation",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "validatorInternalConflicts": [],
+    "adjudicationEligible": false,
+    "evidenceCoverage": {
+      "rhythmEvidence": true,
+      "hemodynamicContext": true,
+      "electrolyteInterpretation": true,
+      "ischemiaInterpretation": true,
+      "infectionContext": true,
+      "qtContext": false,
+      "renalContext": false,
+      "medicationToxicityContext": false,
+      "medicationContext": false,
+      "episodePackClinicalContext": true
+    },
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 6,
+    "evidenceCoverageRequired": 3,
+    "correctionEvidence": [],
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-v4.3",
+    "groundingStatus": "accepted",
+    "clinicalPromptMode": "episode_pack_only",
+    "evidenceFingerprint": "8c069f6f7cd5ec2a2c0dce801272462c669cfa8a4a3873fe3baccfd87b61ee46"
+  }
+}

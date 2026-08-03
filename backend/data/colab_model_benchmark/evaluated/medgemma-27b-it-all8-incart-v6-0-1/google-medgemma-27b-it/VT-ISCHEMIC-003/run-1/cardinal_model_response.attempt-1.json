@@ -1,0 +1,97 @@
+{
+  "attempt": 1,
+  "createdAt": "2026-08-02T01:32:28.241950+00:00",
+  "model": {
+    "provider": "google_colab_file",
+    "name": "google/medgemma-27b-it",
+    "endpoint": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\91d855b748d88009baae0d239a6daedcd5b084daade1a21be8abed0b926ae221.json",
+    "sourceFile": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\91d855b748d88009baae0d239a6daedcd5b084daade1a21be8abed0b926ae221.json",
+    "colabRun": 1,
+    "promptFingerprint": "91d855b748d88009baae0d239a6daedcd5b084daade1a21be8abed0b926ae221",
+    "elapsedSeconds": 65.301,
+    "promptEvalCount": 3506,
+    "evalCount": 428,
+    "peakGpuMemoryGiB": 17.505,
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "quantization": "4-bit-nf4",
+    "structuredOutput": true,
+    "schema": "grounded-etiology-context-universal-v1",
+    "recommendedActionsRequired": false
+  },
+  "rawModelResponse": {
+    "episodeSummary": "The patient experienced an episode of monomorphic ventricular tachycardia (VT) lasting 8 seconds, captured by the device. The patient was conscious during the event, with borderline hemodynamics (systolic BP 88 mmHg, MAP 68 mmHg). The VT occurred in the context of known ischemic cardiomyopathy (LVEF 25%) and chronic kidney disease (CKD) stage 3. Pre-event ECG showed sinus rhythm with LBBB-like conduction. The VT exhibited AV dissociation and occasional capture/fusion beats. Electrolytes (potassium, magnesium) were within normal limits. Troponin was mildly elevated, consistent with demand ischemia. Phase 6 analysis found insufficient confidence in controlled-event heart rate and QRS duration measurements due to fewer than three reliable QRS-energy candidates.",
+    "detectedEpisodeContext": "Sustained monomorphic ventricular tachycardia in a patient with known structural heart disease (ischemic cardiomyopathy, LVEF 25%) and CKD. The episode was hemodynamically borderline but the patient remained conscious. The event occurred in the context of baseline sinus rhythm with LBBB-like conduction.",
+    "mostLikelyEtiology": "The most likely etiology is re-entrant ventricular tachycardia related to the patient's underlying ischemic cardiomyopathy and structural heart disease (scar tissue, LVEF 25%).",
+    "contributingFactors": [
+      "Ischemic cardiomyopathy (LVEF 25%)",
+      "Chronic kidney disease (CKD stage 3)",
+      "Borderline hemodynamics during event"
+    ],
+    "uncertaintyAndMissingData": [
+      "Phase 6 analysis has insufficient confidence for controlled-event heart rate and QRS duration measurements.",
+      "Calcium level is unavailable.",
+      "Sodium level is unavailable.",
+      "Detailed medication list and adherence are not fully specified beyond home medications.",
+      "Specific cause of borderline hemodynamics (e.g., volume status, medication effect) is not detailed."
+    ]
+  },
+  "modelResponse": {
+    "episodeSummary": "The patient experienced an episode of monomorphic ventricular tachycardia (VT) lasting 8 seconds, captured by the device. The patient was conscious during the event, with borderline hemodynamics (systolic BP 88 mmHg, MAP 68 mmHg). The VT occurred in the context of known ischemic cardiomyopathy (LVEF 25%) and chronic kidney disease (CKD) stage 3. Pre-event ECG showed sinus rhythm with LBBB-like conduction. The VT exhibited AV dissociation and occasional capture/fusion beats. Electrolytes (potassium, magnesium) were within normal limits. Troponin was mildly elevated, consistent with demand ischemia. Phase 6 analysis found insufficient confidence in controlled-event heart rate and QRS duration measurements due to fewer than three reliable QRS-energy candidates.",
+    "detectedEpisodeContext": "Sustained monomorphic ventricular tachycardia in a patient with known structural heart disease (ischemic cardiomyopathy, LVEF 25%) and CKD. The episode was hemodynamically borderline but the patient remained conscious. The event occurred in the context of baseline sinus rhythm with LBBB-like conduction.",
+    "mostLikelyEtiology": "The most likely etiology is re-entrant ventricular tachycardia related to the patient's underlying ischemic cardiomyopathy and structural heart disease (scar tissue, LVEF 25%).",
+    "contributingFactors": [
+      "Ischemic cardiomyopathy (LVEF 25%)",
+      "Chronic kidney disease (CKD stage 3)",
+      "Borderline hemodynamics during event"
+    ],
+    "uncertaintyAndMissingData": [
+      "Phase 6 analysis has insufficient confidence for controlled-event heart rate and QRS duration measurements.",
+      "Calcium level is unavailable.",
+      "Sodium level is unavailable.",
+      "Detailed medication list and adherence are not fully specified beyond home medications.",
+      "Specific cause of borderline hemodynamics (e.g., volume status, medication effect) is not detailed."
+    ]
+  },
+  "normalizationChanges": [],
+  "validation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "MONOMORPHIC_VENTRICULAR_TACHYCARDIA",
+    "authoritativeDiagnosisDisplay": "Monomorphic ventricular tachycardia",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "validatorInternalConflicts": [],
+    "adjudicationEligible": false,
+    "evidenceCoverage": {
+      "rhythmEvidence": true,
+      "structuralSubstrate": true,
+      "hemodynamicContext": true,
+      "electrolyteInterpretation": true,
+      "ischemiaInterpretation": true,
+      "infectionContext": false,
+      "qtContext": false,
+      "renalContext": true,
+      "medicationToxicityContext": false,
+      "medicationContext": true,
+      "episodePackClinicalContext": true
+    },
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 8,
+    "evidenceCoverageRequired": 4,
+    "correctionEvidence": [],
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-v4.3",
+    "groundingStatus": "accepted",
+    "clinicalPromptMode": "episode_pack_only",
+    "evidenceFingerprint": "2f4c55df47e9d9287a7d00b94f6b6a149efbb08d7af3c6d581afddcdf1852b39"
+  }
+}

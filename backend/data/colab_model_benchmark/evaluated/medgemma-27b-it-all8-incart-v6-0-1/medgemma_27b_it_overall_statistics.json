@@ -1,0 +1,20 @@
+﻿{
+    "Model":  "google/medgemma-27b-it",
+    "RunCount":  8,
+    "GenerationSuccessRate":  1,
+    "StrictAcceptanceRate":  0.625,
+    "AcceptedWithReviewCount":  2,
+    "ValidatorPassRate":  0.875,
+    "SafetyPassRate":  0.75,
+    "OverallPassRate":  0,
+    "AverageScore":  70,
+    "MedianScore":  71,
+    "MinimumScore":  50,
+    "MaximumScore":  80,
+    "TotalContradictions":  0,
+    "TotalUnsupportedFacts":  1,
+    "AverageLatencySeconds":  67.938,
+    "AverageInputTokens":  3443.75,
+    "AverageOutputTokens":  440.625,
+    "AveragePeakGpuMemoryGiB":  17.467
+}

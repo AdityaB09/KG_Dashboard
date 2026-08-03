@@ -1,0 +1,7 @@
+{
+  "schemaVersion": "patient-linkage-v4",
+  "samePatientVerified": null,
+  "linkageMode": "oracle_launch_only",
+  "oracleClinicalContextUsed": false,
+  "warnings": []
+}

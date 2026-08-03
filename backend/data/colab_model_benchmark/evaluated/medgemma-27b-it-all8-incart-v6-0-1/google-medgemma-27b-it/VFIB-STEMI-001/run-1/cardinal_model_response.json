@@ -1,0 +1,518 @@
+{
+  "schemaVersion": "grounded-cardinal-response-v4",
+  "status": "complete",
+  "validationStatus": "accepted",
+  "displayPolicy": "always_show_model_response",
+  "createdAt": "2026-08-02T01:32:24.901853+00:00",
+  "mode": "evaluation_injection",
+  "scenarioId": "VFIB-STEMI-001",
+  "episodeId": "evalflow-VFIB-STEMI-001-20260731-191149-c3ca79",
+  "incidentId": "inc-INCART-EVAL-VFIB-STEMI-001-loop-1-ventricular-fibrillation-000001584-T-fMRMNztUUNQnMO",
+  "source": "authoritative_diagnosis_plus_scoped_evidence",
+  "evidenceSchemaVersion": "slm-evidence-envelope-v4",
+  "clinicalPromptMode": "episode_pack_only",
+  "evidenceConsistencyReview": {
+    "schemaVersion": "evidence-consistency-review-v1",
+    "status": "consistent",
+    "scenarioId": "VFIB-STEMI-001",
+    "hardConflicts": [],
+    "warnings": [],
+    "normalizationsApplied": [],
+    "qualifiedMeasurementConflictCount": 0
+  },
+  "validatorVersion": "grounded-response-validator-v4.3",
+  "diagnosticEvent": {
+    "schemaVersion": "diagnostic-event-universal-v2",
+    "eventDetected": true,
+    "episodeId": "evalflow-VFIB-STEMI-001-20260731-191149-c3ca79",
+    "incidentId": "inc-INCART-EVAL-VFIB-STEMI-001-loop-1-ventricular-fibrillation-000001584-T-fMRMNztUUNQnMO",
+    "diagnosis": {
+      "code": "VENTRICULAR_FIBRILLATION",
+      "display": "Ventricular fibrillation",
+      "authoritative": true
+    },
+    "source": {
+      "type": "controlled_evaluation_scenario",
+      "name": "SLM_Eval",
+      "identifier": "VFIB-STEMI-001",
+      "futureReplacement": "ecg_ml_diagnostic_model"
+    },
+    "confidence": {
+      "value": 1.0,
+      "basis": "controlled_evaluation_label"
+    },
+    "measurements": {
+      "ventricularRateBpm": null,
+      "atrialRateBpm": null,
+      "qrsDurationMs": null,
+      "qtcMs": null,
+      "prIntervalMs": null,
+      "regularity": "chaotic/irregular",
+      "axisDegrees": null,
+      "pWavePresent": false,
+      "atrialActivityPresent": false,
+      "atrioventricularAssociation": null
+    },
+    "rhythmFeatures": {
+      "ventricularRateBpm": null,
+      "atrialRateBpm": null,
+      "qrsDurationMs": null,
+      "qtcMs": null,
+      "qtcEvidenceSource": null,
+      "prIntervalMs": null,
+      "regularity": "chaotic/irregular",
+      "axisDegrees": null,
+      "pWavePresent": false,
+      "atrialActivityPresent": false,
+      "atrioventricularAssociation": null,
+      "findings": []
+    },
+    "hemodynamicStatus": {
+      "available": true,
+      "classification": "cardiac_arrest",
+      "conscious": false,
+      "pulseless": true,
+      "pulsePresent": false,
+      "shockSupported": null,
+      "vasopressorSupport": null,
+      "systolicBloodPressure": null,
+      "diastolicBloodPressure": null,
+      "map": null,
+      "oxygenSaturationPct": null,
+      "temperatureC": 36.9,
+      "sourceNote": "No pulse; arterial line flat"
+    },
+    "electrolyteContext": {
+      "available": true,
+      "potassium": {
+        "available": true,
+        "value": 4.1,
+        "unit": "mmol/L",
+        "withinReference": true,
+        "reference": {
+          "low": 3.5,
+          "high": 5.1
+        },
+        "note": ""
+      },
+      "magnesium": {
+        "available": true,
+        "value": 2.0,
+        "unit": "mg/dL",
+        "withinReference": true,
+        "reference": {
+          "low": 1.7,
+          "high": 2.2
+        },
+        "note": ""
+      },
+      "calcium": {
+        "available": false,
+        "value": null,
+        "unit": null,
+        "withinReference": null,
+        "reference": null
+      },
+      "sodium": {
+        "available": false,
+        "value": null,
+        "unit": null,
+        "withinReference": null,
+        "reference": null
+      },
+      "abnormalElectrolytes": [],
+      "electrolyteAbnormalityPresent": false,
+      "majorElectrolyteTriggerSupported": false
+    },
+    "ischemiaContext": {
+      "available": true,
+      "acuteChestPain": true,
+      "stElevationSupported": true,
+      "troponinValue": 1.85,
+      "troponinPattern": "measured_unspecified_pattern",
+      "acuteStemiSupported": true
+    },
+    "infectionContext": {
+      "available": true,
+      "temperatureC": 36.9,
+      "wbc": null,
+      "procalcitonin": null,
+      "lactate": 4.8,
+      "feverSupported": null,
+      "inflammatoryResponseSupported": null,
+      "infectionSupported": null,
+      "sepsisSupported": null,
+      "infectionExplicitlyDenied": null,
+      "suspectedSource": null
+    },
+    "qtContext": {
+      "available": false,
+      "qtcMs": null,
+      "prolonged": null,
+      "thresholdMs": 500,
+      "qtProlongingMedications": [],
+      "acquiredLongQtSupported": null,
+      "evidenceSource": null
+    },
+    "renalContext": {
+      "available": true,
+      "creatinine": 1.1,
+      "bun": null,
+      "egfr": null,
+      "esrd": null,
+      "dialysis": null,
+      "missedDialysis": null,
+      "chronicKidneyDiseaseSupported": null,
+      "acuteKidneyInjurySupported": null,
+      "renalImpairmentSupported": null,
+      "sourceTextContainsRenalImpairment": null
+    },
+    "medicationContext": {
+      "available": true,
+      "homeMedications": [
+        "Aspirin 81 mg",
+        "Atorvastatin 80 mg",
+        "Metoprolol 50 mg",
+        "Metformin 1000 mg"
+      ],
+      "activeMedications": [
+        "Aspirin 81 mg",
+        "Atorvastatin 80 mg",
+        "Metoprolol 50 mg",
+        "Metformin 1000 mg"
+      ],
+      "infusions": [
+        "Nitroglycerin IV (started for chest pain)"
+      ],
+      "qtProlongingMedications": [],
+      "digoxinExposure": false,
+      "potassiumRaisingMedicationExposure": false,
+      "thiazideExposure": false
+    },
+    "toxicityContext": {
+      "available": true,
+      "digoxinLevel": null,
+      "symptoms": [],
+      "digoxinToxicitySupported": false,
+      "reducedClearanceSupported": false
+    },
+    "patientContext": {
+      "available": true,
+      "age": 68,
+      "sex": "M",
+      "primaryDiagnosis": "Acute chest pain, rule-out ACS",
+      "history": [
+        "Coronary artery disease",
+        "Prior anterior MI (2019, DES to LAD)",
+        "Hyperlipidemia",
+        "Type 2 diabetes",
+        "Former smoker"
+      ],
+      "leftVentricularEjectionFraction": null,
+      "priorAtrialFibrillation": null
+    },
+    "structuralHeartContext": {
+      "available": false,
+      "findings": [],
+      "lvefPct": null,
+      "severeLvDysfunction": null
+    },
+    "laboratoryContext": {
+      "troponinT": {
+        "value": 1.85,
+        "unit": "ng/mL",
+        "reference": "<0.014",
+        "flag": "CRITICAL HIGH"
+      },
+      "ck_mb": {
+        "value": 48,
+        "unit": "ng/mL",
+        "reference": "0–5",
+        "flag": "HIGH"
+      },
+      "potassium": {
+        "value": 4.1,
+        "unit": "mmol/L",
+        "reference": "3.5–5.1",
+        "flag": ""
+      },
+      "magnesium": {
+        "value": 2.0,
+        "unit": "mg/dL",
+        "reference": "1.7–2.2",
+        "flag": ""
+      },
+      "glucose": {
+        "value": 212,
+        "unit": "mg/dL",
+        "reference": "70–140",
+        "flag": "HIGH"
+      },
+      "creatinine": {
+        "value": 1.1,
+        "unit": "mg/dL",
+        "reference": "0.7–1.3",
+        "flag": ""
+      },
+      "lactate": {
+        "value": 4.8,
+        "unit": "mmol/L",
+        "reference": "0.5–2.2",
+        "flag": "HIGH"
+      },
+      "ph": {
+        "value": 7.21,
+        "unit": "",
+        "reference": "7.35–7.45",
+        "flag": "LOW"
+      }
+    },
+    "recentClinicalContext": {
+      "recentEvents": [
+        "Sudden loss of consciousness on monitor",
+        "Preceded by crescendo chest pain and ST elevation",
+        "BLS/ACLS in progress"
+      ]
+    },
+    "pairedOraclePatientContext": {
+      "available": false,
+      "sourceType": "oracle_smart_fhir"
+    },
+    "detector": {
+      "ruleId": "multilead-waveform-change-v1",
+      "estimatedRateBpm": null,
+      "triggerLatencySeconds": 1.2,
+      "referenceOnsetOffsetSeconds": 6.0,
+      "detectedTriggerOffsetSeconds": 7.2
+    },
+    "capture": {
+      "durationSeconds": 20.0,
+      "preSeconds": 6.0,
+      "eventSeconds": 8.0,
+      "postSeconds": 6.0,
+      "complete": true,
+      "sampleRateHz": 220.0,
+      "leads": [
+        "I",
+        "II",
+        "III",
+        "aVR",
+        "aVL",
+        "aVF"
+      ]
+    },
+    "provenance": {
+      "isIndependentDiagnosis": false,
+      "evaluationControlled": true,
+      "diagnosisOwnedByUpstreamSource": true,
+      "timingOwnedByDeterministicDetector": true,
+      "slmMayReclassify": false
+    }
+  },
+  "evidenceFingerprint": "f2f6614a14d3bd635e292129d337e30c6b0d6133fa9b6318a3843b348cd4c96d",
+  "model": {
+    "provider": "google_colab_file",
+    "name": "google/medgemma-27b-it",
+    "endpoint": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\b965a21ceaa38607acb16ed6ba6ca6efe041b52ed36c8a6980366a1097c125dc.json",
+    "sourceFile": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\b965a21ceaa38607acb16ed6ba6ca6efe041b52ed36c8a6980366a1097c125dc.json",
+    "colabRun": 1,
+    "promptFingerprint": "b965a21ceaa38607acb16ed6ba6ca6efe041b52ed36c8a6980366a1097c125dc",
+    "elapsedSeconds": 55.927,
+    "promptEvalCount": 3292,
+    "evalCount": 360,
+    "peakGpuMemoryGiB": 17.375,
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "quantization": "4-bit-nf4",
+    "structuredOutput": true,
+    "schema": "grounded-etiology-context-universal-v1",
+    "recommendedActionsRequired": false
+  },
+  "modelOwnedFields": [
+    "episodeSummary",
+    "detectedEpisodeContext",
+    "mostLikelyEtiology",
+    "contributingFactors",
+    "uncertaintyAndMissingData"
+  ],
+  "deterministicFields": [
+    "rhythmInterpretation",
+    "recommendedImmediateActions"
+  ],
+  "recommendedActionsRequired": false,
+  "modelResponse": {
+    "episodeSummary": "A 68-year-old male with a history of coronary artery disease, prior MI, hyperlipidemia, and type 2 diabetes experienced sudden loss of consciousness, preceded by crescendo chest pain and ST elevation. He was found to be pulseless with arterial line flatlining. The rhythm is ventricular fibrillation. Labs show elevated troponin (1.85 ng/mL) and CK-MB (48 ng/mL), high lactate (4.8 mmol/L), low pH (7.21), and hyperglycemia (212 mg/dL). Electrolytes (potassium, magnesium) are within normal limits.",
+    "rhythmInterpretation": "Authoritative upstream diagnosis: Ventricular fibrillation. Source: SLM_Eval. The rhythm diagnosis was not generated by the SLM.",
+    "clinicalContext": "Cardiac arrest due to ventricular fibrillation in a patient with acute chest pain and ST elevation, suggestive of an acute myocardial infarction. The patient was pulseless and apneic, requiring BLS/ACLS.",
+    "mostLikelyEtiology": "Acute myocardial infarction (STEMI) leading to ventricular fibrillation.",
+    "contributingFactors": [
+      "Acute ST-elevation myocardial infarction (STEMI)",
+      "History of coronary artery disease",
+      "Elevated troponin and CK-MB",
+      "Hyperglycemia",
+      "Acidosis (low pH)"
+    ],
+    "recommendedImmediateActions": [],
+    "uncertaintyAndMissingData": [
+      "Calcium level is unavailable.",
+      "Sodium level is unavailable.",
+      "Detailed troponin pattern is unspecified.",
+      "Specific coronary anatomy or lesion details are unavailable.",
+      "Phase 6 analysis reports insufficient confidence for controlled event heart rate and QRS duration measurements due to lack of reliable organized beat sequence in the ventricular fibrillation window."
+    ]
+  },
+  "displayModelResponse": {
+    "episodeSummary": "A 68-year-old male with a history of coronary artery disease, prior MI, hyperlipidemia, and type 2 diabetes experienced sudden loss of consciousness, preceded by crescendo chest pain and ST elevation. He was found to be pulseless with arterial line flatlining. The rhythm is ventricular fibrillation. Labs show elevated troponin (1.85 ng/mL) and CK-MB (48 ng/mL), high lactate (4.8 mmol/L), low pH (7.21), and hyperglycemia (212 mg/dL). Electrolytes (potassium, magnesium) are within normal limits.",
+    "rhythmInterpretation": "Authoritative upstream diagnosis: Ventricular fibrillation. Source: SLM_Eval. The rhythm diagnosis was not generated by the SLM.",
+    "clinicalContext": "Cardiac arrest due to ventricular fibrillation in a patient with acute chest pain and ST elevation, suggestive of an acute myocardial infarction. The patient was pulseless and apneic, requiring BLS/ACLS.",
+    "mostLikelyEtiology": "Acute myocardial infarction (STEMI) leading to ventricular fibrillation.",
+    "contributingFactors": [
+      "Acute ST-elevation myocardial infarction (STEMI)",
+      "History of coronary artery disease",
+      "Elevated troponin and CK-MB",
+      "Hyperglycemia",
+      "Acidosis (low pH)"
+    ],
+    "recommendedImmediateActions": [],
+    "uncertaintyAndMissingData": [
+      "Calcium level is unavailable.",
+      "Sodium level is unavailable.",
+      "Detailed troponin pattern is unspecified.",
+      "Specific coronary anatomy or lesion details are unavailable.",
+      "Phase 6 analysis reports insufficient confidence for controlled event heart rate and QRS duration measurements due to lack of reliable organized beat sequence in the ventricular fibrillation window."
+    ]
+  },
+  "validatedModelResponse": {
+    "episodeSummary": "A 68-year-old male with a history of coronary artery disease, prior MI, hyperlipidemia, and type 2 diabetes experienced sudden loss of consciousness, preceded by crescendo chest pain and ST elevation. He was found to be pulseless with arterial line flatlining. The rhythm is ventricular fibrillation. Labs show elevated troponin (1.85 ng/mL) and CK-MB (48 ng/mL), high lactate (4.8 mmol/L), low pH (7.21), and hyperglycemia (212 mg/dL). Electrolytes (potassium, magnesium) are within normal limits.",
+    "rhythmInterpretation": "Authoritative upstream diagnosis: Ventricular fibrillation. Source: SLM_Eval. The rhythm diagnosis was not generated by the SLM.",
+    "clinicalContext": "Cardiac arrest due to ventricular fibrillation in a patient with acute chest pain and ST elevation, suggestive of an acute myocardial infarction. The patient was pulseless and apneic, requiring BLS/ACLS.",
+    "mostLikelyEtiology": "Acute myocardial infarction (STEMI) leading to ventricular fibrillation.",
+    "contributingFactors": [
+      "Acute ST-elevation myocardial infarction (STEMI)",
+      "History of coronary artery disease",
+      "Elevated troponin and CK-MB",
+      "Hyperglycemia",
+      "Acidosis (low pH)"
+    ],
+    "recommendedImmediateActions": [],
+    "uncertaintyAndMissingData": [
+      "Calcium level is unavailable.",
+      "Sodium level is unavailable.",
+      "Detailed troponin pattern is unspecified.",
+      "Specific coronary anatomy or lesion details are unavailable.",
+      "Phase 6 analysis reports insufficient confidence for controlled event heart rate and QRS duration measurements due to lack of reliable organized beat sequence in the ventricular fibrillation window."
+    ]
+  },
+  "rawGroundedModelResponse": {
+    "episodeSummary": "A 68-year-old male with a history of coronary artery disease, prior MI, hyperlipidemia, and type 2 diabetes experienced sudden loss of consciousness, preceded by crescendo chest pain and ST elevation. He was found to be pulseless with arterial line flatlining. The rhythm is ventricular fibrillation. Labs show elevated troponin (1.85 ng/mL) and CK-MB (48 ng/mL), high lactate (4.8 mmol/L), low pH (7.21), and hyperglycemia (212 mg/dL). Electrolytes (potassium, magnesium) are within normal limits.",
+    "detectedEpisodeContext": "Cardiac arrest due to ventricular fibrillation in a patient with acute chest pain and ST elevation, suggestive of an acute myocardial infarction. The patient was pulseless and apneic, requiring BLS/ACLS.",
+    "mostLikelyEtiology": "Acute myocardial infarction (STEMI) leading to ventricular fibrillation.",
+    "contributingFactors": [
+      "Acute ST-elevation myocardial infarction (STEMI)",
+      "History of coronary artery disease",
+      "Elevated troponin and CK-MB",
+      "Hyperglycemia",
+      "Acidosis (low pH)"
+    ],
+    "uncertaintyAndMissingData": [
+      "Calcium level is unavailable.",
+      "Sodium level is unavailable.",
+      "Detailed troponin pattern is unspecified.",
+      "Specific coronary anatomy or lesion details are unavailable.",
+      "Phase 6 analysis reports insufficient confidence for controlled event heart rate and QRS duration measurements due to lack of reliable organized beat sequence in the ventricular fibrillation window."
+    ]
+  },
+  "normalizedGroundedModelResponse": {
+    "episodeSummary": "A 68-year-old male with a history of coronary artery disease, prior MI, hyperlipidemia, and type 2 diabetes experienced sudden loss of consciousness, preceded by crescendo chest pain and ST elevation. He was found to be pulseless with arterial line flatlining. The rhythm is ventricular fibrillation. Labs show elevated troponin (1.85 ng/mL) and CK-MB (48 ng/mL), high lactate (4.8 mmol/L), low pH (7.21), and hyperglycemia (212 mg/dL). Electrolytes (potassium, magnesium) are within normal limits.",
+    "detectedEpisodeContext": "Cardiac arrest due to ventricular fibrillation in a patient with acute chest pain and ST elevation, suggestive of an acute myocardial infarction. The patient was pulseless and apneic, requiring BLS/ACLS.",
+    "mostLikelyEtiology": "Acute myocardial infarction (STEMI) leading to ventricular fibrillation.",
+    "contributingFactors": [
+      "Acute ST-elevation myocardial infarction (STEMI)",
+      "History of coronary artery disease",
+      "Elevated troponin and CK-MB",
+      "Hyperglycemia",
+      "Acidosis (low pH)"
+    ],
+    "uncertaintyAndMissingData": [
+      "Calcium level is unavailable.",
+      "Sodium level is unavailable.",
+      "Detailed troponin pattern is unspecified.",
+      "Specific coronary anatomy or lesion details are unavailable.",
+      "Phase 6 analysis reports insufficient confidence for controlled event heart rate and QRS duration measurements due to lack of reliable organized beat sequence in the ventricular fibrillation window."
+    ]
+  },
+  "normalizationChanges": [],
+  "validation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "VENTRICULAR_FIBRILLATION",
+    "authoritativeDiagnosisDisplay": "Ventricular fibrillation",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "validatorInternalConflicts": [],
+    "adjudicationEligible": false,
+    "evidenceCoverage": {
+      "rhythmEvidence": true,
+      "hemodynamicContext": true,
+      "electrolyteInterpretation": true,
+      "ischemiaInterpretation": true,
+      "infectionContext": true,
+      "qtContext": false,
+      "renalContext": false,
+      "medicationToxicityContext": false,
+      "medicationContext": false,
+      "episodePackClinicalContext": true
+    },
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 6,
+    "evidenceCoverageRequired": 3,
+    "correctionEvidence": [],
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-v4.3",
+    "groundingStatus": "accepted",
+    "clinicalPromptMode": "episode_pack_only",
+    "evidenceFingerprint": "8c069f6f7cd5ec2a2c0dce801272462c669cfa8a4a3873fe3baccfd87b61ee46",
+    "medicalAdjudication": {
+      "schemaVersion": "medical-validator-review-v2",
+      "status": "disabled",
+      "advisoryOnly": true
+    },
+    "medicalReviewRecommended": false
+  },
+  "reliability": {
+    "attemptCount": 1,
+    "firstAttemptAccepted": true,
+    "firstAttemptStrictlyAccepted": true,
+    "firstAttemptDisplayableWithReview": false,
+    "firstAttemptErrors": [],
+    "finalAttemptAccepted": true,
+    "finalAttemptStrictlyAccepted": true,
+    "finalAttemptDisplayableWithReview": false,
+    "retryReasonCount": 0,
+    "contradictionCount": 0,
+    "unsupportedFactCount": 0,
+    "evidenceCoverageCount": 6,
+    "evidenceCoverageRequired": 3
+  },
+  "attemptCount": 1,
+  "firstAttemptAccepted": true,
+  "firstAttemptStrictlyAccepted": true,
+  "firstAttemptDisplayableWithReview": false,
+  "firstAttemptErrors": [],
+  "finalAttemptAccepted": true,
+  "finalAttemptStrictlyAccepted": true,
+  "finalAttemptDisplayableWithReview": false,
+  "retryReasonCount": 0,
+  "contradictionCount": 0,
+  "unsupportedFactCount": 0,
+  "evidenceCoverageCount": 6,
+  "evidenceCoverageRequired": 3
+}

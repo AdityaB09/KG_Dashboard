@@ -1,0 +1,110 @@
+{
+  "schemaVersion": "slm-widget-result-v4",
+  "scenarioId": "VFIB-STEMI-001",
+  "episodeId": "evalflow-VFIB-STEMI-001-20260731-191149-c3ca79",
+  "incidentId": "inc-INCART-EVAL-VFIB-STEMI-001-loop-1-ventricular-fibrillation-000001584-T-fMRMNztUUNQnMO",
+  "status": "complete",
+  "validationStatus": "accepted",
+  "displayPolicy": "always_show_model_response",
+  "validationSummary": {
+    "status": "accepted",
+    "strictlyAccepted": true,
+    "hardAccepted": true,
+    "displayableWithReview": false,
+    "validatorPassed": true,
+    "hardErrorCount": 0,
+    "qualityErrorCount": 0,
+    "contradictionCount": 0,
+    "unsupportedFactCount": 0,
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "contradictions": [],
+    "unsupportedFacts": []
+  },
+  "headline": "Ventricular fibrillation",
+  "narrative": {
+    "episodeSummary": "A 68-year-old male with a history of coronary artery disease, prior MI, hyperlipidemia, and type 2 diabetes experienced sudden loss of consciousness, preceded by crescendo chest pain and ST elevation. He was found to be pulseless with arterial line flatlining. The rhythm is ventricular fibrillation. Labs show elevated troponin (1.85 ng/mL) and CK-MB (48 ng/mL), high lactate (4.8 mmol/L), low pH (7.21), and hyperglycemia (212 mg/dL). Electrolytes (potassium, magnesium) are within normal limits.",
+    "clinicalContext": "Cardiac arrest due to ventricular fibrillation in a patient with acute chest pain and ST elevation, suggestive of an acute myocardial infarction. The patient was pulseless and apneic, requiring BLS/ACLS.",
+    "mostLikelyEtiology": "Acute myocardial infarction (STEMI) leading to ventricular fibrillation.",
+    "contributingFactors": [
+      "Acute ST-elevation myocardial infarction (STEMI)",
+      "History of coronary artery disease",
+      "Elevated troponin and CK-MB",
+      "Hyperglycemia",
+      "Acidosis (low pH)"
+    ],
+    "uncertaintyAndMissingData": [
+      "Calcium level is unavailable.",
+      "Sodium level is unavailable.",
+      "Detailed troponin pattern is unspecified.",
+      "Specific coronary anatomy or lesion details are unavailable.",
+      "Phase 6 analysis reports insufficient confidence for controlled event heart rate and QRS duration measurements due to lack of reliable organized beat sequence in the ventricular fibrillation window."
+    ]
+  },
+  "grounding": {
+    "status": "accepted",
+    "pass": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "accepted": true,
+    "displayableWithReview": false,
+    "hardErrorCount": 0,
+    "qualityErrorCount": 0
+  },
+  "benchmark": {
+    "score": 77,
+    "grade": "below_target",
+    "conceptGrade": "needs_improvement",
+    "alignmentMode": "full_scenario",
+    "informationalOnly": false,
+    "pass": false,
+    "disposition": "below_target"
+  },
+  "evaluationStatistics": {
+    "scenarioScore": 77,
+    "overallPass": false,
+    "safetyPass": true,
+    "attemptCount": 1,
+    "generationLatencySeconds": 55.927,
+    "rawResponseDisplayed": true
+  },
+  "measurementConflicts": [],
+  "sourceManifest": {
+    "patientContextSource": "complete_episode_pack",
+    "episodeContextSource": "complete_episode_pack",
+    "controlledEventSource": "complete_episode_pack",
+    "waveformAnalysisSource": "phase6_deterministic_analysis",
+    "detectorSource": "evaluation_detector",
+    "oracleSmartRole": "authentication_and_scenario_routing_only",
+    "oracleFhirClinicalContextUsed": false
+  },
+  "clinicalPromptMode": "episode_pack_only",
+  "model": {
+    "provider": "google_colab_file",
+    "name": "google/medgemma-27b-it",
+    "endpoint": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\b965a21ceaa38607acb16ed6ba6ca6efe041b52ed36c8a6980366a1097c125dc.json",
+    "sourceFile": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\b965a21ceaa38607acb16ed6ba6ca6efe041b52ed36c8a6980366a1097c125dc.json",
+    "colabRun": 1,
+    "promptFingerprint": "b965a21ceaa38607acb16ed6ba6ca6efe041b52ed36c8a6980366a1097c125dc",
+    "elapsedSeconds": 55.927,
+    "promptEvalCount": 3292,
+    "evalCount": 360,
+    "peakGpuMemoryGiB": 17.375,
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "quantization": "4-bit-nf4",
+    "structuredOutput": true,
+    "schema": "grounded-etiology-context-universal-v1",
+    "recommendedActionsRequired": false
+  },
+  "manualReviewRequired": true,
+  "medicalAdjudication": {
+    "status": "disabled",
+    "advisoryOnly": true,
+    "model": null,
+    "decision": null,
+    "issueReviewCount": 0,
+    "validatorFalsePositiveCount": 0
+  },
+  "medicalReviewRecommended": false
+}

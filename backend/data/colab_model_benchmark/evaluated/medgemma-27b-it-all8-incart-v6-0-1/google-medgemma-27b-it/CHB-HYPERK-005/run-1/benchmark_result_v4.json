@@ -1,0 +1,539 @@
+{
+  "schemaVersion": "benchmark-result-v4",
+  "episodeId": "CHB-HYPERK-005",
+  "scoringContract": "etiology-context-deterministic-v4.3",
+  "recommendedActionsRequired": false,
+  "actionsScored": false,
+  "diagnosisConsistency": 20,
+  "primaryEtiology": 22,
+  "contextualEvidence": 25,
+  "uncertaintyAndMissingData": 0,
+  "avoidsDistractors": 5,
+  "total": 72,
+  "grade": "needs_improvement",
+  "validatorPassed": true,
+  "safetyPass": true,
+  "overallPass": false,
+  "overallDisposition": "grounded_but_below_benchmark_target",
+  "groundingPass": true,
+  "grounding": {
+    "status": "accepted",
+    "pass": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "accepted": true,
+    "displayableWithReview": false,
+    "hardErrorCount": 0,
+    "qualityErrorCount": 0
+  },
+  "benchmark": {
+    "score": 72,
+    "grade": "below_target",
+    "conceptGrade": "needs_improvement",
+    "alignmentMode": "full_scenario",
+    "informationalOnly": false,
+    "pass": false,
+    "disposition": "below_target"
+  },
+  "benchmarkAlignmentMode": "full_scenario",
+  "benchmarkInformationalOnly": false,
+  "benchmarkPass": false,
+  "benchmarkDisposition": "below_target",
+  "clinicalPromptMode": "episode_pack_only",
+  "matched": {
+    "diagnosis": [
+      "Complete heart block"
+    ],
+    "etiology": [
+      "hyperkalemiaMediatedConductionFailure"
+    ],
+    "context": [
+      "severeHyperkalemia",
+      "missedDialysis",
+      "esrd",
+      "metabolicAcidosis",
+      "peakedTWaves",
+      "qrsWidening",
+      "completeAvBlock",
+      "renalFailure",
+      "hyperkalemia",
+      "acidosis"
+    ],
+    "uncertainty": []
+  },
+  "partial": {
+    "etiology": [
+      "renalFailureMissedDialysisMechanism"
+    ],
+    "context": [],
+    "uncertainty": []
+  },
+  "missing": {
+    "etiology": [],
+    "context": [
+      "potassiumRaisingMedications",
+      "medicationContribution"
+    ],
+    "uncertainty": [
+      "underlyingDegenerativeConductionDiseaseUncertain"
+    ]
+  },
+  "conceptStrengths": {
+    "etiology": {
+      "hyperkalemiaMediatedConductionFailure": 0.75,
+      "renalFailureMissedDialysisMechanism": 0.5
+    },
+    "context": {
+      "severeHyperkalemia": 1.0,
+      "missedDialysis": 0.9,
+      "esrd": 1.0,
+      "metabolicAcidosis": 1.0,
+      "peakedTWaves": 1.0,
+      "qrsWidening": 1.0,
+      "completeAvBlock": 1.0,
+      "potassiumRaisingMedications": 0.0,
+      "renalFailure": 1.0,
+      "hyperkalemia": 1.0,
+      "acidosis": 1.0,
+      "medicationContribution": 0.0
+    },
+    "uncertainty": {
+      "underlyingDegenerativeConductionDiseaseUncertain": 0.0
+    }
+  },
+  "distractorHits": [],
+  "forbiddenClaimHits": [],
+  "unsafeStatements": [],
+  "responseValidation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "COMPLETE_HEART_BLOCK",
+    "authoritativeDiagnosisDisplay": "Complete heart block",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "validatorInternalConflicts": [],
+    "adjudicationEligible": false,
+    "evidenceCoverage": {
+      "rhythmEvidence": true,
+      "structuralSubstrate": true,
+      "hemodynamicContext": true,
+      "electrolyteInterpretation": true,
+      "ischemiaInterpretation": true,
+      "infectionContext": false,
+      "qtContext": false,
+      "renalContext": true,
+      "medicationToxicityContext": false,
+      "medicationContext": false,
+      "episodePackClinicalContext": true
+    },
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 7,
+    "evidenceCoverageRequired": 4,
+    "correctionEvidence": [],
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-v4.3",
+    "groundingStatus": "accepted",
+    "clinicalPromptMode": "episode_pack_only",
+    "evidenceFingerprint": "1f8fc631ed526722fcd719a4f48082ba0de4ea51c3f457a5c9cc9b363424884e",
+    "medicalAdjudication": {
+      "schemaVersion": "medical-validator-review-v2",
+      "status": "disabled",
+      "advisoryOnly": true
+    },
+    "medicalReviewRecommended": false
+  },
+  "manualClinicalReviewRequired": true,
+  "scoringMethod": "scenario answer-key concept-strength matching with word-boundary, negation-aware terminology; grounding safety evaluated separately",
+  "scopedEvidenceSchemaVersion": "slm-evidence-envelope-v4",
+  "rhythmIdentification": 20,
+  "contributingFactors": 25,
+  "recommendedActions": 0,
+  "mandatoryEmergencyActionsMissing": [],
+  "normalizedModelResponse": {
+    "episodeSummary": "The patient, a 70-year-old male with end-stage renal disease on hemodialysis, hypertension, and heart failure, presented with generalized weakness after missing two dialysis sessions. He was found to have symptomatic bradycardia with a heart rate of 34 bpm, hypotension (MAP 59 mmHg), and ECG findings consistent with complete heart block (wide QRS, AV dissociation, peaked T waves, progressive QRS widening). Laboratory results show critical hyperkalemia (7.4 mmol/L), hypocalcemia (7.6 mg/dL), metabolic acidosis (pH 7.24, bicarbonate 15 mmol/L), and significantly elevated creatinine (9.8 mg/dL) and BUN (88 mg/dL), consistent with severe renal impairment. The Phase 6 analysis confirms a low heart rate (median 34.1 bpm) during the controlled event, but notes low confidence in the QRS measurement validity.",
+    "rhythmInterpretation": "Authoritative upstream diagnosis: Complete heart block. Source: SLM_Eval. The rhythm diagnosis was not generated by the SLM.",
+    "clinicalContext": "Symptomatic bradycardia secondary to complete heart block in the setting of severe renal failure, electrolyte abnormalities (hyperkalemia, hypocalcemia), and metabolic acidosis, likely related to missed hemodialysis.",
+    "mostLikelyEtiology": "Severe hyperkalemia secondary to end-stage renal disease and missed hemodialysis, leading to conduction system dysfunction and complete heart block.",
+    "contributingFactors": [
+      "End-stage renal disease",
+      "Missed hemodialysis sessions",
+      "Severe hyperkalemia",
+      "Hypocalcemia",
+      "Metabolic acidosis"
+    ],
+    "recommendedImmediateActions": [],
+    "uncertaintyAndMissingData": [
+      "Phase 6 analysis has low confidence in the controlled-event heart rate measurement validity.",
+      "Phase 6 analysis has insufficient confidence for windowed measurement quality.",
+      "Phase 6 analysis could not reliably measure QRS duration in this window.",
+      "Magnesium level is unavailable.",
+      "Sodium level is unavailable.",
+      "Troponin level is unavailable."
+    ]
+  },
+  "displayModelResponse": {
+    "episodeSummary": "The patient, a 70-year-old male with end-stage renal disease on hemodialysis, hypertension, and heart failure, presented with generalized weakness after missing two dialysis sessions. He was found to have symptomatic bradycardia with a heart rate of 34 bpm, hypotension (MAP 59 mmHg), and ECG findings consistent with complete heart block (wide QRS, AV dissociation, peaked T waves, progressive QRS widening). Laboratory results show critical hyperkalemia (7.4 mmol/L), hypocalcemia (7.6 mg/dL), metabolic acidosis (pH 7.24, bicarbonate 15 mmol/L), and significantly elevated creatinine (9.8 mg/dL) and BUN (88 mg/dL), consistent with severe renal impairment. The Phase 6 analysis confirms a low heart rate (median 34.1 bpm) during the controlled event, but notes low confidence in the QRS measurement validity.",
+    "rhythmInterpretation": "Authoritative upstream diagnosis: Complete heart block. Source: SLM_Eval. The rhythm diagnosis was not generated by the SLM.",
+    "clinicalContext": "Symptomatic bradycardia secondary to complete heart block in the setting of severe renal failure, electrolyte abnormalities (hyperkalemia, hypocalcemia), and metabolic acidosis, likely related to missed hemodialysis.",
+    "mostLikelyEtiology": "Severe hyperkalemia secondary to end-stage renal disease and missed hemodialysis, leading to conduction system dysfunction and complete heart block.",
+    "contributingFactors": [
+      "End-stage renal disease",
+      "Missed hemodialysis sessions",
+      "Severe hyperkalemia",
+      "Hypocalcemia",
+      "Metabolic acidosis"
+    ],
+    "recommendedImmediateActions": [],
+    "uncertaintyAndMissingData": [
+      "Phase 6 analysis has low confidence in the controlled-event heart rate measurement validity.",
+      "Phase 6 analysis has insufficient confidence for windowed measurement quality.",
+      "Phase 6 analysis could not reliably measure QRS duration in this window.",
+      "Magnesium level is unavailable.",
+      "Sodium level is unavailable.",
+      "Troponin level is unavailable."
+    ]
+  },
+  "cardinalResponseFile": "cardinal_model_response.json",
+  "diagnosticEvent": {
+    "schemaVersion": "diagnostic-event-universal-v2",
+    "eventDetected": true,
+    "episodeId": "evalflow-CHB-HYPERK-005-20260731-194304-f282ff",
+    "incidentId": "inc-INCART-EVAL-CHB-HYPERK-005-loop-1-complete-heart-block-000001584-RtowvVFVNg2--Iex",
+    "diagnosis": {
+      "code": "COMPLETE_HEART_BLOCK",
+      "display": "Complete heart block",
+      "authoritative": true
+    },
+    "source": {
+      "type": "controlled_evaluation_scenario",
+      "name": "SLM_Eval",
+      "identifier": "CHB-HYPERK-005",
+      "futureReplacement": "ecg_ml_diagnostic_model"
+    },
+    "confidence": {
+      "value": 1.0,
+      "basis": "controlled_evaluation_label"
+    },
+    "measurements": {
+      "ventricularRateBpm": 34.0,
+      "atrialRateBpm": 84.0,
+      "qrsDurationMs": 150.0,
+      "qtcMs": null,
+      "prIntervalMs": null,
+      "regularity": "regular (dissociated)",
+      "axisDegrees": null,
+      "pWavePresent": true,
+      "atrialActivityPresent": true,
+      "atrioventricularAssociation": "dissociated"
+    },
+    "rhythmFeatures": {
+      "ventricularRateBpm": 34.0,
+      "atrialRateBpm": 84.0,
+      "qrsDurationMs": 150.0,
+      "qtcMs": null,
+      "qtcEvidenceSource": null,
+      "prIntervalMs": null,
+      "regularity": "regular (dissociated)",
+      "axisDegrees": null,
+      "pWavePresent": true,
+      "atrialActivityPresent": true,
+      "atrioventricularAssociation": "dissociated",
+      "findings": [
+        "Wide QRS",
+        "AV dissociation",
+        "Peaked T waves",
+        "Progressive QRS widening"
+      ]
+    },
+    "hemodynamicStatus": {
+      "available": true,
+      "classification": "unstable",
+      "conscious": null,
+      "pulseless": null,
+      "pulsePresent": null,
+      "shockSupported": null,
+      "vasopressorSupport": null,
+      "systolicBloodPressure": 78.0,
+      "diastolicBloodPressure": 50.0,
+      "map": 59.0,
+      "oxygenSaturationPct": 95.0,
+      "temperatureC": 36.5,
+      "sourceNote": "Symptomatic bradycardia"
+    },
+    "electrolyteContext": {
+      "available": true,
+      "potassium": {
+        "available": true,
+        "value": 7.4,
+        "unit": "mmol/L",
+        "withinReference": false,
+        "reference": {
+          "low": 3.5,
+          "high": 5.1
+        },
+        "note": "CRITICAL HIGH"
+      },
+      "magnesium": {
+        "available": false,
+        "value": null,
+        "unit": null,
+        "withinReference": null,
+        "reference": null
+      },
+      "calcium": {
+        "available": true,
+        "value": 7.6,
+        "unit": "mg/dL",
+        "withinReference": false,
+        "reference": {
+          "low": 8.5,
+          "high": 10.2
+        },
+        "note": "LOW"
+      },
+      "sodium": {
+        "available": false,
+        "value": null,
+        "unit": null,
+        "withinReference": null,
+        "reference": null
+      },
+      "abnormalElectrolytes": [
+        "potassium",
+        "calcium"
+      ],
+      "electrolyteAbnormalityPresent": true,
+      "majorElectrolyteTriggerSupported": true
+    },
+    "ischemiaContext": {
+      "available": false,
+      "acuteChestPain": null,
+      "stElevationSupported": null,
+      "troponinValue": null,
+      "troponinPattern": "not_available",
+      "acuteStemiSupported": null
+    },
+    "infectionContext": {
+      "available": true,
+      "temperatureC": 36.5,
+      "wbc": null,
+      "procalcitonin": null,
+      "lactate": null,
+      "feverSupported": null,
+      "inflammatoryResponseSupported": null,
+      "infectionSupported": null,
+      "sepsisSupported": null,
+      "infectionExplicitlyDenied": null,
+      "suspectedSource": null
+    },
+    "qtContext": {
+      "available": false,
+      "qtcMs": null,
+      "prolonged": null,
+      "thresholdMs": 500,
+      "qtProlongingMedications": [],
+      "acquiredLongQtSupported": null,
+      "evidenceSource": null
+    },
+    "renalContext": {
+      "available": true,
+      "creatinine": 9.8,
+      "bun": 88.0,
+      "egfr": null,
+      "esrd": true,
+      "dialysis": true,
+      "missedDialysis": true,
+      "chronicKidneyDiseaseSupported": null,
+      "acuteKidneyInjurySupported": null,
+      "renalImpairmentSupported": true,
+      "sourceTextContainsRenalImpairment": null
+    },
+    "medicationContext": {
+      "available": true,
+      "homeMedications": [
+        "Lisinopril 20 mg",
+        "Spironolactone 25 mg",
+        "Sevelamer"
+      ],
+      "activeMedications": [
+        "Lisinopril 20 mg",
+        "Spironolactone 25 mg",
+        "Sevelamer"
+      ],
+      "infusions": [],
+      "qtProlongingMedications": [],
+      "digoxinExposure": false,
+      "potassiumRaisingMedicationExposure": true,
+      "thiazideExposure": false
+    },
+    "toxicityContext": {
+      "available": true,
+      "digoxinLevel": null,
+      "symptoms": [],
+      "digoxinToxicitySupported": false,
+      "reducedClearanceSupported": false
+    },
+    "patientContext": {
+      "available": true,
+      "age": 70,
+      "sex": "M",
+      "primaryDiagnosis": "Missed hemodialysis, weakness",
+      "history": [
+        "End-stage renal disease on hemodialysis (MWF)",
+        "Hypertension",
+        "Heart failure"
+      ],
+      "leftVentricularEjectionFraction": null,
+      "priorAtrialFibrillation": null
+    },
+    "structuralHeartContext": {
+      "available": true,
+      "findings": [
+        "Heart failure"
+      ],
+      "lvefPct": null,
+      "severeLvDysfunction": null
+    },
+    "laboratoryContext": {
+      "potassium": {
+        "value": 7.4,
+        "unit": "mmol/L",
+        "reference": "3.5–5.1",
+        "flag": "CRITICAL HIGH"
+      },
+      "bicarbonate": {
+        "value": 15,
+        "unit": "mmol/L",
+        "reference": "22–29",
+        "flag": "LOW"
+      },
+      "creatinine": {
+        "value": 9.8,
+        "unit": "mg/dL",
+        "reference": "0.7–1.3",
+        "flag": "CRITICAL HIGH"
+      },
+      "bun": {
+        "value": 88,
+        "unit": "mg/dL",
+        "reference": "7–20",
+        "flag": "HIGH"
+      },
+      "calcium": {
+        "value": 7.6,
+        "unit": "mg/dL",
+        "reference": "8.5–10.2",
+        "flag": "LOW"
+      },
+      "ph": {
+        "value": 7.24,
+        "unit": "",
+        "reference": "7.35–7.45",
+        "flag": "LOW"
+      },
+      "glucose": {
+        "value": 118,
+        "unit": "mg/dL",
+        "reference": "70–140",
+        "flag": ""
+      }
+    },
+    "recentClinicalContext": {
+      "recentEvents": [
+        "Missed last 2 dialysis sessions",
+        "Generalized weakness",
+        "Peaked T waves and QRS widening on monitor"
+      ]
+    },
+    "pairedOraclePatientContext": {
+      "available": false,
+      "sourceType": "oracle_smart_fhir"
+    },
+    "detector": {
+      "ruleId": "multilead-waveform-change-v1",
+      "estimatedRateBpm": 34.0,
+      "triggerLatencySeconds": 1.2,
+      "referenceOnsetOffsetSeconds": 6.0,
+      "detectedTriggerOffsetSeconds": 7.2
+    },
+    "capture": {
+      "durationSeconds": 20.0,
+      "preSeconds": 6.0,
+      "eventSeconds": 8.0,
+      "postSeconds": 6.0,
+      "complete": true,
+      "sampleRateHz": 220.0,
+      "leads": [
+        "I",
+        "II",
+        "III",
+        "aVR",
+        "aVL",
+        "aVF"
+      ]
+    },
+    "provenance": {
+      "isIndependentDiagnosis": false,
+      "evaluationControlled": true,
+      "diagnosisOwnedByUpstreamSource": true,
+      "timingOwnedByDeterministicDetector": true,
+      "slmMayReclassify": false
+    }
+  },
+  "rhythmIdentificationSource": "authoritative_diagnostic_event",
+  "scoreApplicability": "scenario_evaluation",
+  "clinicalPatientScoreApplicable": true,
+  "displayInClinicalWidget": true,
+  "displayPolicy": "always_show_model_response",
+  "evidenceSchemaVersion": "slm-evidence-envelope-v4",
+  "evidenceConsistencyReview": {
+    "schemaVersion": "evidence-consistency-review-v1",
+    "status": "consistent_with_warnings",
+    "scenarioId": "CHB-HYPERK-005",
+    "hardConflicts": [],
+    "warnings": [
+      "Phase 6 produced an low-confidence controlled-event ventricularRateBpm measurement. It must not dispute or replace the controlled episode-package value."
+    ],
+    "normalizationsApplied": [],
+    "qualifiedMeasurementConflictCount": 0
+  },
+  "generationAttempted": true,
+  "validContract": true,
+  "reliability": {
+    "attemptCount": 1,
+    "firstAttemptAccepted": true,
+    "firstAttemptStrictlyAccepted": true,
+    "firstAttemptDisplayableWithReview": false,
+    "firstAttemptErrors": [],
+    "finalAttemptAccepted": true,
+    "finalAttemptStrictlyAccepted": true,
+    "finalAttemptDisplayableWithReview": false,
+    "retryReasonCount": 0,
+    "contradictionCount": 0,
+    "unsupportedFactCount": 0,
+    "evidenceCoverageCount": 7,
+    "evidenceCoverageRequired": 4
+  },
+  "attemptCount": 1,
+  "firstAttemptAccepted": true,
+  "firstAttemptStrictlyAccepted": true,
+  "firstAttemptDisplayableWithReview": false,
+  "firstAttemptErrors": [],
+  "finalAttemptAccepted": true,
+  "finalAttemptStrictlyAccepted": true,
+  "finalAttemptDisplayableWithReview": false,
+  "retryReasonCount": 0,
+  "contradictionCount": 0,
+  "unsupportedFactCount": 0,
+  "evidenceCoverageCount": 7,
+  "evidenceCoverageRequired": 4
+}

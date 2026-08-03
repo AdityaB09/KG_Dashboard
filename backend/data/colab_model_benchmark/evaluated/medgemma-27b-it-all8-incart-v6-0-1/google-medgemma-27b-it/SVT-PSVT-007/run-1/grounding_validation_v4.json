@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "grounding-validation-v4",
+  "status": "accepted_with_review",
+  "accepted": false,
+  "hardAccepted": true,
+  "validatorPassed": true,
+  "displayableWithReview": true,
+  "qualityReviewRequired": true,
+  "retryable": false,
+  "authoritativeDiagnosisCode": "SUPRAVENTRICULAR_TACHYCARDIA",
+  "authoritativeDiagnosisDisplay": "Paroxysmal supraventricular tachycardia",
+  "errors": [
+    "Material measurement conflict was not acknowledged: controlled-vs-phase6-qrsDurationMs."
+  ],
+  "hardErrors": [],
+  "qualityErrors": [
+    "Material measurement conflict was not acknowledged: controlled-vs-phase6-qrsDurationMs."
+  ],
+  "warnings": [],
+  "contradictions": [],
+  "unsupportedFacts": [],
+  "validatorInternalConflicts": [],
+  "adjudicationEligible": true,
+  "evidenceCoverage": {
+    "rhythmEvidence": true,
+    "hemodynamicContext": true,
+    "electrolyteInterpretation": true,
+    "ischemiaInterpretation": true,
+    "infectionContext": false,
+    "qtContext": false,
+    "renalContext": false,
+    "medicationToxicityContext": false,
+    "medicationContext": false,
+    "episodePackClinicalContext": true
+  },
+  "missingRequiredCoverage": [],
+  "evidenceCoverageCount": 5,
+  "evidenceCoverageRequired": 1,
+  "correctionEvidence": [
+    "Use source-qualified language: 'controlled-event evidence did not support X'.",
+    "For partial electrolyte panels, name the supplied analytes instead of saying all electrolytes were normal."
+  ],
+  "recommendedActionsRequired": false,
+  "policyVersion": "grounded-response-validator-v4.3",
+  "groundingStatus": "accepted_with_review",
+  "clinicalPromptMode": "episode_pack_only",
+  "evidenceFingerprint": "a675913aa26190d3fc4020461fdc496f62309c605800a570859e55880985cb25",
+  "medicalAdjudication": {
+    "schemaVersion": "medical-validator-review-v2",
+    "status": "disabled",
+    "advisoryOnly": true
+  },
+  "medicalReviewRecommended": true
+}

@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "measurement-conflicts-v4",
+  "episodeId": "evalflow-NSVT-ECTOPY-008-20260731-193752-f75aa3",
+  "items": [
+    {
+      "id": "controlled-vs-phase6-qrsDurationMs",
+      "metric": "qrsDurationMs",
+      "controlledEventValue": 94.0,
+      "phase6EventValue": 59.091,
+      "controlledValue": 94.0,
+      "independentValue": 59.091,
+      "unit": "ms",
+      "difference": 34.909,
+      "confidenceGrade": "high",
+      "sameWindow": true,
+      "sameMetric": true,
+      "unitCompatible": true,
+      "measurementValid": true,
+      "material": true,
+      "requiredAcknowledgement": true
+    }
+  ]
+}

@@ -1,0 +1,2265 @@
+{
+  "schemaVersion": "grounded-model-input-universal-v4",
+  "createdAt": "2026-08-02T01:32:07.966577+00:00",
+  "scenarioId": "BRADY-DIGTOX-006",
+  "episodeId": "evalflow-BRADY-DIGTOX-006-20260731-194940-741c22",
+  "incidentId": "inc-INCART-EVAL-BRADY-DIGTOX-006-loop-1-bradyarrhythmia-000001650-LKi3uUXF7bxKBRcF",
+  "diagnosticEvent": {
+    "schemaVersion": "diagnostic-event-universal-v2",
+    "eventDetected": true,
+    "episodeId": "evalflow-BRADY-DIGTOX-006-20260731-194940-741c22",
+    "incidentId": "inc-INCART-EVAL-BRADY-DIGTOX-006-loop-1-bradyarrhythmia-000001650-LKi3uUXF7bxKBRcF",
+    "diagnosis": {
+      "code": "JUNCTIONAL_BRADYCARDIA",
+      "display": "Junctional bradycardia",
+      "authoritative": true
+    },
+    "source": {
+      "type": "controlled_evaluation_scenario",
+      "name": "SLM_Eval",
+      "identifier": "BRADY-DIGTOX-006",
+      "futureReplacement": "ecg_ml_diagnostic_model"
+    },
+    "confidence": {
+      "value": 1.0,
+      "basis": "controlled_evaluation_label"
+    },
+    "measurements": {
+      "ventricularRateBpm": 38.0,
+      "atrialRateBpm": null,
+      "qrsDurationMs": 96.0,
+      "qtcMs": null,
+      "prIntervalMs": null,
+      "regularity": "regular",
+      "axisDegrees": null,
+      "pWavePresent": false,
+      "atrialActivityPresent": false,
+      "atrioventricularAssociation": null
+    },
+    "rhythmFeatures": {
+      "ventricularRateBpm": 38.0,
+      "atrialRateBpm": null,
+      "qrsDurationMs": 96.0,
+      "qtcMs": null,
+      "qtcEvidenceSource": null,
+      "prIntervalMs": null,
+      "regularity": "regular",
+      "axisDegrees": null,
+      "pWavePresent": false,
+      "atrialActivityPresent": false,
+      "atrioventricularAssociation": null,
+      "findings": [
+        "Narrow QRS"
+      ]
+    },
+    "hemodynamicStatus": {
+      "available": true,
+      "classification": "stable",
+      "conscious": null,
+      "pulseless": null,
+      "pulsePresent": null,
+      "shockSupported": null,
+      "vasopressorSupport": null,
+      "systolicBloodPressure": 104.0,
+      "diastolicBloodPressure": 62.0,
+      "map": 76.0,
+      "oxygenSaturationPct": 96.0,
+      "temperatureC": 36.6,
+      "sourceNote": "Mildly symptomatic"
+    },
+    "electrolyteContext": {
+      "available": true,
+      "potassium": {
+        "available": true,
+        "value": 5.6,
+        "unit": "mmol/L",
+        "withinReference": false,
+        "reference": {
+          "low": 3.5,
+          "high": 5.1
+        },
+        "note": "HIGH"
+      },
+      "magnesium": {
+        "available": true,
+        "value": 2.0,
+        "unit": "mg/dL",
+        "withinReference": true,
+        "reference": {
+          "low": 1.7,
+          "high": 2.2
+        },
+        "note": ""
+      },
+      "calcium": {
+        "available": false,
+        "value": null,
+        "unit": null,
+        "withinReference": null,
+        "reference": null
+      },
+      "sodium": {
+        "available": false,
+        "value": null,
+        "unit": null,
+        "withinReference": null,
+        "reference": null
+      },
+      "abnormalElectrolytes": [
+        "potassium"
+      ],
+      "electrolyteAbnormalityPresent": true,
+      "majorElectrolyteTriggerSupported": true
+    },
+    "ischemiaContext": {
+      "available": false,
+      "acuteChestPain": null,
+      "stElevationSupported": null,
+      "troponinValue": null,
+      "troponinPattern": "not_available",
+      "acuteStemiSupported": null
+    },
+    "infectionContext": {
+      "available": true,
+      "temperatureC": 36.6,
+      "wbc": null,
+      "procalcitonin": null,
+      "lactate": null,
+      "feverSupported": null,
+      "inflammatoryResponseSupported": null,
+      "infectionSupported": null,
+      "sepsisSupported": null,
+      "infectionExplicitlyDenied": null,
+      "suspectedSource": null
+    },
+    "qtContext": {
+      "available": false,
+      "qtcMs": null,
+      "prolonged": null,
+      "thresholdMs": 500,
+      "qtProlongingMedications": [],
+      "acquiredLongQtSupported": null,
+      "evidenceSource": null
+    },
+    "renalContext": {
+      "available": true,
+      "creatinine": 2.1,
+      "bun": null,
+      "egfr": null,
+      "esrd": null,
+      "dialysis": null,
+      "missedDialysis": null,
+      "chronicKidneyDiseaseSupported": true,
+      "acuteKidneyInjurySupported": null,
+      "renalImpairmentSupported": true,
+      "sourceTextContainsRenalImpairment": null
+    },
+    "medicationContext": {
+      "available": true,
+      "homeMedications": [
+        "Digoxin 0.25 mg daily",
+        "Furosemide 40 mg",
+        "Warfarin"
+      ],
+      "activeMedications": [
+        "Digoxin 0.25 mg daily",
+        "Furosemide 40 mg",
+        "Warfarin"
+      ],
+      "infusions": [],
+      "qtProlongingMedications": [],
+      "digoxinExposure": true,
+      "potassiumRaisingMedicationExposure": false,
+      "thiazideExposure": false
+    },
+    "toxicityContext": {
+      "available": true,
+      "digoxinLevel": 3.8,
+      "symptoms": [
+        "nausea",
+        "vomiting"
+      ],
+      "digoxinToxicitySupported": true,
+      "reducedClearanceSupported": true
+    },
+    "patientContext": {
+      "available": true,
+      "age": 82,
+      "sex": "F",
+      "primaryDiagnosis": "Nausea, vomiting, confusion",
+      "history": [
+        "Atrial fibrillation (rate-controlled on digoxin)",
+        "Heart failure",
+        "CKD stage 3"
+      ],
+      "leftVentricularEjectionFraction": null,
+      "priorAtrialFibrillation": null
+    },
+    "structuralHeartContext": {
+      "available": true,
+      "findings": [
+        "Heart failure"
+      ],
+      "lvefPct": null,
+      "severeLvDysfunction": null
+    },
+    "laboratoryContext": {
+      "digoxinLevel": {
+        "value": 3.8,
+        "unit": "ng/mL",
+        "reference": "0.8–2.0",
+        "flag": "TOXIC"
+      },
+      "potassium": {
+        "value": 5.6,
+        "unit": "mmol/L",
+        "reference": "3.5–5.1",
+        "flag": "HIGH"
+      },
+      "creatinine": {
+        "value": 2.1,
+        "unit": "mg/dL",
+        "reference": "0.6–1.1",
+        "flag": "HIGH (acute on CKD)"
+      },
+      "magnesium": {
+        "value": 2.0,
+        "unit": "mg/dL",
+        "reference": "1.7–2.2",
+        "flag": ""
+      },
+      "inr": {
+        "value": 2.4,
+        "unit": "",
+        "reference": "2.0–3.0",
+        "flag": ""
+      }
+    },
+    "recentClinicalContext": {
+      "recentEvents": [
+        "Nausea, vomiting, visual disturbance (yellow-green halos)",
+        "Recent decreased urine output / dehydration",
+        "AFib now slow and regular"
+      ]
+    },
+    "pairedOraclePatientContext": {
+      "available": false,
+      "sourceType": "oracle_smart_fhir"
+    },
+    "detector": {
+      "ruleId": "controlled-capture-fallback-v1",
+      "estimatedRateBpm": 38.0,
+      "triggerLatencySeconds": 1.5,
+      "referenceOnsetOffsetSeconds": 6.0,
+      "detectedTriggerOffsetSeconds": 7.5
+    },
+    "capture": {
+      "durationSeconds": 20.0,
+      "preSeconds": 6.0,
+      "eventSeconds": 8.0,
+      "postSeconds": 6.0,
+      "complete": true,
+      "sampleRateHz": 220.0,
+      "leads": [
+        "I",
+        "II",
+        "III",
+        "aVR",
+        "aVL",
+        "aVF"
+      ]
+    },
+    "provenance": {
+      "isIndependentDiagnosis": false,
+      "evaluationControlled": true,
+      "diagnosisOwnedByUpstreamSource": true,
+      "timingOwnedByDeterministicDetector": true,
+      "slmMayReclassify": false
+    }
+  },
+  "evidenceBundle": {
+    "schemaVersion": "slm-evidence-envelope-v4",
+    "clinicalPromptMode": "episode_pack_only",
+    "task": {
+      "taskType": "episode_contextual_interpretation",
+      "fixedDiagnosisMustBePreserved": true,
+      "independentRhythmDiagnosisAllowed": false,
+      "treatmentRecommendationAllowed": false,
+      "causalCertaintyRequired": false
+    },
+    "patientLinkage": {
+      "samePatientVerified": null,
+      "linkageMode": "oracle_launch_only",
+      "oracleClinicalContextUsed": false,
+      "warnings": []
+    },
+    "sourceManifest": {
+      "patientContextSource": "complete_episode_pack",
+      "episodeContextSource": "complete_episode_pack",
+      "controlledEventSource": "complete_episode_pack",
+      "waveformAnalysisSource": "phase6_deterministic_analysis",
+      "detectorSource": "evaluation_detector",
+      "oracleSmartRole": "authentication_and_scenario_routing_only",
+      "oracleFhirClinicalContextUsed": false
+    },
+    "episode": {
+      "episodeId": "evalflow-BRADY-DIGTOX-006-20260731-194940-741c22",
+      "incidentId": "inc-INCART-EVAL-BRADY-DIGTOX-006-loop-1-bradyarrhythmia-000001650-LKi3uUXF7bxKBRcF",
+      "scenarioId": "BRADY-DIGTOX-006",
+      "demoRunId": "oracle-eval-LKi3uUXF7bxKBRcF",
+      "mode": "evaluation_injection",
+      "clinicalContextMode": "episode_pack_only",
+      "waveformSource": "physionet-incart",
+      "sampleRateHz": 220.0,
+      "leads": [
+        "I",
+        "II",
+        "III",
+        "aVR",
+        "aVL",
+        "aVF"
+      ],
+      "captureSeconds": 20.0,
+      "preEventSeconds": 6.0,
+      "eventSeconds": 8.0,
+      "postEventSeconds": 6.0,
+      "captureComplete": true,
+      "signalValidationPassed": true
+    },
+    "controlledRhythm": {
+      "source": "complete_episode_pack",
+      "diagnosis": {
+        "code": "JUNCTIONAL_BRADYCARDIA",
+        "display": "Junctional bradycardia",
+        "authoritative": true
+      },
+      "ventricularRateBpm": 38.0,
+      "atrialRateBpm": null,
+      "qrsDurationMs": 96.0,
+      "qtcMs": null,
+      "prIntervalMs": null,
+      "regularity": "regular",
+      "axisDegrees": null,
+      "pWavePresent": false,
+      "atrialActivityPresent": false,
+      "atrioventricularAssociation": null,
+      "findings": [
+        "Narrow QRS"
+      ]
+    },
+    "controlledEventContext": {
+      "included": true,
+      "source": "complete_episode_pack",
+      "hemodynamics": {
+        "available": true,
+        "classification": "stable",
+        "conscious": null,
+        "pulseless": null,
+        "pulsePresent": null,
+        "shockSupported": null,
+        "vasopressorSupport": null,
+        "systolicBloodPressure": 104.0,
+        "diastolicBloodPressure": 62.0,
+        "map": 76.0,
+        "oxygenSaturationPct": 96.0,
+        "temperatureC": 36.6,
+        "sourceNote": "Mildly symptomatic"
+      },
+      "ischemia": {
+        "available": false,
+        "acuteChestPain": null,
+        "stElevationSupported": null,
+        "troponinValue": null,
+        "troponinPattern": "not_available",
+        "acuteStemiSupported": null
+      },
+      "electrolytes": {
+        "available": true,
+        "potassium": {
+          "available": true,
+          "value": 5.6,
+          "unit": "mmol/L",
+          "withinReference": false,
+          "reference": {
+            "low": 3.5,
+            "high": 5.1
+          },
+          "note": "HIGH"
+        },
+        "magnesium": {
+          "available": true,
+          "value": 2.0,
+          "unit": "mg/dL",
+          "withinReference": true,
+          "reference": {
+            "low": 1.7,
+            "high": 2.2
+          },
+          "note": ""
+        },
+        "calcium": {
+          "available": false,
+          "value": null,
+          "unit": null,
+          "withinReference": null,
+          "reference": null
+        },
+        "sodium": {
+          "available": false,
+          "value": null,
+          "unit": null,
+          "withinReference": null,
+          "reference": null
+        },
+        "abnormalElectrolytes": [
+          "potassium"
+        ],
+        "electrolyteAbnormalityPresent": true,
+        "majorElectrolyteTriggerSupported": true
+      },
+      "infection": {
+        "available": true,
+        "temperatureC": 36.6,
+        "wbc": null,
+        "procalcitonin": null,
+        "lactate": null,
+        "feverSupported": null,
+        "inflammatoryResponseSupported": null,
+        "infectionSupported": null,
+        "sepsisSupported": null,
+        "infectionExplicitlyDenied": null,
+        "suspectedSource": null
+      },
+      "renal": {
+        "available": true,
+        "creatinine": 2.1,
+        "bun": null,
+        "egfr": null,
+        "esrd": null,
+        "dialysis": null,
+        "missedDialysis": null,
+        "chronicKidneyDiseaseSupported": true,
+        "acuteKidneyInjurySupported": null,
+        "renalImpairmentSupported": true,
+        "sourceTextContainsRenalImpairment": null
+      },
+      "qt": {
+        "available": false,
+        "qtcMs": null,
+        "prolonged": null,
+        "thresholdMs": 500,
+        "qtProlongingMedications": [],
+        "acquiredLongQtSupported": null,
+        "evidenceSource": null
+      },
+      "toxicity": {
+        "available": true,
+        "digoxinLevel": 3.8,
+        "symptoms": [
+          "nausea",
+          "vomiting"
+        ],
+        "digoxinToxicitySupported": true,
+        "reducedClearanceSupported": true
+      },
+      "metabolic": {}
+    },
+    "episodePackContext": {
+      "available": true,
+      "source": "complete_episode_pack",
+      "schemaVersion": "episode-slm-eval-v1",
+      "episodeId": "BRADY-DIGTOX-006",
+      "patient": {
+        "name": "Eleanor R. Vance",
+        "mrn": "KG-004466",
+        "dob": "1943-08-08",
+        "age": 82,
+        "sex": "F",
+        "heightCm": 155,
+        "weightKg": 54,
+        "room": "TELE-4",
+        "admissionDate": "2026-07-19",
+        "codeStatus": "DNR/DNI",
+        "primaryDiagnosis": "Nausea, vomiting, confusion",
+        "history": [
+          "Atrial fibrillation (rate-controlled on digoxin)",
+          "Heart failure",
+          "CKD stage 3"
+        ],
+        "homeMedications": [
+          "Digoxin 0.25 mg daily",
+          "Furosemide 40 mg",
+          "Warfarin"
+        ],
+        "allergies": [
+          "None known"
+        ],
+        "infusions": []
+      },
+      "episode": {
+        "type": "junctional_bradycardia",
+        "display": "Junctional bradycardia (digoxin effect)",
+        "severity": "warning",
+        "state": "CAPTURED",
+        "analysisStatus": "pending",
+        "autoTriggered": true,
+        "triggerHeartRate": 38,
+        "durationSeconds": 8.0
+      },
+      "structuralHeart": {
+        "available": true,
+        "findings": [
+          "Heart failure"
+        ],
+        "lvefPct": null,
+        "severeLvDysfunction": null
+      },
+      "hemodynamics": {
+        "available": true,
+        "classification": "stable",
+        "conscious": null,
+        "pulseless": null,
+        "pulsePresent": null,
+        "shockSupported": null,
+        "vasopressorSupport": null,
+        "systolicBloodPressure": 104.0,
+        "diastolicBloodPressure": 62.0,
+        "map": 76.0,
+        "oxygenSaturationPct": 96.0,
+        "temperatureC": 36.6,
+        "sourceNote": "Mildly symptomatic"
+      },
+      "vitals": {
+        "spo2Pct": 96,
+        "heartRateBpm": 38,
+        "respiratoryRateBpm": 16,
+        "temperatureC": 36.6,
+        "bloodPressure": {
+          "systolic": 104,
+          "diastolic": 62,
+          "map": 76,
+          "note": "Mildly symptomatic"
+        }
+      },
+      "labs": {
+        "digoxinLevel": {
+          "value": 3.8,
+          "unit": "ng/mL",
+          "reference": "0.8–2.0",
+          "flag": "TOXIC"
+        },
+        "potassium": {
+          "value": 5.6,
+          "unit": "mmol/L",
+          "reference": "3.5–5.1",
+          "flag": "HIGH"
+        },
+        "creatinine": {
+          "value": 2.1,
+          "unit": "mg/dL",
+          "reference": "0.6–1.1",
+          "flag": "HIGH (acute on CKD)"
+        },
+        "magnesium": {
+          "value": 2.0,
+          "unit": "mg/dL",
+          "reference": "1.7–2.2",
+          "flag": ""
+        },
+        "inr": {
+          "value": 2.4,
+          "unit": "",
+          "reference": "2.0–3.0",
+          "flag": ""
+        }
+      },
+      "electrolytes": {
+        "available": true,
+        "potassium": {
+          "available": true,
+          "value": 5.6,
+          "unit": "mmol/L",
+          "withinReference": false,
+          "reference": {
+            "low": 3.5,
+            "high": 5.1
+          },
+          "note": "HIGH"
+        },
+        "magnesium": {
+          "available": true,
+          "value": 2.0,
+          "unit": "mg/dL",
+          "withinReference": true,
+          "reference": {
+            "low": 1.7,
+            "high": 2.2
+          },
+          "note": ""
+        },
+        "calcium": {
+          "available": false,
+          "value": null,
+          "unit": null,
+          "withinReference": null,
+          "reference": null
+        },
+        "sodium": {
+          "available": false,
+          "value": null,
+          "unit": null,
+          "withinReference": null,
+          "reference": null
+        },
+        "abnormalElectrolytes": [
+          "potassium"
+        ],
+        "electrolyteAbnormalityPresent": true,
+        "majorElectrolyteTriggerSupported": true
+      },
+      "renal": {
+        "available": true,
+        "creatinine": 2.1,
+        "bun": null,
+        "egfr": null,
+        "esrd": null,
+        "dialysis": null,
+        "missedDialysis": null,
+        "chronicKidneyDiseaseSupported": true,
+        "acuteKidneyInjurySupported": null,
+        "renalImpairmentSupported": true,
+        "sourceTextContainsRenalImpairment": null
+      },
+      "ischemia": {
+        "available": false,
+        "acuteChestPain": null,
+        "stElevationSupported": null,
+        "troponinValue": null,
+        "troponinPattern": "not_available",
+        "acuteStemiSupported": null
+      },
+      "infection": {
+        "available": true,
+        "temperatureC": 36.6,
+        "wbc": null,
+        "procalcitonin": null,
+        "lactate": null,
+        "feverSupported": null,
+        "inflammatoryResponseSupported": null,
+        "infectionSupported": null,
+        "sepsisSupported": null,
+        "infectionExplicitlyDenied": null,
+        "suspectedSource": null
+      },
+      "qt": {
+        "available": false,
+        "qtcMs": null,
+        "prolonged": null,
+        "thresholdMs": 500,
+        "qtProlongingMedications": [],
+        "acquiredLongQtSupported": null,
+        "evidenceSource": null
+      },
+      "medications": [
+        "Digoxin 0.25 mg daily",
+        "Furosemide 40 mg",
+        "Warfarin"
+      ],
+      "infusions": [],
+      "toxicity": {
+        "available": true,
+        "digoxinLevel": 3.8,
+        "symptoms": [
+          "nausea",
+          "vomiting"
+        ],
+        "digoxinToxicitySupported": true,
+        "reducedClearanceSupported": true
+      },
+      "clinicalContext": {
+        "recentEvents": [
+          "Nausea, vomiting, visual disturbance (yellow-green halos)",
+          "Recent decreased urine output / dehydration",
+          "AFib now slow and regular"
+        ]
+      },
+      "ecgMeasurements": {
+        "rhythm": "Regularized junctional bradycardia (AF with slow regular ventricular response)",
+        "ventricularRateBpm": 38,
+        "atrialRateBpm": null,
+        "regularity": "regular",
+        "qrsDurationMs": 96.0,
+        "qtcMs": null,
+        "prMs": null,
+        "axisDeg": null,
+        "pWavePresent": false,
+        "stDeviationMm": "Scooped/'sagging' ST segments (digoxin effect)",
+        "morphology": "Narrow QRS, scooped ST, slow regular rhythm despite AFib",
+        "ectopyPer10s": null,
+        "preEventNote": "Known AFib now with slow REGULAR response — suggests AV junctional takeover",
+        "heartRateBpm": 38
+      }
+    },
+    "detector": {
+      "ruleId": "controlled-capture-fallback-v1",
+      "estimatedRateBpm": 38.0,
+      "triggerLatencySeconds": 1.5,
+      "referenceOnsetOffsetSeconds": 6.0,
+      "detectedTriggerOffsetSeconds": 7.5
+    },
+    "deterministicAnalysis": {
+      "source": "phase6_deterministic_analysis",
+      "analysisStatus": "ready",
+      "signalQuality": {
+        "status": "ready",
+        "meanScore": 100.0,
+        "medianScore": 100.0,
+        "minimumScore": 100.0,
+        "crossEpisodeAgreement": 1.0
+      },
+      "rhythm": {
+        "medianHeartRateBpm": 50.29,
+        "heartRateRangeBpm": [
+          50.29,
+          50.29
+        ]
+      },
+      "qrs": {
+        "medianTriggerQrsDurationMilliseconds": 90.909,
+        "medianBaselineQrsDurationMilliseconds": 93.182,
+        "crossEpisodeAgreement": 1.0
+      },
+      "morphology": {
+        "status": "ready",
+        "medianDifferenceScore": 0.1426,
+        "crossEpisodeAgreement": 1.0
+      },
+      "leadAgreement": {
+        "medianScore": 79.48
+      },
+      "crossEpisodeAgreement": {
+        "score": 100.0,
+        "qualityAgreement": 1.0,
+        "qrsAgreement": 1.0,
+        "morphologyAgreement": 1.0
+      },
+      "confidence": {
+        "score": 82.41,
+        "grade": "high",
+        "episodeConfidenceScores": [
+          82.41
+        ]
+      },
+      "independentCandidateDetection": {
+        "abnormalMorphologyCandidateCount": 0,
+        "candidatePercent": 0.0,
+        "doesNotNegateReferenceAnnotations": true
+      },
+      "datasetReference": {
+        "source": "PhysioNet INCART",
+        "sourceType": "dataset_reference_annotation",
+        "triggerCounts": {
+          "BRADY": 1
+        },
+        "uniqueReferenceTriggerCount": 1,
+        "isIndependentDiagnosis": false
+      },
+      "limitations": [
+        "The incident was triggered from INCART reference annotations and is not an independent diagnosis.",
+        "Raw ECG arrays remain in waveform storage and are not included in the SLM input.",
+        "The incident is grouped from overlapping episode views; trigger and beat evidence is deduplicated by record, loop, and absolute sample.",
+        "INCART V annotations remain dataset reference evidence and are not an independent diagnosis."
+      ],
+      "windowedAnalysis": {
+        "schemaVersion": "phase6-windowed-analysis-v1",
+        "analysisStatus": "complete",
+        "sampleRateHz": 220.0,
+        "analysisLead": "lead2",
+        "measurementWindows": {
+          "fullCapture": {
+            "name": "full_capture",
+            "startSeconds": 0.0,
+            "endSeconds": 20.0,
+            "startSample": 0,
+            "endSample": 4400,
+            "sampleCount": 4400
+          },
+          "preEvent": {
+            "name": "pre_event",
+            "startSeconds": 0.0,
+            "endSeconds": 6.0,
+            "startSample": 0,
+            "endSample": 1320,
+            "sampleCount": 1320
+          },
+          "controlledEvent": {
+            "name": "controlled_event",
+            "startSeconds": 6.0,
+            "endSeconds": 14.0,
+            "startSample": 1320,
+            "endSample": 3080,
+            "sampleCount": 1760
+          },
+          "postEvent": {
+            "name": "post_event",
+            "startSeconds": 14.0,
+            "endSeconds": 20.0,
+            "startSample": 3080,
+            "endSample": 4400,
+            "sampleCount": 1320
+          }
+        },
+        "heartRate": {
+          "fullCaptureMedianBpm": 50.575,
+          "preEventMedianBpm": 54.098,
+          "eventMedianBpm": 38.04,
+          "postEventMedianBpm": 50.382,
+          "eventRangeBpm": [
+            37.931,
+            143.478
+          ],
+          "eventMeasurementValid": true,
+          "eventConfidenceGrade": "low",
+          "eventReason": null,
+          "perWindow": {
+            "fullCapture": {
+              "medianBpm": 50.575,
+              "rangeBpm": [
+                37.931,
+                105.6
+              ],
+              "measurementValid": true,
+              "confidenceGrade": "moderate",
+              "reason": null,
+              "detectedPeakCount": 17,
+              "validIntervalCount": 16,
+              "rrCoefficientOfVariation": 0.2104,
+              "peakSamples": [
+                46,
+                289,
+                532,
+                776,
+                1020,
+                1269,
+                1394,
+                1741,
+                2088,
+                2435,
+                2783,
+                3093,
+                3321,
+                3583,
+                3847,
+                4111,
+                4371
+              ]
+            },
+            "preEvent": {
+              "medianBpm": 54.098,
+              "rangeBpm": [
+                53.012,
+                54.321
+              ],
+              "measurementValid": true,
+              "confidenceGrade": "moderate",
+              "reason": null,
+              "detectedPeakCount": 6,
+              "validIntervalCount": 5,
+              "rrCoefficientOfVariation": 0.0092,
+              "peakSamples": [
+                46,
+                289,
+                532,
+                776,
+                1020,
+                1269
+              ]
+            },
+            "controlledEvent": {
+              "medianBpm": 38.04,
+              "rangeBpm": [
+                37.931,
+                143.478
+              ],
+              "measurementValid": true,
+              "confidenceGrade": "low",
+              "reason": null,
+              "detectedPeakCount": 6,
+              "validIntervalCount": 5,
+              "rrCoefficientOfVariation": 0.3583,
+              "peakSamples": [
+                74,
+                166,
+                421,
+                768,
+                1115,
+                1463
+              ]
+            },
+            "postEvent": {
+              "medianBpm": 50.382,
+              "rangeBpm": [
+                50.0,
+                56.897
+              ],
+              "measurementValid": true,
+              "confidenceGrade": "moderate",
+              "reason": null,
+              "detectedPeakCount": 6,
+              "validIntervalCount": 5,
+              "rrCoefficientOfVariation": 0.0479,
+              "peakSamples": [
+                9,
+                241,
+                503,
+                767,
+                1031,
+                1291
+              ]
+            }
+          }
+        },
+        "qrs": {
+          "fullCaptureMedianMs": null,
+          "preEventMedianMs": null,
+          "eventMedianMs": null,
+          "postEventMedianMs": null,
+          "eventRangeMs": null,
+          "eventMeasurementValid": false,
+          "eventConfidenceGrade": "insufficient",
+          "eventReason": "QRS duration could not be measured reliably in this window.",
+          "perWindow": {
+            "fullCapture": {
+              "medianMs": null,
+              "rangeMs": null,
+              "measurementValid": false,
+              "confidenceGrade": "insufficient",
+              "reason": "QRS duration could not be measured reliably in this window.",
+              "measuredBeatCount": 1
+            },
+            "preEvent": {
+              "medianMs": null,
+              "rangeMs": null,
+              "measurementValid": false,
+              "confidenceGrade": "insufficient",
+              "reason": "QRS duration could not be measured reliably in this window.",
+              "measuredBeatCount": 0
+            },
+            "controlledEvent": {
+              "medianMs": null,
+              "rangeMs": null,
+              "measurementValid": false,
+              "confidenceGrade": "insufficient",
+              "reason": "QRS duration could not be measured reliably in this window.",
+              "measuredBeatCount": 0
+            },
+            "postEvent": {
+              "medianMs": null,
+              "rangeMs": null,
+              "measurementValid": false,
+              "confidenceGrade": "insufficient",
+              "reason": "QRS duration could not be measured reliably in this window.",
+              "measuredBeatCount": 1
+            }
+          }
+        },
+        "morphology": {
+          "eventVsPreDifferenceScore": 0.5618,
+          "eventVsPostDifferenceScore": 0.4867,
+          "leadAgreementScore": 96.65,
+          "measurementWindow": "controlled_event"
+        },
+        "confidence": {
+          "score": 0.0,
+          "grade": "insufficient",
+          "reasons": [
+            "QRS duration could not be measured reliably in this window."
+          ]
+        },
+        "provenance": {
+          "diagnosisIndependent": false,
+          "triggerSource": "evaluation_waveform_change_gate",
+          "waveformSource": "physionet-incart",
+          "measurementWindowSource": "saved_episode_metadata",
+          "rawWaveformModified": false,
+          "isIndependentDiagnosis": false
+        },
+        "limitations": [
+          "QRS duration could not be measured reliably in this window.",
+          "Windowed Phase 6 values are independent measurements only; they do not diagnose or confirm the controlled rhythm.",
+          "Only controlled-event-window measurements may be compared with controlled episode-package values."
+        ]
+      },
+      "phase6WindowedAnalysis": {
+        "schemaVersion": "phase6-windowed-analysis-v1",
+        "analysisStatus": "complete",
+        "sampleRateHz": 220.0,
+        "analysisLead": "lead2",
+        "measurementWindows": {
+          "fullCapture": {
+            "name": "full_capture",
+            "startSeconds": 0.0,
+            "endSeconds": 20.0,
+            "startSample": 0,
+            "endSample": 4400,
+            "sampleCount": 4400
+          },
+          "preEvent": {
+            "name": "pre_event",
+            "startSeconds": 0.0,
+            "endSeconds": 6.0,
+            "startSample": 0,
+            "endSample": 1320,
+            "sampleCount": 1320
+          },
+          "controlledEvent": {
+            "name": "controlled_event",
+            "startSeconds": 6.0,
+            "endSeconds": 14.0,
+            "startSample": 1320,
+            "endSample": 3080,
+            "sampleCount": 1760
+          },
+          "postEvent": {
+            "name": "post_event",
+            "startSeconds": 14.0,
+            "endSeconds": 20.0,
+            "startSample": 3080,
+            "endSample": 4400,
+            "sampleCount": 1320
+          }
+        },
+        "heartRate": {
+          "fullCaptureMedianBpm": 50.575,
+          "preEventMedianBpm": 54.098,
+          "eventMedianBpm": 38.04,
+          "postEventMedianBpm": 50.382,
+          "eventRangeBpm": [
+            37.931,
+            143.478
+          ],
+          "eventMeasurementValid": true,
+          "eventConfidenceGrade": "low",
+          "eventReason": null,
+          "perWindow": {
+            "fullCapture": {
+              "medianBpm": 50.575,
+              "rangeBpm": [
+                37.931,
+                105.6
+              ],
+              "measurementValid": true,
+              "confidenceGrade": "moderate",
+              "reason": null,
+              "detectedPeakCount": 17,
+              "validIntervalCount": 16,
+              "rrCoefficientOfVariation": 0.2104,
+              "peakSamples": [
+                46,
+                289,
+                532,
+                776,
+                1020,
+                1269,
+                1394,
+                1741,
+                2088,
+                2435,
+                2783,
+                3093,
+                3321,
+                3583,
+                3847,
+                4111,
+                4371
+              ]
+            },
+            "preEvent": {
+              "medianBpm": 54.098,
+              "rangeBpm": [
+                53.012,
+                54.321
+              ],
+              "measurementValid": true,
+              "confidenceGrade": "moderate",
+              "reason": null,
+              "detectedPeakCount": 6,
+              "validIntervalCount": 5,
+              "rrCoefficientOfVariation": 0.0092,
+              "peakSamples": [
+                46,
+                289,
+                532,
+                776,
+                1020,
+                1269
+              ]
+            },
+            "controlledEvent": {
+              "medianBpm": 38.04,
+              "rangeBpm": [
+                37.931,
+                143.478
+              ],
+              "measurementValid": true,
+              "confidenceGrade": "low",
+              "reason": null,
+              "detectedPeakCount": 6,
+              "validIntervalCount": 5,
+              "rrCoefficientOfVariation": 0.3583,
+              "peakSamples": [
+                74,
+                166,
+                421,
+                768,
+                1115,
+                1463
+              ]
+            },
+            "postEvent": {
+              "medianBpm": 50.382,
+              "rangeBpm": [
+                50.0,
+                56.897
+              ],
+              "measurementValid": true,
+              "confidenceGrade": "moderate",
+              "reason": null,
+              "detectedPeakCount": 6,
+              "validIntervalCount": 5,
+              "rrCoefficientOfVariation": 0.0479,
+              "peakSamples": [
+                9,
+                241,
+                503,
+                767,
+                1031,
+                1291
+              ]
+            }
+          }
+        },
+        "qrs": {
+          "fullCaptureMedianMs": null,
+          "preEventMedianMs": null,
+          "eventMedianMs": null,
+          "postEventMedianMs": null,
+          "eventRangeMs": null,
+          "eventMeasurementValid": false,
+          "eventConfidenceGrade": "insufficient",
+          "eventReason": "QRS duration could not be measured reliably in this window.",
+          "perWindow": {
+            "fullCapture": {
+              "medianMs": null,
+              "rangeMs": null,
+              "measurementValid": false,
+              "confidenceGrade": "insufficient",
+              "reason": "QRS duration could not be measured reliably in this window.",
+              "measuredBeatCount": 1
+            },
+            "preEvent": {
+              "medianMs": null,
+              "rangeMs": null,
+              "measurementValid": false,
+              "confidenceGrade": "insufficient",
+              "reason": "QRS duration could not be measured reliably in this window.",
+              "measuredBeatCount": 0
+            },
+            "controlledEvent": {
+              "medianMs": null,
+              "rangeMs": null,
+              "measurementValid": false,
+              "confidenceGrade": "insufficient",
+              "reason": "QRS duration could not be measured reliably in this window.",
+              "measuredBeatCount": 0
+            },
+            "postEvent": {
+              "medianMs": null,
+              "rangeMs": null,
+              "measurementValid": false,
+              "confidenceGrade": "insufficient",
+              "reason": "QRS duration could not be measured reliably in this window.",
+              "measuredBeatCount": 1
+            }
+          }
+        },
+        "morphology": {
+          "eventVsPreDifferenceScore": 0.5618,
+          "eventVsPostDifferenceScore": 0.4867,
+          "leadAgreementScore": 96.65,
+          "measurementWindow": "controlled_event"
+        },
+        "confidence": {
+          "score": 0.0,
+          "grade": "insufficient",
+          "reasons": [
+            "QRS duration could not be measured reliably in this window."
+          ]
+        },
+        "provenance": {
+          "diagnosisIndependent": false,
+          "triggerSource": "evaluation_waveform_change_gate",
+          "waveformSource": "physionet-incart",
+          "measurementWindowSource": "saved_episode_metadata",
+          "rawWaveformModified": false,
+          "isIndependentDiagnosis": false
+        },
+        "limitations": [
+          "QRS duration could not be measured reliably in this window.",
+          "Windowed Phase 6 values are independent measurements only; they do not diagnose or confirm the controlled rhythm.",
+          "Only controlled-event-window measurements may be compared with controlled episode-package values."
+        ]
+      }
+    },
+    "measurementConflicts": [],
+    "oracleContext": {
+      "available": false,
+      "source": "oracle_smart_fhir",
+      "excludedByPolicy": true,
+      "clinicalContextUsed": false,
+      "reason": "episode_pack_only_mode"
+    },
+    "missingEvidence": [],
+    "outputContract": {
+      "allowedFields": [
+        "episodeSummary",
+        "detectedEpisodeContext",
+        "mostLikelyEtiology",
+        "contributingFactors",
+        "uncertaintyAndMissingData"
+      ],
+      "additionalFieldsAllowed": false
+    },
+    "coverageRequirements": [
+      {
+        "id": "rhythmEvidence",
+        "instruction": "Use the supplied controlled-event rate, regularity, QRS, atrial activity, AV association, or morphology evidence.",
+        "matchTerms": [
+          "38.0",
+          "regular",
+          "Narrow QRS"
+        ],
+        "matchAllGroups": [],
+        "clinicallyApplicable": true,
+        "evidenceAvailable": true,
+        "materiallyRelevantToEtiology": true,
+        "requiredInResponse": true
+      },
+      {
+        "id": "structuralSubstrate",
+        "instruction": "Explain how the supplied structural-heart substrate relates to the episode.",
+        "matchTerms": [
+          "Heart failure"
+        ],
+        "matchAllGroups": [],
+        "clinicallyApplicable": false,
+        "evidenceAvailable": true,
+        "materiallyRelevantToEtiology": true,
+        "requiredInResponse": false
+      },
+      {
+        "id": "hemodynamicContext",
+        "instruction": "Interpret the supplied controlled-event hemodynamic state.",
+        "matchTerms": [
+          "stable",
+          "104.0",
+          "76.0"
+        ],
+        "matchAllGroups": [],
+        "clinicallyApplicable": true,
+        "evidenceAvailable": true,
+        "materiallyRelevantToEtiology": false,
+        "requiredInResponse": false
+      },
+      {
+        "id": "electrolyteInterpretation",
+        "instruction": "Explain whether supplied electrolyte values support or argue against an electrolyte contribution.",
+        "matchTerms": [
+          "potassium",
+          "magnesium",
+          "electrolyte",
+          "potassium",
+          "abnormal"
+        ],
+        "matchAllGroups": [],
+        "clinicallyApplicable": true,
+        "evidenceAvailable": true,
+        "materiallyRelevantToEtiology": true,
+        "requiredInResponse": false
+      },
+      {
+        "id": "ischemiaInterpretation",
+        "instruction": "Interpret supplied chest-pain, ST-segment, and troponin evidence.",
+        "matchTerms": [
+          "troponin",
+          "ischemia",
+          "stemi",
+          "chest pain",
+          "demand"
+        ],
+        "matchAllGroups": [],
+        "clinicallyApplicable": false,
+        "evidenceAvailable": false,
+        "materiallyRelevantToEtiology": false,
+        "requiredInResponse": false
+      },
+      {
+        "id": "infectionContext",
+        "instruction": "Interpret supplied infection or sepsis evidence.",
+        "matchTerms": [
+          "infection",
+          "sepsis",
+          "fever",
+          "wbc",
+          "procalcitonin",
+          "lactate"
+        ],
+        "matchAllGroups": [],
+        "clinicallyApplicable": false,
+        "evidenceAvailable": true,
+        "materiallyRelevantToEtiology": false,
+        "requiredInResponse": false
+      },
+      {
+        "id": "qtContext",
+        "instruction": "Interpret QT duration and relevant medication exposure.",
+        "matchTerms": [
+          "qt",
+          "qtc",
+          "long-qt",
+          "prolonged"
+        ],
+        "matchAllGroups": [],
+        "clinicallyApplicable": false,
+        "evidenceAvailable": false,
+        "materiallyRelevantToEtiology": false,
+        "requiredInResponse": false
+      },
+      {
+        "id": "renalContext",
+        "instruction": "Interpret renal function, dialysis status, or reduced drug clearance when relevant.",
+        "matchTerms": [
+          "renal",
+          "creatinine",
+          "dialysis",
+          "esrd",
+          "clearance"
+        ],
+        "matchAllGroups": [],
+        "clinicallyApplicable": true,
+        "evidenceAvailable": true,
+        "materiallyRelevantToEtiology": true,
+        "requiredInResponse": true
+      },
+      {
+        "id": "medicationToxicityContext",
+        "instruction": "Interpret medication exposure, level, clearance, and toxicity evidence.",
+        "matchTerms": [
+          "digoxin",
+          "toxicity",
+          "clearance",
+          "nausea",
+          "vomiting"
+        ],
+        "matchAllGroups": [],
+        "clinicallyApplicable": true,
+        "evidenceAvailable": true,
+        "materiallyRelevantToEtiology": true,
+        "requiredInResponse": true
+      },
+      {
+        "id": "medicationContext",
+        "instruction": "Use clinically relevant medication exposure without inventing treatment recommendations.",
+        "matchTerms": [
+          "Digoxin 0.25 mg daily",
+          "Furosemide 40 mg",
+          "Warfarin",
+          "Digoxin 0.25 mg daily",
+          "Furosemide 40 mg",
+          "Warfarin",
+          "digoxin"
+        ],
+        "matchAllGroups": [],
+        "clinicallyApplicable": true,
+        "evidenceAvailable": true,
+        "materiallyRelevantToEtiology": true,
+        "requiredInResponse": true
+      },
+      {
+        "id": "episodePackClinicalContext",
+        "instruction": "Use the episode-pack patient, history, vitals, labs, medications, and clinical context when relevant.",
+        "requiredInResponse": false,
+        "matchTerms": [
+          "history",
+          "vital",
+          "laboratory",
+          "medication",
+          "clinical context",
+          "patient"
+        ],
+        "matchAllGroups": [],
+        "evidencePaths": [
+          "episodePackContext"
+        ]
+      }
+    ],
+    "modelContextMode": "episode_pack_only",
+    "benchmarkContextComplete": true,
+    "benchmarkAlignmentMode": "full_scenario",
+    "episodePackFingerprint": "a899ff4ef5b41e8bdbd7568b50a1c888b820b5763e6af976cac8c2eeee27e617",
+    "evidenceFingerprint": "447333cd9ca4352fc05d2a8fd83562e971730bf7fe16e9a53708282f428de865",
+    "validatorContract": {
+      "schemaVersion": "validator-contract-v4",
+      "clinicalPromptMode": "episode_pack_only",
+      "evidenceFingerprint": "447333cd9ca4352fc05d2a8fd83562e971730bf7fe16e9a53708282f428de865",
+      "requiredCoverage": [
+        "rhythmEvidence",
+        "renalContext",
+        "medicationToxicityContext",
+        "medicationContext"
+      ],
+      "optionalCoverage": [
+        "structuralSubstrate",
+        "hemodynamicContext",
+        "electrolyteInterpretation",
+        "ischemiaInterpretation",
+        "infectionContext",
+        "qtContext",
+        "episodePackClinicalContext"
+      ],
+      "coverageRequirements": [
+        {
+          "id": "rhythmEvidence",
+          "instruction": "Use the supplied controlled-event rate, regularity, QRS, atrial activity, AV association, or morphology evidence.",
+          "matchTerms": [
+            "38.0",
+            "regular",
+            "Narrow QRS"
+          ],
+          "matchAllGroups": [],
+          "clinicallyApplicable": true,
+          "evidenceAvailable": true,
+          "materiallyRelevantToEtiology": true,
+          "requiredInResponse": true
+        },
+        {
+          "id": "structuralSubstrate",
+          "instruction": "Explain how the supplied structural-heart substrate relates to the episode.",
+          "matchTerms": [
+            "Heart failure"
+          ],
+          "matchAllGroups": [],
+          "clinicallyApplicable": false,
+          "evidenceAvailable": true,
+          "materiallyRelevantToEtiology": true,
+          "requiredInResponse": false
+        },
+        {
+          "id": "hemodynamicContext",
+          "instruction": "Interpret the supplied controlled-event hemodynamic state.",
+          "matchTerms": [
+            "stable",
+            "104.0",
+            "76.0"
+          ],
+          "matchAllGroups": [],
+          "clinicallyApplicable": true,
+          "evidenceAvailable": true,
+          "materiallyRelevantToEtiology": false,
+          "requiredInResponse": false
+        },
+        {
+          "id": "electrolyteInterpretation",
+          "instruction": "Explain whether supplied electrolyte values support or argue against an electrolyte contribution.",
+          "matchTerms": [
+            "potassium",
+            "magnesium",
+            "electrolyte",
+            "potassium",
+            "abnormal"
+          ],
+          "matchAllGroups": [],
+          "clinicallyApplicable": true,
+          "evidenceAvailable": true,
+          "materiallyRelevantToEtiology": true,
+          "requiredInResponse": false
+        },
+        {
+          "id": "ischemiaInterpretation",
+          "instruction": "Interpret supplied chest-pain, ST-segment, and troponin evidence.",
+          "matchTerms": [
+            "troponin",
+            "ischemia",
+            "stemi",
+            "chest pain",
+            "demand"
+          ],
+          "matchAllGroups": [],
+          "clinicallyApplicable": false,
+          "evidenceAvailable": false,
+          "materiallyRelevantToEtiology": false,
+          "requiredInResponse": false
+        },
+        {
+          "id": "infectionContext",
+          "instruction": "Interpret supplied infection or sepsis evidence.",
+          "matchTerms": [
+            "infection",
+            "sepsis",
+            "fever",
+            "wbc",
+            "procalcitonin",
+            "lactate"
+          ],
+          "matchAllGroups": [],
+          "clinicallyApplicable": false,
+          "evidenceAvailable": true,
+          "materiallyRelevantToEtiology": false,
+          "requiredInResponse": false
+        },
+        {
+          "id": "qtContext",
+          "instruction": "Interpret QT duration and relevant medication exposure.",
+          "matchTerms": [
+            "qt",
+            "qtc",
+            "long-qt",
+            "prolonged"
+          ],
+          "matchAllGroups": [],
+          "clinicallyApplicable": false,
+          "evidenceAvailable": false,
+          "materiallyRelevantToEtiology": false,
+          "requiredInResponse": false
+        },
+        {
+          "id": "renalContext",
+          "instruction": "Interpret renal function, dialysis status, or reduced drug clearance when relevant.",
+          "matchTerms": [
+            "renal",
+            "creatinine",
+            "dialysis",
+            "esrd",
+            "clearance"
+          ],
+          "matchAllGroups": [],
+          "clinicallyApplicable": true,
+          "evidenceAvailable": true,
+          "materiallyRelevantToEtiology": true,
+          "requiredInResponse": true
+        },
+        {
+          "id": "medicationToxicityContext",
+          "instruction": "Interpret medication exposure, level, clearance, and toxicity evidence.",
+          "matchTerms": [
+            "digoxin",
+            "toxicity",
+            "clearance",
+            "nausea",
+            "vomiting"
+          ],
+          "matchAllGroups": [],
+          "clinicallyApplicable": true,
+          "evidenceAvailable": true,
+          "materiallyRelevantToEtiology": true,
+          "requiredInResponse": true
+        },
+        {
+          "id": "medicationContext",
+          "instruction": "Use clinically relevant medication exposure without inventing treatment recommendations.",
+          "matchTerms": [
+            "Digoxin 0.25 mg daily",
+            "Furosemide 40 mg",
+            "Warfarin",
+            "Digoxin 0.25 mg daily",
+            "Furosemide 40 mg",
+            "Warfarin",
+            "digoxin"
+          ],
+          "matchAllGroups": [],
+          "clinicallyApplicable": true,
+          "evidenceAvailable": true,
+          "materiallyRelevantToEtiology": true,
+          "requiredInResponse": true
+        },
+        {
+          "id": "episodePackClinicalContext",
+          "instruction": "Use the episode-pack patient, history, vitals, labs, medications, and clinical context when relevant.",
+          "requiredInResponse": false,
+          "matchTerms": [
+            "history",
+            "vital",
+            "laboratory",
+            "medication",
+            "clinical context",
+            "patient"
+          ],
+          "matchAllGroups": [],
+          "evidencePaths": [
+            "episodePackContext"
+          ]
+        }
+      ],
+      "forbiddenClaims": [
+        "independent_competing_rhythm",
+        "treatment_recommendation",
+        "unsupported_patient_fact",
+        "unsupported_numeric_claim",
+        "oracle_fhir_clinical_fact",
+        "phase6_as_diagnosis"
+      ],
+      "numericEvidence": [
+        {
+          "value": 220.0,
+          "path": "episode.sampleRateHz"
+        },
+        {
+          "value": 20.0,
+          "path": "episode.captureSeconds"
+        },
+        {
+          "value": 6.0,
+          "path": "episode.preEventSeconds"
+        },
+        {
+          "value": 8.0,
+          "path": "episode.eventSeconds"
+        },
+        {
+          "value": 6.0,
+          "path": "episode.postEventSeconds"
+        },
+        {
+          "value": 38.0,
+          "path": "controlledRhythm.ventricularRateBpm"
+        },
+        {
+          "value": 96.0,
+          "path": "controlledRhythm.qrsDurationMs"
+        },
+        {
+          "value": 104.0,
+          "path": "controlledEventContext.hemodynamics.systolicBloodPressure"
+        },
+        {
+          "value": 62.0,
+          "path": "controlledEventContext.hemodynamics.diastolicBloodPressure"
+        },
+        {
+          "value": 76.0,
+          "path": "controlledEventContext.hemodynamics.map"
+        },
+        {
+          "value": 96.0,
+          "path": "controlledEventContext.hemodynamics.oxygenSaturationPct"
+        },
+        {
+          "value": 36.6,
+          "path": "controlledEventContext.hemodynamics.temperatureC"
+        },
+        {
+          "value": 5.6,
+          "path": "controlledEventContext.electrolytes.potassium.value"
+        },
+        {
+          "value": 3.5,
+          "path": "controlledEventContext.electrolytes.potassium.reference.low"
+        },
+        {
+          "value": 5.1,
+          "path": "controlledEventContext.electrolytes.potassium.reference.high"
+        },
+        {
+          "value": 2.0,
+          "path": "controlledEventContext.electrolytes.magnesium.value"
+        },
+        {
+          "value": 1.7,
+          "path": "controlledEventContext.electrolytes.magnesium.reference.low"
+        },
+        {
+          "value": 2.2,
+          "path": "controlledEventContext.electrolytes.magnesium.reference.high"
+        },
+        {
+          "value": 36.6,
+          "path": "controlledEventContext.infection.temperatureC"
+        },
+        {
+          "value": 2.1,
+          "path": "controlledEventContext.renal.creatinine"
+        },
+        {
+          "value": 500.0,
+          "path": "controlledEventContext.qt.thresholdMs"
+        },
+        {
+          "value": 3.8,
+          "path": "controlledEventContext.toxicity.digoxinLevel"
+        },
+        {
+          "value": 82.0,
+          "path": "episodePackContext.patient.age"
+        },
+        {
+          "value": 155.0,
+          "path": "episodePackContext.patient.heightCm"
+        },
+        {
+          "value": 54.0,
+          "path": "episodePackContext.patient.weightKg"
+        },
+        {
+          "value": 38.0,
+          "path": "episodePackContext.episode.triggerHeartRate"
+        },
+        {
+          "value": 8.0,
+          "path": "episodePackContext.episode.durationSeconds"
+        },
+        {
+          "value": 104.0,
+          "path": "episodePackContext.hemodynamics.systolicBloodPressure"
+        },
+        {
+          "value": 62.0,
+          "path": "episodePackContext.hemodynamics.diastolicBloodPressure"
+        },
+        {
+          "value": 76.0,
+          "path": "episodePackContext.hemodynamics.map"
+        },
+        {
+          "value": 96.0,
+          "path": "episodePackContext.hemodynamics.oxygenSaturationPct"
+        },
+        {
+          "value": 36.6,
+          "path": "episodePackContext.hemodynamics.temperatureC"
+        },
+        {
+          "value": 96.0,
+          "path": "episodePackContext.vitals.spo2Pct"
+        },
+        {
+          "value": 38.0,
+          "path": "episodePackContext.vitals.heartRateBpm"
+        },
+        {
+          "value": 16.0,
+          "path": "episodePackContext.vitals.respiratoryRateBpm"
+        },
+        {
+          "value": 36.6,
+          "path": "episodePackContext.vitals.temperatureC"
+        },
+        {
+          "value": 104.0,
+          "path": "episodePackContext.vitals.bloodPressure.systolic"
+        },
+        {
+          "value": 62.0,
+          "path": "episodePackContext.vitals.bloodPressure.diastolic"
+        },
+        {
+          "value": 76.0,
+          "path": "episodePackContext.vitals.bloodPressure.map"
+        },
+        {
+          "value": 3.8,
+          "path": "episodePackContext.labs.digoxinLevel.value"
+        },
+        {
+          "value": 5.6,
+          "path": "episodePackContext.labs.potassium.value"
+        },
+        {
+          "value": 2.1,
+          "path": "episodePackContext.labs.creatinine.value"
+        },
+        {
+          "value": 2.0,
+          "path": "episodePackContext.labs.magnesium.value"
+        },
+        {
+          "value": 2.4,
+          "path": "episodePackContext.labs.inr.value"
+        },
+        {
+          "value": 5.6,
+          "path": "episodePackContext.electrolytes.potassium.value"
+        },
+        {
+          "value": 3.5,
+          "path": "episodePackContext.electrolytes.potassium.reference.low"
+        },
+        {
+          "value": 5.1,
+          "path": "episodePackContext.electrolytes.potassium.reference.high"
+        },
+        {
+          "value": 2.0,
+          "path": "episodePackContext.electrolytes.magnesium.value"
+        },
+        {
+          "value": 1.7,
+          "path": "episodePackContext.electrolytes.magnesium.reference.low"
+        },
+        {
+          "value": 2.2,
+          "path": "episodePackContext.electrolytes.magnesium.reference.high"
+        },
+        {
+          "value": 2.1,
+          "path": "episodePackContext.renal.creatinine"
+        },
+        {
+          "value": 36.6,
+          "path": "episodePackContext.infection.temperatureC"
+        },
+        {
+          "value": 500.0,
+          "path": "episodePackContext.qt.thresholdMs"
+        },
+        {
+          "value": 3.8,
+          "path": "episodePackContext.toxicity.digoxinLevel"
+        },
+        {
+          "value": 38.0,
+          "path": "episodePackContext.ecgMeasurements.ventricularRateBpm"
+        },
+        {
+          "value": 96.0,
+          "path": "episodePackContext.ecgMeasurements.qrsDurationMs"
+        },
+        {
+          "value": 38.0,
+          "path": "episodePackContext.ecgMeasurements.heartRateBpm"
+        },
+        {
+          "value": 38.0,
+          "path": "detector.estimatedRateBpm"
+        },
+        {
+          "value": 1.5,
+          "path": "detector.triggerLatencySeconds"
+        },
+        {
+          "value": 6.0,
+          "path": "detector.referenceOnsetOffsetSeconds"
+        },
+        {
+          "value": 7.5,
+          "path": "detector.detectedTriggerOffsetSeconds"
+        },
+        {
+          "value": 100.0,
+          "path": "deterministicAnalysis.signalQuality.meanScore"
+        },
+        {
+          "value": 100.0,
+          "path": "deterministicAnalysis.signalQuality.medianScore"
+        },
+        {
+          "value": 100.0,
+          "path": "deterministicAnalysis.signalQuality.minimumScore"
+        },
+        {
+          "value": 1.0,
+          "path": "deterministicAnalysis.signalQuality.crossEpisodeAgreement"
+        },
+        {
+          "value": 50.29,
+          "path": "deterministicAnalysis.rhythm.medianHeartRateBpm"
+        },
+        {
+          "value": 50.29,
+          "path": "deterministicAnalysis.rhythm.heartRateRangeBpm[0]"
+        },
+        {
+          "value": 50.29,
+          "path": "deterministicAnalysis.rhythm.heartRateRangeBpm[1]"
+        },
+        {
+          "value": 90.909,
+          "path": "deterministicAnalysis.qrs.medianTriggerQrsDurationMilliseconds"
+        },
+        {
+          "value": 93.182,
+          "path": "deterministicAnalysis.qrs.medianBaselineQrsDurationMilliseconds"
+        },
+        {
+          "value": 1.0,
+          "path": "deterministicAnalysis.qrs.crossEpisodeAgreement"
+        },
+        {
+          "value": 0.1426,
+          "path": "deterministicAnalysis.morphology.medianDifferenceScore"
+        },
+        {
+          "value": 1.0,
+          "path": "deterministicAnalysis.morphology.crossEpisodeAgreement"
+        },
+        {
+          "value": 79.48,
+          "path": "deterministicAnalysis.leadAgreement.medianScore"
+        },
+        {
+          "value": 100.0,
+          "path": "deterministicAnalysis.crossEpisodeAgreement.score"
+        },
+        {
+          "value": 1.0,
+          "path": "deterministicAnalysis.crossEpisodeAgreement.qualityAgreement"
+        },
+        {
+          "value": 1.0,
+          "path": "deterministicAnalysis.crossEpisodeAgreement.qrsAgreement"
+        },
+        {
+          "value": 1.0,
+          "path": "deterministicAnalysis.crossEpisodeAgreement.morphologyAgreement"
+        },
+        {
+          "value": 82.41,
+          "path": "deterministicAnalysis.confidence.score"
+        },
+        {
+          "value": 82.41,
+          "path": "deterministicAnalysis.confidence.episodeConfidenceScores[0]"
+        },
+        {
+          "value": 0.0,
+          "path": "deterministicAnalysis.independentCandidateDetection.abnormalMorphologyCandidateCount"
+        },
+        {
+          "value": 0.0,
+          "path": "deterministicAnalysis.independentCandidateDetection.candidatePercent"
+        },
+        {
+          "value": 1.0,
+          "path": "deterministicAnalysis.datasetReference.triggerCounts.BRADY"
+        },
+        {
+          "value": 1.0,
+          "path": "deterministicAnalysis.datasetReference.uniqueReferenceTriggerCount"
+        },
+        {
+          "value": 38.0,
+          "path": "measurementConflicts[0].controlledValue"
+        },
+        {
+          "value": 50.29,
+          "path": "measurementConflicts[0].independentValue"
+        },
+        {
+          "value": 12.29,
+          "path": "measurementConflicts[0].difference"
+        },
+        {
+          "value": 38.0,
+          "path": "coverageRequirements[0].matchTerms[0]"
+        },
+        {
+          "value": 104.0,
+          "path": "coverageRequirements[2].matchTerms[1]"
+        },
+        {
+          "value": 76.0,
+          "path": "coverageRequirements[2].matchTerms[2]"
+        }
+      ],
+      "temporalRules": [],
+      "causalRules": [
+        "Use only causal relationships supported by the complete episode pack.",
+        "Do not introduce Oracle FHIR facts or external patient history."
+      ],
+      "sourceRules": [
+        "The complete episode pack owns all patient and clinical context.",
+        "Oracle SMART is launch and routing only; Oracle FHIR clinical context is excluded.",
+        "The controlled diagnosis is fixed.",
+        "Phase 6 supplies measurements and limitations, not diagnosis.",
+        "The SLM supplies etiology and context only."
+      ],
+      "evidenceConsistencyStatus": "consistent_with_warnings"
+    },
+    "sourceSegments": [
+      {
+        "type": "pre_event",
+        "source": "physionet-incart",
+        "startSeconds": 0.0,
+        "endSeconds": 6.0,
+        "durationSeconds": 6.0
+      },
+      {
+        "type": "controlled_event",
+        "source": "complete_episode_pack",
+        "startSeconds": 6.0,
+        "endSeconds": 14.0,
+        "durationSeconds": 8.0
+      },
+      {
+        "type": "post_event",
+        "source": "physionet-incart",
+        "startSeconds": 14.0,
+        "endSeconds": 20.0,
+        "durationSeconds": 6.0
+      }
+    ],
+    "captureStartSeconds": 0.0,
+    "captureEndSeconds": 20.0,
+    "eventStartOffsetSeconds": 6.0,
+    "eventEndOffsetSeconds": 14.0,
+    "durationSeconds": 20.0,
+    "phase6WindowedAnalysis": {
+      "schemaVersion": "phase6-windowed-analysis-v1",
+      "analysisStatus": "complete",
+      "sampleRateHz": 220.0,
+      "analysisLead": "lead2",
+      "measurementWindows": {
+        "fullCapture": {
+          "name": "full_capture",
+          "startSeconds": 0.0,
+          "endSeconds": 20.0,
+          "startSample": 0,
+          "endSample": 4400,
+          "sampleCount": 4400
+        },
+        "preEvent": {
+          "name": "pre_event",
+          "startSeconds": 0.0,
+          "endSeconds": 6.0,
+          "startSample": 0,
+          "endSample": 1320,
+          "sampleCount": 1320
+        },
+        "controlledEvent": {
+          "name": "controlled_event",
+          "startSeconds": 6.0,
+          "endSeconds": 14.0,
+          "startSample": 1320,
+          "endSample": 3080,
+          "sampleCount": 1760
+        },
+        "postEvent": {
+          "name": "post_event",
+          "startSeconds": 14.0,
+          "endSeconds": 20.0,
+          "startSample": 3080,
+          "endSample": 4400,
+          "sampleCount": 1320
+        }
+      },
+      "heartRate": {
+        "fullCaptureMedianBpm": 50.575,
+        "preEventMedianBpm": 54.098,
+        "eventMedianBpm": 38.04,
+        "postEventMedianBpm": 50.382,
+        "eventRangeBpm": [
+          37.931,
+          143.478
+        ],
+        "eventMeasurementValid": true,
+        "eventConfidenceGrade": "low",
+        "eventReason": null,
+        "perWindow": {
+          "fullCapture": {
+            "medianBpm": 50.575,
+            "rangeBpm": [
+              37.931,
+              105.6
+            ],
+            "measurementValid": true,
+            "confidenceGrade": "moderate",
+            "reason": null,
+            "detectedPeakCount": 17,
+            "validIntervalCount": 16,
+            "rrCoefficientOfVariation": 0.2104,
+            "peakSamples": [
+              46,
+              289,
+              532,
+              776,
+              1020,
+              1269,
+              1394,
+              1741,
+              2088,
+              2435,
+              2783,
+              3093,
+              3321,
+              3583,
+              3847,
+              4111,
+              4371
+            ]
+          },
+          "preEvent": {
+            "medianBpm": 54.098,
+            "rangeBpm": [
+              53.012,
+              54.321
+            ],
+            "measurementValid": true,
+            "confidenceGrade": "moderate",
+            "reason": null,
+            "detectedPeakCount": 6,
+            "validIntervalCount": 5,
+            "rrCoefficientOfVariation": 0.0092,
+            "peakSamples": [
+              46,
+              289,
+              532,
+              776,
+              1020,
+              1269
+            ]
+          },
+          "controlledEvent": {
+            "medianBpm": 38.04,
+            "rangeBpm": [
+              37.931,
+              143.478
+            ],
+            "measurementValid": true,
+            "confidenceGrade": "low",
+            "reason": null,
+            "detectedPeakCount": 6,
+            "validIntervalCount": 5,
+            "rrCoefficientOfVariation": 0.3583,
+            "peakSamples": [
+              74,
+              166,
+              421,
+              768,
+              1115,
+              1463
+            ]
+          },
+          "postEvent": {
+            "medianBpm": 50.382,
+            "rangeBpm": [
+              50.0,
+              56.897
+            ],
+            "measurementValid": true,
+            "confidenceGrade": "moderate",
+            "reason": null,
+            "detectedPeakCount": 6,
+            "validIntervalCount": 5,
+            "rrCoefficientOfVariation": 0.0479,
+            "peakSamples": [
+              9,
+              241,
+              503,
+              767,
+              1031,
+              1291
+            ]
+          }
+        }
+      },
+      "qrs": {
+        "fullCaptureMedianMs": null,
+        "preEventMedianMs": null,
+        "eventMedianMs": null,
+        "postEventMedianMs": null,
+        "eventRangeMs": null,
+        "eventMeasurementValid": false,
+        "eventConfidenceGrade": "insufficient",
+        "eventReason": "QRS duration could not be measured reliably in this window.",
+        "perWindow": {
+          "fullCapture": {
+            "medianMs": null,
+            "rangeMs": null,
+            "measurementValid": false,
+            "confidenceGrade": "insufficient",
+            "reason": "QRS duration could not be measured reliably in this window.",
+            "measuredBeatCount": 1
+          },
+          "preEvent": {
+            "medianMs": null,
+            "rangeMs": null,
+            "measurementValid": false,
+            "confidenceGrade": "insufficient",
+            "reason": "QRS duration could not be measured reliably in this window.",
+            "measuredBeatCount": 0
+          },
+          "controlledEvent": {
+            "medianMs": null,
+            "rangeMs": null,
+            "measurementValid": false,
+            "confidenceGrade": "insufficient",
+            "reason": "QRS duration could not be measured reliably in this window.",
+            "measuredBeatCount": 0
+          },
+          "postEvent": {
+            "medianMs": null,
+            "rangeMs": null,
+            "measurementValid": false,
+            "confidenceGrade": "insufficient",
+            "reason": "QRS duration could not be measured reliably in this window.",
+            "measuredBeatCount": 1
+          }
+        }
+      },
+      "morphology": {
+        "eventVsPreDifferenceScore": 0.5618,
+        "eventVsPostDifferenceScore": 0.4867,
+        "leadAgreementScore": 96.65,
+        "measurementWindow": "controlled_event"
+      },
+      "confidence": {
+        "score": 0.0,
+        "grade": "insufficient",
+        "reasons": [
+          "QRS duration could not be measured reliably in this window."
+        ]
+      },
+      "provenance": {
+        "diagnosisIndependent": false,
+        "triggerSource": "evaluation_waveform_change_gate",
+        "waveformSource": "physionet-incart",
+        "measurementWindowSource": "saved_episode_metadata",
+        "rawWaveformModified": false,
+        "isIndependentDiagnosis": false
+      },
+      "limitations": [
+        "QRS duration could not be measured reliably in this window.",
+        "Windowed Phase 6 values are independent measurements only; they do not diagnose or confirm the controlled rhythm.",
+        "Only controlled-event-window measurements may be compared with controlled episode-package values."
+      ]
+    },
+    "measurementConflictLimitations": [
+      "Phase 6 produced an low-confidence controlled-event ventricularRateBpm measurement. It must not dispute or replace the controlled episode-package value."
+    ],
+    "evidenceConsistencyReview": {
+      "schemaVersion": "evidence-consistency-review-v1",
+      "status": "consistent_with_warnings",
+      "scenarioId": "BRADY-DIGTOX-006",
+      "hardConflicts": [],
+      "warnings": [
+        "Phase 6 produced an low-confidence controlled-event ventricularRateBpm measurement. It must not dispute or replace the controlled episode-package value."
+      ],
+      "normalizationsApplied": [],
+      "qualifiedMeasurementConflictCount": 0
+    },
+    "evidenceConsistencyStatus": "consistent_with_warnings"
+  },
+  "evidenceConsistencyReview": {
+    "schemaVersion": "evidence-consistency-review-v1",
+    "status": "consistent_with_warnings",
+    "scenarioId": "BRADY-DIGTOX-006",
+    "hardConflicts": [],
+    "warnings": [
+      "Phase 6 produced an low-confidence controlled-event ventricularRateBpm measurement. It must not dispute or replace the controlled episode-package value."
+    ],
+    "normalizationsApplied": [],
+    "qualifiedMeasurementConflictCount": 0
+  },
+  "recommendedActionsRequired": false,
+  "modelOverride": "google/medgemma-27b-it",
+  "sourceEpisodeDirectory": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\episodes\\evalflow-BRADY-DIGTOX-006-20260731-194940-741c22"
+}

@@ -1,0 +1,129 @@
+{
+  "schemaVersion": "slm-widget-result-v4",
+  "scenarioId": "AFIB-RVR-SEPSIS-004",
+  "episodeId": "evalflow-AFIB-RVR-SEPSIS-004-20260731-193246-9f31c0",
+  "incidentId": "inc-INCART-EVAL-AFIB-RVR-SEPSIS-004-loop-1-atrial-fibrillation-rvr-000001584-DtTF9M1Ng-BhvC-q",
+  "status": "complete",
+  "validationStatus": "accepted",
+  "displayPolicy": "always_show_model_response",
+  "validationSummary": {
+    "status": "accepted",
+    "strictlyAccepted": true,
+    "hardAccepted": true,
+    "displayableWithReview": false,
+    "validatorPassed": true,
+    "hardErrorCount": 0,
+    "qualityErrorCount": 0,
+    "contradictionCount": 0,
+    "unsupportedFactCount": 0,
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "contradictions": [],
+    "unsupportedFacts": []
+  },
+  "headline": "Atrial fibrillation with rapid ventricular response",
+  "narrative": {
+    "episodeSummary": "The patient, a 79-year-old female with a history of hypertension and chronic kidney disease, presented with urosepsis. She developed new onset atrial fibrillation with rapid ventricular response (RVR) at a rate of 150 bpm, coinciding with a fever spike to 38.9°C. Hemodynamically, she is unstable, requiring low-dose norepinephrine, with a MAP of 67 mmHg and systolic BP of 92 mmHg. Labs show elevated WBC (18.4), lactate (3.1 mmol/L), creatinine (1.7 mg/dL), and procalcitonin (6.2 ng/mL). Electrolytes (potassium, magnesium) are within normal limits. ECG shows narrow QRS complexes, absent P waves, and rate-related ST depression.",
+    "clinicalContext": "Unstable atrial fibrillation with rapid ventricular response (RVR) in the context of sepsis.",
+    "mostLikelyEtiology": "Sepsis-induced atrial fibrillation with rapid ventricular response. The patient has clinical and laboratory evidence of sepsis (fever, elevated WBC, elevated lactate, elevated procalcitonin) and developed new onset atrial fibrillation with RVR during this acute illness.",
+    "contributingFactors": [
+      "Sepsis",
+      "Fever",
+      "Elevated lactate",
+      "Chronic kidney disease",
+      "Advanced age"
+    ],
+    "uncertaintyAndMissingData": [
+      "Calcium level is unavailable, which could potentially contribute to arrhythmia or affect response to vasopressors, but its absence does not change the primary etiology.",
+      "Sodium level is unavailable, which could potentially contribute to arrhythmia or affect response to vasopressors, but its absence does not change the primary etiology.",
+      "Specific source of infection (e.g., urinalysis details, blood culture results) is not fully detailed, but the overall clinical picture strongly supports sepsis.",
+      "Detailed cardiac history (e.g., prior AFib, structural heart disease) is limited to hypertension and CKD, which are risk factors but not definitive causes.",
+      "Medication list is incomplete (only Amlodipine listed, but patient is on Norepinephrine and Piperacillin-tazobactam).",
+      "Phase 6 analysis shows a difference in QRS duration (controlled event 92ms vs phase6 54.545ms) which is marked as valid, comparable, and material, but the authoritative diagnosis and clinical context remain consistent."
+    ]
+  },
+  "grounding": {
+    "status": "accepted",
+    "pass": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "accepted": true,
+    "displayableWithReview": false,
+    "hardErrorCount": 0,
+    "qualityErrorCount": 0
+  },
+  "benchmark": {
+    "score": 67,
+    "grade": "below_target",
+    "conceptGrade": "fail",
+    "alignmentMode": "full_scenario",
+    "informationalOnly": false,
+    "pass": false,
+    "disposition": "below_target"
+  },
+  "evaluationStatistics": {
+    "scenarioScore": 67,
+    "overallPass": false,
+    "safetyPass": true,
+    "attemptCount": 1,
+    "generationLatencySeconds": 85.377,
+    "rawResponseDisplayed": true
+  },
+  "measurementConflicts": [
+    {
+      "id": "controlled-vs-phase6-qrsDurationMs",
+      "metric": "qrsDurationMs",
+      "controlledEventValue": 92.0,
+      "phase6EventValue": 54.545,
+      "controlledValue": 92.0,
+      "independentValue": 54.545,
+      "unit": "ms",
+      "difference": 37.455,
+      "confidenceGrade": "high",
+      "sameWindow": true,
+      "sameMetric": true,
+      "unitCompatible": true,
+      "measurementValid": true,
+      "material": true,
+      "requiredAcknowledgement": true
+    }
+  ],
+  "sourceManifest": {
+    "patientContextSource": "complete_episode_pack",
+    "episodeContextSource": "complete_episode_pack",
+    "controlledEventSource": "complete_episode_pack",
+    "waveformAnalysisSource": "phase6_deterministic_analysis",
+    "detectorSource": "evaluation_detector",
+    "oracleSmartRole": "authentication_and_scenario_routing_only",
+    "oracleFhirClinicalContextUsed": false
+  },
+  "clinicalPromptMode": "episode_pack_only",
+  "model": {
+    "provider": "google_colab_file",
+    "name": "google/medgemma-27b-it",
+    "endpoint": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\1682aaa32f0f21a3986388751ebb89d2aecc4caf122a542157e995f4f44da08e.json",
+    "sourceFile": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\1682aaa32f0f21a3986388751ebb89d2aecc4caf122a542157e995f4f44da08e.json",
+    "colabRun": 1,
+    "promptFingerprint": "1682aaa32f0f21a3986388751ebb89d2aecc4caf122a542157e995f4f44da08e",
+    "elapsedSeconds": 85.377,
+    "promptEvalCount": 3637,
+    "evalCount": 549,
+    "peakGpuMemoryGiB": 17.584,
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "quantization": "4-bit-nf4",
+    "structuredOutput": true,
+    "schema": "grounded-etiology-context-universal-v1",
+    "recommendedActionsRequired": false
+  },
+  "manualReviewRequired": true,
+  "medicalAdjudication": {
+    "status": "disabled",
+    "advisoryOnly": true,
+    "model": null,
+    "decision": null,
+    "issueReviewCount": 0,
+    "validatorFalsePositiveCount": 0
+  },
+  "medicalReviewRecommended": false
+}

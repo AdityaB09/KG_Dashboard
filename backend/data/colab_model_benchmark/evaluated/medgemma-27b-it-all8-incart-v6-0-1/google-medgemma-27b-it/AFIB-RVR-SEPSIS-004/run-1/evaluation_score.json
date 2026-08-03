@@ -1,0 +1,529 @@
+{
+  "episodeId": "AFIB-RVR-SEPSIS-004",
+  "scoringContract": "etiology-context-deterministic-v4.3",
+  "recommendedActionsRequired": false,
+  "actionsScored": false,
+  "diagnosisConsistency": 20,
+  "primaryEtiology": 18,
+  "contextualEvidence": 24,
+  "uncertaintyAndMissingData": 0,
+  "avoidsDistractors": 5,
+  "total": 67,
+  "grade": "fail",
+  "validatorPassed": true,
+  "safetyPass": true,
+  "overallPass": false,
+  "overallDisposition": "grounded_but_below_benchmark_target",
+  "groundingPass": true,
+  "grounding": {
+    "status": "accepted",
+    "pass": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "accepted": true,
+    "displayableWithReview": false,
+    "hardErrorCount": 0,
+    "qualityErrorCount": 0
+  },
+  "benchmark": {
+    "score": 67,
+    "grade": "below_target",
+    "conceptGrade": "fail",
+    "alignmentMode": "full_scenario",
+    "informationalOnly": false,
+    "pass": false,
+    "disposition": "below_target"
+  },
+  "benchmarkAlignmentMode": "full_scenario",
+  "benchmarkInformationalOnly": false,
+  "benchmarkPass": false,
+  "benchmarkDisposition": "below_target",
+  "clinicalPromptMode": "episode_pack_only",
+  "matched": {
+    "diagnosis": [
+      "Atrial fibrillation with rapid ventricular response"
+    ],
+    "etiology": [
+      "sepsisPrecipitatedAfib"
+    ],
+    "context": [
+      "newAfibRvr",
+      "fever",
+      "elevatedInflammatoryMarkers",
+      "elevatedLactate",
+      "infectionSource",
+      "shockOrVasopressorContext",
+      "systemicInflammatoryStress",
+      "hemodynamicStress"
+    ],
+    "uncertainty": []
+  },
+  "partial": {
+    "etiology": [
+      "infectionDrivenAdrenergicStress"
+    ],
+    "context": [
+      "noPriorAfibWhenDocumented",
+      "infectionBurden"
+    ],
+    "uncertainty": []
+  },
+  "missing": {
+    "etiology": [],
+    "context": [],
+    "uncertainty": [
+      "relativeContributionOfVolumeAndCatecholaminesUnknown"
+    ]
+  },
+  "conceptStrengths": {
+    "etiology": {
+      "sepsisPrecipitatedAfib": 0.75,
+      "infectionDrivenAdrenergicStress": 0.25
+    },
+    "context": {
+      "newAfibRvr": 0.9,
+      "fever": 1.0,
+      "elevatedInflammatoryMarkers": 0.9,
+      "elevatedLactate": 1.0,
+      "infectionSource": 1.0,
+      "shockOrVasopressorContext": 0.75,
+      "noPriorAfibWhenDocumented": 0.5,
+      "infectionBurden": 0.5,
+      "systemicInflammatoryStress": 0.75,
+      "hemodynamicStress": 0.75
+    },
+    "uncertainty": {
+      "relativeContributionOfVolumeAndCatecholaminesUnknown": 0.0
+    }
+  },
+  "distractorHits": [],
+  "forbiddenClaimHits": [],
+  "unsafeStatements": [],
+  "responseValidation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "ATRIAL_FIBRILLATION_RVR",
+    "authoritativeDiagnosisDisplay": "Atrial fibrillation with rapid ventricular response",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "validatorInternalConflicts": [],
+    "adjudicationEligible": false,
+    "evidenceCoverage": {
+      "rhythmEvidence": true,
+      "hemodynamicContext": true,
+      "electrolyteInterpretation": true,
+      "ischemiaInterpretation": false,
+      "infectionContext": true,
+      "qtContext": false,
+      "renalContext": true,
+      "medicationToxicityContext": false,
+      "medicationContext": true,
+      "episodePackClinicalContext": true
+    },
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 7,
+    "evidenceCoverageRequired": 3,
+    "correctionEvidence": [],
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-v4.3",
+    "groundingStatus": "accepted",
+    "clinicalPromptMode": "episode_pack_only",
+    "evidenceFingerprint": "0ed90e80e93dfda927fa056828efb88b9dd4588e1bf92970c7518d0ea9c2a582",
+    "medicalAdjudication": {
+      "schemaVersion": "medical-validator-review-v2",
+      "status": "disabled",
+      "advisoryOnly": true
+    },
+    "medicalReviewRecommended": false
+  },
+  "manualClinicalReviewRequired": true,
+  "scoringMethod": "scenario answer-key concept-strength matching with word-boundary, negation-aware terminology; grounding safety evaluated separately",
+  "scopedEvidenceSchemaVersion": "slm-evidence-envelope-v4",
+  "rhythmIdentification": 20,
+  "contributingFactors": 24,
+  "recommendedActions": 0,
+  "mandatoryEmergencyActionsMissing": [],
+  "normalizedModelResponse": {
+    "episodeSummary": "The patient, a 79-year-old female with a history of hypertension and chronic kidney disease, presented with urosepsis. She developed new onset atrial fibrillation with rapid ventricular response (RVR) at a rate of 150 bpm, coinciding with a fever spike to 38.9°C. Hemodynamically, she is unstable, requiring low-dose norepinephrine, with a MAP of 67 mmHg and systolic BP of 92 mmHg. Labs show elevated WBC (18.4), lactate (3.1 mmol/L), creatinine (1.7 mg/dL), and procalcitonin (6.2 ng/mL). Electrolytes (potassium, magnesium) are within normal limits. ECG shows narrow QRS complexes, absent P waves, and rate-related ST depression.",
+    "rhythmInterpretation": "Authoritative upstream diagnosis: Atrial fibrillation with rapid ventricular response. Source: SLM_Eval. The rhythm diagnosis was not generated by the SLM.",
+    "clinicalContext": "Unstable atrial fibrillation with rapid ventricular response (RVR) in the context of sepsis.",
+    "mostLikelyEtiology": "Sepsis-induced atrial fibrillation with rapid ventricular response. The patient has clinical and laboratory evidence of sepsis (fever, elevated WBC, elevated lactate, elevated procalcitonin) and developed new onset atrial fibrillation with RVR during this acute illness.",
+    "contributingFactors": [
+      "Sepsis",
+      "Fever",
+      "Elevated lactate",
+      "Chronic kidney disease",
+      "Advanced age"
+    ],
+    "recommendedImmediateActions": [],
+    "uncertaintyAndMissingData": [
+      "Calcium level is unavailable, which could potentially contribute to arrhythmia or affect response to vasopressors, but its absence does not change the primary etiology.",
+      "Sodium level is unavailable, which could potentially contribute to arrhythmia or affect response to vasopressors, but its absence does not change the primary etiology.",
+      "Specific source of infection (e.g., urinalysis details, blood culture results) is not fully detailed, but the overall clinical picture strongly supports sepsis.",
+      "Detailed cardiac history (e.g., prior AFib, structural heart disease) is limited to hypertension and CKD, which are risk factors but not definitive causes.",
+      "Medication list is incomplete (only Amlodipine listed, but patient is on Norepinephrine and Piperacillin-tazobactam).",
+      "Phase 6 analysis shows a difference in QRS duration (controlled event 92ms vs phase6 54.545ms) which is marked as valid, comparable, and material, but the authoritative diagnosis and clinical context remain consistent."
+    ]
+  },
+  "displayModelResponse": {
+    "episodeSummary": "The patient, a 79-year-old female with a history of hypertension and chronic kidney disease, presented with urosepsis. She developed new onset atrial fibrillation with rapid ventricular response (RVR) at a rate of 150 bpm, coinciding with a fever spike to 38.9°C. Hemodynamically, she is unstable, requiring low-dose norepinephrine, with a MAP of 67 mmHg and systolic BP of 92 mmHg. Labs show elevated WBC (18.4), lactate (3.1 mmol/L), creatinine (1.7 mg/dL), and procalcitonin (6.2 ng/mL). Electrolytes (potassium, magnesium) are within normal limits. ECG shows narrow QRS complexes, absent P waves, and rate-related ST depression.",
+    "rhythmInterpretation": "Authoritative upstream diagnosis: Atrial fibrillation with rapid ventricular response. Source: SLM_Eval. The rhythm diagnosis was not generated by the SLM.",
+    "clinicalContext": "Unstable atrial fibrillation with rapid ventricular response (RVR) in the context of sepsis.",
+    "mostLikelyEtiology": "Sepsis-induced atrial fibrillation with rapid ventricular response. The patient has clinical and laboratory evidence of sepsis (fever, elevated WBC, elevated lactate, elevated procalcitonin) and developed new onset atrial fibrillation with RVR during this acute illness.",
+    "contributingFactors": [
+      "Sepsis",
+      "Fever",
+      "Elevated lactate",
+      "Chronic kidney disease",
+      "Advanced age"
+    ],
+    "recommendedImmediateActions": [],
+    "uncertaintyAndMissingData": [
+      "Calcium level is unavailable, which could potentially contribute to arrhythmia or affect response to vasopressors, but its absence does not change the primary etiology.",
+      "Sodium level is unavailable, which could potentially contribute to arrhythmia or affect response to vasopressors, but its absence does not change the primary etiology.",
+      "Specific source of infection (e.g., urinalysis details, blood culture results) is not fully detailed, but the overall clinical picture strongly supports sepsis.",
+      "Detailed cardiac history (e.g., prior AFib, structural heart disease) is limited to hypertension and CKD, which are risk factors but not definitive causes.",
+      "Medication list is incomplete (only Amlodipine listed, but patient is on Norepinephrine and Piperacillin-tazobactam).",
+      "Phase 6 analysis shows a difference in QRS duration (controlled event 92ms vs phase6 54.545ms) which is marked as valid, comparable, and material, but the authoritative diagnosis and clinical context remain consistent."
+    ]
+  },
+  "cardinalResponseFile": "cardinal_model_response.json",
+  "diagnosticEvent": {
+    "schemaVersion": "diagnostic-event-universal-v2",
+    "eventDetected": true,
+    "episodeId": "evalflow-AFIB-RVR-SEPSIS-004-20260731-193246-9f31c0",
+    "incidentId": "inc-INCART-EVAL-AFIB-RVR-SEPSIS-004-loop-1-atrial-fibrillation-rvr-000001584-DtTF9M1Ng-BhvC-q",
+    "diagnosis": {
+      "code": "ATRIAL_FIBRILLATION_RVR",
+      "display": "Atrial fibrillation with rapid ventricular response",
+      "authoritative": true
+    },
+    "source": {
+      "type": "controlled_evaluation_scenario",
+      "name": "SLM_Eval",
+      "identifier": "AFIB-RVR-SEPSIS-004",
+      "futureReplacement": "ecg_ml_diagnostic_model"
+    },
+    "confidence": {
+      "value": 1.0,
+      "basis": "controlled_evaluation_label"
+    },
+    "measurements": {
+      "ventricularRateBpm": 150.0,
+      "atrialRateBpm": null,
+      "qrsDurationMs": 92.0,
+      "qtcMs": 430.0,
+      "prIntervalMs": null,
+      "regularity": "irregularly irregular",
+      "axisDegrees": 40.0,
+      "pWavePresent": false,
+      "atrialActivityPresent": false,
+      "atrioventricularAssociation": null
+    },
+    "rhythmFeatures": {
+      "ventricularRateBpm": 150.0,
+      "atrialRateBpm": null,
+      "qrsDurationMs": 92.0,
+      "qtcMs": 430.0,
+      "qtcEvidenceSource": "complete_episode_pack.ecg.measurements.qtcMs",
+      "prIntervalMs": null,
+      "regularity": "irregularly irregular",
+      "axisDegrees": 40.0,
+      "pWavePresent": false,
+      "atrialActivityPresent": false,
+      "atrioventricularAssociation": null,
+      "findings": [
+        "Narrow QRS"
+      ]
+    },
+    "hemodynamicStatus": {
+      "available": true,
+      "classification": "unstable",
+      "conscious": null,
+      "pulseless": null,
+      "pulsePresent": null,
+      "shockSupported": true,
+      "vasopressorSupport": true,
+      "systolicBloodPressure": 92.0,
+      "diastolicBloodPressure": 54.0,
+      "map": 67.0,
+      "oxygenSaturationPct": 93.0,
+      "temperatureC": 38.9,
+      "sourceNote": "On low-dose norepinephrine"
+    },
+    "electrolyteContext": {
+      "available": true,
+      "potassium": {
+        "available": true,
+        "value": 3.6,
+        "unit": "mmol/L",
+        "withinReference": true,
+        "reference": {
+          "low": 3.5,
+          "high": 5.1
+        },
+        "note": ""
+      },
+      "magnesium": {
+        "available": true,
+        "value": 1.8,
+        "unit": "mg/dL",
+        "withinReference": true,
+        "reference": {
+          "low": 1.7,
+          "high": 2.2
+        },
+        "note": ""
+      },
+      "calcium": {
+        "available": false,
+        "value": null,
+        "unit": null,
+        "withinReference": null,
+        "reference": null
+      },
+      "sodium": {
+        "available": false,
+        "value": null,
+        "unit": null,
+        "withinReference": null,
+        "reference": null
+      },
+      "abnormalElectrolytes": [],
+      "electrolyteAbnormalityPresent": false,
+      "majorElectrolyteTriggerSupported": false
+    },
+    "ischemiaContext": {
+      "available": true,
+      "acuteChestPain": null,
+      "stElevationSupported": null,
+      "troponinValue": 0.03,
+      "troponinPattern": "measured_unspecified_pattern",
+      "acuteStemiSupported": null
+    },
+    "infectionContext": {
+      "available": true,
+      "temperatureC": 38.9,
+      "wbc": 18.4,
+      "procalcitonin": 6.2,
+      "lactate": 3.1,
+      "feverSupported": true,
+      "inflammatoryResponseSupported": true,
+      "infectionSupported": true,
+      "sepsisSupported": true,
+      "infectionExplicitlyDenied": null,
+      "suspectedSource": null
+    },
+    "qtContext": {
+      "available": true,
+      "qtcMs": 430.0,
+      "prolonged": false,
+      "thresholdMs": 500,
+      "qtProlongingMedications": [],
+      "acquiredLongQtSupported": false,
+      "evidenceSource": "complete_episode_pack.ecg.measurements.qtcMs"
+    },
+    "renalContext": {
+      "available": true,
+      "creatinine": 1.7,
+      "bun": null,
+      "egfr": null,
+      "esrd": null,
+      "dialysis": null,
+      "missedDialysis": null,
+      "chronicKidneyDiseaseSupported": true,
+      "acuteKidneyInjurySupported": null,
+      "renalImpairmentSupported": true,
+      "sourceTextContainsRenalImpairment": null
+    },
+    "medicationContext": {
+      "available": true,
+      "homeMedications": [
+        "Amlodipine 5 mg"
+      ],
+      "activeMedications": [
+        "Amlodipine 5 mg"
+      ],
+      "infusions": [
+        "Norepinephrine (low dose)",
+        "Piperacillin-tazobactam",
+        "IV crystalloid"
+      ],
+      "qtProlongingMedications": [],
+      "digoxinExposure": false,
+      "potassiumRaisingMedicationExposure": false,
+      "thiazideExposure": false
+    },
+    "toxicityContext": {
+      "available": true,
+      "digoxinLevel": null,
+      "symptoms": [],
+      "digoxinToxicitySupported": false,
+      "reducedClearanceSupported": false
+    },
+    "patientContext": {
+      "available": true,
+      "age": 79,
+      "sex": "F",
+      "primaryDiagnosis": "Urosepsis",
+      "history": [
+        "Hypertension",
+        "Chronic kidney disease",
+        "No prior atrial fibrillation"
+      ],
+      "leftVentricularEjectionFraction": null,
+      "priorAtrialFibrillation": false
+    },
+    "structuralHeartContext": {
+      "available": false,
+      "findings": [],
+      "lvefPct": null,
+      "severeLvDysfunction": null
+    },
+    "laboratoryContext": {
+      "wbc": {
+        "value": 18.4,
+        "unit": "10^3/uL",
+        "reference": "4–11",
+        "flag": "HIGH"
+      },
+      "lactate": {
+        "value": 3.1,
+        "unit": "mmol/L",
+        "reference": "0.5–2.2",
+        "flag": "HIGH"
+      },
+      "potassium": {
+        "value": 3.6,
+        "unit": "mmol/L",
+        "reference": "3.5–5.1",
+        "flag": ""
+      },
+      "magnesium": {
+        "value": 1.8,
+        "unit": "mg/dL",
+        "reference": "1.7–2.2",
+        "flag": ""
+      },
+      "creatinine": {
+        "value": 1.7,
+        "unit": "mg/dL",
+        "reference": "0.6–1.1",
+        "flag": "HIGH"
+      },
+      "tsh": {
+        "value": 1.8,
+        "unit": "mIU/L",
+        "reference": "0.4–4.0",
+        "flag": ""
+      },
+      "procalcitonin": {
+        "value": 6.2,
+        "unit": "ng/mL",
+        "reference": "<0.5",
+        "flag": "HIGH"
+      },
+      "troponinT": {
+        "value": 0.03,
+        "unit": "ng/mL",
+        "reference": "<0.014",
+        "flag": "mild"
+      }
+    },
+    "recentClinicalContext": {
+      "recentEvents": [
+        "Fever to 38.9, rigors",
+        "Urinalysis positive, blood cultures pending",
+        "New irregular tachycardia coincident with fever spike"
+      ]
+    },
+    "pairedOraclePatientContext": {
+      "available": false,
+      "sourceType": "oracle_smart_fhir"
+    },
+    "detector": {
+      "ruleId": "multilead-waveform-change-v1",
+      "estimatedRateBpm": 150.0,
+      "triggerLatencySeconds": 1.2,
+      "referenceOnsetOffsetSeconds": 6.0,
+      "detectedTriggerOffsetSeconds": 7.2
+    },
+    "capture": {
+      "durationSeconds": 20.0,
+      "preSeconds": 6.0,
+      "eventSeconds": 8.0,
+      "postSeconds": 6.0,
+      "complete": true,
+      "sampleRateHz": 220.0,
+      "leads": [
+        "I",
+        "II",
+        "III",
+        "aVR",
+        "aVL",
+        "aVF"
+      ]
+    },
+    "provenance": {
+      "isIndependentDiagnosis": false,
+      "evaluationControlled": true,
+      "diagnosisOwnedByUpstreamSource": true,
+      "timingOwnedByDeterministicDetector": true,
+      "slmMayReclassify": false
+    }
+  },
+  "rhythmIdentificationSource": "authoritative_diagnostic_event",
+  "scoreApplicability": "scenario_evaluation",
+  "clinicalPatientScoreApplicable": true,
+  "displayInClinicalWidget": true,
+  "displayPolicy": "always_show_model_response",
+  "evidenceSchemaVersion": "slm-evidence-envelope-v4",
+  "evidenceConsistencyReview": {
+    "schemaVersion": "evidence-consistency-review-v1",
+    "status": "consistent",
+    "scenarioId": "AFIB-RVR-SEPSIS-004",
+    "hardConflicts": [],
+    "warnings": [],
+    "normalizationsApplied": [],
+    "qualifiedMeasurementConflictCount": 1
+  },
+  "generationAttempted": true,
+  "validContract": true,
+  "reliability": {
+    "attemptCount": 1,
+    "firstAttemptAccepted": true,
+    "firstAttemptStrictlyAccepted": true,
+    "firstAttemptDisplayableWithReview": false,
+    "firstAttemptErrors": [],
+    "finalAttemptAccepted": true,
+    "finalAttemptStrictlyAccepted": true,
+    "finalAttemptDisplayableWithReview": false,
+    "retryReasonCount": 0,
+    "contradictionCount": 0,
+    "unsupportedFactCount": 0,
+    "evidenceCoverageCount": 7,
+    "evidenceCoverageRequired": 3
+  },
+  "attemptCount": 1,
+  "firstAttemptAccepted": true,
+  "firstAttemptStrictlyAccepted": true,
+  "firstAttemptDisplayableWithReview": false,
+  "firstAttemptErrors": [],
+  "finalAttemptAccepted": true,
+  "finalAttemptStrictlyAccepted": true,
+  "finalAttemptDisplayableWithReview": false,
+  "retryReasonCount": 0,
+  "contradictionCount": 0,
+  "unsupportedFactCount": 0,
+  "evidenceCoverageCount": 7,
+  "evidenceCoverageRequired": 3
+}

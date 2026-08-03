@@ -6353,6 +6353,16 @@ body.kgen-wave-modal-open {
   box-shadow: 0 0 5px rgba(37, 99, 235, 0.5);
 }
 
+.kgen-episode-marker.reference {
+  width: 0;
+  border-left: 2px dashed #e28a00;
+}
+
+.kgen-episode-marker.detected {
+  width: 0;
+  border-left: 2px solid #2468d8;
+}
+
 .kgen-episode-vital-note {
   color: #64748b;
   font-size: 9px;
@@ -6388,4 +6398,9 @@ body.kgen-wave-modal-open {
   border-color: #fecaca;
   background: #fee2e2;
   color: #991b1b;
+}
+
+/* Automatic Oracle evaluation runs do not render a provenance banner. */
+.kgen-oracle-demo-banner {
+  display: none !important;
 }

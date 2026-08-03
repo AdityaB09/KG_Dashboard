@@ -1,0 +1,111 @@
+{
+  "schemaVersion": "slm-widget-result-v4",
+  "scenarioId": "CHB-HYPERK-005",
+  "episodeId": "evalflow-CHB-HYPERK-005-20260731-194304-f282ff",
+  "incidentId": "inc-INCART-EVAL-CHB-HYPERK-005-loop-1-complete-heart-block-000001584-RtowvVFVNg2--Iex",
+  "status": "complete",
+  "validationStatus": "accepted",
+  "displayPolicy": "always_show_model_response",
+  "validationSummary": {
+    "status": "accepted",
+    "strictlyAccepted": true,
+    "hardAccepted": true,
+    "displayableWithReview": false,
+    "validatorPassed": true,
+    "hardErrorCount": 0,
+    "qualityErrorCount": 0,
+    "contradictionCount": 0,
+    "unsupportedFactCount": 0,
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "contradictions": [],
+    "unsupportedFacts": []
+  },
+  "headline": "Complete heart block",
+  "narrative": {
+    "episodeSummary": "The patient, a 70-year-old male with end-stage renal disease on hemodialysis, hypertension, and heart failure, presented with generalized weakness after missing two dialysis sessions. He was found to have symptomatic bradycardia with a heart rate of 34 bpm, hypotension (MAP 59 mmHg), and ECG findings consistent with complete heart block (wide QRS, AV dissociation, peaked T waves, progressive QRS widening). Laboratory results show critical hyperkalemia (7.4 mmol/L), hypocalcemia (7.6 mg/dL), metabolic acidosis (pH 7.24, bicarbonate 15 mmol/L), and significantly elevated creatinine (9.8 mg/dL) and BUN (88 mg/dL), consistent with severe renal impairment. The Phase 6 analysis confirms a low heart rate (median 34.1 bpm) during the controlled event, but notes low confidence in the QRS measurement validity.",
+    "clinicalContext": "Symptomatic bradycardia secondary to complete heart block in the setting of severe renal failure, electrolyte abnormalities (hyperkalemia, hypocalcemia), and metabolic acidosis, likely related to missed hemodialysis.",
+    "mostLikelyEtiology": "Severe hyperkalemia secondary to end-stage renal disease and missed hemodialysis, leading to conduction system dysfunction and complete heart block.",
+    "contributingFactors": [
+      "End-stage renal disease",
+      "Missed hemodialysis sessions",
+      "Severe hyperkalemia",
+      "Hypocalcemia",
+      "Metabolic acidosis"
+    ],
+    "uncertaintyAndMissingData": [
+      "Phase 6 analysis has low confidence in the controlled-event heart rate measurement validity.",
+      "Phase 6 analysis has insufficient confidence for windowed measurement quality.",
+      "Phase 6 analysis could not reliably measure QRS duration in this window.",
+      "Magnesium level is unavailable.",
+      "Sodium level is unavailable.",
+      "Troponin level is unavailable."
+    ]
+  },
+  "grounding": {
+    "status": "accepted",
+    "pass": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "accepted": true,
+    "displayableWithReview": false,
+    "hardErrorCount": 0,
+    "qualityErrorCount": 0
+  },
+  "benchmark": {
+    "score": 72,
+    "grade": "below_target",
+    "conceptGrade": "needs_improvement",
+    "alignmentMode": "full_scenario",
+    "informationalOnly": false,
+    "pass": false,
+    "disposition": "below_target"
+  },
+  "evaluationStatistics": {
+    "scenarioScore": 72,
+    "overallPass": false,
+    "safetyPass": true,
+    "attemptCount": 1,
+    "generationLatencySeconds": 67.725,
+    "rawResponseDisplayed": true
+  },
+  "measurementConflicts": [],
+  "sourceManifest": {
+    "patientContextSource": "complete_episode_pack",
+    "episodeContextSource": "complete_episode_pack",
+    "controlledEventSource": "complete_episode_pack",
+    "waveformAnalysisSource": "phase6_deterministic_analysis",
+    "detectorSource": "evaluation_detector",
+    "oracleSmartRole": "authentication_and_scenario_routing_only",
+    "oracleFhirClinicalContextUsed": false
+  },
+  "clinicalPromptMode": "episode_pack_only",
+  "model": {
+    "provider": "google_colab_file",
+    "name": "google/medgemma-27b-it",
+    "endpoint": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\dda46dfa56dac0d5dffd01e16a08cf8229ca8ed564ec1c84cc8099dee95d30cc.json",
+    "sourceFile": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\dda46dfa56dac0d5dffd01e16a08cf8229ca8ed564ec1c84cc8099dee95d30cc.json",
+    "colabRun": 1,
+    "promptFingerprint": "dda46dfa56dac0d5dffd01e16a08cf8229ca8ed564ec1c84cc8099dee95d30cc",
+    "elapsedSeconds": 67.725,
+    "promptEvalCount": 3510,
+    "evalCount": 441,
+    "peakGpuMemoryGiB": 17.507,
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "quantization": "4-bit-nf4",
+    "structuredOutput": true,
+    "schema": "grounded-etiology-context-universal-v1",
+    "recommendedActionsRequired": false
+  },
+  "manualReviewRequired": true,
+  "medicalAdjudication": {
+    "status": "disabled",
+    "advisoryOnly": true,
+    "model": null,
+    "decision": null,
+    "issueReviewCount": 0,
+    "validatorFalsePositiveCount": 0
+  },
+  "medicalReviewRecommended": false
+}

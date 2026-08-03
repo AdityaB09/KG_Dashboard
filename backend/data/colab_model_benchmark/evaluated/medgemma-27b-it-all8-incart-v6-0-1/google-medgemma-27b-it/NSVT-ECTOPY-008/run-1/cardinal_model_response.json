@@ -1,0 +1,505 @@
+{
+  "schemaVersion": "grounded-cardinal-response-v4",
+  "status": "complete",
+  "validationStatus": "accepted_with_review",
+  "displayPolicy": "always_show_model_response",
+  "createdAt": "2026-08-02T01:32:14.077647+00:00",
+  "mode": "evaluation_injection",
+  "scenarioId": "NSVT-ECTOPY-008",
+  "episodeId": "evalflow-NSVT-ECTOPY-008-20260731-193752-f75aa3",
+  "incidentId": "inc-INCART-EVAL-NSVT-ECTOPY-008-loop-1-nonsustained-ventricular-tachycardia-000001650-IVd74VSLICeLh8Ud",
+  "source": "authoritative_diagnosis_plus_scoped_evidence",
+  "evidenceSchemaVersion": "slm-evidence-envelope-v4",
+  "clinicalPromptMode": "episode_pack_only",
+  "evidenceConsistencyReview": {
+    "schemaVersion": "evidence-consistency-review-v1",
+    "status": "consistent_with_warnings",
+    "scenarioId": "NSVT-ECTOPY-008",
+    "hardConflicts": [],
+    "warnings": [
+      "Phase 6 produced an low-confidence controlled-event ventricularRateBpm measurement. It must not dispute or replace the controlled episode-package value."
+    ],
+    "normalizationsApplied": [],
+    "qualifiedMeasurementConflictCount": 1
+  },
+  "validatorVersion": "grounded-response-validator-v4.3",
+  "diagnosticEvent": {
+    "schemaVersion": "diagnostic-event-universal-v2",
+    "eventDetected": true,
+    "episodeId": "evalflow-NSVT-ECTOPY-008-20260731-193752-f75aa3",
+    "incidentId": "inc-INCART-EVAL-NSVT-ECTOPY-008-loop-1-nonsustained-ventricular-tachycardia-000001650-IVd74VSLICeLh8Ud",
+    "diagnosis": {
+      "code": "NONSUSTAINED_VENTRICULAR_TACHYCARDIA",
+      "display": "Frequent PVCs with non-sustained VT run",
+      "authoritative": true
+    },
+    "source": {
+      "type": "controlled_evaluation_scenario",
+      "name": "SLM_Eval",
+      "identifier": "NSVT-ECTOPY-008",
+      "futureReplacement": "ecg_ml_diagnostic_model"
+    },
+    "confidence": {
+      "value": 1.0,
+      "basis": "controlled_evaluation_label"
+    },
+    "measurements": {
+      "ventricularRateBpm": 78.0,
+      "atrialRateBpm": 78.0,
+      "qrsDurationMs": 94.0,
+      "qtcMs": 445.0,
+      "prIntervalMs": 160.0,
+      "regularity": "occasionally irregular",
+      "axisDegrees": 30.0,
+      "pWavePresent": true,
+      "atrialActivityPresent": true,
+      "atrioventricularAssociation": null
+    },
+    "rhythmFeatures": {
+      "ventricularRateBpm": 78.0,
+      "atrialRateBpm": 78.0,
+      "qrsDurationMs": 94.0,
+      "qtcMs": 445.0,
+      "qtcEvidenceSource": "complete_episode_pack.ecg.measurements.qtcMs",
+      "prIntervalMs": 160.0,
+      "regularity": "occasionally irregular",
+      "axisDegrees": 30.0,
+      "pWavePresent": true,
+      "atrialActivityPresent": true,
+      "atrioventricularAssociation": null,
+      "findings": [
+        "Multifocal PVCs"
+      ]
+    },
+    "hemodynamicStatus": {
+      "available": true,
+      "classification": "stable",
+      "conscious": null,
+      "pulseless": null,
+      "pulsePresent": null,
+      "shockSupported": null,
+      "vasopressorSupport": null,
+      "systolicBloodPressure": 128.0,
+      "diastolicBloodPressure": 80.0,
+      "map": 96.0,
+      "oxygenSaturationPct": 96.0,
+      "temperatureC": 37.0,
+      "sourceNote": "Stable"
+    },
+    "electrolyteContext": {
+      "available": true,
+      "potassium": {
+        "available": true,
+        "value": 3.1,
+        "unit": "mmol/L",
+        "withinReference": false,
+        "reference": {
+          "low": 3.5,
+          "high": 5.1
+        },
+        "note": "LOW"
+      },
+      "magnesium": {
+        "available": true,
+        "value": 1.5,
+        "unit": "mg/dL",
+        "withinReference": false,
+        "reference": {
+          "low": 1.7,
+          "high": 2.2
+        },
+        "note": "LOW"
+      },
+      "calcium": {
+        "available": true,
+        "value": 8.8,
+        "unit": "mg/dL",
+        "withinReference": true,
+        "reference": {
+          "low": 8.5,
+          "high": 10.2
+        },
+        "note": ""
+      },
+      "sodium": {
+        "available": false,
+        "value": null,
+        "unit": null,
+        "withinReference": null,
+        "reference": null
+      },
+      "abnormalElectrolytes": [
+        "potassium",
+        "magnesium"
+      ],
+      "electrolyteAbnormalityPresent": true,
+      "majorElectrolyteTriggerSupported": true
+    },
+    "ischemiaContext": {
+      "available": true,
+      "acuteChestPain": null,
+      "stElevationSupported": null,
+      "troponinValue": 0.02,
+      "troponinPattern": "measured_unspecified_pattern",
+      "acuteStemiSupported": null
+    },
+    "infectionContext": {
+      "available": true,
+      "temperatureC": 37.0,
+      "wbc": null,
+      "procalcitonin": null,
+      "lactate": null,
+      "feverSupported": null,
+      "inflammatoryResponseSupported": null,
+      "infectionSupported": null,
+      "sepsisSupported": null,
+      "infectionExplicitlyDenied": null,
+      "suspectedSource": null
+    },
+    "qtContext": {
+      "available": true,
+      "qtcMs": 445.0,
+      "prolonged": false,
+      "thresholdMs": 500,
+      "qtProlongingMedications": [],
+      "acquiredLongQtSupported": false,
+      "evidenceSource": "complete_episode_pack.ecg.measurements.qtcMs"
+    },
+    "renalContext": {
+      "available": true,
+      "creatinine": 1.0,
+      "bun": null,
+      "egfr": null,
+      "esrd": null,
+      "dialysis": null,
+      "missedDialysis": null,
+      "chronicKidneyDiseaseSupported": null,
+      "acuteKidneyInjurySupported": null,
+      "renalImpairmentSupported": null,
+      "sourceTextContainsRenalImpairment": null
+    },
+    "medicationContext": {
+      "available": true,
+      "homeMedications": [
+        "Hydrochlorothiazide 25 mg",
+        "Lisinopril 10 mg"
+      ],
+      "activeMedications": [
+        "Hydrochlorothiazide 25 mg",
+        "Lisinopril 10 mg"
+      ],
+      "infusions": [
+        "Maintenance IV fluids"
+      ],
+      "qtProlongingMedications": [],
+      "digoxinExposure": false,
+      "potassiumRaisingMedicationExposure": false,
+      "thiazideExposure": true
+    },
+    "toxicityContext": {
+      "available": true,
+      "digoxinLevel": null,
+      "symptoms": [],
+      "digoxinToxicitySupported": false,
+      "reducedClearanceSupported": false
+    },
+    "patientContext": {
+      "available": true,
+      "age": 55,
+      "sex": "M",
+      "primaryDiagnosis": "Post-op monitoring (day 1 after abdominal surgery)",
+      "history": [
+        "Hypertension",
+        "Mild diastolic dysfunction"
+      ],
+      "leftVentricularEjectionFraction": null,
+      "priorAtrialFibrillation": null
+    },
+    "structuralHeartContext": {
+      "available": false,
+      "findings": [],
+      "lvefPct": null,
+      "severeLvDysfunction": null
+    },
+    "laboratoryContext": {
+      "potassium": {
+        "value": 3.1,
+        "unit": "mmol/L",
+        "reference": "3.5–5.1",
+        "flag": "LOW"
+      },
+      "magnesium": {
+        "value": 1.5,
+        "unit": "mg/dL",
+        "reference": "1.7–2.2",
+        "flag": "LOW"
+      },
+      "troponinT": {
+        "value": 0.02,
+        "unit": "ng/mL",
+        "reference": "<0.014",
+        "flag": "mild post-op"
+      },
+      "creatinine": {
+        "value": 1.0,
+        "unit": "mg/dL",
+        "reference": "0.7–1.3",
+        "flag": ""
+      },
+      "calcium": {
+        "value": 8.8,
+        "unit": "mg/dL",
+        "reference": "8.5–10.2",
+        "flag": ""
+      }
+    },
+    "recentClinicalContext": {
+      "recentEvents": [
+        "Post-operative day 1",
+        "On thiazide diuretic (K/Mg wasting)",
+        "PVC burden rising; brief NSVT run, asymptomatic"
+      ]
+    },
+    "pairedOraclePatientContext": {
+      "available": false,
+      "sourceType": "oracle_smart_fhir"
+    },
+    "detector": {
+      "ruleId": "controlled-capture-fallback-v1",
+      "estimatedRateBpm": 78.0,
+      "triggerLatencySeconds": 1.5,
+      "referenceOnsetOffsetSeconds": 6.0,
+      "detectedTriggerOffsetSeconds": 7.5
+    },
+    "capture": {
+      "durationSeconds": 20.0,
+      "preSeconds": 6.0,
+      "eventSeconds": 8.0,
+      "postSeconds": 6.0,
+      "complete": true,
+      "sampleRateHz": 220.0,
+      "leads": [
+        "I",
+        "II",
+        "III",
+        "aVR",
+        "aVL",
+        "aVF"
+      ]
+    },
+    "provenance": {
+      "isIndependentDiagnosis": false,
+      "evaluationControlled": true,
+      "diagnosisOwnedByUpstreamSource": true,
+      "timingOwnedByDeterministicDetector": true,
+      "slmMayReclassify": false
+    }
+  },
+  "evidenceFingerprint": "d565d11f5035c8e2a4c670037825cbd25ed33c8cde55679a74623c20b92ace71",
+  "model": {
+    "provider": "google_colab_file",
+    "name": "google/medgemma-27b-it",
+    "endpoint": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\be6bec1fbfa547bc17907449dec4694c54849101c33249ebde9b0047d9526930.json",
+    "sourceFile": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\be6bec1fbfa547bc17907449dec4694c54849101c33249ebde9b0047d9526930.json",
+    "colabRun": 1,
+    "promptFingerprint": "be6bec1fbfa547bc17907449dec4694c54849101c33249ebde9b0047d9526930",
+    "elapsedSeconds": 49.06,
+    "promptEvalCount": 3550,
+    "evalCount": 315,
+    "peakGpuMemoryGiB": 17.532,
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "quantization": "4-bit-nf4",
+    "structuredOutput": true,
+    "schema": "grounded-etiology-context-universal-v1",
+    "recommendedActionsRequired": false
+  },
+  "modelOwnedFields": [
+    "episodeSummary",
+    "detectedEpisodeContext",
+    "mostLikelyEtiology",
+    "contributingFactors",
+    "uncertaintyAndMissingData"
+  ],
+  "deterministicFields": [
+    "rhythmInterpretation",
+    "recommendedImmediateActions"
+  ],
+  "recommendedActionsRequired": false,
+  "modelResponse": {
+    "episodeSummary": "The patient experienced an episode of frequent PVCs with a non-sustained VT run, classified as stable. The event lasted 8 seconds, with a ventricular rate of 78 bpm. The patient is post-operative day 1 after abdominal surgery, taking hydrochlorothiazide and lisinopril. Labs show hypokalemia (3.1 mmol/L) and hypomagnesemia (1.5 mg/dL).",
+    "rhythmInterpretation": "Authoritative upstream diagnosis: Frequent PVCs with non-sustained VT run. Source: SLM_Eval. The rhythm diagnosis was not generated by the SLM.",
+    "clinicalContext": "Ventricular ectopy occurred in a post-operative patient on a thiazide diuretic, with evidence of electrolyte abnormalities (low potassium and magnesium). The episode was hemodynamically stable.",
+    "mostLikelyEtiology": "Electrolyte imbalance (hypokalemia and hypomagnesemia) secondary to diuretic therapy (hydrochlorothiazide) in a post-operative patient.",
+    "contributingFactors": [
+      "Post-operative state",
+      "Hydrochlorothiazide use",
+      "Hypokalemia",
+      "Hypomagnesemia"
+    ],
+    "recommendedImmediateActions": [],
+    "uncertaintyAndMissingData": [
+      "Sodium level is unavailable, which could contribute to electrolyte imbalance assessment.",
+      "Detailed surgical history and specific post-operative course are not provided.",
+      "Baseline potassium and magnesium levels are unknown.",
+      "Other potential causes of VT (e.g., ischemia, structural heart disease) are not fully evaluated based on available data."
+    ]
+  },
+  "displayModelResponse": {
+    "episodeSummary": "The patient experienced an episode of frequent PVCs with a non-sustained VT run, classified as stable. The event lasted 8 seconds, with a ventricular rate of 78 bpm. The patient is post-operative day 1 after abdominal surgery, taking hydrochlorothiazide and lisinopril. Labs show hypokalemia (3.1 mmol/L) and hypomagnesemia (1.5 mg/dL).",
+    "rhythmInterpretation": "Authoritative upstream diagnosis: Frequent PVCs with non-sustained VT run. Source: SLM_Eval. The rhythm diagnosis was not generated by the SLM.",
+    "clinicalContext": "Ventricular ectopy occurred in a post-operative patient on a thiazide diuretic, with evidence of electrolyte abnormalities (low potassium and magnesium). The episode was hemodynamically stable.",
+    "mostLikelyEtiology": "Electrolyte imbalance (hypokalemia and hypomagnesemia) secondary to diuretic therapy (hydrochlorothiazide) in a post-operative patient.",
+    "contributingFactors": [
+      "Post-operative state",
+      "Hydrochlorothiazide use",
+      "Hypokalemia",
+      "Hypomagnesemia"
+    ],
+    "recommendedImmediateActions": [],
+    "uncertaintyAndMissingData": [
+      "Sodium level is unavailable, which could contribute to electrolyte imbalance assessment.",
+      "Detailed surgical history and specific post-operative course are not provided.",
+      "Baseline potassium and magnesium levels are unknown.",
+      "Other potential causes of VT (e.g., ischemia, structural heart disease) are not fully evaluated based on available data."
+    ]
+  },
+  "validatedModelResponse": {
+    "episodeSummary": "The patient experienced an episode of frequent PVCs with a non-sustained VT run, classified as stable. The event lasted 8 seconds, with a ventricular rate of 78 bpm. The patient is post-operative day 1 after abdominal surgery, taking hydrochlorothiazide and lisinopril. Labs show hypokalemia (3.1 mmol/L) and hypomagnesemia (1.5 mg/dL).",
+    "rhythmInterpretation": "Authoritative upstream diagnosis: Frequent PVCs with non-sustained VT run. Source: SLM_Eval. The rhythm diagnosis was not generated by the SLM.",
+    "clinicalContext": "Ventricular ectopy occurred in a post-operative patient on a thiazide diuretic, with evidence of electrolyte abnormalities (low potassium and magnesium). The episode was hemodynamically stable.",
+    "mostLikelyEtiology": "Electrolyte imbalance (hypokalemia and hypomagnesemia) secondary to diuretic therapy (hydrochlorothiazide) in a post-operative patient.",
+    "contributingFactors": [
+      "Post-operative state",
+      "Hydrochlorothiazide use",
+      "Hypokalemia",
+      "Hypomagnesemia"
+    ],
+    "recommendedImmediateActions": [],
+    "uncertaintyAndMissingData": [
+      "Sodium level is unavailable, which could contribute to electrolyte imbalance assessment.",
+      "Detailed surgical history and specific post-operative course are not provided.",
+      "Baseline potassium and magnesium levels are unknown.",
+      "Other potential causes of VT (e.g., ischemia, structural heart disease) are not fully evaluated based on available data."
+    ]
+  },
+  "rawGroundedModelResponse": {
+    "episodeSummary": "The patient experienced an episode of frequent PVCs with a non-sustained VT run, classified as stable. The event lasted 8 seconds, with a ventricular rate of 78 bpm. The patient is post-operative day 1 after abdominal surgery, taking hydrochlorothiazide and lisinopril. Labs show hypokalemia (3.1 mmol/L) and hypomagnesemia (1.5 mg/dL).",
+    "detectedEpisodeContext": "Ventricular ectopy occurred in a post-operative patient on a thiazide diuretic, with evidence of electrolyte abnormalities (low potassium and magnesium). The episode was hemodynamically stable.",
+    "mostLikelyEtiology": "Electrolyte imbalance (hypokalemia and hypomagnesemia) secondary to diuretic therapy (hydrochlorothiazide) in a post-operative patient.",
+    "contributingFactors": [
+      "Post-operative state",
+      "Hydrochlorothiazide use",
+      "Hypokalemia",
+      "Hypomagnesemia"
+    ],
+    "uncertaintyAndMissingData": [
+      "Sodium level is unavailable, which could contribute to electrolyte imbalance assessment.",
+      "Detailed surgical history and specific post-operative course are not provided.",
+      "Baseline potassium and magnesium levels are unknown.",
+      "Other potential causes of VT (e.g., ischemia, structural heart disease) are not fully evaluated based on available data."
+    ]
+  },
+  "normalizedGroundedModelResponse": {
+    "episodeSummary": "The patient experienced an episode of frequent PVCs with a non-sustained VT run, classified as stable. The event lasted 8 seconds, with a ventricular rate of 78 bpm. The patient is post-operative day 1 after abdominal surgery, taking hydrochlorothiazide and lisinopril. Labs show hypokalemia (3.1 mmol/L) and hypomagnesemia (1.5 mg/dL).",
+    "detectedEpisodeContext": "Ventricular ectopy occurred in a post-operative patient on a thiazide diuretic, with evidence of electrolyte abnormalities (low potassium and magnesium). The episode was hemodynamically stable.",
+    "mostLikelyEtiology": "Electrolyte imbalance (hypokalemia and hypomagnesemia) secondary to diuretic therapy (hydrochlorothiazide) in a post-operative patient.",
+    "contributingFactors": [
+      "Post-operative state",
+      "Hydrochlorothiazide use",
+      "Hypokalemia",
+      "Hypomagnesemia"
+    ],
+    "uncertaintyAndMissingData": [
+      "Sodium level is unavailable, which could contribute to electrolyte imbalance assessment.",
+      "Detailed surgical history and specific post-operative course are not provided.",
+      "Baseline potassium and magnesium levels are unknown.",
+      "Other potential causes of VT (e.g., ischemia, structural heart disease) are not fully evaluated based on available data."
+    ]
+  },
+  "normalizationChanges": [],
+  "validation": {
+    "status": "accepted_with_review",
+    "accepted": false,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": true,
+    "qualityReviewRequired": true,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "NONSUSTAINED_VENTRICULAR_TACHYCARDIA",
+    "authoritativeDiagnosisDisplay": "Frequent PVCs with non-sustained VT run",
+    "errors": [
+      "Material measurement conflict was not acknowledged: controlled-vs-phase6-qrsDurationMs."
+    ],
+    "hardErrors": [],
+    "qualityErrors": [
+      "Material measurement conflict was not acknowledged: controlled-vs-phase6-qrsDurationMs."
+    ],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "validatorInternalConflicts": [],
+    "adjudicationEligible": true,
+    "evidenceCoverage": {
+      "rhythmEvidence": true,
+      "hemodynamicContext": true,
+      "electrolyteInterpretation": true,
+      "ischemiaInterpretation": true,
+      "infectionContext": false,
+      "qtContext": false,
+      "renalContext": true,
+      "medicationToxicityContext": false,
+      "medicationContext": true,
+      "episodePackClinicalContext": true
+    },
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 7,
+    "evidenceCoverageRequired": 2,
+    "correctionEvidence": [
+      "Use source-qualified language: 'controlled-event evidence did not support X'.",
+      "For partial electrolyte panels, name the supplied analytes instead of saying all electrolytes were normal."
+    ],
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-v4.3",
+    "groundingStatus": "accepted_with_review",
+    "clinicalPromptMode": "episode_pack_only",
+    "evidenceFingerprint": "4566f1af11206cbe789c409917d57268dbe59b0b82bbe3fb3985a00a514cfbce",
+    "medicalAdjudication": {
+      "schemaVersion": "medical-validator-review-v2",
+      "status": "disabled",
+      "advisoryOnly": true
+    },
+    "medicalReviewRecommended": true
+  },
+  "reliability": {
+    "attemptCount": 1,
+    "firstAttemptAccepted": true,
+    "firstAttemptStrictlyAccepted": false,
+    "firstAttemptDisplayableWithReview": true,
+    "firstAttemptErrors": [
+      "Material measurement conflict was not acknowledged: controlled-vs-phase6-qrsDurationMs."
+    ],
+    "finalAttemptAccepted": true,
+    "finalAttemptStrictlyAccepted": false,
+    "finalAttemptDisplayableWithReview": true,
+    "retryReasonCount": 0,
+    "contradictionCount": 0,
+    "unsupportedFactCount": 0,
+    "evidenceCoverageCount": 7,
+    "evidenceCoverageRequired": 2
+  },
+  "attemptCount": 1,
+  "firstAttemptAccepted": true,
+  "firstAttemptStrictlyAccepted": false,
+  "firstAttemptDisplayableWithReview": true,
+  "firstAttemptErrors": [
+    "Material measurement conflict was not acknowledged: controlled-vs-phase6-qrsDurationMs."
+  ],
+  "finalAttemptAccepted": true,
+  "finalAttemptStrictlyAccepted": false,
+  "finalAttemptDisplayableWithReview": true,
+  "retryReasonCount": 0,
+  "contradictionCount": 0,
+  "unsupportedFactCount": 0,
+  "evidenceCoverageCount": 7,
+  "evidenceCoverageRequired": 2
+}

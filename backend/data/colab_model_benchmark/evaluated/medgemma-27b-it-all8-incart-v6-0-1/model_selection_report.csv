@@ -1,0 +1,2 @@
+model,selectionIndex,runCount,scenarioCount,generationSuccessRate,strictAcceptanceRate,validatorPassRate,safetyPassRate,overallPassRate,retryRate,contradictionRunRate,unsupportedFactRunRate,averageScore,medianScore,minimumScore,maximumScore,worstScenario,worstScenarioAverageScore,scoreStandardDeviation,averageLatencySeconds,medianLatencySeconds
+google/medgemma-27b-it,70.25,8,8,1.0,0.625,0.875,0.75,0.0,0.0,0.0,0.125,70.0,71.0,50.0,80.0,NSVT-ECTOPY-008,50.0,8.958,67.938,66.513

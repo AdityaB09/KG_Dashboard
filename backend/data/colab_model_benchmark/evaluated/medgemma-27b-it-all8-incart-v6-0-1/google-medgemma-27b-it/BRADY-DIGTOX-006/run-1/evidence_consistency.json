@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "evidence-consistency-review-v1",
+  "status": "consistent_with_warnings",
+  "scenarioId": "BRADY-DIGTOX-006",
+  "hardConflicts": [],
+  "warnings": [
+    "Phase 6 produced an low-confidence controlled-event ventricularRateBpm measurement. It must not dispute or replace the controlled episode-package value."
+  ],
+  "normalizationsApplied": [],
+  "qualifiedMeasurementConflictCount": 0
+}

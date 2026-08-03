@@ -1,7 +1,29 @@
 import { useEffect, useMemo, useState } from "react";
 import "./ClinicalPhysiologyPage.css";
+import "./CloudDemoAnalyticsAdditions.css";
 import { connectFhirStream } from "../services/fhirStream";
 import WebGLWaveformCanvas from "./WebGLWaveformCanvas";
+import {
+  adaptEvaluationRunToWidget,
+} from "../evaluation/evaluationWidgetAdapter";
+import {
+  buildEvaluationTriggerMarkers,
+  summarizeTriggerMarkers,
+} from "../evaluation/evaluationTriggerMarkers";
+import {
+  buildOracleLabCards,
+  buildOracleVitalRows,
+  buildOracleLivePatch,
+  selectOracleMedicationRows,
+} from "../evaluation/clinicalContextDisplay";
+import {
+  buildEpisodePackLabCards,
+  buildEpisodePackLivePatch,
+  buildEpisodePackMedicationRows,
+  buildEpisodePackPatient,
+  buildEpisodePackVitalRows,
+  getEpisodePack,
+} from "../evaluation/episodePackDisplay";
 import {
   connectEpisodeEvents,
   getEpisode,
@@ -455,6 +477,130 @@ function nextLiveState(prev) {
   };
 }
 
+function readEvaluationValue(entry) {
+  if (
+    entry === null ||
+    entry === undefined ||
+    entry === ""
+  ) {
+    return null;
+  }
+
+  const rawValue =
+    typeof entry === "object"
+      ? (
+          entry.value ??
+          entry.result ??
+          entry.numericValue ??
+          entry.measurement ??
+          null
+        )
+      : entry;
+
+  if (
+    rawValue === null ||
+    rawValue === undefined ||
+    rawValue === ""
+  ) {
+    return null;
+  }
+
+  const numeric = Number(rawValue);
+
+  return Number.isFinite(numeric)
+    ? numeric
+    : null;
+}
+
+function normalizeEvaluationMedications(
+  medications
+) {
+  const source = Array.isArray(medications)
+    ? medications
+    : Array.isArray(medications?.items)
+    ? medications.items
+    : Array.isArray(medications?.current)
+    ? medications.current
+    : Array.isArray(medications?.active)
+    ? medications.active
+    : Array.isArray(medications?.medications)
+    ? medications.medications
+    : [];
+
+  return source.map((item, index) => ({
+    id:
+      item.id ||
+      `evaluation-med-${index}`,
+    name:
+      item.name ||
+      item.medication ||
+      item.drug ||
+      "Medication",
+    doseDisplay:
+      item.doseDisplay ||
+      item.dose ||
+      "Unavailable",
+    route: item.route || "",
+    status: item.status || "listed",
+    contextTiming:
+      item.contextTiming ||
+      item.timing ||
+      item.time ||
+      "Episode context",
+    relationLabel:
+      item.relationLabel ||
+      item.contextTiming ||
+      item.timing ||
+      item.time ||
+      "Episode context",
+    resourceType: "Medication",
+  }));
+}
+
+function formatClinicalNumber(
+  value,
+  decimals = 0
+) {
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
+    return "--";
+  }
+
+  const numeric = Number(value);
+
+  if (!Number.isFinite(numeric)) {
+    return "--";
+  }
+
+  return numeric.toFixed(decimals);
+}
+
+function formatBloodPressure(
+  systolic,
+  diastolic
+) {
+  const systolicText = formatClinicalNumber(
+    systolic,
+    0
+  );
+  const diastolicText = formatClinicalNumber(
+    diastolic,
+    0
+  );
+
+  if (
+    systolicText === "--" ||
+    diastolicText === "--"
+  ) {
+    return "--";
+  }
+
+  return `${systolicText}/${diastolicText}`;
+}
+
 function toPolylineNormalized(values, width, height, padding = 6) {
   return values
     .map((value, index) => {
@@ -598,6 +744,7 @@ function LabTile({
 }
 function WaveformOverlay({ config, onClose }) {
   useEffect(() => {
+
     function handleKeyDown(event) {
       if (event.key === "Escape") onClose();
     }
@@ -747,49 +894,6 @@ function normalizeEpisodeValues(values = []) {
   );
 }
 
-function buildAnnotationSeries(
-  annotations = [],
-  durationSeconds = 1,
-) {
-  const values = Array.from(
-    { length: MAX_POINTS },
-    () => 0.2
-  );
-
-  for (const annotation of annotations) {
-    const seconds = Number(
-      annotation.captureOffsetSeconds
-    );
-
-    if (!Number.isFinite(seconds)) continue;
-
-    const ratio = clamp(
-      seconds / Math.max(durationSeconds, 1),
-      0,
-      1
-    );
-
-    const index = Math.min(
-      MAX_POINTS - 1,
-      Math.round(
-        ratio * (MAX_POINTS - 1)
-      )
-    );
-
-    values[index] = 0.9;
-
-    if (index > 0) {
-      values[index - 1] = 0.5;
-    }
-
-    if (index < MAX_POINTS - 1) {
-      values[index + 1] = 0.5;
-    }
-  }
-
-  return values;
-}
-
 function EpisodeWaveRow({
   label,
   values,
@@ -797,6 +901,8 @@ function EpisodeWaveRow({
   compact = false,
   eventStartRatio,
   eventEndRatio,
+  triggerAnnotations = [],
+  duration = 1,
 }) {
   return (
     <div
@@ -824,6 +930,56 @@ function EpisodeWaveRow({
           left: `${eventEndRatio * 100}%`,
         }}
       />
+
+      {triggerAnnotations.map(
+        (annotation) => {
+          const seconds = Number(
+            annotation
+              ?.captureOffsetSeconds
+          );
+
+          if (
+            !Number.isFinite(seconds)
+          ) {
+            return null;
+          }
+
+          const ratio = Math.max(
+            0,
+            Math.min(
+              1,
+              seconds / duration
+            )
+          );
+
+          return (
+            <span
+              key={
+                annotation.id ||
+                `${annotation.kind}-${seconds}`
+              }
+              className={
+                `kgen-episode-marker ` +
+                (
+                  annotation.kind ===
+                  "detected"
+                    ? "detected"
+                    : "reference"
+                )
+              }
+              style={{
+                left: `${ratio * 100}%`,
+              }}
+              title={
+                annotation.kind ===
+                "detected"
+                  ? "Detector activation"
+                  : "Event onset reference"
+              }
+            />
+          );
+        }
+      )}
     </div>
   );
 }
@@ -874,15 +1030,70 @@ function EpisodePhysiology({
     waveforms.leadsMv?.avf
   );
 
- const triggerAnnotations =
-  waveforms.triggerAnnotations ||
-  episode.triggerAnnotations ||
-  [];
+const isEvaluationEpisode =
+  Boolean(
+    episode
+      ?.isEvaluationEpisode ||
+    episode?.mode ===
+      "evaluation_injection"
+  );
 
-const annotationSeries =
-  buildAnnotationSeries(
-    triggerAnnotations,
-    duration
+const explicitTriggerMarkers = (
+  waveforms.annotations ||
+  episode.annotations ||
+  []
+).filter(
+  (item) =>
+    item?.kind === "reference" ||
+    item?.kind === "detected"
+);
+
+const fallbackTriggerMarkers = [
+  ...(
+    Array.isArray(
+      episode?.referenceAnnotations
+    )
+      ? episode.referenceAnnotations
+      : []
+  ),
+  ...(
+    Array.isArray(
+      waveforms.triggerAnnotations
+    )
+      ? waveforms.triggerAnnotations
+      : Array.isArray(
+          episode?.triggerAnnotations
+        )
+      ? episode.triggerAnnotations
+      : []
+  ),
+];
+
+const triggerAnnotations =
+  Array.from(
+    new Map(
+      (
+        explicitTriggerMarkers.length
+          ? explicitTriggerMarkers
+          : fallbackTriggerMarkers
+      ).map(
+        (annotation, index) => [
+          annotation?.id ||
+            [
+              annotation?.kind,
+              annotation
+                ?.captureOffsetSeconds,
+              index,
+            ].join("-"),
+          annotation,
+        ]
+      )
+    ).values()
+  );
+
+const triggerSummary =
+  summarizeTriggerMarkers(
+    triggerAnnotations
   );
 
   return (
@@ -894,6 +1105,8 @@ const annotationSeries =
           values={lead2}
           eventStartRatio={eventStartRatio}
           eventEndRatio={eventEndRatio}
+          triggerAnnotations={triggerAnnotations}
+          duration={duration}
         />
 
         <EpisodeWaveRow
@@ -903,6 +1116,8 @@ const annotationSeries =
           compact
           eventStartRatio={eventStartRatio}
           eventEndRatio={eventEndRatio}
+          triggerAnnotations={triggerAnnotations}
+          duration={duration}
         />
 
         <EpisodeWaveRow
@@ -911,16 +1126,10 @@ const annotationSeries =
           values={avf}
           eventStartRatio={eventStartRatio}
           eventEndRatio={eventEndRatio}
+          triggerAnnotations={triggerAnnotations}
+          duration={duration}
         />
 
-        <EpisodeWaveRow
-       label="Reference triggers"
-          color="yellow"
-          values={annotationSeries}
-          compact
-          eventStartRatio={eventStartRatio}
-          eventEndRatio={eventEndRatio}
-        />
 
         <div className="kgen-time-axis">
   <span>
@@ -941,37 +1150,81 @@ const annotationSeries =
       <aside className="kgen-side-vitals">
         <div className="kgen-side-vital">
           <span>Trigger HR</span>
-          <strong>
+
+          <strong className="blue">
             {episode.triggerHeartRate ?? "--"}
           </strong>
+
           <small className="kgen-episode-vital-note">
             bpm
           </small>
         </div>
 
-       <div className="kgen-side-vital">
-  <span>Event span</span>
+        {isEvaluationEpisode ? (
+          <div className="kgen-side-vital">
+            <span>Trigger latency</span>
 
-  <strong className="blue">
-    {Number(
-      episode.eventDurationSeconds || 0
-    ).toFixed(1)}
-    s
-  </strong>
+            <strong className="blue">
+              {episode.triggerLatencySeconds != null
+                ? `${Number(
+                    episode.triggerLatencySeconds
+                  ).toFixed(2)}s`
+                : "--"}
+            </strong>
 
-  <small className="kgen-episode-vital-note">
-    reference window
-  </small>
-</div>
+            <small className="kgen-episode-vital-note">
+              reference to detected
+            </small>
+          </div>
+        ) : (
+          <div className="kgen-side-vital">
+            <span>Event span</span>
+
+            <strong className="blue">
+              {Number(
+                episode.eventDurationSeconds || 0
+              ).toFixed(1)}
+              s
+            </strong>
+
+            <small className="kgen-episode-vital-note">
+              reference window
+            </small>
+          </div>
+        )}
 
         <div className="kgen-side-vital">
-          <span>Annotations</span>
+          <span>
+            {isEvaluationEpisode
+              ? "Capture"
+              : "Annotations"}
+          </span>
+
           <strong className="blue">
-  {episode.triggerAnnotationCount ?? 0}
-</strong>
+            {isEvaluationEpisode
+              ? (
+                  episode.captureCompleteness
+                    ?.captureComplete
+                    ? "Complete"
+                    : "Partial"
+                )
+              : (
+                  episode
+                    .triggerAnnotationCount ??
+                  triggerAnnotations.length
+                )}
+          </strong>
+
           <small className="kgen-episode-vital-note">
-  automatic triggers
-</small>
+            {isEvaluationEpisode
+              ? (
+                  `${triggerSummary.referenceCount}` +
+                  " / " +
+                  `${triggerSummary.detectedCount}` +
+                  " reference / detected"
+                )
+              : "automatic triggers"}
+          </small>
         </div>
       </aside>
     </div>
@@ -983,12 +1236,18 @@ export default function ClinicalPhysiologyPage({
   episodeId,
   incidentId,
   onOpenLabs,
+  evaluationDemo,
+  onExitEvaluation,
 }) {
   const [
     incidentList,
     setIncidentList,
   ] = useState([]);
-
+const isEvaluation =
+  Boolean(
+    evaluationDemo?.active &&
+    evaluationDemo?.episode
+  );
   const [
     activeIncidentId,
     setActiveIncidentId,
@@ -1021,6 +1280,13 @@ export default function ClinicalPhysiologyPage({
   const [live, setLive] = useState(createInitialLiveState);
   const [activeWaveformId, setActiveWaveformId] = useState(null);
   const [episode, setEpisode] = useState(null);
+  const isEvaluationInjection =
+    episode?.mode ===
+    "evaluation_injection";
+  // Every evaluation-injection episode uses the complete episode package.
+  // Oracle SMART is never a clinical-context fallback for this page.
+  const episodePackMode =
+    isEvaluationInjection;
 const [
   episodeWaveforms,
   setEpisodeWaveforms,
@@ -1123,6 +1389,9 @@ const activeIncidentIndex =
   ]);
 
 useEffect(() => {
+  if (isEvaluation) {
+  return undefined;
+}
   const resolvedIncidentId =
     activeIncidentId ||
     episode?.incidentId ||
@@ -1188,10 +1457,28 @@ useEffect(() => {
 }, [
   activeIncidentId,
   episode?.incidentId,
-  incidentId,
+  incidentId,isEvaluation
 ]);
 
 async function ensureEpisodeContext(metadata) {
+  const metadataEpisodePackMode =
+    metadata?.mode ===
+      "evaluation_injection" ||
+    metadata?.clinicalContextMode ===
+      "episode_pack_only" ||
+    metadata?.evaluationContextMode ===
+      "episode_pack_only" ||
+    Boolean(getEpisodePack(metadata));
+
+  if (metadataEpisodePackMode) {
+    setContextStatus("ready");
+    setEpisodeContext({
+      status: "ready",
+      source: "complete_episode_pack",
+    });
+    return;
+  }
+
   if (!metadata?.incidentId) {
     setEpisodeContext(null);
     setContextStatus("not_loaded");
@@ -1232,22 +1519,31 @@ async function ensureEpisodeContext(metadata) {
   }
 }
   useEffect(() => {
+    if (isEvaluation) {
+  return undefined;
+}
     if (incidentId) {
       setActiveIncidentId(
         incidentId
       );
     }
-  }, [incidentId]);
+  }, [incidentId, isEvaluation]);
 
   useEffect(() => {
+    if (isEvaluation) {
+  return undefined;
+}
     if (episodeId) {
       setActiveEpisodeId(
         episodeId
       );
     }
-  }, [episodeId]);
+  }, [episodeId,isEvaluation,]);
 
   useEffect(() => {
+    if (isEvaluation) {
+  return undefined;
+}
     let active = true;
 
     async function loadIncidentList() {
@@ -1304,9 +1600,13 @@ async function ensureEpisodeContext(metadata) {
     };
   }, [
     incidentId,
+    isEvaluation,
   ]);
 
   useEffect(() => {
+    if (isEvaluation) {
+  return undefined;
+}
     if (!activeIncidentId) {
       setIncidentEpisodes([]);
       return undefined;
@@ -1378,18 +1678,34 @@ async function ensureEpisodeContext(metadata) {
   }, [
     activeIncidentId,
     incidentList,
+    isEvaluation,
   ]);
 
   useEffect(() => {
+    if (
+      isEvaluation ||
+      isEvaluationInjection
+    ) {
+      return undefined;
+    }
+
     const interval = setInterval(() => {
       setLive((prev) => nextLiveState(prev));
     }, 420);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [
+    isEvaluation,
+    isEvaluationInjection,
+  ]);
 
 useEffect(() => {
-
+if (
+  isEvaluation ||
+  isEvaluationInjection
+) {
+  return undefined;
+}
   if (STATIC_ANALYTICS_MODE) {
     return undefined;
   }
@@ -1445,9 +1761,644 @@ useEffect(() => {
   });
 
   return disconnect;
-}, [patient?.fhirId, patient?.id]);
+}, [
+  patient?.fhirId,
+  patient?.id,
+  isEvaluation,
+  isEvaluationInjection,
+]);
+
+const evaluationWidgetResult =
+  useMemo(() => {
+    if (!isEvaluation) {
+      return null;
+    }
+
+    return adaptEvaluationRunToWidget({
+      episode:
+        evaluationDemo.episode,
+
+      run:
+        evaluationDemo.run,
+    });
+  }, [
+    isEvaluation,
+    evaluationDemo?.episode,
+    evaluationDemo?.run,
+  ]);
+  const displayedSlmWidgetResult =
+    useMemo(() => {
+      if (isEvaluation) {
+        return evaluationWidgetResult;
+      }
+
+      if (
+        episode?.mode !==
+          "evaluation_injection" ||
+        !slmWidgetResult
+      ) {
+        return slmWidgetResult;
+      }
+
+      const score =
+        episode
+          ?.evaluationScore;
+
+      if (!score) {
+        return slmWidgetResult;
+      }
+
+      const interpretation = {
+        ...(
+          slmWidgetResult
+            .widgetInterpretation ||
+          {}
+        ),
+      };
+
+      const existing =
+        Array.isArray(
+          interpretation
+            .importantLimitations
+        )
+          ? interpretation
+              .importantLimitations
+          : [];
+
+      const scoreNotes = [];
+
+      if (
+        score.total != null
+      ) {
+        scoreNotes.push(
+          `Evaluator score: ${score.total}/100`
+        );
+      }
+
+      if (
+        score.safetyPass != null
+      ) {
+        scoreNotes.push(
+          `Safety gate: ${
+            score.safetyPass
+              ? "PASS"
+              : "FAIL"
+          }`
+        );
+      }
+
+      interpretation
+        .importantLimitations = [
+          ...existing,
+          ...scoreNotes,
+        ];
+
+      const existingMetrics =
+        Array.isArray(
+          interpretation.keyMetrics
+        )
+          ? interpretation.keyMetrics
+          : [];
+
+      interpretation.keyMetrics = [
+        ...existingMetrics.filter(
+          (metric) =>
+            metric?.key !==
+              "evaluation-score" &&
+            metric?.key !==
+              "evaluation-safety"
+        ),
+        ...(score.total != null
+          ? [
+              {
+                key:
+                  "evaluation-score",
+                label:
+                  "Evaluator score",
+                value: score.total,
+                unit: "/100",
+              },
+            ]
+          : []),
+        ...(score.safetyPass != null
+          ? [
+              {
+                key:
+                  "evaluation-safety",
+                label:
+                  "Safety gate",
+                value:
+                  score.safetyPass
+                    ? "PASS"
+                    : "FAIL",
+                unit: "",
+              },
+            ]
+          : []),
+      ];
+
+      return {
+        ...slmWidgetResult,
+        widgetInterpretation:
+          interpretation,
+      };
+    }, [
+      isEvaluation,
+      evaluationWidgetResult,
+      slmWidgetResult,
+      episode?.mode,
+      episode?.evaluationScore,
+    ]);
+
+  const evaluationTriggerMarkers =
+  useMemo(() => {
+    if (!isEvaluation) {
+      return [];
+    }
+
+    return buildEvaluationTriggerMarkers({
+      episode:
+        evaluationDemo
+          ?.episode,
+
+      capture:
+        evaluationDemo
+          ?.capture,
+    });
+  }, [
+    isEvaluation,
+    evaluationDemo?.episode,
+    evaluationDemo?.capture,
+  ]);
+const evaluationEpisodeView =
+  useMemo(() => {
+    const source =
+      evaluationDemo?.episode;
+
+    if (
+      !isEvaluation ||
+      !source
+    ) {
+      return null;
+    }
+
+    const duration =
+      Number(
+        source.ecg
+          ?.durationSeconds ||
+        source.episode
+          ?.durationSeconds ||
+        8
+      );
+
+    return {
+      id:
+        source.episodeId ||
+        evaluationDemo
+          ?.episodeId,
+
+      display:
+        source.episode
+          ?.display ||
+        source.episode
+          ?.title ||
+        source.episode
+          ?.type ||
+        evaluationDemo
+          ?.episodeId,
+
+      severity:
+        source.episode
+          ?.severity ||
+        source.severity ||
+        "warning",
+
+      durationSeconds:
+        duration,
+
+      eventDurationSeconds:
+        duration,
+
+      eventStartOffsetSeconds:
+        0,
+
+      eventEndOffsetSeconds:
+        duration,
+
+      triggerHeartRate:
+        source.ecg
+          ?.measurements
+          ?.heartRateBpm ??
+        source.ecg
+          ?.measurements
+          ?.heartRate ??
+        source.vitals
+          ?.heartRate ??
+        null,
+
+      isEvaluationEpisode:
+  true,
+
+triggerAnnotationCount:
+  evaluationTriggerMarkers
+    .filter(
+      (marker) =>
+        marker.kind ===
+        "detected"
+    )
+    .length,
+
+triggerAnnotations:
+  evaluationTriggerMarkers,
+
+triggerMarkerSummary:
+  summarizeTriggerMarkers(
+    evaluationTriggerMarkers
+  ),
+
+      preSecondsCaptured:
+        0,
+
+      postSecondsCaptured:
+        0,
+
+      captureCompleteness: {
+        preContextComplete:
+          true,
+        postContextComplete:
+          true,
+        captureComplete:
+          true,
+      },
+    };
+  },  [
+  isEvaluation,
+  evaluationDemo?.episode,
+  evaluationDemo?.episodeId,
+  evaluationTriggerMarkers,
+]);
+
+
+const evaluationWaveformsView =
+  useMemo(() => {
+    const source =
+      evaluationDemo?.episode;
+
+    if (
+      !isEvaluation ||
+      !source
+    ) {
+      return null;
+    }
+
+    const duration =
+      Number(
+        source.ecg
+          ?.durationSeconds ||
+        8
+      );
+
+    return {
+      durationSeconds:
+        duration,
+
+      eventStartSeconds:
+        0,
+
+      eventEndSeconds:
+        duration,
+
+      sampleRate:
+        source.ecg
+          ?.sampleRate ||
+        250,
+
+      leadsMv:
+        source.ecg
+          ?.waveforms ||
+        {},
+
+      triggerAnnotations:
+  evaluationTriggerMarkers,
+    };
+ }, [
+  isEvaluation,
+  evaluationDemo?.episode,
+  evaluationTriggerMarkers,
+]);
 
 useEffect(() => {
+  if (!isEvaluation) {
+    return;
+  }
+
+  const scenario = evaluationDemo?.episode;
+
+  if (!scenario) {
+    return;
+  }
+
+  const vitals = scenario.vitals || {};
+  const labs = scenario.labs || {};
+  const bloodPressure =
+    vitals.bloodPressure ||
+    vitals.bp ||
+    {};
+
+  const heartRate = readEvaluationValue(
+    vitals.heartRate
+  );
+  const respiratoryRate =
+    readEvaluationValue(
+      vitals.respiratoryRate
+    );
+  const spo2 = readEvaluationValue(
+    vitals.spo2
+  );
+  const systolic = readEvaluationValue(
+    vitals.systolic ??
+      bloodPressure.systolic
+  );
+  const diastolic = readEvaluationValue(
+    vitals.diastolic ??
+      bloodPressure.diastolic
+  );
+  const temperature = readEvaluationValue(
+    vitals.temperature
+  );
+  const glucose = readEvaluationValue(
+    labs.glucose ?? labs.Glucose
+  );
+  const potassium = readEvaluationValue(
+    labs.potassium ??
+      labs.Potassium ??
+      labs.K
+  );
+  const creatinine = readEvaluationValue(
+    labs.creatinine ?? labs.Creatinine
+  );
+  const wbc = readEvaluationValue(
+    labs.wbc ??
+      labs.WBC ??
+      labs.whiteBloodCellCount
+  );
+
+  const primaryMedicationRows =
+    normalizeEvaluationMedications(
+      scenario.medications
+    );
+
+  const contextMedicationRows =
+    normalizeEvaluationMedications(
+      scenario.clinicalContext
+        ?.medications
+    );
+
+  setLive((previous) => ({
+    ...previous,
+    firelyStatus: "evaluation",
+    firelySource:
+      "cardinal-evaluation",
+    streamTimestamp:
+      scenario.capturedAt ||
+      previous.streamTimestamp,
+    heartRate,
+    respiratoryRate,
+    spo2,
+    systolic,
+    diastolic,
+    temperature,
+    glucose,
+    potassium,
+    creatinine,
+    wbc,
+    heartTrend:
+      heartRate == null
+        ? []
+        : [heartRate, heartRate],
+    respTrend:
+      respiratoryRate == null
+        ? []
+        : [
+            respiratoryRate,
+            respiratoryRate,
+          ],
+    spo2Trend:
+      spo2 == null
+        ? []
+        : [spo2, spo2],
+    glucoseTrend:
+      glucose == null
+        ? []
+        : [glucose, glucose],
+    potassiumTrend:
+      potassium == null
+        ? []
+        : [potassium, potassium],
+    creatinineTrend:
+      creatinine == null
+        ? []
+        : [creatinine, creatinine],
+    wbcTrend:
+      wbc == null
+        ? []
+        : [wbc, wbc],
+    medicationRows:
+      primaryMedicationRows.length
+        ? primaryMedicationRows
+        : contextMedicationRows,
+  }));
+}, [
+  isEvaluation,
+  evaluationDemo?.episode,
+]);
+
+useEffect(() => {
+  if (
+    !isEvaluationInjection ||
+    episode?.oracleDemo ||
+    episodePackMode
+  ) {
+    return;
+  }
+
+  const scenario =
+    episode?.evaluationScenario || {};
+  const vitals = scenario.vitals || {};
+  const labs = scenario.labs || {};
+  const bloodPressure =
+    vitals.bloodPressure ||
+    vitals.bp ||
+    {};
+
+  const heartRate = readEvaluationValue(
+    vitals.heartRate ??
+      vitals.heartRateBpm ??
+      episode?.triggerHeartRate
+  );
+  const respiratoryRate =
+    readEvaluationValue(
+      vitals.respiratoryRate ??
+        vitals.respiratoryRateBpm
+    );
+  const spo2 = readEvaluationValue(
+    vitals.spo2 ??
+      vitals.spo2Pct
+  );
+  const systolic = readEvaluationValue(
+    vitals.systolic ??
+      bloodPressure.systolic
+  );
+  const diastolic = readEvaluationValue(
+    vitals.diastolic ??
+      bloodPressure.diastolic
+  );
+  const temperature = readEvaluationValue(
+    vitals.temperature ??
+      vitals.temperatureC
+  );
+  const glucose = readEvaluationValue(
+    labs.glucose ?? labs.Glucose
+  );
+  const potassium = readEvaluationValue(
+    labs.potassium ??
+      labs.Potassium ??
+      labs.K
+  );
+  const creatinine = readEvaluationValue(
+    labs.creatinine ?? labs.Creatinine
+  );
+  const wbc = readEvaluationValue(
+    labs.wbc ??
+      labs.WBC ??
+      labs.whiteBloodCellCount
+  );
+
+  const medicationRows =
+    normalizeEvaluationMedications(
+      scenario.medications ||
+        scenario.patient
+          ?.homeMedications ||
+        []
+    );
+
+  setLive((previous) => ({
+    ...previous,
+    firelyStatus: "evaluation",
+    firelySource:
+      "incart-evaluation-injection",
+    streamTimestamp:
+      episode?.capturedAt ||
+      previous.streamTimestamp,
+    heartRate,
+    respiratoryRate,
+    spo2,
+    systolic,
+    diastolic,
+    temperature,
+    glucose,
+    potassium,
+    creatinine,
+    wbc,
+    heartTrend:
+      heartRate == null
+        ? []
+        : [heartRate, heartRate],
+    respTrend:
+      respiratoryRate == null
+        ? []
+        : [
+            respiratoryRate,
+            respiratoryRate,
+          ],
+    spo2Trend:
+      spo2 == null
+        ? []
+        : [spo2, spo2],
+    glucoseTrend:
+      glucose == null
+        ? []
+        : [glucose, glucose],
+    potassiumTrend:
+      potassium == null
+        ? []
+        : [potassium, potassium],
+    creatinineTrend:
+      creatinine == null
+        ? []
+        : [creatinine, creatinine],
+    wbcTrend:
+      wbc == null
+        ? []
+        : [wbc, wbc],
+    medicationRows,
+  }));
+}, [
+  isEvaluationInjection,
+  episode?.oracleDemo,
+  episodePackMode,
+  episode?.evaluationScenario,
+  episode?.capturedAt,
+  episode?.triggerHeartRate,
+]);
+
+useEffect(() => {
+  if (!episodePackMode) {
+    return;
+  }
+
+  const patch =
+    buildEpisodePackLivePatch(
+      episode
+    );
+
+  setLive((previous) => ({
+    ...previous,
+    ...patch,
+  }));
+}, [
+  episodePackMode,
+  episode,
+]);
+
+useEffect(() => {
+  if (
+    episodePackMode ||
+    !isEvaluationInjection ||
+    !episode?.oracleDemo ||
+    contextStatus !== "ready"
+  ) {
+    return;
+  }
+
+  const patch =
+    buildOracleLivePatch(
+      episodeContext
+    );
+
+  setLive((previous) => ({
+    ...previous,
+    ...Object.fromEntries(
+      Object.entries(patch).filter(
+        ([, value]) =>
+          value !== null &&
+          value !== undefined
+      )
+    ),
+  }));
+}, [
+  episodePackMode,
+  isEvaluationInjection,
+  episode?.oracleDemo,
+  episodeContext,
+  contextStatus,
+]);
+
+useEffect(() => {
+  if (isEvaluation) {
+  return undefined;
+}
+
   if (
     activeIncidentId &&
     !activeEpisodeId
@@ -1542,18 +2493,118 @@ void ensureEpisodeContext(metadata);
 }, [
   activeEpisodeId,
   activeIncidentId,
+  isEvaluation
 ]);
 
-  const currentPatient = useMemo(() => {
-    if (!patient) return BASE_PATIENT;
+const currentPatient =
+  useMemo(() => {
+    if (
+      isEvaluation &&
+      evaluationDemo
+        ?.episode
+        ?.patient
+    ) {
+      const evaluationPatient =
+        evaluationDemo
+          .episode
+          .patient;
+
+      return {
+        name:
+          evaluationPatient.name ||
+          "Synthetic Patient",
+
+        sex:
+          evaluationPatient.sex
+            ?.toUpperCase?.() ||
+          "--",
+
+        dob:
+          evaluationPatient.dob ||
+          "--",
+
+        id:
+          evaluationPatient.mrn ||
+          evaluationPatient.id ||
+          evaluationDemo.episodeId,
+      };
+    }
+
+    if (
+      isEvaluationInjection &&
+      episode?.patient
+    ) {
+      const evaluationPatient =
+        episode.patient;
+
+      return {
+        name:
+          evaluationPatient.name ||
+          "Evaluation Patient",
+
+        sex:
+          evaluationPatient.sex
+            ?.toUpperCase?.() ||
+          "--",
+
+        dob:
+          evaluationPatient.dob ||
+          "--",
+
+        id:
+          evaluationPatient.mrn ||
+          evaluationPatient.id ||
+          episode.id,
+      };
+    }
+
+    if (!patient) {
+      return BASE_PATIENT;
+    }
 
     return {
-      name: patient.name || BASE_PATIENT.name,
-      sex: patient.sex?.toUpperCase?.() || BASE_PATIENT.sex,
-      dob: BASE_PATIENT.dob,
-      id: patient.mrn || patient.id || BASE_PATIENT.id
+      name:
+        patient.name ||
+        BASE_PATIENT.name,
+
+      sex:
+        patient.sex
+          ?.toUpperCase?.() ||
+        BASE_PATIENT.sex,
+
+      dob:
+        patient.dob ||
+        BASE_PATIENT.dob,
+
+      id:
+        patient.mrn ||
+        patient.id ||
+        BASE_PATIENT.id,
     };
-  }, [patient]);
+  }, [
+    patient,
+    isEvaluation,
+    evaluationDemo?.episode,
+    evaluationDemo?.episodeId,
+    isEvaluationInjection,
+    episode?.patient,
+    episode?.id,
+  ]);
+
+const episodePackPatient =
+  useMemo(
+    () =>
+      buildEpisodePackPatient(
+        episode
+      ),
+    [episode]
+  );
+
+const displayedPatient =
+  episodePackMode &&
+  episodePackPatient
+    ? episodePackPatient
+    : currentPatient;
 
 const streamDate = formatStreamDate(live.streamTimestamp);
 
@@ -1561,7 +2612,10 @@ const labCards = useMemo(() => {
   return [
     {
       name: "Glucose",
-      value: live.glucose,
+      value: formatClinicalNumber(
+        live.glucose,
+        0
+      ),
       status: statusFromColor(getLiveColor(live, "glucose", "blue")),
       meta: streamDate,
       trend: live.glucoseTrend,
@@ -1569,7 +2623,10 @@ const labCards = useMemo(() => {
     },
     {
       name: "Potassium",
-      value: Number(live.potassium).toFixed(1),
+      value: formatClinicalNumber(
+        live.potassium,
+        1
+      ),
       status: statusFromColor(getLiveColor(live, "potassium", "blue")),
       meta: streamDate,
       trend: live.potassiumTrend,
@@ -1577,7 +2634,10 @@ const labCards = useMemo(() => {
     },
     {
       name: "Creatinine",
-      value: Number(live.creatinine).toFixed(2),
+      value: formatClinicalNumber(
+        live.creatinine,
+        2
+      ),
       status: statusFromColor(getLiveColor(live, "creatinine", "blue")),
       meta: streamDate,
       trend: live.creatinineTrend,
@@ -1585,7 +2645,10 @@ const labCards = useMemo(() => {
     },
     {
       name: "WBC",
-      value: Number(live.wbc).toFixed(1),
+      value: formatClinicalNumber(
+        live.wbc,
+        1
+      ),
       status: statusFromColor(getLiveColor(live, "wbc", "blue")),
       meta: streamDate,
       trend: live.wbcTrend,
@@ -1605,61 +2668,99 @@ const labCards = useMemo(() => {
   streamDate,
 ]);
 
-const episodeLabCards = useMemo(() => {
-  return (
-    episodeContext?.labTrends || []
-  ).map((item) => {
-    const values = (
-      item.points || []
-    )
-      .map((point) =>
-        Number(point.value)
-      )
-      .filter(Number.isFinite);
-
-    return {
-      name: item.label,
-      value: item.latestValue,
-      status: statusFromColor(
-        item.color || "blue"
+const oracleLabCards =
+  useMemo(
+    () =>
+      buildOracleLabCards(
+        episodeContext
       ),
-      meta:
-        item.latestAt?.slice(5, 10) ||
-        item.latestRelationLabel ||
-        "FHIR",
-      trend: values,
-      color: item.color || "blue",
-      unit: item.unit,
-      relation:
-        item.latestRelationLabel,
-    };
-  });
-}, [episodeContext]);
+    [episodeContext]
+  );
+
+const episodePackLabCards =
+  useMemo(
+    () =>
+      buildEpisodePackLabCards(
+        episode
+      ),
+    [episode]
+  );
+
+const existingDisplayedLabCards =
+  contextStatus === "ready"
+    ? oracleLabCards
+    : isEvaluationInjection
+    ? []
+    : labCards;
 
 const displayedLabCards =
-  contextStatus === "ready" &&
-  episodeLabCards.length
-    ? episodeLabCards
-    : labCards;
+  episodePackMode
+    ? episodePackLabCards
+    : existingDisplayedLabCards;
+
 
 
 // const labCards = useMemo(() => {
 //   return STATIC_ANALYTICS_LABS;
 // }, []);
 
-// const vitalRows = [
-//   ["BP", `${live.systolic}/${live.diastolic}`, "mmHg", streamDate],
-//   ["SpO2", live.spo2, "%", streamDate],
-//   ["Oral Temperature", Number(live.temperature).toFixed(1), "°C", streamDate]
-// ];
+const oracleVitalRows =
+  useMemo(
+    () =>
+      buildOracleVitalRows(
+        episodeContext
+      ),
+    [episodeContext]
+  );
 
-// const vitalRows = STATIC_ANALYTICS_VITAL_ROWS;
+const episodePackVitalRows =
+  useMemo(
+    () =>
+      buildEpisodePackVitalRows(
+        episode
+      ),
+    [episode]
+  );
 
-const vitalRows = [
-  ["BP", `${live.systolic}/${live.diastolic}`, "mmHg", streamDate],
-  ["SpO2", live.spo2, "%", streamDate],
-  ["Oral Temperature", Number(live.temperature).toFixed(1), "°C", streamDate],
-];
+const existingVitalRows =
+  isEvaluationInjection &&
+  episode?.oracleDemo
+    ? oracleVitalRows
+    : [
+        [
+          "BP",
+          formatBloodPressure(
+            live.systolic,
+            live.diastolic
+          ),
+          "mmHg",
+          streamDate,
+        ],
+        [
+          "SpO2",
+          formatClinicalNumber(
+            live.spo2,
+            0
+          ),
+          "%",
+          streamDate,
+        ],
+        [
+          "Oral Temperature",
+          formatClinicalNumber(
+            live.temperature,
+            1
+          ),
+          "°C",
+          streamDate,
+        ],
+      ];
+
+const vitalRows =
+  episodePackMode
+    ? episodePackVitalRows
+    : existingVitalRows;
+
 const waveformOverlay = useMemo(() => {
     if (!activeWaveformId) return null;
 
@@ -1667,7 +2768,7 @@ const waveformOverlay = useMemo(() => {
       ecg: {
         section: "01. Live Physiology",
         title: "ECG waveform",
-        subtitle: `${currentPatient.name} • Hyperkalemic rhythm progression`,
+        subtitle: `${displayedPatient.name} • Hyperkalemic rhythm progression`,
         scaleMode: "normalized",
         values: live.ecg,
         currentValue: live.heartRate,
@@ -1680,7 +2781,7 @@ const waveformOverlay = useMemo(() => {
       resp: {
         section: "01. Live Physiology",
         title: "Respiratory rhythm waveform",
-        subtitle: `${currentPatient.name} • Respiratory waveform strip`,
+        subtitle: `${displayedPatient.name} • Respiratory waveform strip`,
        color: getLiveColor(live, "respiratoryRate", "yellow"),
         scaleMode: "normalized",
         values: live.resp,
@@ -1693,7 +2794,7 @@ const waveformOverlay = useMemo(() => {
       ppg: {
         section: "01. Live Physiology",
         title: "PPG waveform",
-        subtitle: `${currentPatient.name} • Pulse plethysmography signal`,
+        subtitle: `${displayedPatient.name} • Pulse plethysmography signal`,
         color: getLiveColor(live, "spo2", "blue"),
         scaleMode: "normalized",
         values: live.ppg,
@@ -1706,7 +2807,7 @@ const waveformOverlay = useMemo(() => {
       ppgSoft: {
         section: "01. Live Physiology",
         title: "Secondary PPG waveform",
-        subtitle: `${currentPatient.name} • Low amplitude pulse trend`,
+        subtitle: `${displayedPatient.name} • Low amplitude pulse trend`,
         color: getLiveColor(live, "spo2", "blue"),
         scaleMode: "normalized",
         values: live.ppgSoft,
@@ -1719,7 +2820,7 @@ const waveformOverlay = useMemo(() => {
       heartTrend: {
         section: "01. Live Physiology",
         title: "Heart rate trend",
-        subtitle: `${currentPatient.name} • Live heart rate mini trend`,
+        subtitle: `${displayedPatient.name} • Live heart rate mini trend`,
         color: getLiveColor(live, "heartRate", "red"),
         scaleMode: "scaled",
         values: live.heartTrend,
@@ -1733,7 +2834,7 @@ const waveformOverlay = useMemo(() => {
       respTrend: {
         section: "01. Live Physiology",
         title: "Respiratory rate trend",
-        subtitle: `${currentPatient.name} • Live respiratory trend`,
+        subtitle: `${displayedPatient.name} • Live respiratory trend`,
           color: getLiveColor(live, "respiratoryRate", "yellow"),
         scaleMode: "scaled",
         values: live.respTrend,
@@ -1747,7 +2848,7 @@ const waveformOverlay = useMemo(() => {
       spo2Trend: {
         section: "01. Live Physiology",
         title: "SpO2 trend",
-        subtitle: `${currentPatient.name} • Oxygen saturation trend`,
+        subtitle: `${displayedPatient.name} • Oxygen saturation trend`,
          color: getLiveColor(live, "spo2", "blue"),
         scaleMode: "scaled",
         values: live.spo2Trend,
@@ -1776,7 +2877,7 @@ const waveformOverlay = useMemo(() => {
     return {
       section: "03. Recent Lab Results & Trends",
       title: `${selectedLab.name} trend`,
-      subtitle: `${currentPatient.name} • Lab trend over recent draws`,
+      subtitle: `${displayedPatient.name} • Lab trend over recent draws`,
       color: selectedLab.color || "red",
       scaleMode: "scaled",
       values: selectedLab.trend,
@@ -1794,7 +2895,7 @@ const waveformOverlay = useMemo(() => {
       footerLeft: "06/23",
       footerRight: "07/18"
     };
-  }, [activeWaveformId, currentPatient.name, live, displayedLabCards]);
+  }, [activeWaveformId, displayedPatient.name, live, displayedLabCards]);
 
 const interpretation =
   live.alertInterpretation || DEFAULT_ALERT_INTERPRETATION;
@@ -1806,16 +2907,17 @@ const episodeReady = Boolean(
   episodeWaveforms &&
   episodeStatus === "ready"
 );
-const displayedMedicationRows =
+const existingMedicationRows =
   useMemo(() => {
     if (
-      contextStatus === "ready" &&
-      episodeContext?.medicationTimeline
-        ?.length
+      isEvaluationInjection &&
+      episode?.oracleDemo
     ) {
       return (
-        episodeContext
-          .medicationTimeline
+        selectOracleMedicationRows(
+          episodeContext,
+          8
+        )
       );
     }
 
@@ -1827,30 +2929,67 @@ const displayedMedicationRows =
         row.name !== "Oral Temperature"
     );
   }, [
-    contextStatus,
+    isEvaluationInjection,
+    episode?.oracleDemo,
     episodeContext,
     live.medicationRows,
   ]);
-const episodeInterpretation = episodeReady
-  ? {
-      title: `${episode.display} captured`,
-      rhythm:
-        `${episode.triggerAnnotationCount || 0} INCART reference annotation trigger(s) automatically created this episode. ` +
-        `Trigger types: ${
-          Object.entries(
-            episode.triggerAnnotationCounts || {}
+
+const displayedMedicationRows =
+  useMemo(
+    () =>
+      episodePackMode
+        ? buildEpisodePackMedicationRows(
+            episode,
+            10
           )
-            .map(
-              ([symbol, count]) =>
-                `${symbol}: ${count}`
+        : existingMedicationRows,
+    [
+      episodePackMode,
+      episode,
+      existingMedicationRows,
+    ]
+  );
+
+const episodeInterpretation = episodeReady
+  ? isEvaluationInjection
+    ? {
+        title: `${episode.display} captured`,
+        rhythm:
+          `Reference onset ${Number(
+            episode.referenceOnsetOffsetSeconds || 0
+          ).toFixed(2)}s • detected trigger ${Number(
+            episode.detectedTriggerOffsetSeconds || 0
+          ).toFixed(2)}s • latency ${Number(
+            episode.triggerLatencySeconds || 0
+          ).toFixed(2)}s.`,
+        ppg:
+          "The captured physiology window contains the mixed ECG stream and the scenario-linked vital context.",
+        likelyEtiology:
+          episode.captureCompleteness
+            ?.captureComplete
+            ? "The requested 6-second pre-event, 8-second event, and 6-second post-event window was captured completely."
+            : "The captured window is incomplete; review the capture-completeness details.",
+      }
+    : {
+        title: `${episode.display} captured`,
+        rhythm:
+          `${episode.triggerAnnotationCount || 0} INCART reference annotation trigger(s) automatically created this episode. ` +
+          `Trigger types: ${
+            Object.entries(
+              episode.triggerAnnotationCounts || {}
             )
-            .join(", ") || "Unavailable"
-        }.`,
-      ppg:
-        "PPG and SpO2 are not included in the INCART recording.",
-      likelyEtiology:
-        "This is an automatically selected reference-annotation episode. It is not an independently generated diagnosis. Deterministic ECG analysis and clinical context are still pending.",
-    }
+              .map(
+                ([symbol, count]) =>
+                  `${symbol}: ${count}`
+              )
+              .join(", ") || "Unavailable"
+          }.`,
+        ppg:
+          "PPG and SpO2 are not included in the INCART recording.",
+        likelyEtiology:
+          "This is an automatically selected reference-annotation episode. Deterministic ECG analysis and clinical context are available in the interpretation panel.",
+      }
   : {
       title:
         episodeStatus === "loading"
@@ -1866,21 +3005,43 @@ const episodeInterpretation = episodeReady
         "No episode is currently available for analysis.",
     };
 
-const episodeAlertColor = episodeReady
-  ? "yellow"
-  : "blue";
+const episodeAlertColor =
+  isEvaluation
+    ? evaluationDemo?.run
+      ? "yellow"
+      : "blue"
+    : isEvaluationInjection &&
+      episode?.severity === "critical"
+    ? "red"
+    : episodeReady
+    ? "yellow"
+    : "blue";
   return (
     <section className="kgen-page">
       <header className="kgen-topbar">
+        {(isEvaluation ||
+          isEvaluationInjection) && (
+          <button
+            type="button"
+            className="kgen-blue-btn"
+            onClick={
+              onExitEvaluation
+            }
+          >
+            {isEvaluation
+              ? "Exit Evaluation"
+              : "Return to INCART"}
+          </button>
+        )}
         <div className="kgen-brand-box">
           <div className="kgen-logo">⌁</div>
           <span>KardioGenics</span>
         </div>
 
         <div className="kgen-patient-box">
-          <strong>{currentPatient.name}</strong>
+          <strong>{displayedPatient.name}</strong>
           <span>
-            {currentPatient.sex} | DOB: {currentPatient.dob} | ID: {currentPatient.id}
+            {displayedPatient.sex} | DOB: {displayedPatient.dob} | ID: {displayedPatient.id}
           </span>
         </div>
 
@@ -1895,11 +3056,20 @@ const episodeAlertColor = episodeReady
     <h2>01. Episode Physiology</h2>
 
     <span
-      className={`kgen-episode-status ${episodeStatus}`}
+      className={`kgen-episode-status ${
+        (isEvaluation ||
+          isEvaluationInjection)
+          ? "ready"
+          : episodeStatus
+      }`}
     >
       <span className="kgen-clock-dot" />
 
-      {episodeStatus === "ready"
+      {isEvaluation
+        ? "Evaluation episode"
+        : isEvaluationInjection
+        ? "Evaluation capture"
+        : episodeStatus === "ready"
         ? "Captured episode"
         : episodeStatus === "loading"
         ? "Loading episode"
@@ -1910,33 +3080,45 @@ const episodeAlertColor = episodeReady
   </div>
   
 
-  {episodeReady ? (
-    
-    <IncidentEpisodeCarousel
-      incidents={incidentList}
-      activeIncidentIndex={
-        activeIncidentIndex
+{isEvaluation &&
+evaluationEpisodeView &&
+evaluationWaveformsView ? (
+  <EpisodePhysiology
+    episode={
+      evaluationEpisodeView
+    }
+    waveforms={
+      evaluationWaveformsView
+    }
+  />
+) : episodeReady ? (
+  <IncidentEpisodeCarousel
+    incidents={incidentList}
+    activeIncidentIndex={
+      activeIncidentIndex
+    }
+    onIncidentChange={
+      openIncident
+    }
+    episodes={
+      incidentEpisodes
+    }
+    activeEpisodeIndex={
+      activeEpisodeIndex
+    }
+    onEpisodeChange={
+      openIncidentEpisode
+    }
+  >
+    <EpisodePhysiology
+      episode={episode}
+      waveforms={
+        episodeWaveforms
       }
-      onIncidentChange={
-        openIncident
-      }
-      episodes={incidentEpisodes}
-      activeEpisodeIndex={
-        activeEpisodeIndex
-      }
-      onEpisodeChange={
-        openIncidentEpisode
-      }
-    >
-      <EpisodePhysiology
-        episode={episode}
-        waveforms={episodeWaveforms}
-      />
-    </IncidentEpisodeCarousel>
-    
-    
-  ) : (
-    <div className="kgen-episode-empty">
+    />
+  </IncidentEpisodeCarousel>
+) : (
+  <div className="kgen-episode-empty">
       <strong>
         No captured episode selected.
       </strong>
@@ -1957,9 +3139,20 @@ const episodeAlertColor = episodeReady
     </h2>
 
     <span
-      className={`kgen-context-status ${contextStatus}`}
+      className={`kgen-context-status ${
+        (isEvaluation ||
+          isEvaluationInjection)
+          ? "ready"
+          : contextStatus
+      }`}
     >
-      {contextStatus === "ready"
+      {isEvaluation
+        ? "Evaluation scenario"
+        : episodePackMode
+        ? "Episode pack"
+        : isEvaluationInjection
+        ? "Oracle FHIR"
+        : contextStatus === "ready"
         ? "Episode-linked FHIR"
         : contextStatus === "loading"
         ? "Loading FHIR context"
@@ -2002,15 +3195,30 @@ const episodeAlertColor = episodeReady
   <span>07/07</span>
   <span>07/18</span>
 
-  <b>125</b>
-  <b>139</b>
-  <b>141</b>
-  <b>234</b>
+  <b>--</b>
+  <b>--</b>
+  <b>--</b>
+  <b>
+    {formatClinicalNumber(
+      live.glucose,
+      0
+    )}
+  </b>
 
-  <b>1.47</b>
-  <b>1.05</b>
-  <b>1.23</b>
-  <b>5.5</b>
+  <b>
+    {formatClinicalNumber(
+      live.creatinine,
+      2
+    )}
+  </b>
+  <b>--</b>
+  <b>--</b>
+  <b>
+    {formatClinicalNumber(
+      live.potassium,
+      1
+    )}
+  </b>
 </div>
           <button className="kgen-blue-btn" type="button" onClick={onOpenLabs}>
             Access full table
@@ -2025,11 +3233,30 @@ const episodeAlertColor = episodeReady
   </h2>
 
   <div className="kgen-alert-box">
-  <CriticalInterpretationWidget
-    result={slmWidgetResult}
-    status={slmWidgetStatus}
-    fallback={episodeInterpretation}
-  />
+ <CriticalInterpretationWidget
+  result={
+    displayedSlmWidgetResult
+  }
+  status={
+    isEvaluation
+      ? (
+          evaluationDemo.run
+            ? "ready"
+            : "loading"
+        )
+      : slmWidgetStatus
+  }
+  fallback={
+    isEvaluation
+      ? {
+          title:
+            "evaluation episode",
+          rhythm:
+            "Run or load the evaluation SLM result.",
+        }
+      : live.alertInterpretation
+  }
+/>
 </div>
 </section>
 
@@ -2054,103 +3281,183 @@ const episodeAlertColor = episodeReady
         <section className="kgen-panel kgen-vitals-panel">
           <h2>04. Vital Signs Log</h2>
 
-          <table className="kgen-table vitals">
-            <thead>
-              <tr>
-                <th>Parameter</th>
-                <th>Value</th>
-                <th>Unit</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {vitalRows.map((row) => (
-                <tr key={row[0]}>
-                  <td>{row[0]}</td>
-                  <td>{row[1]}</td>
-                  <td>{row[2]}</td>
-                  <td>{row[3]}</td>
+          <div className="kgen-table-scroll kgen-vitals-table-scroll">
+            <table className="kgen-table vitals">
+              <thead>
+                <tr>
+                  <th>Parameter</th>
+                  <th>Value</th>
+                  <th>Unit</th>
+                  <th>Timing / Context</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+
+              <tbody>
+                {vitalRows.length ? (
+                  vitalRows.map((row, index) => {
+                    const isArrayRow =
+                      Array.isArray(row);
+                    const label = isArrayRow
+                      ? row[0]
+                      : row.label ||
+                        row.parameter ||
+                        row.name ||
+                        "Vital sign";
+                    const value = isArrayRow
+                      ? row[1]
+                      : row.value ?? "--";
+                    const unit = isArrayRow
+                      ? row[2]
+                      : row.unit || "";
+                    const timing = isArrayRow
+                      ? row[3]
+                      : row.relationLabel ||
+                        row.timing ||
+                        row.date ||
+                        "Episode time";
+                    const detail = isArrayRow
+                      ? ""
+                      : row.detail || "";
+
+                    return (
+                      <tr
+                        key={
+                          row.id ||
+                          row.field ||
+                          `${label}-${index}`
+                        }
+                      >
+                        <td title={String(label)}>
+                          <span>{label}</span>
+                        </td>
+                        <td title={String(value)}>
+                          <span>{value}</span>
+                          {detail && (
+                            <small title={detail}>
+                              {detail}
+                            </small>
+                          )}
+                        </td>
+                        <td title={String(unit)}>
+                          <span>{unit || "—"}</span>
+                        </td>
+                        <td title={String(timing)}>
+                          <span>{timing}</span>
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="4"
+                      className="kgen-table-empty-cell"
+                    >
+                      No episode-pack vital signs were supplied.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </section>
 
         <section className="kgen-panel kgen-med-panel">
           <h2>05. Medication Timeline</h2>
 
-         <table className="kgen-table meds">
-  <thead>
-    <tr>
-      <th>Medication</th>
-      <th>Dose / Route</th>
-      <th>Status</th>
-      <th>Context Timing</th>
-    </tr>
-  </thead>
+          <div className="kgen-table-scroll kgen-medication-table-scroll">
+            <table className="kgen-table meds">
+              <thead>
+                <tr>
+                  <th>Medication</th>
+                  <th>Dose / Route</th>
+                  <th>Status</th>
+                  <th>Context Timing</th>
+                </tr>
+              </thead>
 
-  <tbody>
-    {displayedMedicationRows.length ? (
-      displayedMedicationRows.map(
-        (row, index) => (
-          <tr
-            key={
-              row.id ||
-              `${row.name || row.med}-${index}`
-            }
-          >
-            <td>
-              <strong>
-                {row.name || row.med}
-              </strong>
+              <tbody>
+                {displayedMedicationRows.length ? (
+                  displayedMedicationRows.map(
+                    (row, index) => {
+                      const medicationName =
+                        row.name ||
+                        row.med ||
+                        "Medication";
+                      const dose =
+                        row.doseDisplay ||
+                        row.dose ||
+                        "Dose not specified";
+                      const route =
+                        row.route &&
+                        !["--", "Unavailable"].includes(
+                          row.route
+                        )
+                          ? row.route
+                          : "";
+                      const status =
+                        row.status ||
+                        "Available";
+                      const timing =
+                        row.contextTiming ||
+                        row.relationLabel ||
+                        row.date ||
+                        row.prescribed ||
+                        "Episode context";
 
-              <small>
-                {row.resourceType ||
-                  row.sourceResource ||
-                  "Medication"}
-              </small>
-            </td>
+                      return (
+                        <tr
+                          key={
+                            row.id ||
+                            `${medicationName}-${index}`
+                          }
+                        >
+                          <td className="kgen-med-name-cell">
+                            <strong title={medicationName}>
+                              {medicationName}
+                            </strong>
+                            <small>Episode pack</small>
+                          </td>
 
-            <td>
-              {row.doseDisplay ||
-                row.dose ||
-                "Unavailable"}
+                          <td>
+                            <span title={String(dose)}>
+                              {dose}
+                            </span>
+                            {route && (
+                              <small title={route}>
+                                {route}
+                              </small>
+                            )}
+                          </td>
 
-              {row.route && (
-                <small>{row.route}</small>
-              )}
-            </td>
+                          <td>
+                            <span title={String(status)}>
+                              {status}
+                            </span>
+                          </td>
 
-            <td>
-              {row.status || "available"}
-
-              {row.evidenceLevel && (
-                <small>
-                  {row.evidenceLevel}
-                </small>
-              )}
-            </td>
-
-            <td>
-              {row.relationLabel ||
-                row.date ||
-                row.prescribed ||
-                "Time unavailable"}
-            </td>
-          </tr>
-        )
-      )
-    ) : (
-      <tr>
-        <td colSpan="4">
-          No episode-linked medication
-          resources were returned.
-        </td>
-      </tr>
-    )}
-  </tbody>
-</table>
+                          <td>
+                            <span title={String(timing)}>
+                              {timing}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    }
+                  )
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="4"
+                      className="kgen-table-empty-cell"
+                    >
+                      No episode-linked medications were supplied.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </section>
       </main>
 
@@ -2171,4 +3478,3 @@ const episodeAlertColor = episodeReady
     </section>
   );
 }
-

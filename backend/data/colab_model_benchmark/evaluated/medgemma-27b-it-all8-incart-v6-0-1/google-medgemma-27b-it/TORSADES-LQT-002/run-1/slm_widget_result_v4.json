@@ -1,0 +1,116 @@
+{
+  "schemaVersion": "slm-widget-result-v4",
+  "scenarioId": "TORSADES-LQT-002",
+  "episodeId": "evalflow-TORSADES-LQT-002-20260731-191927-44081e",
+  "incidentId": "inc-INCART-EVAL-TORSADES-LQT-002-loop-1-polymorphic-ventricular-tachycardia-000001584-6bOcUoz1vGzRTvi1",
+  "status": "complete",
+  "validationStatus": "rejected",
+  "displayPolicy": "always_show_model_response",
+  "validationSummary": {
+    "status": "rejected",
+    "strictlyAccepted": false,
+    "hardAccepted": false,
+    "displayableWithReview": false,
+    "validatorPassed": false,
+    "hardErrorCount": 1,
+    "qualityErrorCount": 0,
+    "contradictionCount": 0,
+    "unsupportedFactCount": 1,
+    "errors": [
+      "Unsupported numeric claims: 3"
+    ],
+    "hardErrors": [
+      "Unsupported numeric claims: 3"
+    ],
+    "qualityErrors": [],
+    "contradictions": [],
+    "unsupportedFacts": [
+      "Unsupported numeric claims: 3"
+    ]
+  },
+  "headline": "Torsades de pointes",
+  "narrative": {
+    "episodeSummary": "A 74-year-old female with a history of atrial fibrillation (on sotalol) and hypertension presented with palpitations and syncope. She recently experienced gastroenteritis with vomiting and diarrhea for 3 days and was started on azithromycin and ondansetron 5 days prior. During the episode, she became hypotensive (SBP 68 mmHg) and hypoxic (SpO2 88%). The ECG showed polymorphic ventricular tachycardia (Torsades de pointes) with a rate of 228 bpm, QRS duration of 150 ms, and QT prolongation (QTc 618 ms). Electrolytes revealed hypokalemia (2.9 mmol/L), hypomagnesemia (1.2 mg/dL), and hypocalcemia (7.9 mg/dL).",
+    "clinicalContext": "Polymorphic ventricular tachycardia (Torsades de pointes) occurred in a patient with underlying structural heart disease (history of atrial fibrillation), recent gastroenteritis with vomiting/diarrhea, and exposure to QT-prolonging medications (sotalol, azithromycin, ondansetron). The event was hemodynamically unstable, associated with hypotension and hypoxia. Pre-event ECG showed marked QT prolongation.",
+    "mostLikelyEtiology": "Acquired long QT syndrome secondary to electrolyte abnormalities (hypokalemia, hypomagnesemia, hypocalcemia) and QT-prolonging medications (sotalol, azithromycin, ondansetron), likely precipitated by recent gastroenteritis with vomiting and diarrhea leading to electrolyte loss.",
+    "contributingFactors": [
+      "Hypokalemia (K+ 2.9 mmol/L)",
+      "Hypomagnesemia (Mg 1.2 mg/dL)",
+      "Hypocalcemia (Ca 7.9 mg/dL)",
+      "QT-prolonging medications (Sotalol, Azithromycin, Ondansetron)",
+      "Recent gastroenteritis with vomiting/diarrhea"
+    ],
+    "uncertaintyAndMissingData": [
+      "Sodium level is unavailable, which could contribute to electrolyte imbalance assessment.",
+      "Detailed history of QT prolongation or prior episodes is unavailable.",
+      "Specific pattern of troponin elevation is unspecified.",
+      "Renal function (creatinine 1.4 mg/dL) is mildly elevated, but the clinical significance regarding drug clearance is unknown.",
+      "No information on other potential causes of QT prolongation (e.g., congenital long QT, other medications, underlying cardiac disease beyond Afib history)."
+    ]
+  },
+  "grounding": {
+    "status": "rejected",
+    "pass": false,
+    "hardAccepted": false,
+    "validatorPassed": false,
+    "accepted": false,
+    "displayableWithReview": false,
+    "hardErrorCount": 1,
+    "qualityErrorCount": 0
+  },
+  "benchmark": {
+    "score": 80,
+    "grade": "pass",
+    "conceptGrade": "pass",
+    "alignmentMode": "full_scenario",
+    "informationalOnly": false,
+    "pass": true,
+    "disposition": "pass"
+  },
+  "evaluationStatistics": {
+    "scenarioScore": 80,
+    "overallPass": false,
+    "safetyPass": false,
+    "attemptCount": 1,
+    "generationLatencySeconds": 86.565,
+    "rawResponseDisplayed": true
+  },
+  "measurementConflicts": [],
+  "sourceManifest": {
+    "patientContextSource": "complete_episode_pack",
+    "episodeContextSource": "complete_episode_pack",
+    "controlledEventSource": "complete_episode_pack",
+    "waveformAnalysisSource": "phase6_deterministic_analysis",
+    "detectorSource": "evaluation_detector",
+    "oracleSmartRole": "authentication_and_scenario_routing_only",
+    "oracleFhirClinicalContextUsed": false
+  },
+  "clinicalPromptMode": "episode_pack_only",
+  "model": {
+    "provider": "google_colab_file",
+    "name": "google/medgemma-27b-it",
+    "endpoint": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\f7a36dd8240d793d4a3acf7c9cf683a9aafe2e7ae231d9717dab4f110b07fea5.json",
+    "sourceFile": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\f7a36dd8240d793d4a3acf7c9cf683a9aafe2e7ae231d9717dab4f110b07fea5.json",
+    "colabRun": 1,
+    "promptFingerprint": "f7a36dd8240d793d4a3acf7c9cf683a9aafe2e7ae231d9717dab4f110b07fea5",
+    "elapsedSeconds": 86.565,
+    "promptEvalCount": 3448,
+    "evalCount": 561,
+    "peakGpuMemoryGiB": 17.47,
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "quantization": "4-bit-nf4",
+    "structuredOutput": true,
+    "schema": "grounded-etiology-context-universal-v1",
+    "recommendedActionsRequired": false
+  },
+  "manualReviewRequired": true,
+  "medicalAdjudication": {
+    "status": "disabled",
+    "advisoryOnly": true,
+    "model": null,
+    "decision": null,
+    "issueReviewCount": 0,
+    "validatorFalsePositiveCount": 0
+  },
+  "medicalReviewRecommended": false
+}

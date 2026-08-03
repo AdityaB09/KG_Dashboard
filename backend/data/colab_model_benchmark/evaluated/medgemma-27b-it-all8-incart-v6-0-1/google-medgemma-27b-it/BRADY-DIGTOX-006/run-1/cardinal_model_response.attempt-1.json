@@ -1,0 +1,97 @@
+{
+  "attempt": 1,
+  "createdAt": "2026-08-02T01:32:08.076108+00:00",
+  "model": {
+    "provider": "google_colab_file",
+    "name": "google/medgemma-27b-it",
+    "endpoint": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\5920bccb9138f142b60a24447ae28cd614d1ba3ccc0d60a29c1883b20307d539.json",
+    "sourceFile": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\5920bccb9138f142b60a24447ae28cd614d1ba3ccc0d60a29c1883b20307d539.json",
+    "colabRun": 1,
+    "promptFingerprint": "5920bccb9138f142b60a24447ae28cd614d1ba3ccc0d60a29c1883b20307d539",
+    "elapsedSeconds": 72.99,
+    "promptEvalCount": 3317,
+    "evalCount": 478,
+    "peakGpuMemoryGiB": 17.39,
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "quantization": "4-bit-nf4",
+    "structuredOutput": true,
+    "schema": "grounded-etiology-context-universal-v1",
+    "recommendedActionsRequired": false
+  },
+  "rawModelResponse": {
+    "episodeSummary": "An 82-year-old female with a history of atrial fibrillation (on digoxin), heart failure, and CKD stage 3 presented with nausea, vomiting, and confusion. An episode of junctional bradycardia (rate 38 bpm) was detected, classified as stable. The ECG showed a regular, narrow QRS rhythm with no P waves. Phase 6 analysis of the controlled event window yielded a median heart rate of 38.04 bpm (range 37.931-143.478 bpm) with low confidence in the heart rate measurement and insufficient confidence in QRS duration measurement. The patient's digoxin level was elevated (3.8 ng/mL, reference 0.8-2.0 ng/mL) and she was taking digoxin 0.25 mg daily. She also had hyperkalemia (5.6 mmol/L, reference 3.5-5.1 mmol/L) and renal impairment (creatinine 2.1 mg/dL).",
+    "detectedEpisodeContext": "Stable junctional bradycardia detected in an elderly female with known atrial fibrillation, heart failure, CKD, and recent symptoms of nausea and vomiting. The rhythm is regular with a ventricular rate of 38 bpm, no P waves, and narrow QRS complexes. The event was captured and is classified as stable based on hemodynamics (SBP 104, MAP 76, SpO2 96).",
+    "mostLikelyEtiology": "Digoxin toxicity leading to increased vagal tone and suppression of the SA and AV nodes, resulting in a junctional escape rhythm.",
+    "contributingFactors": [
+      "Elevated digoxin level (3.8 ng/mL)",
+      "Chronic kidney disease (CKD stage 3)",
+      "Hyperkalemia (5.6 mmol/L)"
+    ],
+    "uncertaintyAndMissingData": [
+      "Phase 6 heart rate measurement has low confidence.",
+      "Phase 6 QRS duration measurement has insufficient confidence.",
+      "Calcium level is unavailable.",
+      "Sodium level is unavailable.",
+      "Troponin pattern is unavailable."
+    ]
+  },
+  "modelResponse": {
+    "episodeSummary": "An 82-year-old female with a history of atrial fibrillation (on digoxin), heart failure, and CKD stage 3 presented with nausea, vomiting, and confusion. An episode of junctional bradycardia (rate 38 bpm) was detected, classified as stable. The ECG showed a regular, narrow QRS rhythm with no P waves. Phase 6 analysis of the controlled event window yielded a median heart rate of 38.04 bpm (range 37.931-143.478 bpm) with low confidence in the heart rate measurement and insufficient confidence in QRS duration measurement. The patient's digoxin level was elevated (3.8 ng/mL, reference 0.8-2.0 ng/mL) and she was taking digoxin 0.25 mg daily. She also had hyperkalemia (5.6 mmol/L, reference 3.5-5.1 mmol/L) and renal impairment (creatinine 2.1 mg/dL).",
+    "detectedEpisodeContext": "Stable junctional bradycardia detected in an elderly female with known atrial fibrillation, heart failure, CKD, and recent symptoms of nausea and vomiting. The rhythm is regular with a ventricular rate of 38 bpm, no P waves, and narrow QRS complexes. The event was captured and is classified as stable based on hemodynamics (SBP 104, MAP 76, SpO2 96).",
+    "mostLikelyEtiology": "Digoxin toxicity leading to increased vagal tone and suppression of the SA and AV nodes, resulting in a junctional escape rhythm.",
+    "contributingFactors": [
+      "Elevated digoxin level (3.8 ng/mL)",
+      "Chronic kidney disease (CKD stage 3)",
+      "Hyperkalemia (5.6 mmol/L)"
+    ],
+    "uncertaintyAndMissingData": [
+      "Phase 6 heart rate measurement has low confidence.",
+      "Phase 6 QRS duration measurement has insufficient confidence.",
+      "Calcium level is unavailable.",
+      "Sodium level is unavailable.",
+      "Troponin pattern is unavailable."
+    ]
+  },
+  "normalizationChanges": [],
+  "validation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "JUNCTIONAL_BRADYCARDIA",
+    "authoritativeDiagnosisDisplay": "Junctional bradycardia",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "validatorInternalConflicts": [],
+    "adjudicationEligible": false,
+    "evidenceCoverage": {
+      "rhythmEvidence": true,
+      "structuralSubstrate": true,
+      "hemodynamicContext": true,
+      "electrolyteInterpretation": true,
+      "ischemiaInterpretation": true,
+      "infectionContext": false,
+      "qtContext": false,
+      "renalContext": true,
+      "medicationToxicityContext": true,
+      "medicationContext": true,
+      "episodePackClinicalContext": true
+    },
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 9,
+    "evidenceCoverageRequired": 4,
+    "correctionEvidence": [],
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-v4.3",
+    "groundingStatus": "accepted",
+    "clinicalPromptMode": "episode_pack_only",
+    "evidenceFingerprint": "447333cd9ca4352fc05d2a8fd83562e971730bf7fe16e9a53708282f428de865"
+  }
+}

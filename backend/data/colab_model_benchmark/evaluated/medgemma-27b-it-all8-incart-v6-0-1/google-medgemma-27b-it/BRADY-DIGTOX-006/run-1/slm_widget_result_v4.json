@@ -1,0 +1,108 @@
+{
+  "schemaVersion": "slm-widget-result-v4",
+  "scenarioId": "BRADY-DIGTOX-006",
+  "episodeId": "evalflow-BRADY-DIGTOX-006-20260731-194940-741c22",
+  "incidentId": "inc-INCART-EVAL-BRADY-DIGTOX-006-loop-1-bradyarrhythmia-000001650-LKi3uUXF7bxKBRcF",
+  "status": "complete",
+  "validationStatus": "accepted",
+  "displayPolicy": "always_show_model_response",
+  "validationSummary": {
+    "status": "accepted",
+    "strictlyAccepted": true,
+    "hardAccepted": true,
+    "displayableWithReview": false,
+    "validatorPassed": true,
+    "hardErrorCount": 0,
+    "qualityErrorCount": 0,
+    "contradictionCount": 0,
+    "unsupportedFactCount": 0,
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "contradictions": [],
+    "unsupportedFacts": []
+  },
+  "headline": "Junctional bradycardia",
+  "narrative": {
+    "episodeSummary": "An 82-year-old female with a history of atrial fibrillation (on digoxin), heart failure, and CKD stage 3 presented with nausea, vomiting, and confusion. An episode of junctional bradycardia (rate 38 bpm) was detected, classified as stable. The ECG showed a regular, narrow QRS rhythm with no P waves. Phase 6 analysis of the controlled event window yielded a median heart rate of 38.04 bpm (range 37.931-143.478 bpm) with low confidence in the heart rate measurement and insufficient confidence in QRS duration measurement. The patient's digoxin level was elevated (3.8 ng/mL, reference 0.8-2.0 ng/mL) and she was taking digoxin 0.25 mg daily. She also had hyperkalemia (5.6 mmol/L, reference 3.5-5.1 mmol/L) and renal impairment (creatinine 2.1 mg/dL).",
+    "clinicalContext": "Stable junctional bradycardia detected in an elderly female with known atrial fibrillation, heart failure, CKD, and recent symptoms of nausea and vomiting. The rhythm is regular with a ventricular rate of 38 bpm, no P waves, and narrow QRS complexes. The event was captured and is classified as stable based on hemodynamics (SBP 104, MAP 76, SpO2 96).",
+    "mostLikelyEtiology": "Digoxin toxicity leading to increased vagal tone and suppression of the SA and AV nodes, resulting in a junctional escape rhythm.",
+    "contributingFactors": [
+      "Elevated digoxin level (3.8 ng/mL)",
+      "Chronic kidney disease (CKD stage 3)",
+      "Hyperkalemia (5.6 mmol/L)"
+    ],
+    "uncertaintyAndMissingData": [
+      "Phase 6 heart rate measurement has low confidence.",
+      "Phase 6 QRS duration measurement has insufficient confidence.",
+      "Calcium level is unavailable.",
+      "Sodium level is unavailable.",
+      "Troponin pattern is unavailable."
+    ]
+  },
+  "grounding": {
+    "status": "accepted",
+    "pass": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "accepted": true,
+    "displayableWithReview": false,
+    "hardErrorCount": 0,
+    "qualityErrorCount": 0
+  },
+  "benchmark": {
+    "score": 66,
+    "grade": "below_target",
+    "conceptGrade": "fail",
+    "alignmentMode": "full_scenario",
+    "informationalOnly": false,
+    "pass": false,
+    "disposition": "below_target"
+  },
+  "evaluationStatistics": {
+    "scenarioScore": 66,
+    "overallPass": false,
+    "safetyPass": true,
+    "attemptCount": 1,
+    "generationLatencySeconds": 72.99,
+    "rawResponseDisplayed": true
+  },
+  "measurementConflicts": [],
+  "sourceManifest": {
+    "patientContextSource": "complete_episode_pack",
+    "episodeContextSource": "complete_episode_pack",
+    "controlledEventSource": "complete_episode_pack",
+    "waveformAnalysisSource": "phase6_deterministic_analysis",
+    "detectorSource": "evaluation_detector",
+    "oracleSmartRole": "authentication_and_scenario_routing_only",
+    "oracleFhirClinicalContextUsed": false
+  },
+  "clinicalPromptMode": "episode_pack_only",
+  "model": {
+    "provider": "google_colab_file",
+    "name": "google/medgemma-27b-it",
+    "endpoint": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\5920bccb9138f142b60a24447ae28cd614d1ba3ccc0d60a29c1883b20307d539.json",
+    "sourceFile": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\5920bccb9138f142b60a24447ae28cd614d1ba3ccc0d60a29c1883b20307d539.json",
+    "colabRun": 1,
+    "promptFingerprint": "5920bccb9138f142b60a24447ae28cd614d1ba3ccc0d60a29c1883b20307d539",
+    "elapsedSeconds": 72.99,
+    "promptEvalCount": 3317,
+    "evalCount": 478,
+    "peakGpuMemoryGiB": 17.39,
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "quantization": "4-bit-nf4",
+    "structuredOutput": true,
+    "schema": "grounded-etiology-context-universal-v1",
+    "recommendedActionsRequired": false
+  },
+  "manualReviewRequired": true,
+  "medicalAdjudication": {
+    "status": "disabled",
+    "advisoryOnly": true,
+    "model": null,
+    "decision": null,
+    "issueReviewCount": 0,
+    "validatorFalsePositiveCount": 0
+  },
+  "medicalReviewRecommended": false
+}

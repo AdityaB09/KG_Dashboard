@@ -1,0 +1,80 @@
+{
+  "schemaVersion": "grounded-model-request-universal-v2",
+  "label": "attempt-1",
+  "provider": "colab_file",
+  "model": "google/medgemma-27b-it",
+  "endpoint": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\5920bccb9138f142b60a24447ae28cd614d1ba3ccc0d60a29c1883b20307d539.json",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a clinical episode-context and etiology summarizer.\n\nUse only the complete episode package and qualified independent Phase 6\nmeasurements printed in this request. Launch and routing metadata are not\nclinical evidence.\n\nSource ownership:\n- The COMPLETE EPISODE PACKAGE supplies the patient, history, symptoms, vitals,\n  laboratories, medications, clinical context, fixed rhythm diagnosis, and\n  controlled-event measurements.\n- PHASE 6 supplies independent deterministic waveform measurements,\n  measurement validity, confidence, provenance, and limitations. It does not\n  diagnose or confirm the rhythm.\n- The SLM supplies episode summary, detected episode context, most likely\n  etiology, contributing factors, and uncertainty only.\n\nRules:\n1. Preserve the fixed upstream rhythm diagnosis.\n2. Do not diagnose, reclassify, dispute, or provide a competing rhythm\n   differential.\n3. Explain the most likely etiology using only the episode-package evidence.\n4. Do not describe Phase 6 as diagnosing or confirming the rhythm.\n5. Discuss a difference between episode-package and Phase 6 measurements only\n   when the supplied evidence explicitly marks the measurements as\n   controlled-event-window aligned, comparable, valid, materially different,\n   and supported by moderate or high confidence.\n6. When Phase 6 confidence is low or insufficient, describe the measurement as\n   limited. Do not use it to dispute, reinterpret, or replace the\n   controlled-event measurement or authoritative diagnosis, and do not repeat a\n   low-confidence number unless it is clinically necessary to explain the\n   limitation.\n7. Use only facts printed in the request. Missing information is not a negative\n   or normal finding.\n8. In uncertaintyAndMissingData, prioritize information whose absence\n   materially limits the etiologic conclusion. Do not list routine unavailable\n   values unless they meaningfully affect the etiologic assessment. Do not say\n   information is unavailable when the supplied evidence contains it.\n9. contributingFactors must contain one to five concise strings.\n10. Do not provide treatment recommendations, medication advice, procedures,\n    management plans, next steps, or action fields.\n11. Return only the five required JSON fields.\n\nRequired fields:\n- episodeSummary\n- detectedEpisodeContext\n- mostLikelyEtiology\n- contributingFactors\n- uncertaintyAndMissingData"
+    },
+    {
+      "role": "user",
+      "content": "CLINICAL EVIDENCE\n\nSOURCE MANIFEST\n- patientContextSource: complete_episode_pack\n- episodeContextSource: complete_episode_pack\n- controlledEventSource: complete_episode_pack\n- waveformAnalysisSource: phase6_deterministic_analysis\n- detectorSource: evaluation_detector\n\nCONTROLLED RHYTHM\n- diagnosis: Junctional bradycardia\n- diagnosisCode: JUNCTIONAL_BRADYCARDIA\n- authoritative: yes\n- ventricularRateBpm: 38\n- qrsDurationMs: 96\n- regularity: regular\n- pWavePresent: no\n- atrialActivityPresent: no\n- findings: Narrow QRS\n\nCONTROLLED EVENT HEMODYNAMICS\n- classification: stable\n- systolicBloodPressure: 104\n- diastolicBloodPressure: 62\n- map: 76\n- oxygenSaturationPct: 96\n- temperatureC: 36.6\n- sourceNote: Mildly symptomatic\n\nCONTROLLED EVENT ISCHEMIA\n- troponinPattern: not_available\n\nCONTROLLED EVENT ELECTROLYTES\n- potassium: available=yes; value=5.6; unit=mmol/L; withinReference=no; reference={'low': 3.5, 'high': 5.1}; note=HIGH\n- magnesium: available=yes; value=2; unit=mg/dL; withinReference=yes; reference={'low': 1.7, 'high': 2.2}\n- calcium: available=no\n- sodium: available=no\n- abnormalElectrolytes: potassium\n- electrolyteAbnormalityPresent: yes\n- majorElectrolyteTriggerSupported: yes\n\nCONTROLLED EVENT INFECTION\n- temperatureC: 36.6\n\nCONTROLLED EVENT RENAL\n- creatinine: 2.1\n- chronicKidneyDiseaseSupported: yes\n- renalImpairmentSupported: yes\n\nCONTROLLED EVENT QT\n- thresholdMs: 500\n\nCONTROLLED EVENT TOXICITY\n- digoxinLevel: 3.8\n- symptoms: nausea; vomiting\n- digoxinToxicitySupported: yes\n- reducedClearanceSupported: yes\n\nDETECTOR AND CAPTURE\n- ruleId: controlled-capture-fallback-v1\n- estimatedRateBpm: 38\n- triggerLatencySeconds: 1.5\n- referenceOnsetOffsetSeconds: 6\n- detectedTriggerOffsetSeconds: 7.5\n- captureSeconds: 20\n- preEventSeconds: 6\n- eventSeconds: 8\n- postEventSeconds: 6\n- captureComplete: yes\n\nPHASE 6 INDEPENDENT ECG\n- schemaVersion: phase6-windowed-analysis-v1\n- analysisStatus: complete\n- window.fullCapture: 0 to 20 seconds\n- window.preEvent: 0 to 6 seconds\n- window.controlledEvent: 6 to 14 seconds\n- window.postEvent: 14 to 20 seconds\n- fullCaptureMedianHeartRateBpm: 50.575\n- preEventMedianHeartRateBpm: 54.098\n- controlledEventMedianHeartRateBpm: 38.04\n- controlledEventHeartRateRangeBpm: [37.931, 143.478]\n- controlledEventHeartRateValid: yes\n- controlledEventHeartRateConfidence: low\n- controlledEventQrsValid: no\n- controlledEventQrsConfidence: insufficient\n- eventVsPreDifferenceScore: 0.5618\n- eventVsPostDifferenceScore: 0.4867\n- leadAgreementScore: 96.65\n- windowedMeasurementConfidenceScore: 0\n- windowedMeasurementConfidenceGrade: insufficient\n- limitation: QRS duration could not be measured reliably in this window.\n- limitation: Windowed Phase 6 values are independent measurements only; they do not diagnose or confirm the controlled rhythm.\n- limitation: Only controlled-event-window measurements may be compared with controlled episode-package values.\n\nPHASE 6 COMPARISON LIMITATIONS\n- Phase 6 produced an low-confidence controlled-event ventricularRateBpm measurement. It must not dispute or replace the controlled episode-package value.\n\nEPISODE PACK PATIENT\n- name: Eleanor R. Vance\n- mrn: KG-004466\n- dob: 1943-08-08\n- age: 82\n- sex: F\n- heightCm: 155\n- weightKg: 54\n- room: TELE-4\n- admissionDate: 2026-07-19\n- codeStatus: DNR/DNI\n- primaryDiagnosis: Nausea, vomiting, confusion\n- history: Atrial fibrillation (rate-controlled on digoxin); Heart failure; CKD stage 3\n- homeMedications: Digoxin 0.25 mg daily; Furosemide 40 mg; Warfarin\n- allergies: None known\n\nEPISODE PACK EPISODE\n- type: junctional_bradycardia\n- display: Junctional bradycardia (digoxin effect)\n- severity: warning\n- state: CAPTURED\n- analysisStatus: pending\n- autoTriggered: yes\n- triggerHeartRate: 38\n- durationSeconds: 8\n\nEPISODE PACK ECG MEASUREMENTS\n- rhythm: Regularized junctional bradycardia (AF with slow regular ventricular response)\n- ventricularRateBpm: 38\n- regularity: regular\n- qrsDurationMs: 96\n- pWavePresent: no\n- stDeviationMm: Scooped/'sagging' ST segments (digoxin effect)\n- morphology: Narrow QRS, scooped ST, slow regular rhythm despite AFib\n- preEventNote: Known AFib now with slow REGULAR response — suggests AV junctional takeover\n- heartRateBpm: 38\n\nEPISODE PACK STRUCTURAL HEART\n- findings: Heart failure\n\nEPISODE PACK HEMODYNAMICS\n- classification: stable\n- systolicBloodPressure: 104\n- diastolicBloodPressure: 62\n- map: 76\n- oxygenSaturationPct: 96\n- temperatureC: 36.6\n- sourceNote: Mildly symptomatic\n\nEPISODE PACK VITALS\n- spo2Pct: 96\n- heartRateBpm: 38\n- respiratoryRateBpm: 16\n- temperatureC: 36.6\n- bloodPressure: systolic=104; diastolic=62; map=76; note=Mildly symptomatic\n\nEPISODE PACK LABS\n- digoxinLevel: value=3.8; unit=ng/mL; reference=0.8–2.0; flag=TOXIC\n- potassium: value=5.6; unit=mmol/L; reference=3.5–5.1; flag=HIGH\n- creatinine: value=2.1; unit=mg/dL; reference=0.6–1.1; flag=HIGH (acute on CKD)\n- magnesium: value=2; unit=mg/dL; reference=1.7–2.2\n- inr: value=2.4; reference=2.0–3.0\n\nEPISODE PACK ELECTROLYTES\n- potassium: available=yes; value=5.6; unit=mmol/L; withinReference=no; reference={'low': 3.5, 'high': 5.1}; note=HIGH\n- magnesium: available=yes; value=2; unit=mg/dL; withinReference=yes; reference={'low': 1.7, 'high': 2.2}\n- calcium: available=no\n- sodium: available=no\n- abnormalElectrolytes: potassium\n- electrolyteAbnormalityPresent: yes\n- majorElectrolyteTriggerSupported: yes\n\nEPISODE PACK RENAL\n- creatinine: 2.1\n- chronicKidneyDiseaseSupported: yes\n- renalImpairmentSupported: yes\n\nEPISODE PACK ISCHEMIA\n- troponinPattern: not_available\n\nEPISODE PACK INFECTION\n- temperatureC: 36.6\n\nEPISODE PACK QT\n- thresholdMs: 500\n\nEPISODE PACK MEDICATIONS\n- Digoxin 0.25 mg daily\n- Furosemide 40 mg\n- Warfarin\n\nEPISODE PACK TOXICITY\n- digoxinLevel: 3.8\n- symptoms: nausea; vomiting\n- digoxinToxicitySupported: yes\n- reducedClearanceSupported: yes\n\nEPISODE PACK CLINICAL CONTEXT\n- recentEvents: Nausea, vomiting, visual disturbance (yellow-green halos); Recent decreased urine output / dehydration; AFib now slow and regular\n\nREQUIRED CONTENT\n- rhythmEvidence: Use the supplied controlled-event rate, regularity, QRS, atrial activity, AV association, or morphology evidence.\n- renalContext: Interpret renal function, dialysis status, or reduced drug clearance when relevant.\n- medicationToxicityContext: Interpret medication exposure, level, clearance, and toxicity evidence.\n- medicationContext: Use clinically relevant medication exposure without inventing treatment recommendations.\n\nOPTIONAL CONTENT WHEN RELEVANT\n- structuralSubstrate: Explain how the supplied structural-heart substrate relates to the episode.\n- hemodynamicContext: Interpret the supplied controlled-event hemodynamic state.\n- electrolyteInterpretation: Explain whether supplied electrolyte values support or argue against an electrolyte contribution.\n- ischemiaInterpretation: Interpret supplied chest-pain, ST-segment, and troponin evidence.\n- infectionContext: Interpret supplied infection or sepsis evidence.\n- qtContext: Interpret QT duration and relevant medication exposure.\n- episodePackClinicalContext: Use the episode-pack patient, history, vitals, labs, medications, and clinical context when relevant.\n\nPROMPT METADATA\n- clinicalPromptMode: episode_pack_only\n- evidenceFingerprint: 447333cd9ca4352fc05d2a8fd83562e971730bf7fe16e9a53708282f428de865\n- validatorContractVersion: validator-contract-v4"
+    },
+    {
+      "role": "user",
+      "content": "Return JSON only. Use exactly the schema below. Write clinical content only. Never copy prompt rules, field definitions, task wording, or schema text into the response. Do not add diagnosis, treatment, recommendation, action, or next-step fields.\n{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{\"episodeSummary\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":1200},\"detectedEpisodeContext\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":1800},\"mostLikelyEtiology\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":1200},\"contributingFactors\":{\"type\":\"array\",\"minItems\":1,\"maxItems\":5,\"items\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":500}},\"uncertaintyAndMissingData\":{\"type\":\"array\",\"minItems\":0,\"maxItems\":8,\"items\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":500}}},\"required\":[\"episodeSummary\",\"detectedEpisodeContext\",\"mostLikelyEtiology\",\"contributingFactors\",\"uncertaintyAndMissingData\"]}"
+    }
+  ],
+  "promptFingerprint": "5920bccb9138f142b60a24447ae28cd614d1ba3ccc0d60a29c1883b20307d539",
+  "format": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "episodeSummary": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1200
+      },
+      "detectedEpisodeContext": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1800
+      },
+      "mostLikelyEtiology": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1200
+      },
+      "contributingFactors": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 5,
+        "items": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      },
+      "uncertaintyAndMissingData": {
+        "type": "array",
+        "minItems": 0,
+        "maxItems": 8,
+        "items": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      }
+    },
+    "required": [
+      "episodeSummary",
+      "detectedEpisodeContext",
+      "mostLikelyEtiology",
+      "contributingFactors",
+      "uncertaintyAndMissingData"
+    ]
+  },
+  "containsAnswerKey": false,
+  "modelOwnedFields": [
+    "episodeSummary",
+    "detectedEpisodeContext",
+    "mostLikelyEtiology",
+    "contributingFactors",
+    "uncertaintyAndMissingData"
+  ],
+  "recommendedActionsRequired": false,
+  "colabRun": 1
+}

@@ -1,0 +1,103 @@
+{
+  "attempt": 1,
+  "createdAt": "2026-08-02T01:32:10.708452+00:00",
+  "model": {
+    "provider": "google_colab_file",
+    "name": "google/medgemma-27b-it",
+    "endpoint": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\dda46dfa56dac0d5dffd01e16a08cf8229ca8ed564ec1c84cc8099dee95d30cc.json",
+    "sourceFile": "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\data\\colab_model_benchmark\\imported\\medgemma-27b-it-v6-0-1\\google-medgemma-27b-it\\run-1\\dda46dfa56dac0d5dffd01e16a08cf8229ca8ed564ec1c84cc8099dee95d30cc.json",
+    "colabRun": 1,
+    "promptFingerprint": "dda46dfa56dac0d5dffd01e16a08cf8229ca8ed564ec1c84cc8099dee95d30cc",
+    "elapsedSeconds": 67.725,
+    "promptEvalCount": 3510,
+    "evalCount": 441,
+    "peakGpuMemoryGiB": 17.507,
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "quantization": "4-bit-nf4",
+    "structuredOutput": true,
+    "schema": "grounded-etiology-context-universal-v1",
+    "recommendedActionsRequired": false
+  },
+  "rawModelResponse": {
+    "episodeSummary": "The patient, a 70-year-old male with end-stage renal disease on hemodialysis, hypertension, and heart failure, presented with generalized weakness after missing two dialysis sessions. He was found to have symptomatic bradycardia with a heart rate of 34 bpm, hypotension (MAP 59 mmHg), and ECG findings consistent with complete heart block (wide QRS, AV dissociation, peaked T waves, progressive QRS widening). Laboratory results show critical hyperkalemia (7.4 mmol/L), hypocalcemia (7.6 mg/dL), metabolic acidosis (pH 7.24, bicarbonate 15 mmol/L), and significantly elevated creatinine (9.8 mg/dL) and BUN (88 mg/dL), consistent with severe renal impairment. The Phase 6 analysis confirms a low heart rate (median 34.1 bpm) during the controlled event, but notes low confidence in the QRS measurement validity.",
+    "detectedEpisodeContext": "Symptomatic bradycardia secondary to complete heart block in the setting of severe renal failure, electrolyte abnormalities (hyperkalemia, hypocalcemia), and metabolic acidosis, likely related to missed hemodialysis.",
+    "mostLikelyEtiology": "Severe hyperkalemia secondary to end-stage renal disease and missed hemodialysis, leading to conduction system dysfunction and complete heart block.",
+    "contributingFactors": [
+      "End-stage renal disease",
+      "Missed hemodialysis sessions",
+      "Severe hyperkalemia",
+      "Hypocalcemia",
+      "Metabolic acidosis"
+    ],
+    "uncertaintyAndMissingData": [
+      "Phase 6 analysis has low confidence in the controlled-event heart rate measurement validity.",
+      "Phase 6 analysis has insufficient confidence for windowed measurement quality.",
+      "Phase 6 analysis could not reliably measure QRS duration in this window.",
+      "Magnesium level is unavailable.",
+      "Sodium level is unavailable.",
+      "Troponin level is unavailable."
+    ]
+  },
+  "modelResponse": {
+    "episodeSummary": "The patient, a 70-year-old male with end-stage renal disease on hemodialysis, hypertension, and heart failure, presented with generalized weakness after missing two dialysis sessions. He was found to have symptomatic bradycardia with a heart rate of 34 bpm, hypotension (MAP 59 mmHg), and ECG findings consistent with complete heart block (wide QRS, AV dissociation, peaked T waves, progressive QRS widening). Laboratory results show critical hyperkalemia (7.4 mmol/L), hypocalcemia (7.6 mg/dL), metabolic acidosis (pH 7.24, bicarbonate 15 mmol/L), and significantly elevated creatinine (9.8 mg/dL) and BUN (88 mg/dL), consistent with severe renal impairment. The Phase 6 analysis confirms a low heart rate (median 34.1 bpm) during the controlled event, but notes low confidence in the QRS measurement validity.",
+    "detectedEpisodeContext": "Symptomatic bradycardia secondary to complete heart block in the setting of severe renal failure, electrolyte abnormalities (hyperkalemia, hypocalcemia), and metabolic acidosis, likely related to missed hemodialysis.",
+    "mostLikelyEtiology": "Severe hyperkalemia secondary to end-stage renal disease and missed hemodialysis, leading to conduction system dysfunction and complete heart block.",
+    "contributingFactors": [
+      "End-stage renal disease",
+      "Missed hemodialysis sessions",
+      "Severe hyperkalemia",
+      "Hypocalcemia",
+      "Metabolic acidosis"
+    ],
+    "uncertaintyAndMissingData": [
+      "Phase 6 analysis has low confidence in the controlled-event heart rate measurement validity.",
+      "Phase 6 analysis has insufficient confidence for windowed measurement quality.",
+      "Phase 6 analysis could not reliably measure QRS duration in this window.",
+      "Magnesium level is unavailable.",
+      "Sodium level is unavailable.",
+      "Troponin level is unavailable."
+    ]
+  },
+  "normalizationChanges": [],
+  "validation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "COMPLETE_HEART_BLOCK",
+    "authoritativeDiagnosisDisplay": "Complete heart block",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "validatorInternalConflicts": [],
+    "adjudicationEligible": false,
+    "evidenceCoverage": {
+      "rhythmEvidence": true,
+      "structuralSubstrate": true,
+      "hemodynamicContext": true,
+      "electrolyteInterpretation": true,
+      "ischemiaInterpretation": true,
+      "infectionContext": false,
+      "qtContext": false,
+      "renalContext": true,
+      "medicationToxicityContext": false,
+      "medicationContext": false,
+      "episodePackClinicalContext": true
+    },
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 7,
+    "evidenceCoverageRequired": 4,
+    "correctionEvidence": [],
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-v4.3",
+    "groundingStatus": "accepted",
+    "clinicalPromptMode": "episode_pack_only",
+    "evidenceFingerprint": "1f8fc631ed526722fcd719a4f48082ba0de4ea51c3f457a5c9cc9b363424884e"
+  }
+}

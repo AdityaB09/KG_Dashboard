@@ -1,0 +1,499 @@
+{
+  "episodeId": "SVT-PSVT-007",
+  "scoringContract": "etiology-context-deterministic-v4.3",
+  "recommendedActionsRequired": false,
+  "actionsScored": false,
+  "diagnosisConsistency": 20,
+  "primaryEtiology": 29,
+  "contextualEvidence": 16,
+  "uncertaintyAndMissingData": 8,
+  "avoidsDistractors": 5,
+  "total": 78,
+  "grade": "needs_improvement",
+  "validatorPassed": true,
+  "safetyPass": true,
+  "overallPass": false,
+  "overallDisposition": "grounded_but_below_benchmark_target",
+  "groundingPass": true,
+  "grounding": {
+    "status": "accepted_with_review",
+    "pass": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "accepted": false,
+    "displayableWithReview": true,
+    "hardErrorCount": 0,
+    "qualityErrorCount": 1
+  },
+  "benchmark": {
+    "score": 78,
+    "grade": "below_target",
+    "conceptGrade": "needs_improvement",
+    "alignmentMode": "full_scenario",
+    "informationalOnly": false,
+    "pass": false,
+    "disposition": "below_target"
+  },
+  "benchmarkAlignmentMode": "full_scenario",
+  "benchmarkInformationalOnly": false,
+  "benchmarkPass": false,
+  "benchmarkDisposition": "below_target",
+  "clinicalPromptMode": "episode_pack_only",
+  "matched": {
+    "diagnosis": [
+      "Paroxysmal supraventricular tachycardia"
+    ],
+    "etiology": [
+      "reentrantSupraventricularMechanism",
+      "likelyAvnrtWhenSupported"
+    ],
+    "context": [
+      "regularNarrowComplexTachycardia",
+      "priorSelfTerminatingEpisodes",
+      "hemodynamicStability"
+    ],
+    "uncertainty": [
+      "avnrtVsAvrtUncertain"
+    ]
+  },
+  "partial": {
+    "etiology": [],
+    "context": [
+      "caffeineOrExertionTrigger",
+      "autonomicTrigger"
+    ],
+    "uncertainty": []
+  },
+  "missing": {
+    "etiology": [],
+    "context": [
+      "abruptOnset",
+      "reentrantCircuit"
+    ],
+    "uncertainty": []
+  },
+  "conceptStrengths": {
+    "etiology": {
+      "reentrantSupraventricularMechanism": 0.75,
+      "likelyAvnrtWhenSupported": 0.9
+    },
+    "context": {
+      "regularNarrowComplexTachycardia": 1.0,
+      "abruptOnset": 0.0,
+      "priorSelfTerminatingEpisodes": 0.9,
+      "caffeineOrExertionTrigger": 0.5,
+      "hemodynamicStability": 1.0,
+      "reentrantCircuit": 0.0,
+      "autonomicTrigger": 0.25
+    },
+    "uncertainty": {
+      "avnrtVsAvrtUncertain": 0.75
+    }
+  },
+  "distractorHits": [],
+  "forbiddenClaimHits": [],
+  "unsafeStatements": [],
+  "responseValidation": {
+    "status": "accepted_with_review",
+    "accepted": false,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": true,
+    "qualityReviewRequired": true,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "SUPRAVENTRICULAR_TACHYCARDIA",
+    "authoritativeDiagnosisDisplay": "Paroxysmal supraventricular tachycardia",
+    "errors": [
+      "Material measurement conflict was not acknowledged: controlled-vs-phase6-qrsDurationMs."
+    ],
+    "hardErrors": [],
+    "qualityErrors": [
+      "Material measurement conflict was not acknowledged: controlled-vs-phase6-qrsDurationMs."
+    ],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "validatorInternalConflicts": [],
+    "adjudicationEligible": true,
+    "evidenceCoverage": {
+      "rhythmEvidence": true,
+      "hemodynamicContext": true,
+      "electrolyteInterpretation": true,
+      "ischemiaInterpretation": true,
+      "infectionContext": false,
+      "qtContext": false,
+      "renalContext": false,
+      "medicationToxicityContext": false,
+      "medicationContext": false,
+      "episodePackClinicalContext": true
+    },
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 5,
+    "evidenceCoverageRequired": 1,
+    "correctionEvidence": [
+      "Use source-qualified language: 'controlled-event evidence did not support X'.",
+      "For partial electrolyte panels, name the supplied analytes instead of saying all electrolytes were normal."
+    ],
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-v4.3",
+    "groundingStatus": "accepted_with_review",
+    "clinicalPromptMode": "episode_pack_only",
+    "evidenceFingerprint": "a675913aa26190d3fc4020461fdc496f62309c605800a570859e55880985cb25",
+    "medicalAdjudication": {
+      "schemaVersion": "medical-validator-review-v2",
+      "status": "disabled",
+      "advisoryOnly": true
+    },
+    "medicalReviewRecommended": true
+  },
+  "manualClinicalReviewRequired": true,
+  "scoringMethod": "scenario answer-key concept-strength matching with word-boundary, negation-aware terminology; grounding safety evaluated separately",
+  "scopedEvidenceSchemaVersion": "slm-evidence-envelope-v4",
+  "rhythmIdentification": 20,
+  "contributingFactors": 16,
+  "recommendedActions": 0,
+  "mandatoryEmergencyActionsMissing": [],
+  "normalizedModelResponse": {
+    "episodeSummary": "A 34-year-old female with a history of similar self-terminating episodes presented with palpitations. Vitals showed a heart rate of 190 bpm, stable blood pressure (118/76 mmHg), and normal oxygen saturation (98%). ECG revealed a regular narrow-complex tachycardia with a ventricular rate of 190 bpm, no clear P waves, and no ST deviation. Electrolytes (potassium, magnesium) were within normal limits. Troponin was negative. The episode was captured and classified as stable supraventricular tachycardia.",
+    "rhythmInterpretation": "Authoritative upstream diagnosis: Paroxysmal supraventricular tachycardia. Source: SLM_Eval. The rhythm diagnosis was not generated by the SLM.",
+    "clinicalContext": "The patient experienced an episode of regular narrow-complex tachycardia (supraventricular tachycardia) characterized by a rapid heart rate (190 bpm) and hemodynamic stability. The ECG showed a regular rhythm, narrow QRS complexes, and absence of clear P waves. The event occurred after consuming caffeine.",
+    "mostLikelyEtiology": "The most likely etiology is caffeine-induced paroxysmal supraventricular tachycardia (PSVT), possibly atrioventricular nodal reentrant tachycardia (AVNRT) or atrioventricular reentrant tachycardia (AVRT), given the abrupt onset, narrow QRS morphology, and history of similar episodes.",
+    "contributingFactors": [
+      "Caffeine ingestion",
+      "History of prior similar self-terminating episodes"
+    ],
+    "recommendedImmediateActions": [],
+    "uncertaintyAndMissingData": [
+      "Specific type of SVT (e.g., AVNRT vs AVRT) cannot be definitively determined without further investigation (e.g., adenosine challenge, electrophysiology study).",
+      "No information on other potential triggers (e.g., stress, dehydration, underlying structural heart disease).",
+      "No information on prior cardiac evaluation or structural heart disease."
+    ]
+  },
+  "displayModelResponse": {
+    "episodeSummary": "A 34-year-old female with a history of similar self-terminating episodes presented with palpitations. Vitals showed a heart rate of 190 bpm, stable blood pressure (118/76 mmHg), and normal oxygen saturation (98%). ECG revealed a regular narrow-complex tachycardia with a ventricular rate of 190 bpm, no clear P waves, and no ST deviation. Electrolytes (potassium, magnesium) were within normal limits. Troponin was negative. The episode was captured and classified as stable supraventricular tachycardia.",
+    "rhythmInterpretation": "Authoritative upstream diagnosis: Paroxysmal supraventricular tachycardia. Source: SLM_Eval. The rhythm diagnosis was not generated by the SLM.",
+    "clinicalContext": "The patient experienced an episode of regular narrow-complex tachycardia (supraventricular tachycardia) characterized by a rapid heart rate (190 bpm) and hemodynamic stability. The ECG showed a regular rhythm, narrow QRS complexes, and absence of clear P waves. The event occurred after consuming caffeine.",
+    "mostLikelyEtiology": "The most likely etiology is caffeine-induced paroxysmal supraventricular tachycardia (PSVT), possibly atrioventricular nodal reentrant tachycardia (AVNRT) or atrioventricular reentrant tachycardia (AVRT), given the abrupt onset, narrow QRS morphology, and history of similar episodes.",
+    "contributingFactors": [
+      "Caffeine ingestion",
+      "History of prior similar self-terminating episodes"
+    ],
+    "recommendedImmediateActions": [],
+    "uncertaintyAndMissingData": [
+      "Specific type of SVT (e.g., AVNRT vs AVRT) cannot be definitively determined without further investigation (e.g., adenosine challenge, electrophysiology study).",
+      "No information on other potential triggers (e.g., stress, dehydration, underlying structural heart disease).",
+      "No information on prior cardiac evaluation or structural heart disease."
+    ]
+  },
+  "cardinalResponseFile": "cardinal_model_response.json",
+  "diagnosticEvent": {
+    "schemaVersion": "diagnostic-event-universal-v2",
+    "eventDetected": true,
+    "episodeId": "evalflow-SVT-PSVT-007-20260731-191646-4d8420",
+    "incidentId": "inc-INCART-EVAL-SVT-PSVT-007-loop-1-supraventricular-tachycardia-000001584-BhI6IwRTha4r0XzM",
+    "diagnosis": {
+      "code": "SUPRAVENTRICULAR_TACHYCARDIA",
+      "display": "Paroxysmal supraventricular tachycardia",
+      "authoritative": true
+    },
+    "source": {
+      "type": "controlled_evaluation_scenario",
+      "name": "SLM_Eval",
+      "identifier": "SVT-PSVT-007",
+      "futureReplacement": "ecg_ml_diagnostic_model"
+    },
+    "confidence": {
+      "value": 1.0,
+      "basis": "controlled_evaluation_label"
+    },
+    "measurements": {
+      "ventricularRateBpm": 190.0,
+      "atrialRateBpm": 190.0,
+      "qrsDurationMs": 88.0,
+      "qtcMs": 400.0,
+      "prIntervalMs": null,
+      "regularity": "regular",
+      "axisDegrees": 60.0,
+      "pWavePresent": false,
+      "atrialActivityPresent": true,
+      "atrioventricularAssociation": null
+    },
+    "rhythmFeatures": {
+      "ventricularRateBpm": 190.0,
+      "atrialRateBpm": 190.0,
+      "qrsDurationMs": 88.0,
+      "qtcMs": 400.0,
+      "qtcEvidenceSource": "complete_episode_pack.ecg.measurements.qtcMs",
+      "prIntervalMs": null,
+      "regularity": "regular",
+      "axisDegrees": 60.0,
+      "pWavePresent": false,
+      "atrialActivityPresent": true,
+      "atrioventricularAssociation": null,
+      "findings": [
+        "Narrow QRS"
+      ]
+    },
+    "hemodynamicStatus": {
+      "available": true,
+      "classification": "stable",
+      "conscious": null,
+      "pulseless": null,
+      "pulsePresent": null,
+      "shockSupported": null,
+      "vasopressorSupport": null,
+      "systolicBloodPressure": 118.0,
+      "diastolicBloodPressure": 76.0,
+      "map": 90.0,
+      "oxygenSaturationPct": 98.0,
+      "temperatureC": 36.8,
+      "sourceNote": "Stable"
+    },
+    "electrolyteContext": {
+      "available": true,
+      "potassium": {
+        "available": true,
+        "value": 4.0,
+        "unit": "mmol/L",
+        "withinReference": true,
+        "reference": {
+          "low": 3.5,
+          "high": 5.1
+        },
+        "note": ""
+      },
+      "magnesium": {
+        "available": true,
+        "value": 2.0,
+        "unit": "mg/dL",
+        "withinReference": true,
+        "reference": {
+          "low": 1.7,
+          "high": 2.2
+        },
+        "note": ""
+      },
+      "calcium": {
+        "available": false,
+        "value": null,
+        "unit": null,
+        "withinReference": null,
+        "reference": null
+      },
+      "sodium": {
+        "available": false,
+        "value": null,
+        "unit": null,
+        "withinReference": null,
+        "reference": null
+      },
+      "abnormalElectrolytes": [],
+      "electrolyteAbnormalityPresent": false,
+      "majorElectrolyteTriggerSupported": false
+    },
+    "ischemiaContext": {
+      "available": true,
+      "acuteChestPain": false,
+      "stElevationSupported": null,
+      "troponinValue": 0.01,
+      "troponinPattern": "measured_unspecified_pattern",
+      "acuteStemiSupported": false
+    },
+    "infectionContext": {
+      "available": true,
+      "temperatureC": 36.8,
+      "wbc": null,
+      "procalcitonin": null,
+      "lactate": null,
+      "feverSupported": null,
+      "inflammatoryResponseSupported": null,
+      "infectionSupported": null,
+      "sepsisSupported": null,
+      "infectionExplicitlyDenied": null,
+      "suspectedSource": null
+    },
+    "qtContext": {
+      "available": true,
+      "qtcMs": 400.0,
+      "prolonged": false,
+      "thresholdMs": 500,
+      "qtProlongingMedications": [],
+      "acquiredLongQtSupported": false,
+      "evidenceSource": "complete_episode_pack.ecg.measurements.qtcMs"
+    },
+    "renalContext": {
+      "available": false,
+      "creatinine": null,
+      "bun": null,
+      "egfr": null,
+      "esrd": null,
+      "dialysis": null,
+      "missedDialysis": null,
+      "chronicKidneyDiseaseSupported": null,
+      "acuteKidneyInjurySupported": null,
+      "renalImpairmentSupported": null,
+      "sourceTextContainsRenalImpairment": null
+    },
+    "medicationContext": {
+      "available": true,
+      "homeMedications": [
+        "None"
+      ],
+      "activeMedications": [
+        "None"
+      ],
+      "infusions": [],
+      "qtProlongingMedications": [],
+      "digoxinExposure": false,
+      "potassiumRaisingMedicationExposure": false,
+      "thiazideExposure": false
+    },
+    "toxicityContext": {
+      "available": true,
+      "digoxinLevel": null,
+      "symptoms": [],
+      "digoxinToxicitySupported": false,
+      "reducedClearanceSupported": false
+    },
+    "patientContext": {
+      "available": true,
+      "age": 34,
+      "sex": "F",
+      "primaryDiagnosis": "Palpitations",
+      "history": [
+        "Prior similar episodes self-terminating",
+        "Otherwise healthy"
+      ],
+      "leftVentricularEjectionFraction": null,
+      "priorAtrialFibrillation": null
+    },
+    "structuralHeartContext": {
+      "available": false,
+      "findings": [],
+      "lvefPct": null,
+      "severeLvDysfunction": null
+    },
+    "laboratoryContext": {
+      "potassium": {
+        "value": 4.0,
+        "unit": "mmol/L",
+        "reference": "3.5–5.1",
+        "flag": ""
+      },
+      "magnesium": {
+        "value": 2.0,
+        "unit": "mg/dL",
+        "reference": "1.7–2.2",
+        "flag": ""
+      },
+      "tsh": {
+        "value": 2.2,
+        "unit": "mIU/L",
+        "reference": "0.4–4.0",
+        "flag": ""
+      },
+      "hemoglobin": {
+        "value": 13.4,
+        "unit": "g/dL",
+        "reference": "12–16",
+        "flag": ""
+      },
+      "troponinT": {
+        "value": 0.01,
+        "unit": "ng/mL",
+        "reference": "<0.014",
+        "flag": ""
+      }
+    },
+    "recentClinicalContext": {
+      "recentEvents": [
+        "Two cups of coffee, then sudden palpitations",
+        "No chest pain or syncope",
+        "History of self-terminating SVT"
+      ]
+    },
+    "pairedOraclePatientContext": {
+      "available": false,
+      "sourceType": "oracle_smart_fhir"
+    },
+    "detector": {
+      "ruleId": "multilead-waveform-change-v1",
+      "estimatedRateBpm": 190.0,
+      "triggerLatencySeconds": 1.2,
+      "referenceOnsetOffsetSeconds": 6.0,
+      "detectedTriggerOffsetSeconds": 7.2
+    },
+    "capture": {
+      "durationSeconds": 20.0,
+      "preSeconds": 6.0,
+      "eventSeconds": 8.0,
+      "postSeconds": 6.0,
+      "complete": true,
+      "sampleRateHz": 220.0,
+      "leads": [
+        "I",
+        "II",
+        "III",
+        "aVR",
+        "aVL",
+        "aVF"
+      ]
+    },
+    "provenance": {
+      "isIndependentDiagnosis": false,
+      "evaluationControlled": true,
+      "diagnosisOwnedByUpstreamSource": true,
+      "timingOwnedByDeterministicDetector": true,
+      "slmMayReclassify": false
+    }
+  },
+  "rhythmIdentificationSource": "authoritative_diagnostic_event",
+  "scoreApplicability": "scenario_evaluation",
+  "clinicalPatientScoreApplicable": true,
+  "displayInClinicalWidget": true,
+  "displayPolicy": "always_show_model_response",
+  "evidenceSchemaVersion": "slm-evidence-envelope-v4",
+  "evidenceConsistencyReview": {
+    "schemaVersion": "evidence-consistency-review-v1",
+    "status": "consistent",
+    "scenarioId": "SVT-PSVT-007",
+    "hardConflicts": [],
+    "warnings": [],
+    "normalizationsApplied": [],
+    "qualifiedMeasurementConflictCount": 1
+  },
+  "generationAttempted": true,
+  "validContract": true,
+  "reliability": {
+    "attemptCount": 1,
+    "firstAttemptAccepted": true,
+    "firstAttemptStrictlyAccepted": false,
+    "firstAttemptDisplayableWithReview": true,
+    "firstAttemptErrors": [
+      "Material measurement conflict was not acknowledged: controlled-vs-phase6-qrsDurationMs."
+    ],
+    "finalAttemptAccepted": true,
+    "finalAttemptStrictlyAccepted": false,
+    "finalAttemptDisplayableWithReview": true,
+    "retryReasonCount": 0,
+    "contradictionCount": 0,
+    "unsupportedFactCount": 0,
+    "evidenceCoverageCount": 5,
+    "evidenceCoverageRequired": 1
+  },
+  "attemptCount": 1,
+  "firstAttemptAccepted": true,
+  "firstAttemptStrictlyAccepted": false,
+  "firstAttemptDisplayableWithReview": true,
+  "firstAttemptErrors": [
+    "Material measurement conflict was not acknowledged: controlled-vs-phase6-qrsDurationMs."
+  ],
+  "finalAttemptAccepted": true,
+  "finalAttemptStrictlyAccepted": false,
+  "finalAttemptDisplayableWithReview": true,
+  "retryReasonCount": 0,
+  "contradictionCount": 0,
+  "unsupportedFactCount": 0,
+  "evidenceCoverageCount": 5,
+  "evidenceCoverageRequired": 1
+}
