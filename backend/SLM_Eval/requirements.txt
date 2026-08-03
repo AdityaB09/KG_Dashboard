@@ -1,0 +1,4 @@
+# Test dependencies for the CARDINAL SLM-eval dataset
+pytest>=7.0
+# (data generation additionally requires: numpy)
+numpy>=1.23

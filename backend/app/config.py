@@ -315,6 +315,132 @@ class Settings:
         "yes",
         "on",
     }
+    ENABLE_SLM_EVAL = os.getenv(
+    "ENABLE_SLM_EVAL",
+    "false",
+).strip().lower() in {
+    "1",
+    "true",
+    "yes",
+    "on",
+}
 
+    SLM_EVAL_DATASET_ROOT = os.getenv(
+        "SLM_EVAL_DATASET_ROOT",
+        "SLM_Eval",
+    ).strip()
+
+    SLM_EVAL_RESULTS_PATH = os.getenv(
+        "SLM_EVAL_RESULTS_PATH",
+        "data/evaluation_runs",
+    ).strip()
+
+    SLM_EVAL_ALLOW_MODEL = os.getenv(
+        "SLM_EVAL_ALLOW_MODEL",
+        "false",
+    ).strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
+
+
+    # Optional INCART evaluation-injection demo.
+    # Disabled by default so the existing stream is unchanged.
+    EVALUATION_INJECTION_ENABLED = os.getenv(
+        "EVALUATION_INJECTION_ENABLED",
+        "false",
+    ).strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
+
+    EVALUATION_INJECTION_DATASET_ROOT = os.getenv(
+        "EVALUATION_INJECTION_DATASET_ROOT",
+        SLM_EVAL_DATASET_ROOT,
+    ).strip()
+
+    EVALUATION_INJECTION_ALLOWED_SCENARIOS = [
+        item.strip()
+        for item in os.getenv(
+            "EVALUATION_INJECTION_ALLOWED_SCENARIOS",
+            "VT-ISCHEMIC-003",
+        ).split(",")
+        if item.strip()
+    ]
+
+    EVALUATION_INJECTION_BASELINE_SECONDS = float(
+        os.getenv(
+            "EVALUATION_INJECTION_BASELINE_SECONDS",
+            "10",
+        )
+    )
+
+    EVALUATION_INJECTION_PRE_SECONDS = float(
+        os.getenv(
+            "EVALUATION_INJECTION_PRE_SECONDS",
+            "6",
+        )
+    )
+
+    EVALUATION_INJECTION_POST_SECONDS = float(
+        os.getenv(
+            "EVALUATION_INJECTION_POST_SECONDS",
+            "6",
+        )
+    )
+
+    EVALUATION_INJECTION_DETECTOR_HOLD_SECONDS = float(
+        os.getenv(
+            "EVALUATION_INJECTION_DETECTOR_HOLD_SECONDS",
+            "1.2",
+        )
+    )
+
+    EVALUATION_INJECTION_VT_RATE_THRESHOLD = float(
+        os.getenv(
+            "EVALUATION_INJECTION_VT_RATE_THRESHOLD",
+            "150",
+        )
+    )
+
+    EVALUATION_INJECTION_QRS_THRESHOLD_MS = float(
+        os.getenv(
+            "EVALUATION_INJECTION_QRS_THRESHOLD_MS",
+            "120",
+        )
+    )
+
+
+    # Automatic Oracle SMART -> INCART evaluation presentation flow.
+    ORACLE_EVALUATION_DEMO_ENABLED = os.getenv(
+        "ORACLE_EVALUATION_DEMO_ENABLED",
+        "false",
+    ).strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
+
+    ORACLE_EVALUATION_DEMO_MAP_PATH = os.getenv(
+        "ORACLE_EVALUATION_DEMO_MAP_PATH",
+        "app/evaluation_demo/patient_scenario_map.json",
+    ).strip()
+
+    # Keep this false for controlled presentations. An unmapped patient then
+    # produces an explicit configuration error instead of an unsupported guess.
+    ORACLE_EVALUATION_DEMO_ALLOW_DEFAULT_SCENARIO = os.getenv(
+        "ORACLE_EVALUATION_DEMO_ALLOW_DEFAULT_SCENARIO",
+        "false",
+    ).strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
 
 settings = Settings()

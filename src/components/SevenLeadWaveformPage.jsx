@@ -1,16 +1,72 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import WebGLWaveformCanvas from "./WebGLWaveformCanvas";
-import { connectWaveformStream } from "../services/waveformStream";
+import {
+  connectWaveformStream,
+  getWaveformSessionId,
+} from "../services/waveformStream";
 import "./SevenLeadWaveformPage.css";
 import {
   connectEpisodeEvents,
   getLatestEpisode,
 } from "../services/episodeService";
+import {
+  getEvaluationEpisode,
+  getEvaluationHealth,
+  getLatestCompletedEvaluationRun,
+  listEvaluationEpisodes,
+  runEvaluationSlm,
+} from "../evaluation/evaluationApi";
+import {
+  adaptEvaluationEpisode,
+} from "../evaluation/evaluationAdapter";
+import {
+  createEvaluationPlayback,
+} from "../evaluation/evaluationPlayback";
+import {
+  armEvaluationInjection,
+  cancelEvaluationInjection,
+  listEvaluationInjectionScenarios,
+} from "../evaluation/evaluationInjectionApi";
+import {
+  startOracleEvaluationDemo,
+} from "../evaluation/oracleEvaluationDemo";
+
 const ECG_PAPER_SPEED_MM_PER_SEC = 25;
 const DEFAULT_VISIBLE_SECONDS = 3;
 const DEFAULT_GAIN_MM_PER_MV = 10;
 const DEFAULT_GAIN_MODE = "auto";
+const EVALUATION_ENABLED =
+  import.meta.env
+    .VITE_ENABLE_SLM_EVAL ===
+  "true";
 
+const EVALUATION_BASE_SOURCE = (
+  import.meta.env
+    .VITE_EVALUATION_BASE_WAVEFORM_SOURCE ||
+  "api_range"
+)
+  .trim()
+  .toLowerCase()
+  .replace("-", "_");
+
+const API_RANGE_EPISODE_SOURCE =
+  "api_range_episode";
+
+const EPISODE_SOURCE_LABEL =
+  EVALUATION_BASE_SOURCE === "incart"
+    ? "INCART + Episode"
+    : "API Range + Episode";
+
+function backendWaveformSource(
+  source
+) {
+  return (
+    source ===
+    API_RANGE_EPISODE_SOURCE
+      ? EVALUATION_BASE_SOURCE
+      : source
+  );
+}
 /*
   Calibrated display gain ladder.
 
@@ -30,10 +86,36 @@ const ECG_GAIN_OPTIONS = [
 ];
 
 const WAVEFORM_SOURCES = [
-  { id: "physionet", label: "PhysioNet" },
-  { id: "csv", label: "CSV" },
-  { id: "api_range", label: "API Range" },
-  { id: "incart", label: "INCART" },
+  {
+    id: "physionet",
+    label: "PhysioNet",
+  },
+  {
+    id: "csv",
+    label: "CSV",
+  },
+  {
+    id: "api_range",
+    label: "API Range",
+  },
+
+  ...(
+    EVALUATION_ENABLED
+      ? [
+          {
+            id:
+              API_RANGE_EPISODE_SOURCE,
+            label:
+              EPISODE_SOURCE_LABEL,
+          },
+        ]
+      : []
+  ),
+
+  {
+    id: "incart",
+    label: "INCART",
+  },
 ];
 const ECG_ZERO_MV = 0;
 
@@ -356,7 +438,15 @@ function getZeroLineTopPercent() {
 
 
 
-export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
+export default function SevenLeadWaveformPage({
+  patient,
+  onOpenAnalytics,
+  evaluationDemo,
+  onEvaluationChange,
+  onEvaluationAnalysisComplete,
+  oracleAutoDemo,
+  onOracleAutoDemoChange,
+}) {
   const [waveFrame, setWaveFrame] = useState(() =>
   createEmptyFrame("incart")
 );
@@ -364,6 +454,94 @@ export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
   const [streamStatus, setStreamStatus] = useState("connecting");
   const [waveformSource, setWaveformSource] =
   useState("incart");
+  const [
+  sourceBeforeEvaluation,
+  setSourceBeforeEvaluation,
+] = useState("incart");
+
+  const waveformSessionIdRef =
+    useRef(
+      getWaveformSessionId()
+    );
+
+  const autoOracleStartIssuedRef =
+    useRef(false);
+
+  const [
+    injectionControlsOpen,
+    setInjectionControlsOpen,
+  ] = useState(false);
+
+  const [
+    injectionScenarioId,
+    setInjectionScenarioId,
+  ] = useState(
+    "VT-ISCHEMIC-003"
+  );
+
+  const [
+    injectionStatus,
+    setInjectionStatus,
+  ] = useState({
+    state: "IDLE",
+  });
+
+  const [
+    injectionScenarios,
+    setInjectionScenarios,
+  ] = useState([]);
+
+  const [
+    injectionScenariosLoading,
+    setInjectionScenariosLoading,
+  ] = useState(false);
+
+  const [
+    injectionError,
+    setInjectionError,
+  ] = useState("");
+
+  const [
+    evaluationEpisodes,
+    setEvaluationEpisodes,
+  ] = useState([]);
+
+  const [
+    selectedEvaluationId,
+    setSelectedEvaluationId,
+  ] = useState("");
+
+  const [
+    evaluationLoading,
+    setEvaluationLoading,
+  ] = useState(false);
+
+  const [
+    evaluationPlaying,
+    setEvaluationPlaying,
+  ] = useState(false);
+
+  const [
+    evaluationError,
+    setEvaluationError,
+  ] = useState("");
+
+  const [
+    evaluationAnalysisStatus,
+    setEvaluationAnalysisStatus,
+  ] = useState("idle");
+
+  const evaluationPlaybackRef =
+    useRef(null);
+
+
+
+  const selectedEvaluationIdRef =
+    useRef("");
+
+  const evaluationRunRequestsRef =
+    useRef(new Map());
+
   const [
   latestEpisodeId,
   setLatestEpisodeId,
@@ -381,30 +559,775 @@ export default function SevenLeadWaveformPage({ patient, onOpenAnalytics }) {
 
   const gridRef = useRef(null);
 
-  function changeWaveformSource(nextSource) {
-  if (nextSource === waveformSource) return;
+  useEffect(() => {
+    if (!oracleAutoDemo?.enabled) {
+      autoOracleStartIssuedRef.current = false;
+      return;
+    }
 
-  setStreamStatus("connecting");
-  setWaveFrame(createEmptyFrame(nextSource));
-  setLeadWindows(createEmptyLeads());
+    if (
+      waveformSource !==
+      API_RANGE_EPISODE_SOURCE
+    ) {
+      changeWaveformSource(
+        API_RANGE_EPISODE_SOURCE
+      );
+    }
+  }, [oracleAutoDemo?.enabled]);
 
-  setLeadAutoGains(
-    Object.fromEntries(
-      LEADS.map((lead) => [
-        lead.id,
-        DEFAULT_GAIN_MM_PER_MV,
-      ])
+  useEffect(() => {
+    if (
+      !oracleAutoDemo?.enabled ||
+      oracleAutoDemo?.status !== "ready" ||
+      waveformSource !==
+        API_RANGE_EPISODE_SOURCE ||
+      streamStatus !== "live" ||
+      autoOracleStartIssuedRef.current
+    ) {
+      return;
+    }
+
+    autoOracleStartIssuedRef.current = true;
+    setInjectionError("");
+    onOracleAutoDemoChange?.({ status: "arming" });
+
+    startOracleEvaluationDemo(
+      waveformSessionIdRef.current
     )
-  );
+      .then((result) => {
+        setInjectionStatus(result);
 
-  setWaveformSource(nextSource);
+        const state = String(
+          result?.state || ""
+        ).toUpperCase();
+
+        onOracleAutoDemoChange?.({
+          status:
+            state === "COMPLETE"
+              ? "complete"
+              : ["FAILED", "CANCELLED"].includes(state)
+              ? "error"
+              : "running",
+          result,
+        });
+      })
+      .catch((error) => {
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Automatic Oracle evaluation could not start.";
+
+        setInjectionError(message);
+        onOracleAutoDemoChange?.({
+          status: "error",
+          error: message,
+        });
+      });
+  }, [
+    oracleAutoDemo?.enabled,
+    oracleAutoDemo?.status,
+    waveformSource,
+    streamStatus,
+    onOracleAutoDemoChange,
+  ]);
+
+  useEffect(() => {
+    if (!EVALUATION_ENABLED) {
+      return undefined;
+    }
+
+    let active = true;
+    setInjectionScenariosLoading(true);
+
+    listEvaluationInjectionScenarios()
+      .then((payload) => {
+        if (!active) return;
+
+        const scenarios = Array.isArray(payload?.scenarios)
+          ? payload.scenarios.filter((item) => item?.available !== false)
+          : [];
+
+        setInjectionScenarios(scenarios);
+        setInjectionScenarioId((current) => {
+          if (scenarios.some((item) => item.scenarioId === current)) {
+            return current;
+          }
+
+          return scenarios[0]?.scenarioId || "";
+        });
+      })
+      .catch((error) => {
+        if (!active) return;
+
+        console.error(
+          "[KGEN EVAL INJECTION SCENARIOS]",
+          error
+        );
+
+        setInjectionScenarios([]);
+        setInjectionScenarioId("");
+        setInjectionError(
+          error instanceof Error
+            ? error.message
+            : "Could not load evaluation scenarios."
+        );
+      })
+      .finally(() => {
+        if (active) {
+          setInjectionScenariosLoading(false);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  async function armApiRangeEvaluation() {
+    if (
+      waveformSource !==
+      API_RANGE_EPISODE_SOURCE
+    ) {
+      setInjectionError(
+        `Select ${EPISODE_SOURCE_LABEL} before starting the mapped episode.`
+      );
+      return;
+    }
+
+    setInjectionError("");
+
+    try {
+      const result =
+        await armEvaluationInjection(
+          waveformSessionIdRef.current,
+          {
+            scenarioId:
+              injectionScenarioId,
+            baselineSeconds: 10,
+            preSeconds: 6,
+            postSeconds: 6,
+            runSlm: true,
+          }
+        );
+
+      setInjectionStatus(
+        result
+      );
+
+      console.info(
+        "[KGEN EVAL INJECTION UI] armed",
+        result
+      );
+    } catch (error) {
+      console.error(
+        "[KGEN EVAL INJECTION UI] arm failed",
+        error
+      );
+
+      setInjectionError(
+        error instanceof Error
+          ? error.message
+          : "Could not arm evaluation injection."
+      );
+    }
+  }
+
+  async function cancelApiRangeEvaluation() {
+    try {
+      const result =
+        await cancelEvaluationInjection(
+          waveformSessionIdRef.current
+        );
+
+      setInjectionStatus(
+        result
+      );
+
+      setInjectionControlsOpen(
+        false
+      );
+    } catch (error) {
+      setInjectionError(
+        error instanceof Error
+          ? error.message
+          : "Could not cancel evaluation injection."
+      );
+    }
+  }
+
+  function clearEvaluationState() {
+    evaluationPlaybackRef.current?.stop();
+    evaluationPlaybackRef.current = null;
+
+   
+
+ 
+    selectedEvaluationIdRef.current = "";
+
+    setSelectedEvaluationId("");
+    setEvaluationPlaying(false);
+    setEvaluationLoading(false);
+    setEvaluationError("");
+    setEvaluationAnalysisStatus("idle");
+
+    onEvaluationChange?.({
+      active: false,
+      episodeId: null,
+      episode: null,
+      run: null,
+      capture: null,
+    });
+  }
+
+  function changeWaveformSource(nextSource) {
+    if (nextSource === waveformSource) {
+      return;
+    }
+
+    if (nextSource === "evaluation") {
+      if (!EVALUATION_ENABLED) {
+        return;
+      }
+
+      setSourceBeforeEvaluation(
+        waveformSource
+      );
+
+      evaluationPlaybackRef.current?.stop();
+      evaluationPlaybackRef.current = null;
+
+      setSelectedEvaluationId("");
+      setEvaluationPlaying(false);
+      setEvaluationError("");
+      setStreamStatus("evaluation");
+      setWaveFrame(
+        createEmptyFrame(
+          "cardinal-evaluation"
+        )
+      );
+      setLeadWindows(
+        createEmptyLeads()
+      );
+      setWaveformSource(
+        "evaluation"
+      );
+
+      onEvaluationChange?.({
+        active: true,
+        episodeId: null,
+        episode: null,
+        run: null,
+        capture: null,
+      });
+
+      return;
+    }
+
+    if (
+      waveformSource === "evaluation"
+    ) {
+      clearEvaluationState();
+    }
+
+    setStreamStatus("connecting");
+    setWaveFrame(
+      createEmptyFrame(nextSource)
+    );
+    setLeadWindows(
+      createEmptyLeads()
+    );
+
+    setLeadAutoGains(
+      Object.fromEntries(
+        LEADS.map((lead) => [
+          lead.id,
+          DEFAULT_GAIN_MM_PER_MV,
+        ])
+      )
+    );
+
+    setWaveformSource(nextSource);
+  }
+
+  function handleEvaluationFrame(
+    frame
+  ) {
+    setWaveFrame(frame);
+    setLeadWindows(
+      frame.leadsMv || {}
+    );
+    setStreamStatus(
+      "evaluation"
+    );
+  }
+
+  async function resolveEvaluationAnalysis(
+    episodeId,
+    adaptedEpisode,
+    evaluationCapture
+  ) {
+    if (!episodeId) {
+      return null;
+    }
+
+    const existingRequest =
+      evaluationRunRequestsRef.current.get(
+        episodeId
+      );
+
+    if (existingRequest) {
+      console.info(
+        "[KGEN EVAL UI] reusing in-flight analysis",
+        { episodeId }
+      );
+      return existingRequest;
+    }
+
+    const request = (async () => {
+      const startedAt = performance.now();
+
+      try {
+        setEvaluationAnalysisStatus(
+          "checking"
+        );
+
+        console.info(
+          "[KGEN EVAL UI] checking saved result",
+          { episodeId }
+        );
+
+        const health =
+          await getEvaluationHealth();
+
+        const configuredModel =
+          health?.configuredModel ||
+          null;
+
+        console.info(
+          "[KGEN EVAL UI] configured model resolved",
+          {
+            episodeId,
+            configuredModel,
+          }
+        );
+
+        let run =
+          await getLatestCompletedEvaluationRun(
+            episodeId,
+            configuredModel
+          ).catch(() => null);
+
+        let source = "saved";
+
+        if (!run) {
+          source = "generated";
+          setEvaluationAnalysisStatus(
+            "running"
+          );
+
+          console.info(
+            "[KGEN EVAL UI] no saved result; starting configured SLM",
+            {
+              episodeId,
+              modelSelection:
+                configuredModel ||
+                "backend SLM_MODEL",
+            }
+          );
+
+          // model is intentionally omitted. The backend uses
+          // the model currently selected in SLM_MODEL.
+          run = await runEvaluationSlm(
+            episodeId,
+            { temperature: 0 }
+          );
+        } else {
+          console.info(
+            "[KGEN EVAL UI] saved analysis loaded",
+            {
+              episodeId,
+              runId: run.runId,
+              model: run.model?.name,
+              score: run.score?.total,
+            }
+          );
+        }
+
+        if (
+          selectedEvaluationIdRef.current ===
+          episodeId
+        ) {
+          onEvaluationChange?.({
+            active: true,
+            episodeId,
+            episode: adaptedEpisode,
+            run,
+            capture: evaluationCapture,
+          });
+
+          setEvaluationAnalysisStatus(
+            "ready"
+          );
+        }
+
+        const elapsedMs = Math.round(
+          performance.now() - startedAt
+        );
+
+        console.info(
+          "[KGEN EVAL UI] analysis ready",
+          {
+            episodeId,
+            source,
+            runId: run?.runId,
+            model: run?.model?.name,
+            score: run?.score?.total,
+            safetyPass: run?.score?.safetyPass,
+            elapsedMs,
+          }
+        );
+
+        onEvaluationAnalysisComplete?.({
+          mode: "evaluation",
+          status: "ready",
+          title: "Evaluation analysis completed",
+          message: [
+            episodeId,
+            run?.model?.name ||
+              "configured model",
+            run?.score?.total != null
+              ? `score ${run.score.total}/100`
+              : null,
+            run?.score?.safetyPass != null
+              ? `safety ${
+                  run.score.safetyPass
+                    ? "PASS"
+                    : "FAIL"
+                }`
+              : null,
+          ]
+            .filter(Boolean)
+            .join(" • "),
+          episodeId,
+          runId: run?.runId || null,
+          source,
+        });
+
+        return run;
+      } catch (error) {
+        console.error(
+          "[KGEN EVAL UI] analysis failed",
+          { episodeId, error }
+        );
+
+        if (
+          selectedEvaluationIdRef.current ===
+          episodeId
+        ) {
+          setEvaluationAnalysisStatus(
+            "error"
+          );
+          setEvaluationError(
+            error instanceof Error
+              ? error.message
+              : "Evaluation analysis failed."
+          );
+        }
+
+        return null;
+      } finally {
+        evaluationRunRequestsRef.current.delete(
+          episodeId
+        );
+      }
+    })();
+
+    evaluationRunRequestsRef.current.set(
+      episodeId,
+      request
+    );
+
+    return request;
+  }
+
+  async function loadEvaluationEpisode(
+    episodeId
+  ) {
+    setSelectedEvaluationId(
+      episodeId
+    );
+    selectedEvaluationIdRef.current =
+      episodeId;
+
+   
+
+    evaluationPlaybackRef.current?.stop();
+    evaluationPlaybackRef.current = null;
+    setEvaluationPlaying(false);
+
+    if (!episodeId) {
+      setWaveFrame(
+        createEmptyFrame(
+          "cardinal-evaluation"
+        )
+      );
+      setLeadWindows(
+        createEmptyLeads()
+      );
+
+      onEvaluationChange?.({
+        active: true,
+        episodeId: null,
+        episode: null,
+        run: null,
+        capture: null,
+      });
+
+      return;
+    }
+
+    setEvaluationLoading(true);
+    setEvaluationError("");
+    setStreamStatus("connecting");
+
+    try {
+      console.info(
+        "[KGEN EVAL UI] loading episode",
+        { episodeId }
+      );
+
+      const record =
+        await getEvaluationEpisode(
+          episodeId
+        );
+
+      const adaptedEpisode =
+        adaptEvaluationEpisode(
+          record
+        );
+const evaluationDurationSeconds =
+  Number(
+    adaptedEpisode
+      ?.ecg
+      ?.durationSeconds
+  ) || 8;
+
+const evaluationCapture = {
+  mode:
+    "scenario_reference",
+
+  referenceOnsetSeconds:
+    0,
+
+  referenceEndSeconds:
+    evaluationDurationSeconds,
+
+  triggerAnnotations:
+    [],
+};
+      onEvaluationChange?.({
+        active: true,
+        episodeId,
+        episode:
+          adaptedEpisode,
+        run: null,
+        capture: evaluationCapture,
+      });
+
+      const playback =
+  createEvaluationPlayback({
+    episode:
+      adaptedEpisode,
+
+    cyclic: true,
+
+    onFrame:
+      handleEvaluationFrame,
+
+    onStateChange: ({
+      playing,
+    }) => {
+      setEvaluationPlaying(
+        Boolean(playing)
+      );
+
+      setStreamStatus(
+        "evaluation"
+      );
+    },
+
+    onCycle: ({
+      cycleCount,
+    }) => {
+      console.info(
+        "[KGEN EVAL UI] cyclic waveform cycle completed",
+        {
+          episodeId,
+          cycleCount,
+        }
+      );
+    },
+  });
+
+      evaluationPlaybackRef.current =
+        playback;
+
+      playback.restart({
+        autoPlay: true,
+      });
+
+      setEvaluationAnalysisStatus(
+        "checking"
+      );
+
+      void resolveEvaluationAnalysis(
+        episodeId,
+        adaptedEpisode,
+        evaluationCapture
+      );
+    } catch (error) {
+      console.error(
+        "[KGEN EVALUATION LOAD ERROR]",
+        error
+      );
+
+      setEvaluationError(
+        error instanceof Error
+          ? error.message
+          : "Could not load the evaluation episode."
+      );
+
+      setStreamStatus(
+        "warning"
+      );
+    } finally {
+      setEvaluationLoading(
+        false
+      );
+    }
+  }
+
+ function toggleEvaluationPlayback() {
+  if (
+    !evaluationPlaybackRef.current ||
+    !evaluationDemo?.episode
+  ) {
+    return;
+  }
+
+  if (evaluationPlaying) {
+    evaluationPlaybackRef.current.pause();
+
+    console.info(
+      "[KGEN EVAL UI] cyclic playback paused",
+      {
+        episodeId:
+          selectedEvaluationIdRef.current,
+      }
+    );
+
+    return;
+  }
+
+  evaluationPlaybackRef.current.play();
+
+  console.info(
+    "[KGEN EVAL UI] cyclic playback resumed",
+    {
+      episodeId:
+        selectedEvaluationIdRef.current,
+    }
+  );
 }
+
+  useEffect(() => {
+    if (
+      waveformSource !== "evaluation"
+    ) {
+      return undefined;
+    }
+
+    let active = true;
+
+    setEvaluationLoading(true);
+    setEvaluationError("");
+
+    listEvaluationEpisodes()
+      .then((manifest) => {
+        if (!active) {
+          return;
+        }
+
+        setEvaluationEpisodes(
+          Array.isArray(
+            manifest?.episodes
+          )
+            ? manifest.episodes
+            : []
+        );
+      })
+      .catch((error) => {
+        if (!active) {
+          return;
+        }
+
+        console.error(
+          "[KGEN EVALUATION LIST ERROR]",
+          error
+        );
+
+        setEvaluationError(
+          error instanceof Error
+            ? error.message
+            : "Could not load evaluation episodes."
+        );
+
+        setStreamStatus(
+          "warning"
+        );
+      })
+      .finally(() => {
+        if (active) {
+          setEvaluationLoading(
+            false
+          );
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [waveformSource]);
+
+  useEffect(() => {
+    return () => {
+      evaluationPlaybackRef.current?.stop();
+
+      
+    };
+  }, []);
 
 useEffect(() => {
   let active = true;
 
+  if (
+  waveformSource ===
+  "evaluation"
+) {
+  return undefined;
+}
+
+  const streamSource =
+    backendWaveformSource(
+      waveformSource
+    );
+
   setStreamStatus("connecting");
-  setWaveFrame(createEmptyFrame(waveformSource));
+  setWaveFrame(
+    createEmptyFrame(
+      streamSource
+    )
+  );
   setLeadWindows(createEmptyLeads());
 
   setLeadAutoGains(
@@ -417,12 +1340,28 @@ useEffect(() => {
   );
 
   const disconnectWaveforms = connectWaveformStream({
-    source: waveformSource,
+    source: streamSource,
+    sessionId:
+      waveformSessionIdRef.current,
 
     onFrame: (frame) => {
       if (!active) return;
 
       setWaveFrame(frame);
+
+      if (
+        frame.evaluationInjection
+      ) {
+        setInjectionStatus(
+          frame.evaluationInjection
+        );
+
+        setInjectionError(
+          frame.evaluationInjection
+            .error ||
+          ""
+        );
+      }
 
       setLeadWindows((previous) =>
         appendLeadWindows(previous, frame)
@@ -462,6 +1401,42 @@ useEffect(() => {
 
   const disconnect = connectEpisodeEvents({
     onEvent: (event) => {
+      if (
+        active &&
+        String(
+          event.type || ""
+        ).startsWith(
+          "evaluation.injection."
+        ) &&
+        event.sessionId ===
+          waveformSessionIdRef.current
+      ) {
+        setInjectionStatus(
+          event
+        );
+
+        if (
+          event.type ===
+          "evaluation.injection.complete"
+        ) {
+          setLatestEpisodeId(
+            event.episodeId ||
+            null
+          );
+        }
+
+        if (
+          event.type ===
+          "evaluation.injection.failed"
+        ) {
+          setInjectionError(
+            event.message ||
+            event.error ||
+            "Evaluation injection failed."
+          );
+        }
+      }
+
       if (
         active &&
         event.type === "episode.captured" &&
@@ -604,59 +1579,406 @@ gainMmPerMv: effectiveGain,
 //   }));
 // }, [leadTiles]);
 
+  const episodePackPatient =
+    injectionStatus?.episodePackPatient ||
+    injectionStatus?.oracleDemo
+      ?.episodePackPatient ||
+    oracleAutoDemo?.episodePack
+      ?.patient ||
+    evaluationDemo?.episode
+      ?.evaluationScenario
+      ?.patient ||
+    null;
+
+  const displayedPatient =
+    episodePackPatient ||
+    (
+      waveformSource ===
+      "evaluation"
+        ? evaluationDemo?.episode
+            ?.patient
+        : null
+    ) ||
+    patient;
+
+const injectionWorkflowActive =
+  waveformSource ===
+    API_RANGE_EPISODE_SOURCE &&
+  [
+    "ARMED",
+    "INJECTING",
+    "POST_EVENT",
+    "ANALYZING",
+  ].includes(
+    injectionStatus.state
+  );
+
+const completedInjectionEpisodeId =
+  injectionStatus.state ===
+    "COMPLETE"
+    ? injectionStatus.episodeId ||
+      null
+    : null;
+
+
   return (
     <section className="wave7-page">
       <header className="wave7-header">
         <div className="wave7-patient-copy">
-          <p className="wave7-eyebrow">Real-time telemetry</p>
-          <h1>{patient?.name || "Selected Patient"}</h1>
-          <span>
-            MRN {patient?.mrn || "--"} • {patient?.location || "Bedside"} •{" "}
-            {waveFrame.source || "physionet-ptb-xl"}
-          </span>
+          <p className="wave7-eyebrow">
+            Real-time telemetry
+          </p>
+          <h1>
+            {displayedPatient?.display ||
+              displayedPatient?.name ||
+              "Selected patient"}
+          </h1>
+
+    
+            {/* MRN{" "}
+            {displayedPatient?.mrn ||
+              displayedPatient?.id ||
+              "--"}
+            {" • "}
+            Oracle SMART
+            {" • "}
+            physionet-incart */}
+       
         </div>
 
         <div className="wave7-header-actions">
           <div
-  className="wave7-source-toggle"
-  aria-label="Waveform source"
->
-  {WAVEFORM_SOURCES.map((source) => (
-    <button
-      key={source.id}
-      type="button"
-      className={
-        waveformSource === source.id
-          ? "active"
-          : ""
-      }
-      onClick={() => changeWaveformSource(source.id)}
-    >
-      {source.label}
-    </button>
-  ))}
-</div>
-          <span className={`wave7-live-pill ${streamStatus}`}>
+            className="wave7-source-toggle"
+            aria-label="Waveform source"
+          >
+            {WAVEFORM_SOURCES.map(
+              (source) => (
+                <button
+                  key={source.id}
+                  type="button"
+                  className={
+                    waveformSource ===
+                    source.id
+                      ? "active"
+                      : ""
+                  }
+                  disabled={
+                    Boolean(
+                      oracleAutoDemo?.enabled &&
+                      oracleAutoDemo?.status !== "error"
+                    )
+                  }
+                  onClick={() =>
+                    changeWaveformSource(
+                      source.id
+                    )
+                  }
+                >
+                  {source.label}
+                </button>
+              )
+            )}
+          </div>
+
+          {EVALUATION_ENABLED &&
+          !(
+            oracleAutoDemo?.enabled &&
+            oracleAutoDemo?.status !== "error"
+          ) &&
+          waveformSource ===
+            API_RANGE_EPISODE_SOURCE && (
+            <>
+              <button
+                type="button"
+                className="wave7-action-btn"
+                onClick={() =>
+                  setInjectionControlsOpen(
+                    (value) => !value
+                  )
+                }
+              >
+                {injectionStatus.state &&
+                injectionStatus.state !==
+                  "IDLE" &&
+                ![
+                  "COMPLETE",
+                  "FAILED",
+                  "CANCELLED",
+                ].includes(
+                  injectionStatus.state
+                )
+                  ? "Episode Armed"
+                  : "Map Episode"}
+              </button>
+
+              {injectionControlsOpen && (
+                <>
+                  <select
+                    className="wave7-action-btn"
+                    aria-label="Injected evaluation scenario"
+                    value={
+                      injectionScenarioId
+                    }
+                    disabled={
+                      injectionStatus.state &&
+                      ![
+                        "IDLE",
+                        "COMPLETE",
+                        "FAILED",
+                        "CANCELLED",
+                      ].includes(
+                        injectionStatus.state
+                      )
+                    }
+                    onChange={(event) =>
+                      setInjectionScenarioId(
+                        event.target.value
+                      )
+                    }
+                  >
+                    {injectionScenariosLoading && (
+                      <option value="">
+                        Loading scenarios...
+                      </option>
+                    )}
+
+                    {!injectionScenariosLoading &&
+                      injectionScenarios.map((scenario) => (
+                        <option
+                          key={scenario.scenarioId}
+                          value={scenario.scenarioId}
+                        >
+                          {scenario.scenarioId}
+                          {" — "}
+                          {scenario.shortLabel || scenario.display}
+                        </option>
+                      ))}
+
+                    {!injectionScenariosLoading &&
+                      injectionScenarios.length === 0 && (
+                        <option value="">
+                          No scenarios available
+                        </option>
+                      )}
+                  </select>
+
+                  {injectionStatus.state ===
+                  "ANALYZING" ? (
+                    <button
+                      type="button"
+                      className="wave7-action-btn"
+                      disabled
+                    >
+                      Analyzing...
+                    </button>
+                  ) : [
+                      "ARMED",
+                      "INJECTING",
+                      "POST_EVENT",
+                    ].includes(
+                      injectionStatus.state
+                    ) ? (
+                    <button
+                      type="button"
+                      className="wave7-action-btn"
+                      onClick={
+                        cancelApiRangeEvaluation
+                      }
+                    >
+                      Cancel Test
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="wave7-action-btn"
+                      disabled={
+                        injectionScenariosLoading ||
+                        !injectionScenarioId
+                      }
+                      onClick={
+                        armApiRangeEvaluation
+                      }
+                    >
+                      Start Mapped Episode
+                    </button>
+                  )}
+                </>
+              )}
+            </>
+          )}
+
+          {waveformSource ===
+            "evaluation" && (
+            <>
+              <select
+                className="wave7-action-btn"
+                aria-label="Evaluation episode"
+                value={
+                  selectedEvaluationId
+                }
+                disabled={
+                  evaluationLoading
+                }
+                onChange={(event) =>
+                  loadEvaluationEpisode(
+                    event.target.value
+                  )
+                }
+              >
+                <option value="">
+                  {evaluationLoading
+                    ? "Loading episodes..."
+                    : "Choose episode"}
+                </option>
+
+                {evaluationEpisodes.map(
+                  (item) => (
+                    <option
+                      key={
+                        item.episodeId
+                      }
+                      value={
+                        item.episodeId
+                      }
+                    >
+                      {item.episodeId}
+                      {" — "}
+                      {item.display}
+                    </option>
+                  )
+                )}
+              </select>
+
+              <button
+                type="button"
+                className="wave7-action-btn"
+                disabled={
+                  !evaluationDemo
+                    ?.episode ||
+                  evaluationLoading
+                }
+                onClick={
+                  toggleEvaluationPlayback
+                }
+              >
+                {evaluationPlaying
+                  ? "Pause"
+                  : "Play"}
+              </button>
+            </>
+          )}
+
+          <span
+            className={`wave7-live-pill ${streamStatus}`}
+            title={
+              injectionError ||
+              evaluationError ||
+              undefined
+            }
+          >
             ●{" "}
-            {streamStatus === "live"
+            {waveformSource ===
+              "evaluation"
+              ? evaluationError
+                ? "Evaluation Error"
+                : evaluationLoading
+                ? "Loading Case"
+                : evaluationAnalysisStatus ===
+                  "running"
+                ? "Analysis Running"
+                : evaluationAnalysisStatus ===
+                  "checking"
+                ? "Checking Analysis"
+                : evaluationAnalysisStatus ===
+                  "ready"
+                ? "Analysis Ready"
+                : evaluationDemo
+                    ?.episode
+                ? evaluationPlaying
+                  ? "Evaluation Playing"
+                  : "Evaluation Ready"
+                : "Choose Episode"
+              : injectionStatus.state ===
+                "ARMED"
+              ? `Armed • ${Number(
+                  injectionStatus.remainingSeconds || 0
+                ).toFixed(1)}s`
+              : injectionStatus.state ===
+                "INJECTING"
+              ? `Injecting ${injectionStatus.scenarioDisplay || "evaluation waveform"}`
+              : injectionStatus.state ===
+                "POST_EVENT"
+              ? `Post capture • ${Number(
+                  injectionStatus.remainingSeconds || 0
+                ).toFixed(1)}s`
+              : injectionStatus.state ===
+                "ANALYZING"
+              ? "Analysis Running"
+              : injectionStatus.state ===
+                "COMPLETE"
+              ? "Analysis Complete"
+              : injectionStatus.state ===
+                "FAILED"
+              ? "Evaluation Failed"
+              : streamStatus ===
+                "live"
               ? "Live WebGL"
-              : streamStatus === "warning"
+              : streamStatus ===
+                "warning"
               ? "Waveform Warning"
               : "Connecting"}
           </span>
 
-          {/* <span className="wave7-speed-pill">
-            {sampleRate} Hz • {visibleSeconds}s • 25 mm/sec • per-lead gain
-          </span> */}
-
           <button
             type="button"
             className="wave7-action-btn"
-           onClick={() =>
-  onOpenAnalytics?.(latestEpisodeId)
-}
+            onClick={() => {
+              if (
+                waveformSource ===
+                "evaluation"
+              ) {
+                onOpenAnalytics?.();
+                return;
+              }
+
+              if (
+                completedInjectionEpisodeId
+              ) {
+                onOpenAnalytics?.(
+                  completedInjectionEpisodeId
+                );
+                return;
+              }
+
+              if (
+                injectionWorkflowActive
+              ) {
+                return;
+              }
+
+              onOpenAnalytics?.(
+                latestEpisodeId
+              );
+            }}
+            disabled={
+              (
+                waveformSource ===
+                  "evaluation" &&
+                !evaluationDemo?.episode
+              ) ||
+              injectionWorkflowActive
+            }
+            title={
+              injectionWorkflowActive
+                ? (
+                    "Evaluation capture or analysis is still running."
+                  )
+                : undefined
+            }
           >
-            Open Analytics
+            {injectionWorkflowActive
+              ? "Analytics Pending"
+              : "Open Analytics"}
           </button>
         </div>
       </header>

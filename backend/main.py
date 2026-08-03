@@ -15,6 +15,18 @@ from fastapi.responses import StreamingResponse
 from app.phase7.routes import (
     router as phase7_router,
 )
+from app.evaluation.routes import (
+    router as evaluation_router,
+)
+from app.evaluation_injection.routes import (
+    router as evaluation_injection_router,
+)
+from app.evaluation_injection.service import (
+    evaluation_injection_service,
+)
+from app.evaluation_demo.routes import (
+    router as evaluation_demo_router,
+)
 from app.api_range_waveforms import build_api_range_frame
 from app.config import settings
 from app.csv_waveforms import build_csv_waveform_frame
@@ -67,7 +79,15 @@ app.add_middleware(
 )
 
 app.include_router(oracle_smart_router)
-
+app.include_router(
+    evaluation_router
+)
+app.include_router(
+    evaluation_injection_router
+)
+app.include_router(
+    evaluation_demo_router
+)
 app.include_router(episode_router)
 
 app.include_router(incident_router)
@@ -946,17 +966,49 @@ async def stream_waveform_frame(
                     batch_size=batch_size,
                 )
 
+                evaluation_sources = {
+                    "incart",
+                    "api_range",
+                    "api-range",
+                }
+
+                if (
+                    source.strip().lower()
+                    in evaluation_sources
+                ):
+                    # The API Range frame is created before injection.
+                    # Its nextCursor remains untouched, so source time
+                    # continues moving during the controlled event.
+                    frame = (
+                        evaluation_injection_service
+                        .process_frame(
+                            session_id=session_id,
+                            frame=frame,
+                        )
+                    )
+
                 cursor = int(
                     frame.get(
                         "nextCursor",
                         cursor + batch_size,
                     )
                 )
-                observe_episode_frame_safely(
-    session_id=session_id,
-    source=source,
-    frame=frame,
-)
+                injection_meta = (
+                    frame.get(
+                        "evaluationInjection"
+                    )
+                    or {}
+                )
+
+                if not injection_meta.get(
+                    "suppressNormalEpisodeObserver",
+                    False,
+                ):
+                    observe_episode_frame_safely(
+                        session_id=session_id,
+                        source=source,
+                        frame=frame,
+                    )
 
                 yield "event: waveform-frame\n"
                 yield (

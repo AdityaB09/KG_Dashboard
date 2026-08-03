@@ -176,6 +176,14 @@ export function connectEpisodeEvents({
   "phase7.failed",
   "clinical.context.updated",
   "clinical.context.checked",
+  "evaluation.injection.armed",
+  "evaluation.injection.started",
+  "evaluation.injection.detected",
+  "evaluation.injection.event_complete",
+  "evaluation.injection.captured",
+  "evaluation.injection.complete",
+  "evaluation.injection.failed",
+  "evaluation.injection.cancelled",
 ];
 
   const handlers = eventNames.map(

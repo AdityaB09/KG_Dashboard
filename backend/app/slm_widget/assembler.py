@@ -15,8 +15,8 @@ from app.slm_widget.validator import (
 
 
 DISCLAIMER = (
-    "Research prototype only. This interpretation summarizes supplied "
-    "evidence and is not an independent diagnosis or treatment recommendation."
+    " "
+    ""
 )
 
 RECOMMENDED_NEXT_CHECKS = [

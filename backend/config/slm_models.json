@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "slm-model-registry-v1",
+  "models": [
+    {
+      "id": "medqwen2-7b-q4",
+      "displayName": "Med-Qwen2 7B Q4",
+      "ollamaName": "hf.co/mradermacher/Med-Qwen2-7B-GGUF:Q4_K_M",
+      "enabled": true,
+      "preferred": true
+    },
+    {
+      "id": "jsl-medqwen-14b-q4",
+      "displayName": "JSL MedQwen 14B Q4",
+      "ollamaName": "hf.co/mradermacher/JSL-MedQwen-14b-reasoning-GGUF:Q4_K_M",
+      "enabled": false,
+      "preferred": false
+    },
+    {
+      "id": "medicaledi-final-s-14b-q4",
+      "displayName": "MedicalEDI Final-S 14B Q4",
+      "ollamaName": "hf.co/mradermacher/MedicalEDI-14b-EDI-Reasoning-Final-S-GGUF:Q4_K_M",
+      "enabled": false,
+      "preferred": false
+    },
+    {
+      "id": "medicaledi-final-i-14b-q4",
+      "displayName": "MedicalEDI Final-I 14B Q4",
+      "ollamaName": "hf.co/mradermacher/MedicalEDI-14b-EDI-Reasoning-Final-I-GGUF:Q4_K_M",
+      "enabled": false,
+      "preferred": false
+    },
+    {
+      "id": "medgemma-1-5-4b-q8",
+      "displayName": "MedGemma 1.5 4B Q8",
+      "ollamaName": "medgemma1.5:4b-it-q8_0",
+      "enabled": false,
+      "preferred": false
+    },
+    {
+      "id": "huatuogpt-o1-7b-q5",
+      "displayName": "HuatuoGPT o1 7B Q5",
+      "ollamaName": "hf.co/QuantFactory/HuatuoGPT-o1-7B-GGUF:Q5_K_M",
+      "enabled": false,
+      "preferred": false
+    }
+  ]
+}

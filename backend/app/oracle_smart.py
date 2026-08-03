@@ -1,10 +1,11 @@
 import base64
 import hashlib
+import json
 import secrets
 import time
 from typing import Any
 from urllib import response
-from urllib.parse import urlencode
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from fastapi import APIRouter, HTTPException, Query, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -63,6 +64,26 @@ def get_token_for_request(request: Request) -> dict[str, Any] | None:
         return None
 
     return token_state
+
+
+
+def _frontend_redirect_url() -> str:
+    base = os.getenv("FRONTEND_APP_URL", "http://127.0.0.1:5173").strip()
+    if not settings.ORACLE_EVALUATION_DEMO_ENABLED:
+        return base
+
+    parts = urlsplit(base)
+    query = dict(parse_qsl(parts.query, keep_blank_values=True))
+    query["mode"] = "oracle-evaluation-auto"
+    return urlunsplit(
+        (
+            parts.scheme,
+            parts.netloc,
+            parts.path,
+            urlencode(query),
+            parts.fragment,
+        )
+    )
 
 
 async def discover_smart_configuration(fhir_base_url: str) -> dict[str, Any]:
@@ -204,6 +225,8 @@ async def oracle_callback(
         "provider": "oracle",
         "fhir_base_url": auth_state["fhir_base_url"],
         "issuer": auth_state["issuer"],
+        "token_endpoint": auth_state["token_endpoint"],
+        "smart_session_id": session_id,
         "access_token": token_response.get("access_token"),
         "refresh_token": token_response.get("refresh_token"),
         "expires_at_epoch": time.time() + int(token_response.get("expires_in", 570)),
@@ -241,16 +264,17 @@ async def oracle_callback(
     
     
 
-    frontend_app_url = os.getenv("FRONTEND_APP_URL", "http://127.0.0.1:5173")
+    frontend_app_url = _frontend_redirect_url()
+    redirect_json = json.dumps(frontend_app_url)
 
     html = f"""
     <h2>Oracle SMART connected</h2>
-    <p>You can return to the KardioGenics React dashboard.</p>
-    <p>The backend now has the Oracle SMART token in a signed session.</p>
+    <p>The selected Oracle patient is authenticated.</p>
+    <p>KardioGenics is preparing the automatic evaluation demonstration.</p>
     <script>
     setTimeout(() => {{
-        window.location.href = "{frontend_app_url}";
-    }}, 1200);
+        window.location.href = {redirect_json};
+    }}, 900);
     </script>
     """
 

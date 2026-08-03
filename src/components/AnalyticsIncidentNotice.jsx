@@ -4,9 +4,24 @@ import {
   useRef,
   useState,
 } from "react";
-import { createPortal } from "react-dom";
+import {
+  createPortal,
+} from "react-dom";
 import "./SLMWidgetAdditions.css";
 import "./SLMWidgetSnackbar.css";
+
+
+function isPersistentNotice(
+  notice
+) {
+  return String(
+    notice?.mode ||
+    ""
+  ).startsWith(
+    "evaluation"
+  );
+}
+
 
 export default function AnalyticsIncidentNotice({
   notice,
@@ -14,28 +29,44 @@ export default function AnalyticsIncidentNotice({
   onDismiss,
   durationMs = 6500,
 }) {
-  const [visible, setVisible] = useState(false);
-  const dismissRef = useRef(onDismiss);
+  const [
+    visible,
+    setVisible,
+  ] = useState(false);
+
+  const dismissRef =
+    useRef(onDismiss);
 
   useEffect(() => {
-    dismissRef.current = onDismiss;
+    dismissRef.current =
+      onDismiss;
   }, [onDismiss]);
 
-  const noticeKey = useMemo(
-    () =>
+  const persistent =
+    isPersistentNotice(
+      notice
+    );
+
+  const noticeKey =
+    useMemo(
+      () =>
+        [
+          notice?.mode,
+          notice?.status,
+          notice?.incidentId,
+          notice?.episodeId,
+          notice?.runId,
+          notice?.title,
+        ].join("|"),
       [
+        notice?.mode,
         notice?.status,
         notice?.incidentId,
         notice?.episodeId,
+        notice?.runId,
         notice?.title,
-      ].join("|"),
-    [
-      notice?.status,
-      notice?.incidentId,
-      notice?.episodeId,
-      notice?.title,
-    ]
-  );
+      ]
+    );
 
   useEffect(() => {
     if (!notice) {
@@ -45,36 +76,84 @@ export default function AnalyticsIncidentNotice({
 
     setVisible(false);
 
-    const showTimer = window.setTimeout(
-      () => setVisible(true),
-      20
-    );
+    const showTimer =
+      window.setTimeout(
+        () =>
+          setVisible(true),
+        20
+      );
 
-    const hideTimer = window.setTimeout(
-      () => setVisible(false),
-      Math.max(500, durationMs - 240)
-    );
+    if (persistent) {
+      console.info(
+        "[KGEN NOTICE] persistent evaluation notice shown",
+        {
+          mode:
+            notice.mode,
+          episodeId:
+            notice.episodeId,
+          incidentId:
+            notice.incidentId,
+        }
+      );
 
-    const dismissTimer = window.setTimeout(
-      () => dismissRef.current?.(),
-      durationMs
-    );
+      return () => {
+        window.clearTimeout(
+          showTimer
+        );
+      };
+    }
+
+    const hideTimer =
+      window.setTimeout(
+        () =>
+          setVisible(false),
+        Math.max(
+          500,
+          durationMs - 240
+        )
+      );
+
+    const dismissTimer =
+      window.setTimeout(
+        () =>
+          dismissRef
+            .current?.(),
+        durationMs
+      );
 
     return () => {
-      window.clearTimeout(showTimer);
-      window.clearTimeout(hideTimer);
-      window.clearTimeout(dismissTimer);
+      window.clearTimeout(
+        showTimer
+      );
+      window.clearTimeout(
+        hideTimer
+      );
+      window.clearTimeout(
+        dismissTimer
+      );
     };
-  }, [noticeKey, durationMs, notice]);
+  }, [
+    noticeKey,
+    durationMs,
+    notice,
+    persistent,
+  ]);
 
-  if (!notice || typeof document === "undefined") {
+  if (
+    !notice ||
+    typeof document ===
+      "undefined"
+  ) {
     return null;
   }
 
   const closeSnackbar = () => {
     setVisible(false);
+
     window.setTimeout(
-      () => dismissRef.current?.(),
+      () =>
+        dismissRef
+          .current?.(),
       220
     );
   };
@@ -84,7 +163,9 @@ export default function AnalyticsIncidentNotice({
     onOpen?.();
   };
 
-  const isReady = notice.status === "ready";
+  const isReady =
+    notice.status ===
+    "ready";
 
   return createPortal(
     <div
@@ -95,8 +176,14 @@ export default function AnalyticsIncidentNotice({
       <div
         className={[
           "kgen-analytics-snackbar",
-          notice.status || "captured",
-          visible ? "show" : "",
+          notice.status ||
+            "captured",
+          persistent
+            ? "persistent"
+            : "",
+          visible
+            ? "show"
+            : "",
         ].join(" ")}
         role="status"
       >
@@ -104,10 +191,14 @@ export default function AnalyticsIncidentNotice({
           className="kgen-snackbar-icon"
           aria-hidden="true"
         >
-          {isReady ? "✓" : "●"}
+          {isReady
+            ? "✓"
+            : "●"}
         </div>
 
-        <div className="kgen-snackbar-copy">
+        <div
+          className="kgen-snackbar-copy"
+        >
           <strong>
             {notice.title ||
               "New ECG incident available"}
@@ -119,11 +210,15 @@ export default function AnalyticsIncidentNotice({
           </span>
         </div>
 
-        <div className="kgen-snackbar-actions">
+        <div
+          className="kgen-snackbar-actions"
+        >
           <button
             type="button"
             className="kgen-snackbar-open"
-            onClick={openAnalytics}
+            onClick={
+              openAnalytics
+            }
           >
             Open Analytics
           </button>
@@ -131,20 +226,25 @@ export default function AnalyticsIncidentNotice({
           <button
             type="button"
             className="kgen-snackbar-close"
-            onClick={closeSnackbar}
+            onClick={
+              closeSnackbar
+            }
             aria-label="Dismiss notification"
           >
             ×
           </button>
         </div>
 
-        <span
-          className="kgen-snackbar-progress"
-          style={{
-            animationDuration: `${durationMs}ms`,
-          }}
-          aria-hidden="true"
-        />
+        {!persistent && (
+          <span
+            className="kgen-snackbar-progress"
+            style={{
+              animationDuration:
+                `${durationMs}ms`,
+            }}
+            aria-hidden="true"
+          />
+        )}
       </div>
     </div>,
     document.body

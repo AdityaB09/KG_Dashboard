@@ -413,12 +413,39 @@ class IncidentCoordinator:
             for character in category
         ).strip("-")
 
-        return (
+        demo_run_id = str(
+            (
+                metadata.get("oracleDemo")
+                or {}
+            ).get("demoRunId")
+            or ""
+        )
+
+        safe_demo_run = "".join(
+            character
+            if character.isalnum()
+            else "-"
+            for character in demo_run_id
+        ).strip("-")
+
+        base_id = (
             f"inc-{metadata.get('record')}-"
             f"loop-{metadata.get('loopNumber')}-"
             f"{safe_category}-"
             f"{first_sample:09d}"
         )
+
+        if (
+            metadata.get("mode")
+            == "evaluation_injection"
+            and safe_demo_run
+        ):
+            return (
+                f"{base_id}-"
+                f"{safe_demo_run[-16:]}"
+            )
+
+        return base_id
 
     def compatible(
         self,
@@ -426,6 +453,36 @@ class IncidentCoordinator:
         metadata: dict[str, Any],
         category: str,
     ) -> bool:
+        new_demo_run_id = str(
+            (
+                metadata.get("oracleDemo")
+                or {}
+            ).get("demoRunId")
+            or ""
+        )
+
+        existing_demo_run_id = str(
+            incident.get("oracleDemoRunId")
+            or ""
+        )
+
+        if (
+            metadata.get("mode")
+            == "evaluation_injection"
+        ):
+            # Each automatic Oracle evaluation run must
+            # remain an independent incident. Re-registering
+            # episodes from the same run may reuse that run's
+            # incident, but a different run must never merge.
+            if not new_demo_run_id:
+                return False
+
+            return (
+                bool(existing_demo_run_id)
+                and existing_demo_run_id
+                == new_demo_run_id
+            )
+
         if (
             incident.get("patientId")
             != metadata.get("patientId")
@@ -840,7 +897,18 @@ class IncidentCoordinator:
                 "patientId": metadata.get(
                     "patientId"
                 ),
-                "mode": "research",
+                "mode": (
+                    metadata.get("mode")
+                    or "research"
+                ),
+                "oracleDemoRunId": (
+                    (
+                        metadata.get(
+                            "oracleDemo"
+                        )
+                        or {}
+                    ).get("demoRunId")
+                ),
                 "record": metadata.get(
                     "record"
                 ),

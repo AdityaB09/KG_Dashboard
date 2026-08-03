@@ -24,6 +24,16 @@ class OracleContextCredentials:
     limitation: str | None = None
 
 
+def _episode_pack_only_context(
+    incident_id: str,
+) -> bool:
+    # Evaluation-injection incidents are always episode-pack-only. This is a
+    # workflow invariant, not a best-effort environment preference.
+    return incident_id.startswith(
+        "inc-INCART-EVAL-"
+    )
+
+
 def _valid_session(
     value: Mapping[str, Any],
 ) -> bool:
@@ -268,6 +278,88 @@ async def load_or_reuse_clinical_context(
     dict[str, Any],
     OracleContextCredentials,
 ]:
+    if _episode_pack_only_context(
+        incident_id
+    ):
+        current = (
+            clinical_context_service
+            .get(incident_id)
+        )
+
+        provenance = (
+            current.get("provenance")
+            if isinstance(
+                current,
+                dict,
+            )
+            else {}
+        ) or {}
+
+        valid_episode_pack_context = bool(
+            current.get("status")
+            in {
+                "ready",
+                "partial",
+            }
+            and provenance.get("source")
+            in {
+                "complete_episode_pack",
+                "SLM_Eval scenario",
+            }
+            and provenance.get(
+                "oracleFhirContextUsed",
+                False,
+            )
+            is False
+        )
+
+        if valid_episode_pack_context:
+            context = dict(current)
+        else:
+            # Fail closed. Never reuse cached Oracle context for an evaluation
+            # incident, even when an older cache entry is marked ready.
+            context = {
+                "schemaVersion":
+                    "clinical-context-v1",
+                "incidentId": incident_id,
+                "status": "not_requested",
+                "labTrends": [],
+                "vitalTrends": [],
+                "medicationTimeline": [],
+                "conditions": [],
+                "encounters": [],
+                "diagnosticReports": [],
+                "documents": [],
+                "limitations": [
+                    (
+                        "No persisted episode-package "
+                        "clinical context was available."
+                    )
+                ],
+                "provenance": {
+                    "source":
+                        "complete_episode_pack",
+                    "clinicalContextMode":
+                        "episode_pack_only",
+                    "oracleFhirContextUsed":
+                        False,
+                },
+            }
+
+        return (
+            context,
+            OracleContextCredentials(
+                patient_id=None,
+                access_token=None,
+                fhir_base_url=None,
+                source=(
+                    "episode_pack_only"
+                ),
+                session_count=0,
+                limitation=None,
+            ),
+        )
+
     current = (
         clinical_context_service
         .get(incident_id)

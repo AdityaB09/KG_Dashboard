@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from typing import Any, Mapping
 
 import numpy as np
@@ -26,11 +27,32 @@ from app.analysis.qrs import analyze_qrs, calibrate_qrs_confidence
 from app.analysis.r_peaks import analyze_r_peaks
 from app.analysis.rr_metrics import analyze_rr_metrics
 from app.analysis.signal_quality import analyze_signal_quality
+from app.analysis.windowed_analysis import (
+    WINDOWED_SCHEMA_VERSION,
+    build_windowed_phase6_analysis,
+)
 
 
 HEART_RATE_AGREEMENT_WARNING_FRACTION = 0.35
 ANNOTATION_MIN_VALID_RR_MS = 250.0
 ANNOTATION_MAX_VALID_RR_MS = 2500.0
+
+
+def _feature_enabled(
+    name: str,
+    default: bool = True,
+) -> bool:
+    raw = os.getenv(name)
+
+    if raw is None:
+        return default
+
+    return raw.strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
 
 
 def _safe_int(value: Any) -> int | None:
@@ -587,6 +609,15 @@ class EpisodeAnalyzer:
         metadata[
             "analysisAlgorithmVersion"
         ] = ALGORITHM_VERSION
+
+        if _feature_enabled(
+            "PHASE6_WINDOWED_ANALYSIS_ENABLED",
+            True,
+        ):
+            metadata[
+                "phase6WindowedSchemaVersion"
+            ] = WINDOWED_SCHEMA_VERSION
+
         metadata["updatedAt"] = now_iso()
 
         write_json_atomic(
@@ -618,6 +649,21 @@ class EpisodeAnalyzer:
                     "algorithmVersion"
                 )
                 == ALGORITHM_VERSION
+                and (
+                    not _feature_enabled(
+                        "PHASE6_WINDOWED_ANALYSIS_ENABLED",
+                        True,
+                    )
+                    or (
+                        cached.get(
+                            "windowedAnalysis"
+                        )
+                        or {}
+                    ).get(
+                        "schemaVersion"
+                    )
+                    == WINDOWED_SCHEMA_VERSION
+                )
             ):
                 return cached
 
@@ -987,9 +1033,51 @@ class EpisodeAnalyzer:
                 )
             )
 
+            windowed_analysis: dict[
+                str,
+                Any,
+            ] | None = None
+
+            if _feature_enabled(
+                "PHASE6_WINDOWED_ANALYSIS_ENABLED",
+                True,
+            ):
+                windowed_analysis = (
+                    build_windowed_phase6_analysis(
+                        waveforms_mv=(
+                            episode_input
+                            .waveforms_mv
+                        ),
+                        metadata=metadata,
+                        sample_rate_hz=(
+                            episode_input
+                            .sampling_rate_hz
+                        ),
+                        lead_ids=(
+                            episode_input
+                            .lead_ids
+                        ),
+                    )
+                )
+
+                _append_unique(
+                    limitations,
+                    list(
+                        windowed_analysis.get(
+                            "limitations"
+                        )
+                        or []
+                    ),
+                )
+
             result = {
                 "schemaVersion": (
                     EPISODE_SCHEMA_VERSION
+                ),
+                "phase6WindowedSchemaVersion": (
+                    WINDOWED_SCHEMA_VERSION
+                    if windowed_analysis
+                    else None
                 ),
                 "episodeId": episode_id,
                 "status": status,
@@ -1037,6 +1125,49 @@ class EpisodeAnalyzer:
                     ectopic_burden
                 ),
                 "confidence": confidence,
+                "windowedAnalysis": (
+                    windowed_analysis
+                ),
+                "measurementWindows": (
+                    (
+                        windowed_analysis
+                        or {}
+                    ).get(
+                        "measurementWindows"
+                    )
+                ),
+                "windowedHeartRate": (
+                    (
+                        windowed_analysis
+                        or {}
+                    ).get(
+                        "heartRate"
+                    )
+                ),
+                "windowedQrs": (
+                    (
+                        windowed_analysis
+                        or {}
+                    ).get(
+                        "qrs"
+                    )
+                ),
+                "windowedMorphology": (
+                    (
+                        windowed_analysis
+                        or {}
+                    ).get(
+                        "morphology"
+                    )
+                ),
+                "windowedConfidence": (
+                    (
+                        windowed_analysis
+                        or {}
+                    ).get(
+                        "confidence"
+                    )
+                ),
                 "partialSections": (
                     partial_sections
                 ),
@@ -1098,8 +1229,28 @@ class EpisodeAnalyzer:
                     "isIndependentDiagnosis": (
                         False
                     ),
+                    "windowedMeasurements": (
+                        bool(
+                            windowed_analysis
+                        )
+                    ),
+                    "measurementWindowSource": (
+                        "saved_episode_metadata"
+                        if windowed_analysis
+                        else None
+                    ),
                 },
             }
+
+            if windowed_analysis:
+                write_json_atomic(
+                    episode_input
+                    .analysis_path
+                    .with_name(
+                        "analysis_windowed.json"
+                    ),
+                    windowed_analysis,
+                )
 
             write_json_atomic(
                 episode_input

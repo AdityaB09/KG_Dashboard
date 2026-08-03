@@ -102,9 +102,7 @@ async def run_phase7_incident(
     if result.get("error"):
         raise HTTPException(
             status_code=500,
-            detail=result[
-                "error"
-            ],
+            detail=result["error"],
         )
 
     return result

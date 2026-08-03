@@ -18,10 +18,112 @@ import AnalyticsIncidentNotice from "./components/AnalyticsIncidentNotice";
 import {
   connectEpisodeEvents,
 } from "./services/episodeService";
+import {
+  getOracleEvaluationBootstrap,
+} from "./evaluation/oracleEvaluationDemo";
 import "./index.css";
 
 import { createInitialTelemetry, nextTelemetryFrame } from "./services/telemetryService";
 import { formatCurrentTime, getVitalAlerts } from "./utils/clinicalEvents";
+
+function normalizeDashboardPatient(
+  value,
+  fallback = {}
+) {
+  const patient =
+    value && typeof value === "object"
+      ? value
+      : {};
+
+  const backup =
+    fallback &&
+    typeof fallback === "object"
+      ? fallback
+      : {};
+
+  const name = String(
+    patient.name ||
+      patient.displayName ||
+      backup.name ||
+      backup.displayName ||
+      "Evaluation Patient"
+  ).trim();
+
+  const generatedId =
+    `evaluation-${name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "") ||
+      "patient"}`;
+
+  const id = String(
+    patient.id ||
+      patient.patientId ||
+      patient.mrn ||
+      backup.id ||
+      backup.patientId ||
+      backup.mrn ||
+      generatedId
+  );
+
+  const sex = String(
+    patient.sex ||
+      patient.gender ||
+      backup.sex ||
+      backup.gender ||
+      "Unknown"
+  )
+    .trim()
+    .toUpperCase();
+
+  const initials =
+    name
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) =>
+        part.charAt(0).toUpperCase()
+      )
+      .join("") || "EP";
+
+  return {
+    ...backup,
+    ...patient,
+    id,
+    name,
+    mrn: String(
+      patient.mrn ||
+        patient.medicalRecordNumber ||
+        backup.mrn ||
+        backup.medicalRecordNumber ||
+        id
+    ),
+    unit: String(
+      patient.unit ||
+        patient.location ||
+        backup.unit ||
+        backup.location ||
+        "Evaluation"
+    ),
+    age:
+      patient.age ??
+      backup.age ??
+      "--",
+    sex,
+    avatar:
+      patient.avatar ||
+      backup.avatar ||
+      initials,
+    lastSeen:
+      patient.lastSeen ||
+      backup.lastSeen ||
+      "Evaluation episode",
+    risk:
+      patient.risk ||
+      backup.risk ||
+      "high",
+  };
+}
 
 export default function App() {
   const [patients, setPatients] = useState(mockPatients);
@@ -31,7 +133,27 @@ export default function App() {
   const [fhirEnabled, setFhirEnabled] = useState(false);
   const [fhirStatus, setFhirStatus] = useState("Using mock data");
   const [fhirLoading, setFhirLoading] = useState(false);
-
+  const [oracleAutoDemo, setOracleAutoDemo] = useState({
+    enabled: false,
+    status: "idle",
+    patient: null,
+    scenario: null,
+    episodePack: null,
+    contextMode: "episode_pack_only",
+    encounterId: null,
+    existingRun: null,
+    error: null,
+  });
+const [
+  evaluationDemo,
+  setEvaluationDemo,
+] = useState({
+  active: false,
+  episodeId: null,
+  episode: null,
+  run: null,
+  capture: null,
+});
   const [selectedPatientId, setSelectedPatientId] = useState(mockPatients[0].id);
   const [modal, setModal] = useState(null);
   const [globalSearchOpen, setGlobalSearchOpen] = useState(false);
@@ -59,9 +181,155 @@ const [
   analyticsNotice,
   setAnalyticsNotice,
 ] = useState(null);
+
+const evaluationInjectionActiveRef =
+  useRef(false);
+
+const evaluationInjectionIncidentRef =
+  useRef(null);
   const [monitorPatientIds, setMonitorPatientIds] = useState([]);
   
   const [monitorSlots, setMonitorSlots] = useState([null, null, null, null]);
+
+  useEffect(() => {
+    const mode = new URLSearchParams(
+      window.location.search
+    ).get("mode");
+
+    if (mode !== "oracle-evaluation-auto") {
+      return undefined;
+    }
+
+    let active = true;
+    setOracleAutoDemo((previous) => ({
+      ...previous,
+      enabled: true,
+      status: "bootstrapping",
+      error: null,
+    }));
+
+    getOracleEvaluationBootstrap()
+      .then((payload) => {
+        if (!active) return;
+        if (!payload?.ready) {
+          throw new Error(
+            payload?.reason ||
+              "Oracle automatic evaluation is not ready."
+          );
+        }
+
+        const oraclePatient =
+          payload.patient || {};
+
+        const episodePackPatient =
+          payload?.episodePack?.patient ||
+          payload?.scenario?.patient ||
+          null;
+
+        // The Oracle patient is launch/routing metadata.
+        // The complete episode-pack patient is the visible
+        // evaluation patient. Normalize it to the shape used
+        // by the existing dashboard and PatientSidebar.
+        if (!episodePackPatient) {
+          throw new Error(
+            "The selected scenario did not return a complete episode-package patient."
+          );
+        }
+
+        const dashboardPatient =
+          normalizeDashboardPatient(
+            episodePackPatient,
+            {}
+          );
+
+        setPatients((previous) => [
+          dashboardPatient,
+          ...previous.filter(
+            (item) =>
+              item.id !==
+              dashboardPatient.id
+          ),
+        ]);
+
+        setSelectedPatientId(
+          dashboardPatient.id
+        );
+        // Keep the legacy direct-Firely mode off. Oracle SMART is used only
+        // for launch authentication and scenario routing.
+        setFhirEnabled(false);
+        setFhirStatus(
+          `Episode package selected: ${
+            dashboardPatient.name
+          }`
+        );
+
+        const existingRun = payload?.existingRun || null;
+        const existingState = String(
+          existingRun?.state || ""
+        ).toUpperCase();
+
+        const existingIsComplete =
+          existingState === "COMPLETE" &&
+          existingRun?.episodeId &&
+          existingRun?.incidentId;
+
+        const existingIsActive = [
+          "ARMED",
+          "INJECTING",
+          "POST_EVENT",
+          "ANALYZING",
+        ].includes(existingState);
+
+        setOracleAutoDemo({
+          enabled: true,
+          status: existingIsComplete
+            ? "complete"
+            : existingIsActive
+            ? "running"
+            : "ready",
+          patient: oraclePatient,
+          scenario: payload.scenario,
+          episodePack:
+            payload.episodePack || null,
+          contextMode:
+            payload.clinicalContextMode ||
+            "episode_pack_only",
+          encounterId:
+            payload.encounterId || null,
+          existingRun,
+          error: null,
+        });
+
+        if (existingIsComplete) {
+          setSelectedEpisodeId(existingRun.episodeId);
+          setSelectedIncidentId(existingRun.incidentId);
+          setActivePage("physiology");
+        } else {
+          setActivePage("main");
+        }
+      })
+      .catch((error) => {
+        if (!active) return;
+        setOracleAutoDemo({
+          enabled: true,
+          status: "error",
+          patient: null,
+          scenario: null,
+          episodePack: null,
+          contextMode: "episode_pack_only",
+          encounterId: null,
+          existingRun: null,
+          error:
+            error instanceof Error
+              ? error.message
+              : "Oracle automatic evaluation bootstrap failed.",
+        });
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const [telemetryMap, setTelemetryMap] = useState(() =>
     Object.fromEntries(
@@ -102,59 +370,250 @@ const [
     return () => clearInterval(interval);
   }, [patients]);
 useEffect(() => {
-  const disconnect = connectEpisodeEvents({
-    onEvent: (event) => {
-      if (event.type === "episode.captured") {
-        setSelectedEpisodeId(
-          event.episodeId || null
-        );
+  const disconnect =
+    connectEpisodeEvents({
+      onEvent: (event) => {
+        const eventType =
+          String(
+            event?.type || ""
+          );
 
-        setSelectedIncidentId(
-          event.incidentId || null
-        );
+        if (
+          [
+            "evaluation.injection.armed",
+            "evaluation.injection.started",
+            "evaluation.injection.detected",
+            "evaluation.injection.event_complete",
+            "evaluation.injection.captured",
+          ].includes(eventType)
+        ) {
+          evaluationInjectionActiveRef.current =
+            true;
 
-        setAnalyticsNotice({
-          status: "captured",
-          title: "ECG episode captured",
-          message:
-            "An episode was stored and the incident analysis is running.",
-          episodeId:
-            event.episodeId || null,
-          incidentId:
-            event.incidentId || null,
-        });
-      }
+          if (event.incidentId) {
+            evaluationInjectionIncidentRef.current =
+              event.incidentId;
+          }
+        }
 
-      if (event.type === "phase7.ready") {
-        setSelectedEpisodeId(
-          event.episodeId ||
-            event.primaryEpisodeId ||
-            null
-        );
+        if (
+          eventType ===
+          "evaluation.injection.complete"
+        ) {
+          evaluationInjectionActiveRef.current =
+            false;
 
-        setSelectedIncidentId(
-          event.incidentId || null
-        );
+          evaluationInjectionIncidentRef.current =
+            event.incidentId ||
+            null;
 
-        setAnalyticsNotice({
-          status: "ready",
-          title: "Incident ready in Analytics",
-          message:
-            "Episode analysis and the interpretation package are available.",
-          episodeId:
+          setSelectedEpisodeId(
+            event.episodeId || null
+          );
+
+          setSelectedIncidentId(
+            event.incidentId || null
+          );
+
+          setAnalyticsNotice({
+            mode:
+              "evaluation_injection",
+            status: "ready",
+            title:
+              event.title ||
+              "Evaluation analysis completed",
+            message:
+              event.message ||
+              "The captured evaluation episode is ready in Analytics.",
+            episodeId:
+              event.episodeId || null,
+            incidentId:
+              event.incidentId || null,
+            scenarioId:
+              event.scenarioId || null,
+            score:
+              event.score || null,
+            oracleDemo:
+              event.oracleDemo || null,
+          });
+
+          if (event.oracleDemo) {
+            setOracleAutoDemo((previous) => ({
+              ...previous,
+              enabled: true,
+              status: "complete",
+              patient:
+                event.oracleDemo.patient ||
+                previous.patient,
+              scenario: {
+                ...(previous.scenario || {}),
+                scenarioId:
+                  event.scenarioId ||
+                  event.oracleDemo.scenarioId,
+              },
+            }));
+          }
+
+          console.info(
+            "[KGEN EVAL INJECTION APP] complete",
+            event
+          );
+
+          return;
+        }
+
+        if (
+          eventType ===
+            "evaluation.injection.failed" ||
+          eventType ===
+            "evaluation.injection.cancelled"
+        ) {
+          evaluationInjectionActiveRef.current =
+            false;
+
+          evaluationInjectionIncidentRef.current =
+            null;
+
+          return;
+        }
+
+        if (
+          eventType ===
+          "episode.captured"
+        ) {
+          if (
+            evaluationInjectionActiveRef.current
+          ) {
+            console.info(
+              "[KGEN EVAL INJECTION APP] ignored normal episode during evaluation workflow",
+              {
+                episodeId:
+                  event.episodeId,
+                incidentId:
+                  event.incidentId,
+              }
+            );
+
+            return;
+          }
+
+          setSelectedEpisodeId(
+            event.episodeId || null
+          );
+
+          setSelectedIncidentId(
+            event.incidentId || null
+          );
+
+          setAnalyticsNotice({
+            status: "captured",
+            title:
+              "ECG episode captured",
+            message:
+              "An episode was stored and the incident analysis is running.",
+            episodeId:
+              event.episodeId || null,
+            incidentId:
+              event.incidentId || null,
+          });
+
+          return;
+        }
+
+        if (
+          eventType ===
+          "phase7.ready"
+        ) {
+          const isInjectionIncident =
+            Boolean(
+              event.incidentId &&
+              event.incidentId ===
+                evaluationInjectionIncidentRef
+                  .current
+            );
+
+          if (
+            evaluationInjectionActiveRef.current ||
+            isInjectionIncident ||
+            event.mode ===
+              "evaluation_injection"
+          ) {
+            console.info(
+              "[KGEN EVAL INJECTION APP] ignored intermediate Phase 7 notice",
+              {
+                incidentId:
+                  event.incidentId,
+              }
+            );
+
+            return;
+          }
+
+          setSelectedEpisodeId(
             event.episodeId ||
-            event.primaryEpisodeId ||
-            null,
-          incidentId:
-            event.incidentId || null,
-        });
-      }
-    },
-    onError: () => {},
-  });
+              event.primaryEpisodeId ||
+              null
+          );
+
+          setSelectedIncidentId(
+            event.incidentId || null
+          );
+
+          setAnalyticsNotice({
+            status: "ready",
+            title:
+              "Incident ready in Analytics",
+            message:
+              "Episode analysis and the interpretation package are available.",
+            episodeId:
+              event.episodeId ||
+              event.primaryEpisodeId ||
+              null,
+            incidentId:
+              event.incidentId || null,
+          });
+        }
+      },
+
+      onError: () => {},
+    });
 
   return disconnect;
 }, []);
+  useEffect(() => {
+    if (
+      analyticsNotice?.mode !== "evaluation_injection" ||
+      analyticsNotice?.status !== "ready" ||
+      !analyticsNotice?.oracleDemo
+    ) {
+      return undefined;
+    }
+
+    const timer = window.setTimeout(() => {
+      setSelectedEpisodeId(
+        analyticsNotice.episodeId || null
+      );
+      setSelectedIncidentId(
+        analyticsNotice.incidentId || null
+      );
+      setEvaluationDemo({
+        active: false,
+        episodeId: null,
+        episode: null,
+        run: null,
+        capture: null,
+      });
+      setActivePage("physiology");
+      setOracleAutoDemo((previous) => ({
+        ...previous,
+        status: "analytics",
+      }));
+      setAnalyticsNotice(null);
+    }, 1600);
+
+    return () => window.clearTimeout(timer);
+  }, [analyticsNotice]);
+
   const selectedPatient = useMemo(
     () => patients.find((patient) => patient.id === selectedPatientId) ?? patients[0],
     [selectedPatientId]
@@ -223,13 +682,23 @@ useEffect(() => {
     document.body.classList.toggle("dark-mode", darkMode);
   }, [darkMode]);
 
-  const handleSelectPatient = (id) => {
-    setSelectedPatientId(id);
-    setModal(null);
-    setGlobalSearchOpen(false);
-    setGlobalSearchQuery("");
-    setSelectedEpisodeId(null);
-  };
+const handleSelectPatient = (id) => {
+  setSelectedPatientId(id);
+  setModal(null);
+  setGlobalSearchOpen(false);
+  setGlobalSearchQuery("");
+
+  setSelectedEpisodeId(null);
+  setSelectedIncidentId(null);
+
+  setEvaluationDemo({
+  active: false,
+  episodeId: null,
+  episode: null,
+  run: null,
+  capture: null,
+});
+};
 
 
   async function loadFirelySandbox() {
@@ -397,9 +866,37 @@ function renderMainPage() {
   return (
     <SevenLeadWaveformPage
       patient={selectedPatient}
-      onOpenAnalytics={() =>
-        setActivePage("physiology")
+      oracleAutoDemo={oracleAutoDemo}
+      onOracleAutoDemoChange={(update) =>
+        setOracleAutoDemo((previous) => ({
+          ...previous,
+          ...update,
+        }))
       }
+
+      evaluationDemo={
+        evaluationDemo
+      }
+      onEvaluationAnalysisComplete={(notice) => {
+  console.info(
+    "[KGEN EVAL APP] analysis notice received",
+    notice
+  );
+
+  setAnalyticsNotice(notice);
+}}
+
+      onEvaluationChange={
+        setEvaluationDemo
+      }
+
+      onOpenAnalytics={(episodeId) => {
+  if (episodeId) {
+    setSelectedEpisodeId(episodeId);
+  }
+
+  setActivePage("physiology");
+}}
     />
   );
 }
@@ -438,15 +935,37 @@ function renderPhysiologyPage() {
   return (
     <ClinicalPhysiologyPage
       patient={selectedPatient}
-      episodeId={selectedEpisodeId}
-      incidentId={selectedIncidentId}
+
+      episodeId={
+        selectedEpisodeId
+      }
+
+      incidentId={
+        selectedIncidentId
+      }
+
+      evaluationDemo={
+        evaluationDemo
+      }
+
+      onExitEvaluation={() => {
+  setEvaluationDemo({
+  active: false,
+  episodeId: null,
+  episode: null,
+  run: null,
+  capture: null,
+});
+
+  setActivePage("main");
+}}
+
       onOpenLabs={() =>
         openModal("labs")
       }
     />
   );
 }
-
 
 function renderActivePage() {
   if (activePage === "main") return renderMainPage();
@@ -474,17 +993,78 @@ function renderActivePage() {
 <AnalyticsIncidentNotice
   notice={analyticsNotice}
   onOpen={() => {
+  if (
+    analyticsNotice?.mode ===
+    "evaluation_injection"
+  ) {
+    console.info(
+      "[KGEN EVAL INJECTION APP] opening captured analysis",
+      {
+        episodeId:
+          analyticsNotice?.episodeId,
+        incidentId:
+          analyticsNotice?.incidentId,
+      }
+    );
+
     setSelectedEpisodeId(
-      analyticsNotice?.episodeId || null
+      analyticsNotice?.episodeId ||
+      null
     );
 
     setSelectedIncidentId(
-      analyticsNotice?.incidentId || null
+      analyticsNotice?.incidentId ||
+      null
     );
+
+    setEvaluationDemo({
+      active: false,
+      episodeId: null,
+      episode: null,
+      run: null,
+      capture: null,
+    });
 
     setActivePage("physiology");
     setAnalyticsNotice(null);
-  }}
+    return;
+  }
+
+  if (
+    analyticsNotice?.mode ===
+    "evaluation"
+  ) {
+    console.info(
+      "[KGEN EVAL APP] opening completed evaluation analysis",
+      {
+        episodeId:
+          analyticsNotice?.episodeId,
+        runId:
+          analyticsNotice?.runId,
+      }
+    );
+
+    setActivePage(
+      "physiology"
+    );
+
+    setAnalyticsNotice(null);
+    return;
+  }
+
+  setSelectedEpisodeId(
+    analyticsNotice?.episodeId ||
+    null
+  );
+
+  setSelectedIncidentId(
+    analyticsNotice?.incidentId ||
+    null
+  );
+
+  setActivePage("physiology");
+  setAnalyticsNotice(null);
+}}
   onDismiss={() =>
     setAnalyticsNotice(null)
   }

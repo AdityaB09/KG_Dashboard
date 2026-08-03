@@ -2247,3 +2247,13 @@
   pointer-events: auto !important;
   cursor: pointer;
 }
+
+/* Automatic evaluation runs without an extra presentation banner. */
+.wave7-oracle-auto-banner {
+  display: none !important;
+}
+
+/* Prevent a stale banner node from adding an empty layout row. */
+.wave7-page:has(.wave7-oracle-auto-banner) {
+  grid-template-rows: auto minmax(0, 1fr) !important;
+}
