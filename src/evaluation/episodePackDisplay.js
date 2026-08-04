@@ -92,6 +92,73 @@ function normalizeSex(value) {
   );
 }
 
+const EMPTY_MEDICATION_SENTINELS = new Set([
+  "",
+  "none",
+  "no medication",
+  "no medications",
+  "no home medication",
+  "no home medications",
+  "nil",
+  "n/a",
+  "na",
+  "not applicable",
+  "not recorded",
+  "unknown",
+]);
+
+function normalizedMedicationText(value) {
+  return String(value ?? "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .toLowerCase();
+}
+
+function medicationDisplayName(value) {
+  if (typeof value === "string") {
+    return value.trim();
+  }
+
+  const item = asObject(value);
+
+  return String(
+    item.medicationName ||
+    item.name ||
+    item.medication ||
+    item.drug ||
+    item.display ||
+    ""
+  ).trim();
+}
+
+function isMeaningfulMedication(value) {
+  const text = normalizedMedicationText(
+    medicationDisplayName(value)
+  );
+
+  return (
+    Boolean(text) &&
+    !EMPTY_MEDICATION_SENTINELS.has(text)
+  );
+}
+
+function inferredInfusionRoute(value) {
+  const text = String(value || "").toLowerCase();
+
+  if (
+    text.includes(" iv") ||
+    text.startsWith("iv ") ||
+    text.includes("intravenous") ||
+    text.includes("drip") ||
+    text.includes("infusion")
+  ) {
+    return "IV / infusion";
+  }
+
+  return "Infusion";
+}
+
+
 function splitMedicationText(value) {
   const text = String(value || "").trim();
   const match = text.match(
@@ -188,9 +255,19 @@ export function buildEpisodePackLabCards(episode) {
           prettify(field),
         value: entry.value,
         unit: entry.unit,
+        reference:
+          raw?.reference ||
+          raw?.referenceRange ||
+          "",
+        flag:
+          raw?.flag ||
+          raw?.status ||
+          "",
         status: statusLabel(entry),
         meta: "Episode time",
+        timing: "Controlled event",
         trend: [entry.value],
+        hasLongitudinalTrend: false,
         source: "Complete episode pack",
         temporalBucket: "episode_near",
       };
@@ -350,6 +427,7 @@ export function buildEpisodePackMedicationRows(
     ...asArray(pack?.medications).map(
       (value) => ({
         value,
+        kind: "episode_medication",
         context: "During episode",
         status: "Episode medication",
       })
@@ -357,11 +435,22 @@ export function buildEpisodePackMedicationRows(
     ...asArray(patient?.homeMedications).map(
       (value) => ({
         value,
-        context: "Home medication",
-        status: "Medication history",
+        kind: "home_medication",
+        context: "Medication history",
+        status: "Home medication",
       })
     ),
-  ];
+    ...asArray(patient?.infusions).map(
+      (value) => ({
+        value,
+        kind: "infusion",
+        context: "During episode",
+        status: "Active infusion",
+      })
+    ),
+  ].filter((item) =>
+    isMeaningfulMedication(item.value)
+  );
 
   const seen = new Set();
   const rows = [];
@@ -379,12 +468,14 @@ export function buildEpisodePackMedicationRows(
         : asObject(raw);
 
     const rawName =
-      item.name ||
-      item.medication ||
-      item.drug ||
-      item.display;
+      medicationDisplayName(item);
 
-    if (!rawName) continue;
+    if (
+      !rawName ||
+      !isMeaningfulMedication(rawName)
+    ) {
+      continue;
+    }
 
     const parsed = splitMedicationText(rawName);
     const name =
@@ -394,10 +485,18 @@ export function buildEpisodePackMedicationRows(
       item.doseDisplay ||
       item.dose ||
       item.doseText ||
-      parsed.dose;
+      (
+        parsed.dose === "Dose not specified"
+          ? "Not specified"
+          : parsed.dose
+      );
     const route =
       item.route ||
-      "Route not specified";
+      (
+        sourceItem.kind === "infusion"
+          ? inferredInfusionRoute(rawName)
+          : ""
+      );
     const contextTiming =
       item.contextTiming ||
       item.relationLabel ||
@@ -425,7 +524,13 @@ export function buildEpisodePackMedicationRows(
       doseDisplay: dose,
       route,
       status,
-      resourceType: "Episode pack",
+      resourceType:
+        sourceItem.kind === "infusion"
+          ? "Episode infusion"
+          : sourceItem.kind === "home_medication"
+          ? "Home medication"
+          : "Episode medication",
+      medicationKind: sourceItem.kind,
       evidenceLevel: "episode_pack",
       contextTiming,
       relationLabel: contextTiming,

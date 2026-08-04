@@ -6404,3 +6404,248 @@ body.kgen-wave-modal-open {
 .kgen-oracle-demo-banner {
   display: none !important;
 }
+
+
+/* =========================================================
+   KGEN V6.3 — EPISODE-PACK DISPLAY AND MODAL RELIABILITY
+========================================================= */
+
+.kgen-lab-unit {
+  font-size: 0.42em;
+  font-style: normal;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.kgen-mini-trend-box.single-result {
+  min-width: 66px;
+  padding: 4px 18px 4px 6px;
+  text-align: center;
+}
+
+.kgen-lab-single-result {
+  display: block;
+  width: 100%;
+  color: #334155;
+  font-size: 9px;
+  font-weight: 950;
+  line-height: 1.05;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.kgen-lab-spark-dates.single {
+  grid-template-columns: 1fr;
+  justify-items: center;
+}
+
+.kgen-lab-spark-dates.single span {
+  overflow: hidden;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kgen-lab-meta-line {
+  margin-top: 4px;
+  min-width: 0;
+  color: #64748b;
+  font-size: 9px;
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kgen-lab-grid.episode-pack {
+  min-height: 0;
+  max-height: 236px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-width: thin;
+}
+
+.kgen-episode-lab-summary {
+  display: grid;
+  gap: 2px;
+  padding: 7px 10px;
+  border: 1px solid #d4dde7;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.kgen-episode-lab-summary strong {
+  color: #0f2a3a;
+  font-size: 10px;
+  font-weight: 950;
+}
+
+.kgen-episode-lab-summary span {
+  color: #64748b;
+  font-size: 9px;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.kgen-panel-empty-state {
+  grid-column: 1 / -1;
+  display: grid;
+  place-items: center;
+  min-height: 82px;
+  padding: 12px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 10px;
+  background: #f8fafc;
+  color: #475569;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.kgen-panel-empty-state.compact {
+  min-height: 56px;
+}
+
+.kgen-table-empty-cell {
+  padding: 18px !important;
+  color: #475569 !important;
+  text-align: center !important;
+  white-space: normal !important;
+  font-weight: 850 !important;
+  line-height: 1.3 !important;
+}
+
+/*
+ * The dashboard uses transform/zoom rules when the patient sidebar is open.
+ * A fixed modal inside that transformed tree can have a visually displaced
+ * close button. V6.3 renders the modal through document.body and explicitly
+ * resets every inherited dashboard fit rule.
+ */
+body > .kgen-wave-overlay-backdrop {
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  transform: none !important;
+  transform-origin: initial !important;
+  zoom: 1 !important;
+  pointer-events: auto !important;
+}
+
+body > .kgen-wave-overlay-backdrop .kgen-wave-overlay-card {
+  pointer-events: auto;
+}
+
+.kgen-wave-overlay-close {
+  position: relative;
+  z-index: 4;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+
+.kgen-wave-overlay-single-result {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  min-height: 280px;
+  margin: 18px 20px 10px;
+  padding: 24px;
+  border: 1px solid #cbd4df;
+  border-radius: 14px;
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(59, 130, 246, 0.08),
+      transparent 62%
+    ),
+    #ffffff;
+  text-align: center;
+}
+
+.kgen-wave-overlay-single-result span {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.kgen-wave-overlay-single-result strong {
+  margin-top: 12px;
+  color: #991b1b;
+  font-size: clamp(34px, 7vw, 72px);
+  line-height: 1;
+  font-weight: 950;
+}
+
+.kgen-wave-overlay-single-result p {
+  max-width: 560px;
+  margin: 16px 0 0;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.45;
+}
+
+.kgen-medication-table-scroll {
+  overflow-x: hidden !important;
+}
+
+.kgen-table.meds {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.kgen-table.meds th:nth-child(1),
+.kgen-table.meds td:nth-child(1) {
+  width: 38%;
+}
+
+.kgen-table.meds th:nth-child(2),
+.kgen-table.meds td:nth-child(2) {
+  width: 21%;
+}
+
+.kgen-table.meds th:nth-child(3),
+.kgen-table.meds td:nth-child(3) {
+  width: 20%;
+}
+
+.kgen-table.meds th:nth-child(4),
+.kgen-table.meds td:nth-child(4) {
+  width: 21%;
+}
+
+.kgen-table.meds td,
+.kgen-table.meds td span,
+.kgen-table.meds td strong,
+.kgen-table.meds td small {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kgen-table.meds td span,
+.kgen-table.meds td strong {
+  display: block;
+  white-space: nowrap;
+}
+
+.kgen-table.meds .kgen-med-name-cell strong {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.1;
+}
+
+@media (max-width: 760px) {
+  .kgen-wave-overlay-single-result {
+    min-height: 220px;
+    margin-inline: 14px;
+  }
+
+  .kgen-lab-grid.episode-pack {
+    max-height: none;
+  }
+}
+
