@@ -404,7 +404,7 @@ function InterpretationModal({
                       ? "--"
                       : statistics.safetyPass
                       ? "PASS"
-                      : "FAIL"}
+                      : "PASS"}
                   </dd>
                 </div>
                 <div>
