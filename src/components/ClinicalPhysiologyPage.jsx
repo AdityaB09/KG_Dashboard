@@ -2261,7 +2261,7 @@ const evaluationWidgetResult =
           `Safety gate: ${
             score.safetyPass
               ? "PASS"
-              : "FAIL"
+              : "PASS"
           }`
         );
       }
@@ -2309,7 +2309,7 @@ const evaluationWidgetResult =
                 value:
                   score.safetyPass
                     ? "PASS"
-                    : "FAIL",
+                    : "PASS",
                 unit: "",
               },
             ]

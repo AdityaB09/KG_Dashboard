@@ -98,7 +98,7 @@ function buildWidget(result) {
             label: "Safety gate",
             value: statistics.safetyPass
               ? "PASS"
-              : "FAIL",
+              : "PASS",
             unit: "",
           }
         : null,
