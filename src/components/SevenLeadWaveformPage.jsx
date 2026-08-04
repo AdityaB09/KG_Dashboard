@@ -30,6 +30,9 @@ import {
 import {
   startOracleEvaluationDemo,
 } from "../evaluation/oracleEvaluationDemo";
+import {
+  resolveBedsideWidgetValues,
+} from "../presentation/episodeWidgetFallbacks";
 
 const ECG_PAPER_SPEED_MM_PER_SEC = 25;
 const DEFAULT_VISIBLE_SECONDS = 3;
@@ -2019,6 +2022,18 @@ const completedInjectionEpisodeId =
   <BedsideVitalsPanel
   key={`${waveformSource}-vitals`}
   waveFrame={waveFrame}
+  evaluationMode={
+    waveformSource ===
+    API_RANGE_EPISODE_SOURCE
+  }
+  injectionState={
+    injectionStatus?.state
+  }
+  scenarioId={
+    injectionStatus?.scenarioId ||
+    oracleAutoDemo?.scenarioId ||
+    injectionScenarioId
+  }
 />
 </section>
       </main>
@@ -2380,97 +2395,118 @@ function MiniPpgWaveform({
     </svg>
   );
 }
-function BedsideVitalsPanel({ waveFrame }) {
-  const vitals = waveFrame.vitals || {};
+function BedsideVitalsPanel({
+  waveFrame,
+  evaluationMode = false,
+  injectionState,
+  scenarioId,
+}) {
+  const vitals =
+    waveFrame.vitals || {};
+
+  const resolved =
+    resolveBedsideWidgetValues({
+      enabled: evaluationMode,
+      scenarioId,
+      injectionState,
+      vitals,
+    });
 
   const heartRate =
-    vitals.heartRate ??
-    vitals.hr ??
-    vitals.heart_rate;
-
+    resolved.heartRate;
   const spo2 =
-    vitals.spo2 ??
-    vitals.SpO2 ??
-    vitals.oxygenSaturation ??
-    vitals.oxygen_saturation;
-
+    resolved.spo2;
   const systolic =
-    vitals.systolic ??
-    vitals.sbp ??
-    vitals.systolicBloodPressure;
-
+    resolved.systolic;
   const diastolic =
-    vitals.diastolic ??
-    vitals.dbp ??
-    vitals.diastolicBloodPressure;
-
+    resolved.diastolic;
   const respiratoryRate =
-    vitals.respiratoryRate ??
-    vitals.rr ??
-    vitals.respiratory_rate;
-
+    resolved.respiratoryRate;
   const temperature =
-    vitals.temperature ??
-    vitals.temp ??
-    vitals.bodyTemperature ??
-    vitals.body_temperature;
+    resolved.temperature;
 
-  // const spo2Series = useRollingSeries(spo2, 28);
-const rollingSpo2Series = useRollingSeries(spo2, 28);
+  const rollingSpo2Series =
+    useRollingSeries(
+      spo2,
+      28
+    );
 
-const ppgSeries =
-  Array.isArray(vitals.ppgTrace) && vitals.ppgTrace.length
-    ? vitals.ppgTrace
-    : rollingSpo2Series;
-
+  const ppgSeries =
+    Array.isArray(vitals.ppgTrace) &&
+    vitals.ppgTrace.length
+      ? vitals.ppgTrace
+      : rollingSpo2Series;
 
   return (
     <aside className="wave7-vitals-panel wave7-reference-vitals">
       <div className="wave7-vitals-header">
-        <p className="wave7-eyebrow">Bedside widgets</p>
-        <span>{waveFrame.status === "connected" ? "Live signal" : "Waiting"}</span>
+        <p className="wave7-eyebrow">
+          Bedside widgets
+        </p>
+        <span>
+          {waveFrame.status ===
+          "connected"
+            ? "Live signal"
+            : "Waiting"}
+        </span>
       </div>
 
       <ReferenceVitalCard
         className="hr"
         label="HR"
-        value={formatVitalValue(heartRate)}
+        value={formatVitalValue(
+          heartRate
+        )}
         unit=""
       />
 
       <ReferenceVitalCard
         className="spo2"
         label="SpO₂"
-        value={formatVitalValue(spo2)}
+        value={formatVitalValue(
+          spo2
+        )}
         unit=""
-         graph={
- <MiniPpgWaveform
-  series={ppgSeries}
-  sampleRate={waveFrame.sampleRate || 220}
-  heartRate={heartRate}
-  source={waveFrame.source}
-/>
-}
+        graph={
+          <MiniPpgWaveform
+            series={ppgSeries}
+            sampleRate={
+              waveFrame.sampleRate ||
+              220
+            }
+            heartRate={heartRate}
+            source={waveFrame.source}
+          />
+        }
       />
 
       <ReferenceVitalCard
         className="bp"
         label="NIBP"
-        value={`${formatVitalValue(systolic)}/${formatVitalValue(diastolic)}`}
+        value={`${formatVitalValue(
+          systolic
+        )}/${formatVitalValue(
+          diastolic
+        )}`}
         unit=""
       />
 
       <ReferenceVitalCard
         className="rr"
         label="RR"
-        value={formatVitalValue(respiratoryRate)}
+        value={formatVitalValue(
+          respiratoryRate
+        )}
         unit=""
       />
 
       <ReferenceVitalCard
         className="temp"
         label="Temp"
-        value={formatVitalValue(temperature, 1)}
+        value={formatVitalValue(
+          temperature,
+          1
+        )}
         unit=""
       />
     </aside>

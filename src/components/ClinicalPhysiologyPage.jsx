@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import "./ClinicalPhysiologyPage.css";
 import "./CloudDemoAnalyticsAdditions.css";
 import { connectFhirStream } from "../services/fhirStream";
@@ -668,51 +669,102 @@ function WaveChart({
     </ChartTag>
   );
 }
-function MiniTrend({ values, color = "red", onOpen, ariaLabel }) {
-  const TrendTag = onOpen ? "button" : "div";
+function cleanNumericSeries(values) {
+  return (
+    Array.isArray(values)
+      ? values
+      : []
+  )
+    .map(Number)
+    .filter(Number.isFinite);
+}
+
+function MiniTrend({
+  values,
+  color = "red",
+  onOpen,
+  ariaLabel,
+  singleValueLabel = "Episode result",
+}) {
+  const TrendTag = onOpen
+    ? "button"
+    : "div";
+  const cleanValues =
+    cleanNumericSeries(values);
+  const hasTrend =
+    cleanValues.length >= 2;
 
   return (
     <TrendTag
       type={onOpen ? "button" : undefined}
       className={`kgen-mini-trend-box ${color} ${
-        onOpen ? "kgen-clickable-trend" : ""
+        onOpen
+          ? "kgen-clickable-trend"
+          : ""
+      } ${
+        hasTrend
+          ? ""
+          : "single-result"
       }`}
       onClick={onOpen}
       aria-label={ariaLabel}
     >
-      <WebGLWaveformCanvas
-        values={values}
-        points={96}
-        color={color}
-        mode="auto"
-        className={`kgen-mini-trend ${color}`}
-      />
+      {hasTrend ? (
+        <WebGLWaveformCanvas
+          values={cleanValues}
+          points={96}
+          color={color}
+          mode="auto"
+          className={`kgen-mini-trend ${color}`}
+        />
+      ) : (
+        <span className="kgen-lab-single-result">
+          {singleValueLabel}
+        </span>
+      )}
 
-      {onOpen && <span className="kgen-mini-open-dot">↗</span>}
+      {onOpen && (
+        <span className="kgen-mini-open-dot">
+          ↗
+        </span>
+      )}
     </TrendTag>
   );
 }
+
 function LabTile({
   name,
   value,
+  unit = "",
+  reference = "",
   status,
   meta,
+  timing,
   trend,
+  hasLongitudinalTrend,
   color = "red",
-  onOpenTrend
+  onOpenTrend,
 }) {
-  const [firstDate = "06/23", secondDate = "07/18"] = String(
-    meta || "06/23 07/18"
-  ).split(" ");
+  const cleanTrend =
+    cleanNumericSeries(trend);
+  const showTrend =
+    hasLongitudinalTrend !== false &&
+    cleanTrend.length >= 2;
+  const [firstDate = "Earlier",
+    secondDate = "Latest"] = String(
+      meta || "Earlier Latest"
+    ).split(" ");
 
   return (
-    <article className={`kgen-lab-tile ${color}`}>
+    <article
+      className={`kgen-lab-tile ${color}`}
+    >
       <div className="kgen-lab-title">
-        <span>{name}</span>
+        <span title={name}>{name}</span>
 
         <button
           type="button"
-          aria-label={`Open ${name} lab trend`}
+          aria-label={`Open ${name} laboratory details`}
           onClick={onOpenTrend}
         >
           ›
@@ -721,65 +773,410 @@ function LabTile({
 
       <div className="kgen-lab-value-row">
         <div className="kgen-lab-reading">
-          <strong>{value}</strong>
+          <strong>
+            {value}
+            {unit ? (
+              <em className="kgen-lab-unit">
+                {" "}{unit}
+              </em>
+            ) : null}
+          </strong>
           <small>{status}</small>
         </div>
 
         <div className="kgen-lab-spark-wrap">
           <MiniTrend
-            values={trend}
+            values={cleanTrend}
             color={color}
             onOpen={onOpenTrend}
-            ariaLabel={`Open ${name} trend popup`}
+            ariaLabel={`Open ${name} laboratory details`}
+            singleValueLabel="Episode result"
           />
 
-          <div className="kgen-lab-spark-dates">
-            <span>{firstDate}</span>
-            <span>{secondDate}</span>
-          </div>
+          {showTrend ? (
+            <div className="kgen-lab-spark-dates">
+              <span>{firstDate}</span>
+              <span>{secondDate}</span>
+            </div>
+          ) : (
+            <div className="kgen-lab-spark-dates single">
+              <span>
+                {timing ||
+                  meta ||
+                  "Controlled event"}
+              </span>
+            </div>
+          )}
         </div>
+      </div>
+
+      <div className="kgen-lab-meta-line">
+        <span>
+          {reference
+            ? `Reference: ${reference}`
+            : "Episode-pack laboratory value"}
+        </span>
       </div>
     </article>
   );
 }
-function WaveformOverlay({ config, onClose }) {
-  useEffect(() => {
 
-    function handleKeyDown(event) {
-      if (event.key === "Escape") onClose();
+function normalizeLabFlag(item) {
+  const text = String(
+    item?.flag ||
+    item?.status ||
+    ""
+  )
+    .trim()
+    .toLowerCase();
+
+  if (
+    text.includes("critical") ||
+    text.includes("toxic")
+  ) {
+    return {
+      key: "critical",
+      label:
+        text.includes("toxic")
+          ? "Toxic"
+          : "Critical",
+    };
+  }
+
+  if (text.includes("high")) {
+    return {
+      key: "high",
+      label: "High",
+    };
+  }
+
+  if (text.includes("low")) {
+    return {
+      key: "low",
+      label: "Low",
+    };
+  }
+
+  return {
+    key: "normal",
+    label: "Within range",
+  };
+}
+
+function deriveLabDirection(item) {
+  const values =
+    cleanNumericSeries(
+      item?.trend
+    );
+
+  if (values.length >= 2) {
+    const first = values[0];
+    const last =
+      values[values.length - 1];
+    const scale = Math.max(
+      Math.abs(first),
+      Math.abs(last),
+      1
+    );
+    const relativeChange =
+      (last - first) / scale;
+
+    if (
+      Math.abs(relativeChange) <
+      0.03
+    ) {
+      return {
+        key: "stable",
+        symbol: "→",
+        label: "Stable",
+        source: "Measured series",
+      };
     }
 
-    document.addEventListener("keydown", handleKeyDown);
-    document.body.classList.add("kgen-wave-modal-open");
+    return relativeChange > 0
+      ? {
+          key: "up",
+          symbol: "↗",
+          label: "Increasing",
+          source: "Measured series",
+        }
+      : {
+          key: "down",
+          symbol: "↘",
+          label: "Decreasing",
+          source: "Measured series",
+        };
+  }
+
+  const flag =
+    normalizeLabFlag(item);
+
+  if (
+    flag.key === "critical" ||
+    flag.key === "high"
+  ) {
+    return {
+      key: "up",
+      symbol: "↗",
+      label: "High-direction cue",
+      source:
+        "Status-derived presentation cue",
+    };
+  }
+
+  if (flag.key === "low") {
+    return {
+      key: "down",
+      symbol: "↘",
+      label: "Low-direction cue",
+      source:
+        "Status-derived presentation cue",
+    };
+  }
+
+  return {
+    key: "stable",
+    symbol: "→",
+    label: "Stable cue",
+    source:
+      "Status-derived presentation cue",
+  };
+}
+
+function labPriorityRank(item) {
+  const flag =
+    normalizeLabFlag(item);
+
+  return {
+    critical: 4,
+    high: 3,
+    low: 2,
+    normal: 1,
+  }[flag.key] || 0;
+}
+
+function LabPointedTrendIndicator({
+  item,
+}) {
+  const direction =
+    deriveLabDirection(item);
+
+  return (
+    <span
+      className={`kgen-lab-pointed-indicator ${
+        direction.key
+      }`}
+      role="img"
+      aria-label={`${direction.label}. ${direction.source}.`}
+      title={`${direction.label}. ${direction.source}.`}
+    />
+  );
+}
+
+function LabResultsTable({
+  rows,
+  compact = false,
+}) {
+  const visibleRows = rows.slice(0, 4);
+
+  return (
+    <div
+      className={`kgen-ehr-lab-table-wrap ${
+        compact ? "compact" : ""
+      }`}
+    >
+      <table className="kgen-ehr-lab-table">
+        <colgroup>
+          <col className="kgen-lab-col-test" />
+          <col className="kgen-lab-col-result" />
+          <col className="kgen-lab-col-trend" />
+        </colgroup>
+
+        <thead>
+          <tr>
+            <th>Test</th>
+            <th>Result</th>
+            <th className="kgen-lab-trend-heading">
+              Trend
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {visibleRows.map((item) => (
+            <tr key={item.name}>
+              <td>
+  <strong title={item.name}>
+    {item.name}
+  </strong>
+
+  <small>
+    {item.timing || "Episode pack"}
+  </small>
+</td>
+
+<td>
+  <strong>
+    {item.value}
+    {item.unit ? (
+      <em>
+        {" "}
+        {item.unit}
+      </em>
+    ) : null}
+  </strong>
+</td>
+
+              <td className="kgen-lab-trend-cell">
+                <LabPointedTrendIndicator
+                  item={item}
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function WaveformOverlay({
+  config,
+  onClose,
+}) {
+  useEffect(() => {
+    function handleKeyDown(event) {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    }
+
+    document.addEventListener(
+      "keydown",
+      handleKeyDown
+    );
+    document.body.classList.add(
+      "kgen-wave-modal-open"
+    );
 
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.body.classList.remove("kgen-wave-modal-open");
+      document.removeEventListener(
+        "keydown",
+        handleKeyDown
+      );
+      document.body.classList.remove(
+        "kgen-wave-modal-open"
+      );
     };
   }, [onClose]);
 
   if (!config) return null;
 
-  const width = 980;
-  const height = 340;
+  const cleanValues =
+    cleanNumericSeries(config.values);
+  const hasLongitudinalTrend =
+    config.hasLongitudinalTrend !== false &&
+    cleanValues.length >= 2;
+  const currentNumeric =
+    Number(config.currentValue);
+  const fallbackValue =
+    Number.isFinite(currentNumeric)
+      ? currentNumeric
+      : cleanValues[0] ?? 0;
+  const chartValues =
+    cleanValues.length >= 2
+      ? cleanValues
+      : [fallbackValue, fallbackValue];
 
-  const points =
-    config.scaleMode === "scaled"
-      ? toPolylineScaled(config.values, width, height, 24)
-      : toPolylineNormalized(config.values, width, height, 24);
+  const minValue = Math.min(
+    ...chartValues
+  );
+  const maxValue = Math.max(
+    ...chartValues
+  );
 
-  const minValue = Math.min(...config.values);
-  const maxValue = Math.max(...config.values);
-  const latestValue = config.values[config.values.length - 1];
+  const labStats =
+    config.kind === "lab"
+      ? [
+          {
+            label: "Result",
+            value: `${config.currentValue}${
+              config.unit || ""
+            }`,
+          },
+          {
+            label: "Status",
+            value:
+              config.status ||
+              "Episode context",
+          },
+          {
+            label: "Reference",
+            value:
+              config.reference ||
+              "Not supplied",
+          },
+          {
+            label: "Timing",
+            value:
+              config.timing ||
+              "Controlled event",
+          },
+        ]
+      : null;
 
-  return (
-    <div className="kgen-wave-overlay-backdrop" onMouseDown={onClose}>
+  const standardStats = [
+    {
+      label: "Current",
+      value: `${config.currentValue}${
+        config.unit || ""
+      }`,
+    },
+    {
+      label: "Status",
+      value: config.status,
+    },
+    {
+      label: "Min",
+      value:
+        config.scaleMode === "scaled"
+          ? minValue.toFixed(
+              config.decimals ?? 0
+            )
+          : "Live",
+    },
+    {
+      label: "Max",
+      value:
+        config.scaleMode === "scaled"
+          ? maxValue.toFixed(
+              config.decimals ?? 0
+            )
+          : "Live",
+    },
+  ];
+
+  const overlay = (
+    <div
+      className="kgen-wave-overlay-backdrop"
+      role="presentation"
+      onPointerDown={(event) => {
+        if (
+          event.target ===
+          event.currentTarget
+        ) {
+          onClose();
+        }
+      }}
+    >
       <section
         className="kgen-wave-overlay-card"
-        onMouseDown={(event) => event.stopPropagation()}
         role="dialog"
         aria-modal="true"
         aria-label={config.title}
+        onPointerDown={(event) =>
+          event.stopPropagation()
+        }
       >
         <header className="kgen-wave-overlay-header">
           <div>
@@ -791,50 +1188,67 @@ function WaveformOverlay({ config, onClose }) {
           <button
             type="button"
             className="kgen-wave-overlay-close"
-            onClick={onClose}
-            aria-label="Close waveform popup"
+            aria-label="Close laboratory or waveform popup"
+            onPointerDown={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              onClose();
+            }}
           >
             ×
           </button>
         </header>
 
         <div className="kgen-wave-overlay-stats">
-          <div>
-            <span>Current</span>
-            <strong>
-              {config.currentValue}
-              {config.unit}
-            </strong>
-          </div>
-
-          <div>
-            <span>Status</span>
-            <strong>{config.status}</strong>
-          </div>
-
-          <div>
-            <span>Min</span>
-            <strong>
-              {config.scaleMode === "scaled" ? minValue.toFixed(config.decimals ?? 0) : "Live"}
-            </strong>
-          </div>
-
-          <div>
-            <span>Max</span>
-            <strong>
-              {config.scaleMode === "scaled" ? maxValue.toFixed(config.decimals ?? 0) : "Live"}
-            </strong>
-          </div>
+          {(labStats || standardStats).map(
+            (item) => (
+              <div key={item.label}>
+                <span>{item.label}</span>
+                <strong title={String(item.value)}>
+                  {item.value}
+                </strong>
+              </div>
+            )
+          )}
         </div>
 
-      <div className={`kgen-wave-overlay-chart ${config.color}`}>
-  <WebGLWaveformCanvas
-    values={config.values}
-    points={Math.max(720, config.values?.length || 360)}
-    color={config.color}
-    mode={config.scaleMode === "scaled" ? "auto" : "unit"}
-  />
-</div>
+        {config.kind === "lab" &&
+        !hasLongitudinalTrend ? (
+          <div className="kgen-wave-overlay-single-result">
+            <span>
+              Controlled-event laboratory result
+            </span>
+            <strong>
+              {config.currentValue}
+              {config.unit || ""}
+            </strong>
+            <p>
+              This episode pack contains one
+              episode-time result, so no artificial
+              longitudinal trend is drawn.
+            </p>
+          </div>
+        ) : (
+          <div
+            className={`kgen-wave-overlay-chart ${
+              config.color
+            }`}
+          >
+            <WebGLWaveformCanvas
+              values={chartValues}
+              points={Math.max(
+                720,
+                chartValues.length || 360
+              )}
+              color={config.color}
+              mode={
+                config.scaleMode === "scaled"
+                  ? "auto"
+                  : "unit"
+              }
+            />
+          </div>
+        )}
 
         <footer className="kgen-wave-overlay-footer">
           <span>{config.footerLeft}</span>
@@ -842,6 +1256,11 @@ function WaveformOverlay({ config, onClose }) {
         </footer>
       </section>
     </div>
+  );
+
+  return createPortal(
+    overlay,
+    document.body
   );
 }
 
@@ -2698,6 +3117,29 @@ const displayedLabCards =
     ? episodePackLabCards
     : existingDisplayedLabCards;
 
+const priorityLabCards =
+  useMemo(() => {
+    const sorted = [
+      ...displayedLabCards,
+    ].sort(
+      (left, right) =>
+        labPriorityRank(right) -
+        labPriorityRank(left)
+    );
+
+    const abnormal = sorted.filter(
+      (item) =>
+        normalizeLabFlag(item).key !==
+        "normal"
+    );
+
+    return (
+      abnormal.length
+        ? abnormal
+        : sorted
+    ).slice(0, 3);
+  }, [displayedLabCards]);
+
 
 
 // const labCards = useMemo(() => {
@@ -2874,16 +3316,45 @@ const waveformOverlay = useMemo(() => {
 
     if (!selectedLab) return null;
 
+    const selectedTrend =
+      cleanNumericSeries(
+        selectedLab.trend
+      );
+    const hasLongitudinalTrend =
+      selectedLab.hasLongitudinalTrend !== false &&
+      selectedTrend.length >= 2;
+
     return {
-      section: "03. Recent Lab Results & Trends",
-      title: `${selectedLab.name} trend`,
-      subtitle: `${displayedPatient.name} • Lab trend over recent draws`,
+      kind: "lab",
+      section:
+        "03. Recent Lab Results & Trends",
+      title: `${selectedLab.name} result`,
+      subtitle:
+        `${displayedPatient.name} • ` +
+        (
+          hasLongitudinalTrend
+            ? "Laboratory trend"
+            : "Episode-pack laboratory evidence"
+        ),
       color: selectedLab.color || "red",
       scaleMode: "scaled",
-      values: selectedLab.trend,
+      values:
+        selectedTrend.length
+          ? selectedTrend
+          : [selectedLab.value],
       currentValue: selectedLab.value,
-      unit: "",
+      unit:
+        selectedLab.unit
+          ? ` ${selectedLab.unit}`
+          : "",
+      reference:
+        selectedLab.reference || "",
+      timing:
+        selectedLab.timing ||
+        selectedLab.meta ||
+        "Controlled event",
       status: selectedLab.status,
+      hasLongitudinalTrend,
       decimals:
         selectedLab.name === "Creatinine"
           ? 2
@@ -2892,8 +3363,14 @@ const waveformOverlay = useMemo(() => {
           : selectedLab.name === "WBC"
           ? 1
           : 0,
-      footerLeft: "06/23",
-      footerRight: "07/18"
+      footerLeft:
+        hasLongitudinalTrend
+          ? "Earlier"
+          : "Episode package",
+      footerRight:
+        hasLongitudinalTrend
+          ? "Latest"
+          : "Controlled event"
     };
   }, [activeWaveformId, displayedPatient.name, live, displayedLabCards]);
 
@@ -3162,15 +3639,21 @@ evaluationWaveformsView ? (
     </span>
   </div>
 
-          <div className="kgen-lab-grid">
-           {displayedLabCards.map((item) => (
-  <LabTile
-    key={item.name}
-    {...item}
-    onOpenTrend={() => setActiveWaveformId(`lab-${item.name}`)}
-  />
-))}
-          </div>
+          {displayedLabCards.length ? (
+            <LabResultsTable
+              rows={displayedLabCards}
+              onOpen={(item) =>
+                setActiveWaveformId(
+                  `lab-${item.name}`
+                )
+              }
+            />
+          ) : (
+            <div className="kgen-panel-empty-state">
+              No laboratory results were supplied
+              in this episode pack.
+            </div>
+          )}
 
           {/* <div className="kgen-mini-table">
             <span>06/23</span>
@@ -3189,37 +3672,18 @@ evaluationWaveformsView ? (
             <b>{live.potassium.toFixed(1)}</b>
           </div> */}
 
-<div className="kgen-mini-table">
-  <span>06/23</span>
-  <span>06/28</span>
-  <span>07/07</span>
-  <span>07/18</span>
-
-  <b>--</b>
-  <b>--</b>
-  <b>--</b>
-  <b>
-    {formatClinicalNumber(
-      live.glucose,
-      0
-    )}
-  </b>
-
-  <b>
-    {formatClinicalNumber(
-      live.creatinine,
-      2
-    )}
-  </b>
-  <b>--</b>
-  <b>--</b>
-  <b>
-    {formatClinicalNumber(
-      live.potassium,
-      1
-    )}
-  </b>
-</div>
+{/* <div className="kgen-episode-lab-summary ehr compact">
+  <strong>
+    {displayedLabCards.length} documented result{
+      displayedLabCards.length === 1
+        ? ""
+        : "s"
+    }
+  </strong>
+  <span>
+    Trend indicator
+  </span>
+</div> */}
           <button className="kgen-blue-btn" type="button" onClick={onOpenLabs}>
             Access full table
           </button>
@@ -3261,19 +3725,31 @@ evaluationWaveformsView ? (
 </section>
 
         <section className="kgen-panel kgen-labs-small-panel">
-          <h2>03. Recent Lab Results &amp; Trends</h2>
+          <h2>
+            03A. Recent Lab Results &amp; Trends
+          </h2>
 
-          <div className="kgen-lab-grid small">
-          {displayedLabCards.slice(0, 2).map((item) => (
-  <LabTile
-    key={item.name}
-    {...item}
-    onOpenTrend={() => setActiveWaveformId(`lab-${item.name}`)}
-  />
-))}
-          </div>
+          {priorityLabCards.length ? (
+            <LabResultsTable
+              rows={priorityLabCards}
+              compact
+              onOpen={(item) =>
+                setActiveWaveformId(
+                  `lab-${item.name}`
+                )
+              }
+            />
+          ) : (
+            <div className="kgen-panel-empty-state compact">
+              No priority laboratory findings.
+            </div>
+          )}
 
-          <button className="kgen-blue-btn" type="button" onClick={onOpenLabs}>
+          <button
+            className="kgen-blue-btn"
+            type="button"
+            onClick={onOpenLabs}
+          >
             Access full table
           </button>
         </section>
@@ -3416,7 +3892,10 @@ evaluationWaveformsView ? (
                             <strong title={medicationName}>
                               {medicationName}
                             </strong>
-                            <small>Episode pack</small>
+                            <small>
+                              {row.resourceType ||
+                                "Episode pack"}
+                            </small>
                           </td>
 
                           <td>
@@ -3451,7 +3930,8 @@ evaluationWaveformsView ? (
                       colSpan="4"
                       className="kgen-table-empty-cell"
                     >
-                      No episode-linked medications were supplied.
+                      No home medications, episode medications,
+                      or infusions were recorded in this episode pack.
                     </td>
                   </tr>
                 )}

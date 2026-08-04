@@ -6649,3 +6649,850 @@ body > .kgen-wave-overlay-backdrop .kgen-wave-overlay-card {
   }
 }
 
+
+/* =========================================================
+   KGEN V6.4 — EHR-STYLE CLINICAL DOCUMENTATION
+========================================================= */
+
+.kgen-labs-panel,
+.kgen-labs-small-panel,
+.kgen-vitals-panel,
+.kgen-medications-panel {
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff,
+      #fbfcfe
+    ) !important;
+}
+
+.kgen-ehr-lab-table-wrap {
+  min-height: 0;
+  max-height: 238px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #ffffff;
+  scrollbar-width: thin;
+}
+
+.kgen-ehr-lab-table-wrap.compact {
+  max-height: 184px;
+}
+
+.kgen-ehr-lab-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-variant-numeric: tabular-nums;
+}
+
+.kgen-ehr-lab-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #e8edf3;
+}
+
+.kgen-ehr-lab-table th {
+  padding: 8px 9px;
+  border-bottom: 1px solid #cbd5e1;
+  color: #334155;
+  text-align: left;
+  font-size: 8.5px;
+  line-height: 1;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.055em;
+}
+
+.kgen-ehr-lab-table th:nth-child(1) {
+  width: 29%;
+}
+
+.kgen-ehr-lab-table th:nth-child(2) {
+  width: 31%;
+}
+
+.kgen-ehr-lab-table th:nth-child(3) {
+  width: 16%;
+}
+
+.kgen-ehr-lab-table th:nth-child(4) {
+  width: 18%;
+}
+
+.kgen-ehr-lab-table th:nth-child(5) {
+  width: 6%;
+}
+
+.kgen-ehr-lab-table td {
+  padding: 8px 9px;
+  border-bottom: 1px solid #e2e8f0;
+  vertical-align: middle;
+}
+
+.kgen-ehr-lab-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.kgen-ehr-lab-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.kgen-ehr-lab-table td > strong {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  color: #111827;
+  font-size: 11px;
+  line-height: 1.1;
+  font-weight: 950;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kgen-ehr-lab-table td > strong em {
+  color: #475569;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 850;
+}
+
+.kgen-ehr-lab-table td > small {
+  display: block;
+  margin-top: 3px;
+  min-width: 0;
+  overflow: hidden;
+  color: #64748b;
+  font-size: 8px;
+  line-height: 1.1;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kgen-lab-flag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 54px;
+  max-width: 100%;
+  padding: 5px 7px;
+  border-radius: 999px;
+  overflow: hidden;
+  font-size: 8px;
+  line-height: 1;
+  font-weight: 950;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kgen-lab-flag.critical {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.kgen-lab-flag.high {
+  background: #ffedd5;
+  color: #9a3412;
+}
+
+.kgen-lab-flag.low {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.kgen-lab-flag.normal {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.kgen-lab-direction {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 68px;
+  max-width: 100%;
+  padding: 4px 6px;
+  border-radius: 8px;
+}
+
+.kgen-lab-direction strong {
+  font-size: 17px;
+  line-height: 1;
+  font-weight: 950;
+}
+
+.kgen-lab-direction small {
+  overflow: hidden;
+  font-size: 7.5px;
+  line-height: 1;
+  font-weight: 950;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kgen-lab-direction.stable {
+  background: #fef3c7;
+  color: #a16207;
+}
+
+.kgen-lab-direction.up {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.kgen-lab-direction.down {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.kgen-lab-detail-btn {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  margin-inline: auto;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #1e3a5f;
+  font-size: 17px;
+  line-height: 1;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.kgen-lab-detail-btn:hover,
+.kgen-lab-detail-btn:focus-visible {
+  border-color: #2563eb;
+  background: #eff6ff;
+  outline: none;
+}
+
+.kgen-episode-lab-summary.ehr {
+  margin-top: 7px;
+  border-left: 4px solid #3b82f6;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.kgen-episode-lab-summary.ehr span {
+  line-height: 1.28;
+}
+
+.kgen-table.vitals {
+  font-variant-numeric: tabular-nums;
+}
+
+.kgen-table.vitals td {
+  vertical-align: top;
+}
+
+.kgen-table.vitals td:nth-child(2) {
+  font-weight: 950;
+}
+
+.kgen-table.vitals td:nth-child(4) {
+  color: #475569;
+}
+
+.kgen-table.meds,
+.kgen-table.vitals {
+  border-collapse: collapse;
+}
+
+.kgen-table.meds thead,
+.kgen-table.vitals thead {
+  background: #e8edf3;
+}
+
+.kgen-table.meds th,
+.kgen-table.vitals th {
+  color: #334155;
+  font-size: 8.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 900px) {
+  .kgen-ehr-lab-table th:nth-child(3),
+  .kgen-ehr-lab-table td:nth-child(3) {
+    display: none;
+  }
+
+  .kgen-ehr-lab-table th:nth-child(1) {
+    width: 31%;
+  }
+
+  .kgen-ehr-lab-table th:nth-child(2) {
+    width: 36%;
+  }
+
+  .kgen-ehr-lab-table th:nth-child(4) {
+    width: 25%;
+  }
+
+  .kgen-ehr-lab-table th:nth-child(5) {
+    width: 8%;
+  }
+}
+
+
+/* =========================================================
+   KGEN V6.4.2 — SMALL POINTED LAB TREND INDICATOR
+   Shape: circular body with a triangular direction tip.
+   No value, word, or glyph is rendered inside the indicator.
+========================================================= */
+
+.kgen-ehr-lab-table-wrap {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.kgen-pointed-trend-legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  min-height: 25px;
+  padding: 4px 10px;
+  border-bottom: 1px solid #d7dee8;
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 7.5px;
+  line-height: 1;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.kgen-pointed-trend-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/*
+ * The legend and row indicator share the same silhouette:
+ * a small circle with a pointed triangular tip.
+ */
+.kgen-pointed-trend-legend i,
+.kgen-lab-pointed-indicator {
+  --indicator-fill: #fef3c7;
+  --indicator-border: #d69e00;
+  position: relative;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+  border: 1.5px solid var(--indicator-border);
+  border-radius: 50%;
+  background: var(--indicator-fill);
+  box-sizing: border-box;
+  transform-origin: 50% 50%;
+}
+
+/* Triangular pointer, matching the supplied pointed-circle reference. */
+.kgen-pointed-trend-legend i::after,
+.kgen-lab-pointed-indicator::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -5px;
+  width: 0;
+  height: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 6px solid var(--indicator-border);
+  transform: translateY(-50%);
+}
+
+/* Stable: amber, pointing directly right. */
+.kgen-pointed-trend-legend i.stable,
+.kgen-lab-pointed-indicator.stable {
+  --indicator-fill: #fff7d6;
+  --indicator-border: #c78b00;
+  transform: rotate(0deg);
+}
+
+/* Increasing: red, pointing upper-right. */
+.kgen-pointed-trend-legend i.up,
+.kgen-lab-pointed-indicator.up {
+  --indicator-fill: #fee2e2;
+  --indicator-border: #c62828;
+  transform: rotate(-45deg);
+}
+
+/* Decreasing: blue, pointing lower-right. */
+.kgen-pointed-trend-legend i.down,
+.kgen-lab-pointed-indicator.down {
+  --indicator-fill: #dbeafe;
+  --indicator-border: #2563eb;
+  transform: rotate(45deg);
+}
+
+.kgen-pointed-trend-legend i.unavailable,
+.kgen-lab-pointed-indicator.unavailable {
+  --indicator-fill: #f1f5f9;
+  --indicator-border: #94a3b8;
+}
+
+.kgen-lab-trend-heading,
+.kgen-lab-trend-cell {
+  text-align: center !important;
+}
+
+.kgen-lab-trend-cell {
+  overflow: visible !important;
+}
+
+.kgen-lab-pointed-indicator {
+  margin-inline: auto;
+  cursor: help;
+}
+
+/* Four-column EHR table: Test | Result | Trend | Details */
+.kgen-ehr-lab-table th:nth-child(1) {
+  width: 38%;
+}
+
+.kgen-ehr-lab-table th:nth-child(2) {
+  width: 43%;
+}
+
+.kgen-ehr-lab-table th:nth-child(3) {
+  width: 12%;
+}
+
+.kgen-ehr-lab-table th:nth-child(4) {
+  width: 7%;
+}
+
+.kgen-ehr-lab-table td:nth-child(3) {
+  text-align: center;
+}
+
+/*
+ * Remove V6.4's visible flag chip and large direction badge from layout.
+ * These selectors remain defensive in case a cached render briefly includes
+ * the older elements during hot reload.
+ */
+.kgen-ehr-lab-table .kgen-lab-flag,
+.kgen-ehr-lab-table .kgen-lab-direction {
+  display: none !important;
+}
+
+.kgen-episode-lab-summary.ehr.compact {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 24px;
+  padding: 4px 8px;
+}
+
+.kgen-episode-lab-summary.ehr.compact strong,
+.kgen-episode-lab-summary.ehr.compact span {
+  margin: 0;
+  font-size: 8px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.kgen-ehr-lab-table-wrap.compact .kgen-pointed-trend-legend {
+  min-height: 21px;
+  padding-block: 3px;
+  font-size: 7px;
+}
+
+.kgen-ehr-lab-table-wrap.compact .kgen-ehr-lab-table th,
+.kgen-ehr-lab-table-wrap.compact .kgen-ehr-lab-table td {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+@media (max-width: 900px) {
+  .kgen-pointed-trend-legend {
+    gap: 9px;
+  }
+
+  .kgen-pointed-trend-legend span {
+    font-size: 0;
+  }
+
+  .kgen-ehr-lab-table th:nth-child(1) {
+    width: 40%;
+  }
+
+  .kgen-ehr-lab-table th:nth-child(2) {
+    width: 42%;
+  }
+
+  .kgen-ehr-lab-table th:nth-child(3) {
+    width: 11%;
+  }
+
+  .kgen-ehr-lab-table th:nth-child(4) {
+    width: 7%;
+  }
+}
+
+/* Three-column table: Test | Result | Trend */
+.kgen-ehr-lab-table th:nth-child(1) {
+  width: 40%;
+}
+
+.kgen-ehr-lab-table th:nth-child(2) {
+  width: 45%;
+}
+
+.kgen-ehr-lab-table th:nth-child(3) {
+  width: 15%;
+}
+
+/* =========================================================
+   FINAL THREE-COLUMN LAB TABLE
+   Test | Result | Trend
+========================================================= */
+
+/*
+ * The old legend was removed, so the wrapper no longer
+ * needs the old two-row grid layout.
+ */
+.kgen-ehr-lab-table-wrap,
+.kgen-ehr-lab-table-wrap.compact {
+  display: block !important;
+  width: 100%;
+  min-width: 0;
+  max-height: none !important;
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+/* One stable table geometry for both 03 and 03A */
+.kgen-ehr-lab-table {
+  width: 100%;
+  min-width: 0;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Canonical column widths */
+.kgen-ehr-lab-table col.kgen-lab-col-test {
+  width: 45% !important;
+}
+
+.kgen-ehr-lab-table col.kgen-lab-col-result {
+  width: 35% !important;
+}
+
+.kgen-ehr-lab-table col.kgen-lab-col-trend {
+  width: 20% !important;
+}
+
+/*
+ * Cancel all old nth-child width rules from the
+ * previous five-column and four-column versions.
+ */
+.kgen-ehr-lab-table th,
+.kgen-ehr-lab-table td {
+  width: auto !important;
+  min-width: 0;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+}
+
+/* Header geometry */
+.kgen-ehr-lab-table thead tr {
+  height: 32px;
+}
+
+.kgen-ehr-lab-table th {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* Normal widget row geometry */
+.kgen-ehr-lab-table tbody tr {
+  height: 49px;
+}
+
+.kgen-ehr-lab-table td {
+  padding-top: 7px !important;
+  padding-bottom: 7px !important;
+  vertical-align: middle;
+}
+
+/* Test column */
+.kgen-ehr-lab-table th:nth-child(1),
+.kgen-ehr-lab-table td:nth-child(1) {
+  text-align: left !important;
+}
+
+/* Result column */
+.kgen-ehr-lab-table th:nth-child(2),
+.kgen-ehr-lab-table td:nth-child(2) {
+  text-align: left !important;
+}
+
+/* Trend column */
+.kgen-ehr-lab-table th:nth-child(3),
+.kgen-ehr-lab-table td:nth-child(3) {
+  display: table-cell !important;
+  text-align: center !important;
+  padding-left: 10px !important;
+  padding-right: 14px !important;
+  overflow: visible !important;
+}
+
+/* Keep indicator perfectly centered */
+.kgen-lab-pointed-indicator {
+  display: inline-block !important;
+  margin: 0 auto !important;
+  vertical-align: middle;
+}
+
+/* Keep names and results readable */
+.kgen-ehr-lab-table td > strong {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kgen-ehr-lab-table td > small {
+  display: block;
+  max-width: 100%;
+  margin-top: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Compact 03A rows */
+.kgen-ehr-lab-table-wrap.compact
+  .kgen-ehr-lab-table tbody tr {
+  height: 42px;
+}
+
+.kgen-ehr-lab-table-wrap.compact
+  .kgen-ehr-lab-table td {
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+}
+
+.kgen-ehr-lab-table-wrap.compact
+  .kgen-ehr-lab-table th {
+  padding-top: 7px !important;
+  padding-bottom: 7px !important;
+}
+
+/* Give 03A enough room for four complete rows */
+.kgen-labs-small-panel {
+  min-height: 275px !important;
+}
+
+/* Consistent separation before the button */
+.kgen-labs-panel .kgen-blue-btn,
+.kgen-labs-small-panel .kgen-blue-btn {
+  margin-top: 8px;
+  flex: 0 0 auto;
+}
+
+/*
+ * Defensive override against the older responsive rule
+ * that hides the Trend column below 900px.
+ */
+@media (max-width: 900px) {
+  .kgen-ehr-lab-table th:nth-child(3),
+  .kgen-ehr-lab-table td:nth-child(3) {
+    display: table-cell !important;
+  }
+}
+
+/* =========================================================
+   FINAL LAB TABLE LAYOUT
+   03 + 03A
+========================================================= */
+
+/* Both laboratory widgets use a vertical layout */
+.kgen-labs-panel,
+.kgen-labs-small-panel {
+  display: flex !important;
+  flex-direction: column !important;
+  min-width: 0;
+  overflow: hidden !important;
+}
+
+/* Keep 03A aligned with the other second-row panels */
+.kgen-labs-small-panel {
+  min-height: 250px !important;
+}
+
+/* The table is the only scrollable area */
+.kgen-labs-panel > .kgen-ehr-lab-table-wrap,
+.kgen-labs-small-panel > .kgen-ehr-lab-table-wrap {
+  display: block !important;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #ffffff;
+
+  scrollbar-width: thin;
+  scrollbar-color: #94a3b8 transparent;
+  scrollbar-gutter: stable;
+}
+
+/* Top 03 table viewport */
+.kgen-labs-panel > .kgen-ehr-lab-table-wrap {
+  flex: 1 1 auto;
+  max-height: 240px !important;
+}
+
+/*
+ * Smaller 03A viewport.
+ * WBC remains available by scrolling, while the button
+ * stays visible below the table.
+ */
+.kgen-labs-small-panel > .kgen-ehr-lab-table-wrap {
+  flex: 1 1 auto;
+  max-height: 154px !important;
+}
+
+/* Visible narrow scrollbar */
+.kgen-ehr-lab-table-wrap::-webkit-scrollbar {
+  width: 6px;
+}
+
+.kgen-ehr-lab-table-wrap::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.kgen-ehr-lab-table-wrap::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 999px;
+}
+
+.kgen-ehr-lab-table-wrap::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Keep the full-table button outside the scrolling area */
+.kgen-labs-panel > .kgen-blue-btn,
+.kgen-labs-small-panel > .kgen-blue-btn {
+  display: block !important;
+  flex: 0 0 auto !important;
+  width: 100%;
+  margin-top: 8px !important;
+  position: relative;
+  z-index: 3;
+}
+
+/* Stable three-column table */
+.kgen-ehr-lab-table {
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+/*
+ * Better-balanced positions:
+ * Test   = 40%
+ * Result = 30%
+ * Trend  = 30%
+ */
+.kgen-ehr-lab-table col.kgen-lab-col-test,
+.kgen-ehr-lab-table th:nth-child(1) {
+  width: 40% !important;
+}
+
+.kgen-ehr-lab-table col.kgen-lab-col-result,
+.kgen-ehr-lab-table th:nth-child(2) {
+  width: 30% !important;
+}
+
+.kgen-ehr-lab-table col.kgen-lab-col-trend,
+.kgen-ehr-lab-table th:nth-child(3) {
+  width: 30% !important;
+}
+
+/* Sticky header while rows scroll */
+.kgen-ehr-lab-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  background: #e8edf3;
+}
+
+/* Consistent internal spacing */
+.kgen-ehr-lab-table th,
+.kgen-ehr-lab-table td {
+  box-sizing: border-box;
+  min-width: 0;
+  padding-left: 12px !important;
+  padding-right: 10px !important;
+}
+
+/* Test and Result remain left aligned */
+.kgen-ehr-lab-table th:nth-child(1),
+.kgen-ehr-lab-table td:nth-child(1),
+.kgen-ehr-lab-table th:nth-child(2),
+.kgen-ehr-lab-table td:nth-child(2) {
+  text-align: left !important;
+}
+
+/*
+ * Bring Trend inward instead of placing it against
+ * the extreme right edge.
+ */
+.kgen-ehr-lab-table .kgen-lab-trend-heading,
+.kgen-ehr-lab-table .kgen-lab-trend-cell {
+  display: table-cell !important;
+  text-align: left !important;
+  padding-left: 16px !important;
+  padding-right: 8px !important;
+  overflow: visible !important;
+}
+
+/* Cancel the previous margin-inline:auto centering */
+.kgen-lab-trend-cell .kgen-lab-pointed-indicator {
+  display: inline-block !important;
+  margin: 0 !important;
+  vertical-align: middle;
+}
+
+/* Slightly more compact rows */
+.kgen-ehr-lab-table td {
+  padding-top: 7px !important;
+  padding-bottom: 7px !important;
+}
+
+.kgen-ehr-lab-table-wrap.compact
+  .kgen-ehr-lab-table td {
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+}
+
+/* Never hide the Trend column responsively */
+@media (max-width: 900px) {
+  .kgen-ehr-lab-table th:nth-child(3),
+  .kgen-ehr-lab-table td:nth-child(3) {
+    display: table-cell !important;
+  }
+}

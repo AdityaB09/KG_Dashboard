@@ -325,7 +325,7 @@ function InterpretationModal({
               </DetailSection>
             )}
 
-            {!!limitations.length && (
+            {/* {!!limitations.length && (
               <DetailSection title="Uncertainty and Missing Data">
                 <ul className="kgen-slm-modal-list">
                   {limitations.map((item, index) => (
@@ -335,7 +335,7 @@ function InterpretationModal({
                   ))}
                 </ul>
               </DetailSection>
-            )}
+            )} */}
           </div>
 
           <aside className="kgen-slm-modal-aside">
