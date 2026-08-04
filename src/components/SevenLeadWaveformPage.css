@@ -2257,3 +2257,453 @@
 .wave7-page:has(.wave7-oracle-auto-banner) {
   grid-template-rows: auto minmax(0, 1fr) !important;
 }
+
+
+/* =========================================================
+   KGEN V6.4 — EHR-STYLE BEDSIDE OBSERVATION TABLE
+========================================================= */
+
+.wave7-vitals-panel.wave7-clinical-observation-panel {
+  display: grid !important;
+  grid-template-rows:
+    auto
+    minmax(0, 1fr)
+    auto !important;
+  gap: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  border: 1px solid #284761 !important;
+  border-radius: 14px !important;
+  background: #071b2b !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 6px 20px rgba(0, 15, 28, 0.18) !important;
+}
+
+.wave7-observation-header {
+  min-height: 58px;
+  padding: 10px 12px !important;
+  border-bottom: 1px solid #284761;
+  background: #0b2639;
+}
+
+.wave7-observation-header > div {
+  min-width: 0;
+}
+
+.wave7-observation-header strong {
+  display: block;
+  margin-top: 4px;
+  overflow: hidden;
+  color: #f8fafc;
+  font-size: 13px;
+  line-height: 1.1;
+  font-weight: 950;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wave7-observation-phase {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 54px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  font-size: 9px;
+  line-height: 1;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.wave7-observation-phase.pre {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.wave7-observation-phase.event {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.wave7-observation-phase.post {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.wave7-observation-table-wrap {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.wave7-observation-table {
+  width: 100%;
+  height: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  color: #e2e8f0;
+}
+
+.wave7-observation-table thead {
+  background: #102f45;
+}
+
+.wave7-observation-table th {
+  padding: 7px 8px;
+  color: #93c5fd;
+  text-align: left;
+  font-size: 8px;
+  line-height: 1;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.wave7-observation-table th:nth-child(1) {
+  width: 46%;
+}
+
+.wave7-observation-table th:nth-child(2) {
+  width: 38%;
+}
+
+.wave7-observation-table th:nth-child(3) {
+  width: 16%;
+  text-align: center;
+}
+
+.wave7-observation-table td {
+  padding: 8px;
+  border-top: 1px solid rgba(148, 163, 184, 0.16);
+  vertical-align: middle;
+}
+
+.wave7-observation-table td:nth-child(3) {
+  text-align: center;
+}
+
+.wave7-observation-table td strong {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  color: #f8fafc;
+  font-size: 12px;
+  line-height: 1.05;
+  font-weight: 950;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.wave7-observation-table td small {
+  display: block;
+  margin-top: 3px;
+  overflow: hidden;
+  color: #94a3b8;
+  font-size: 8px;
+  line-height: 1;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wave7-observation-direction {
+  display: inline-grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 8px;
+  font-size: 17px;
+  line-height: 1;
+  font-weight: 950;
+}
+
+.wave7-observation-direction.stable {
+  background: #fef3c7;
+  color: #a16207;
+}
+
+.wave7-observation-direction.up {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.wave7-observation-direction.down {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.wave7-observation-direction.unavailable {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.wave7-observation-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  min-height: 34px;
+  padding: 7px 10px;
+  border-top: 1px solid #284761;
+  background: #0b2639;
+}
+
+.wave7-observation-footer span {
+  min-width: 0;
+  overflow: hidden;
+  color: #cbd5e1;
+  font-size: 8px;
+  line-height: 1.1;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wave7-observation-footer em {
+  flex: 0 0 auto;
+  padding: 4px 6px;
+  border-radius: 999px;
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 7px;
+  line-height: 1;
+  font-style: normal;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 1120px) {
+  .wave7-observation-table th,
+  .wave7-observation-table td {
+    padding-inline: 6px;
+  }
+
+  .wave7-observation-table td strong {
+    font-size: 11px;
+  }
+}
+
+/* =========================================================
+   KGEN V6.5 — SMOOTH SpO2 / PPG MINI GRAPH
+========================================================= */
+
+.wave7-reference-graph-box {
+  contain: paint;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.wave7-spo2-reference-graph.wave7-spo2-smooth-graph {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  shape-rendering: geometricPrecision;
+}
+
+.wave7-spo2-smooth-graph polyline {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.wave7-spo2-smooth-graph .wave7-ppg-base {
+  stroke: #7dd3fc;
+  stroke-width: 2;
+  opacity: 0.82;
+  filter:
+    drop-shadow(
+      0 0 2px
+      rgba(56, 189, 248, 0.34)
+    );
+}
+
+.wave7-spo2-smooth-graph .wave7-ppg-sweep {
+  stroke: #e0f7ff;
+  stroke-width: 2.5;
+  opacity: 0.96;
+  stroke-dasharray: 15 150;
+  stroke-dashoffset: 0;
+  animation:
+    wave7-ppg-smooth-sweep
+    var(
+      --wave7-ppg-beat-duration,
+      0.8s
+    )
+    linear
+    infinite;
+  filter:
+    drop-shadow(
+      0 0 3px
+      rgba(125, 211, 252, 0.72)
+    );
+  will-change:
+    stroke-dashoffset;
+}
+
+/*
+ * The old endpoint circle visually jumped whenever
+ * the selected API Range beat changed. The V6.5
+ * renderer uses the moving highlight above instead.
+ */
+.wave7-spo2-smooth-graph circle {
+  display: none !important;
+}
+
+@keyframes wave7-ppg-smooth-sweep {
+  from {
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dashoffset: -165;
+  }
+}
+
+@media (
+  prefers-reduced-motion:
+  reduce
+) {
+  .wave7-spo2-smooth-graph
+    .wave7-ppg-sweep {
+    animation: none;
+    opacity: 0.45;
+  }
+}
+
+
+/* =========================================================
+   KGEN V6.5.2 — SpO₂ PPG INSIDE BEDSIDE TABLE
+========================================================= */
+
+.wave7-observation-result {
+  min-width: 0;
+}
+
+.wave7-observation-result.with-ppg {
+  display: grid;
+  grid-template-columns:
+    minmax(42px, auto)
+    minmax(54px, 1fr);
+  align-items: center;
+  gap: 5px;
+}
+
+.wave7-observation-result.with-ppg > div:first-child {
+  min-width: 0;
+}
+
+.wave7-observation-ppg {
+  min-width: 0;
+  height: 28px;
+  overflow: hidden;
+  border: 1px solid rgba(125, 211, 252, 0.18);
+  border-radius: 7px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(15, 47, 68, 0.74),
+      rgba(5, 29, 46, 0.94)
+    );
+}
+
+.wave7-observation-ppg .wave7-spo2-reference-graph {
+  width: 100%;
+  height: 100%;
+}
+
+
+/* =========================================================
+   KGEN V6.5.3 — RESTORE PREVIOUS BEDSIDE CARD STACK
+========================================================= */
+
+.wave7-vitals-panel.wave7-reference-vitals {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  padding: 10px !important;
+  overflow: hidden !important;
+  border: 1px solid #284761 !important;
+  border-radius: 14px !important;
+  background: #071b2b !important;
+}
+
+.wave7-reference-vitals .wave7-vitals-header {
+  min-height: auto !important;
+  padding: 0 0 2px !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.wave7-reference-vitals .wave7-reference-vital-card {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+.wave7-reference-vitals
+  .wave7-reference-vital-card.spo2 {
+  flex: 1.15 1 0;
+}
+
+.wave7-reference-vitals
+  .wave7-reference-graph-box {
+  min-width: 64px;
+  height: 42px;
+}
+
+.wave7-reference-vitals
+  .wave7-spo2-reference-graph {
+  width: 100%;
+  height: 100%;
+}
+
+/*
+ * Hide the V6.4 observation-table presentation defensively.
+ * These elements are no longer rendered by the JSX.
+ */
+.wave7-clinical-observation-panel,
+.wave7-observation-table-wrap,
+.wave7-observation-footer,
+.wave7-observation-header {
+  display: none !important;
+}
+
+
+/* =========================================================
+   KGEN V6.6 — CONTINUOUS SCROLLING SpO₂ / PPG
+========================================================= */
+
+.wave7-reference-graph-box {
+  contain: strict;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.wave7-spo2-reference-graph.wave7-spo2-continuous-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/*
+ * V6.6 draws the moving waveform directly on canvas.
+ * Disable the older SVG sweep rules defensively.
+ */
+.wave7-reference-graph-box
+  .wave7-spo2-smooth-graph {
+  display: none !important;
+}
+
+.wave7-reference-graph-box canvas {
+  pointer-events: none;
+}
+

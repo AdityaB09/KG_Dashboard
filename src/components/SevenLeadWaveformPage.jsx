@@ -2020,21 +2020,15 @@ const completedInjectionEpisodeId =
 ))}
 
   <BedsideVitalsPanel
-  key={`${waveformSource}-vitals`}
-  waveFrame={waveFrame}
-  evaluationMode={
-    waveformSource ===
-    API_RANGE_EPISODE_SOURCE
-  }
-  injectionState={
-    injectionStatus?.state
-  }
-  scenarioId={
-    injectionStatus?.scenarioId ||
-    oracleAutoDemo?.scenarioId ||
-    injectionScenarioId
-  }
-/>
+    key={`${waveformSource}-vitals`}
+    waveFrame={waveFrame}
+    injectionStatus={injectionStatus}
+    scenarioId={
+      injectionStatus?.scenarioId ||
+      oracleAutoDemo?.scenarioId ||
+      injectionScenarioId
+    }
+  />
 </section>
       </main>
     </section>
@@ -2347,95 +2341,1068 @@ function getMovingPpgBeat(
   );
 }
 
+const CONTINUOUS_PPG_TEMPLATE_POINTS = 96;
+const CONTINUOUS_PPG_DRAW_POINTS = 150;
+const CONTINUOUS_PPG_BEATS_VISIBLE = 2.15;
+
+const PPG_TEMPLATE_MORPH_SECONDS = 0.72;
+const PPG_RATE_MORPH_SECONDS = 0.65;
+const PPG_MIN_HEART_RATE = 40;
+const PPG_MAX_HEART_RATE = 190;
+
+const DEFAULT_CONTINUOUS_PPG_TEMPLATE =
+  Array.from(
+    {
+      length:
+        CONTINUOUS_PPG_TEMPLATE_POINTS,
+    },
+    (_, index) => {
+      const x =
+        index /
+        Math.max(
+          1,
+          CONTINUOUS_PPG_TEMPLATE_POINTS -
+            1
+        );
+
+      const systolic =
+        Math.exp(
+          -Math.pow(
+            (x - 0.24) / 0.075,
+            2
+          )
+        );
+
+      const shoulder =
+        0.18 *
+        Math.exp(
+          -Math.pow(
+            (x - 0.39) / 0.09,
+            2
+          )
+        );
+
+      const notch =
+        0.12 *
+        Math.exp(
+          -Math.pow(
+            (x - 0.50) / 0.048,
+            2
+          )
+        );
+
+      const dicrotic =
+        0.31 *
+        Math.exp(
+          -Math.pow(
+            (x - 0.64) / 0.11,
+            2
+          )
+        );
+
+      return clamp(
+        systolic +
+        shoulder +
+        dicrotic -
+        notch,
+        0,
+        1
+      );
+    }
+  );
+
+function cleanContinuousPpgSeries(
+  values
+) {
+  return (
+    Array.isArray(values)
+      ? values
+      : []
+  )
+    .map(Number)
+    .filter(Number.isFinite);
+}
+
+function resampleContinuousPpg(
+  values,
+  pointCount =
+    CONTINUOUS_PPG_TEMPLATE_POINTS
+) {
+  const clean =
+    cleanContinuousPpgSeries(
+      values
+    );
+
+  if (!clean.length) {
+    return [
+      ...DEFAULT_CONTINUOUS_PPG_TEMPLATE,
+    ];
+  }
+
+  if (clean.length === 1) {
+    return Array.from(
+      {
+        length: pointCount,
+      },
+      () => clean[0]
+    );
+  }
+
+  return Array.from(
+    {
+      length: pointCount,
+    },
+    (_, targetIndex) => {
+      const position =
+        (
+          targetIndex /
+          Math.max(
+            1,
+            pointCount - 1
+          )
+        ) *
+        (clean.length - 1);
+
+      const lowerIndex =
+        Math.floor(
+          position
+        );
+
+      const upperIndex =
+        Math.min(
+          clean.length - 1,
+          lowerIndex + 1
+        );
+
+      const fraction =
+        position -
+        lowerIndex;
+
+      return (
+        clean[lowerIndex] *
+          (1 - fraction) +
+        clean[upperIndex] *
+          fraction
+      );
+    }
+  );
+}
+
+function normalizeContinuousPpgTemplate(
+  values
+) {
+  const resampled =
+    resampleContinuousPpg(
+      smoothPpg(
+        cleanContinuousPpgSeries(
+          values
+        ),
+        1
+      )
+    );
+
+  const lower =
+    percentile(
+      resampled,
+      4
+    );
+
+  const upper =
+    percentile(
+      resampled,
+      96
+    );
+
+  const range =
+    upper - lower;
+
+  if (
+    !Number.isFinite(range) ||
+    range < 0.00001
+  ) {
+    return [
+      ...DEFAULT_CONTINUOUS_PPG_TEMPLATE,
+    ];
+  }
+
+  return resampled.map(
+    (value) =>
+      clamp(
+        (value - lower) /
+          range,
+        0,
+        1
+      )
+  );
+}
+
+function rotateContinuousPpgTemplate(
+  values,
+  shift
+) {
+  const length =
+    values.length;
+
+  if (!length) {
+    return [];
+  }
+
+  return values.map(
+    (_, index) => {
+      const sourceIndex =
+        (
+          index -
+          shift +
+          length
+        ) %
+        length;
+
+      return values[
+        sourceIndex
+      ];
+    }
+  );
+}
+
+function continuousPpgTemplateDistance(
+  left,
+  right
+) {
+  const length =
+    Math.min(
+      left.length,
+      right.length
+    );
+
+  if (!length) {
+    return Infinity;
+  }
+
+  let total = 0;
+
+  for (
+    let index = 0;
+    index < length;
+    index += 1
+  ) {
+    const difference =
+      left[index] -
+      right[index];
+
+    total +=
+      difference *
+      difference;
+  }
+
+  return total / length;
+}
+
+function alignContinuousPpgTemplate(
+  previous,
+  candidate
+) {
+  if (
+    !previous?.length ||
+    previous.length !==
+      candidate.length
+  ) {
+    return candidate;
+  }
+
+  const maximumShift =
+    Math.max(
+      4,
+      Math.round(
+        candidate.length *
+          0.18
+      )
+    );
+
+  let best =
+    candidate;
+
+  let bestDistance =
+    continuousPpgTemplateDistance(
+      previous,
+      candidate
+    );
+
+  for (
+    let shift =
+      -maximumShift;
+    shift <= maximumShift;
+    shift += 1
+  ) {
+    if (shift === 0) {
+      continue;
+    }
+
+    const shifted =
+      rotateContinuousPpgTemplate(
+        candidate,
+        shift
+      );
+
+    const distance =
+      continuousPpgTemplateDistance(
+        previous,
+        shifted
+      );
+
+    if (
+      distance <
+      bestDistance
+    ) {
+      best =
+        shifted;
+
+      bestDistance =
+        distance;
+    }
+  }
+
+  return best;
+}
+
+function sampleContinuousPpgTemplate(
+  template,
+  phase
+) {
+  const length =
+    template.length;
+
+  if (!length) {
+    return 0;
+  }
+
+  const wrapped =
+    (
+      phase % 1 +
+      1
+    ) % 1;
+
+  const position =
+    wrapped *
+    length;
+
+  const lowerIndex =
+    Math.floor(
+      position
+    ) % length;
+
+  const upperIndex =
+    (
+      lowerIndex + 1
+    ) % length;
+
+  const fraction =
+    position -
+    Math.floor(
+      position
+    );
+
+  return (
+    template[lowerIndex] *
+      (1 - fraction) +
+    template[upperIndex] *
+      fraction
+  );
+}
+
+function validContinuousPpgHeartRate(
+  value
+) {
+  const numeric =
+    Number(value);
+
+  if (
+    !Number.isFinite(numeric) ||
+    numeric <= 0
+  ) {
+    return null;
+  }
+
+  return clamp(
+    numeric,
+    PPG_MIN_HEART_RATE,
+    PPG_MAX_HEART_RATE
+  );
+}
+
 function MiniPpgWaveform({
   series,
   sampleRate = 220,
   heartRate = 72,
   source = "",
 }) {
-  const width = 86;
-  const height = 42;
+  const canvasRef =
+    useRef(null);
 
-  const oneBeat = getMovingPpgBeat(
-    series || [],
-    sampleRate,
-    heartRate,
-    source
-  );
+  const sizeRef =
+    useRef({
+      width: 86,
+      height: 42,
+      pixelRatio: 1,
+    });
 
-  const min = Math.min(...oneBeat);
-  const max = Math.max(...oneBeat);
-  const range = max - min || 1;
+  const displayedTemplateRef =
+    useRef([
+      ...DEFAULT_CONTINUOUS_PPG_TEMPLATE,
+    ]);
 
-  const points = oneBeat
-    .map((value, index) => {
-      const x =
-        oneBeat.length <= 1
-          ? width
-          : (index / (oneBeat.length - 1)) * width;
+  const targetTemplateRef =
+    useRef([
+      ...DEFAULT_CONTINUOUS_PPG_TEMPLATE,
+    ]);
 
-      const y = height - ((value - min) / range) * height;
+  const phaseRef =
+    useRef(0);
 
-      return `${x.toFixed(1)},${y.toFixed(1)}`;
-    })
-    .join(" ");
+  const smoothedHeartRateRef =
+    useRef(
+      validContinuousPpgHeartRate(
+        heartRate
+      ) || 72
+    );
 
-  const lastValue = oneBeat[oneBeat.length - 1];
-  const lastX = width;
-  const lastY = height - ((lastValue - min) / range) * height;
+  const requestedHeartRateRef =
+    useRef(
+      validContinuousPpgHeartRate(
+        heartRate
+      )
+    );
+
+  const latestValidSeriesRef =
+    useRef([]);
+
+  const candidateTemplate =
+    useMemo(() => {
+      const clean =
+        cleanContinuousPpgSeries(
+          series
+        );
+
+      /*
+       * A missing trace is not a reset signal.
+       * During controlled injection we keep the
+       * previous real pulse moving until a new
+       * post-capture trace arrives.
+       */
+      if (clean.length < 8) {
+        return null;
+      }
+
+      latestValidSeriesRef.current =
+        clean;
+
+      const extracted =
+        getMovingPpgBeat(
+          clean,
+          sampleRate,
+          heartRate,
+          source
+        );
+
+      return normalizeContinuousPpgTemplate(
+        extracted
+      );
+    }, [
+      series,
+      sampleRate,
+      heartRate,
+      source,
+    ]);
+
+  useEffect(() => {
+    const requested =
+      validContinuousPpgHeartRate(
+        heartRate
+      );
+
+    if (requested !== null) {
+      requestedHeartRateRef.current =
+        requested;
+    }
+  }, [heartRate]);
+
+  useEffect(() => {
+    if (!candidateTemplate) {
+      return;
+    }
+
+    const aligned =
+      alignContinuousPpgTemplate(
+        displayedTemplateRef.current,
+        candidateTemplate
+      );
+
+    /*
+     * Do not replace the target in one frame.
+     * This first dampening layer prevents a new
+     * API-range pulse selection from looking like
+     * a sudden morphology jump.
+     */
+    const previousTarget =
+      targetTemplateRef.current;
+
+    targetTemplateRef.current =
+      aligned.map(
+        (value, index) => {
+          const previous =
+            previousTarget[
+              index
+            ] ??
+            value;
+
+          return (
+            previous *
+              0.62 +
+            value *
+              0.38
+          );
+        }
+      );
+  }, [candidateTemplate]);
+
+  useEffect(() => {
+    const canvas =
+      canvasRef.current;
+
+    if (!canvas) {
+      return undefined;
+    }
+
+    const context =
+      canvas.getContext(
+        "2d",
+        {
+          alpha: true,
+          desynchronized: true,
+        }
+      );
+
+    if (!context) {
+      return undefined;
+    }
+
+    let mounted = true;
+    let animationFrame = 0;
+    let previousTimestamp = 0;
+
+    function resizeCanvas() {
+      const rect =
+        canvas.getBoundingClientRect();
+
+      const width =
+        Math.max(
+          1,
+          rect.width || 86
+        );
+
+      const height =
+        Math.max(
+          1,
+          rect.height || 42
+        );
+
+      const pixelRatio =
+        Math.min(
+          2,
+          Math.max(
+            1,
+            window.devicePixelRatio ||
+              1
+          )
+        );
+
+      const canvasWidth =
+        Math.round(
+          width *
+          pixelRatio
+        );
+
+      const canvasHeight =
+        Math.round(
+          height *
+          pixelRatio
+        );
+
+      if (
+        canvas.width !==
+          canvasWidth ||
+        canvas.height !==
+          canvasHeight
+      ) {
+        canvas.width =
+          canvasWidth;
+
+        canvas.height =
+          canvasHeight;
+      }
+
+      sizeRef.current = {
+        width,
+        height,
+        pixelRatio,
+      };
+    }
+
+    resizeCanvas();
+
+    const resizeObserver =
+      typeof ResizeObserver !==
+      "undefined"
+        ? new ResizeObserver(
+            resizeCanvas
+          )
+        : null;
+
+    resizeObserver?.observe(
+      canvas
+    );
+
+    function draw(timestamp) {
+      if (!mounted) {
+        return;
+      }
+
+      if (!previousTimestamp) {
+        previousTimestamp =
+          timestamp;
+      }
+
+      const elapsedSeconds =
+        Math.min(
+          0.05,
+          Math.max(
+            0,
+            (
+              timestamp -
+              previousTimestamp
+            ) /
+              1000
+          )
+        );
+
+      previousTimestamp =
+        timestamp;
+
+      const requestedRate =
+        requestedHeartRateRef.current ||
+        smoothedHeartRateRef.current ||
+        72;
+
+      const rateAlpha =
+        1 -
+        Math.exp(
+          -elapsedSeconds /
+            PPG_RATE_MORPH_SECONDS
+        );
+
+      smoothedHeartRateRef.current +=
+        (
+          requestedRate -
+          smoothedHeartRateRef.current
+        ) *
+        rateAlpha;
+
+      phaseRef.current =
+        (
+          phaseRef.current +
+          elapsedSeconds *
+            (
+              smoothedHeartRateRef.current /
+              60
+            )
+        ) % 1;
+
+      const templateAlpha =
+        1 -
+        Math.exp(
+          -elapsedSeconds /
+            PPG_TEMPLATE_MORPH_SECONDS
+        );
+
+      displayedTemplateRef.current =
+        displayedTemplateRef.current.map(
+          (value, index) => {
+            const target =
+              targetTemplateRef.current[
+                index
+              ] ??
+              value;
+
+            return (
+              value +
+              (
+                target -
+                value
+              ) *
+                templateAlpha
+            );
+          }
+        );
+
+      const {
+        width,
+        height,
+        pixelRatio,
+      } = sizeRef.current;
+
+      context.setTransform(
+        pixelRatio,
+        0,
+        0,
+        pixelRatio,
+        0,
+        0
+      );
+
+      context.clearRect(
+        0,
+        0,
+        width,
+        height
+      );
+
+      const horizontalPadding = 2;
+      const verticalPadding = 4;
+      const drawableWidth =
+        Math.max(
+          1,
+          width -
+          horizontalPadding *
+            2
+        );
+
+      const drawableHeight =
+        Math.max(
+          1,
+          height -
+          verticalPadding *
+            2
+        );
+
+      const points = [];
+
+      for (
+        let index = 0;
+        index <
+        CONTINUOUS_PPG_DRAW_POINTS;
+        index += 1
+      ) {
+        const fraction =
+          index /
+          Math.max(
+            1,
+            CONTINUOUS_PPG_DRAW_POINTS -
+              1
+          );
+
+        const x =
+          horizontalPadding +
+          fraction *
+            drawableWidth;
+
+        /*
+         * The animation clock is never reset by
+         * pre/event/post state changes. Increasing
+         * phase makes the trace continuously scroll
+         * from right to left.
+         */
+        const templatePhase =
+          phaseRef.current +
+          fraction *
+            CONTINUOUS_PPG_BEATS_VISIBLE;
+
+        const value =
+          sampleContinuousPpgTemplate(
+            displayedTemplateRef.current,
+            templatePhase
+          );
+
+        const y =
+          verticalPadding +
+          (
+            1 -
+            clamp(
+              value,
+              0,
+              1
+            )
+          ) *
+            drawableHeight;
+
+        points.push({
+          x,
+          y,
+        });
+      }
+
+      const gradient =
+        context.createLinearGradient(
+          0,
+          0,
+          width,
+          0
+        );
+
+      gradient.addColorStop(
+        0,
+        "rgba(56, 189, 248, 0.38)"
+      );
+
+      gradient.addColorStop(
+        0.72,
+        "rgba(125, 211, 252, 0.88)"
+      );
+
+      gradient.addColorStop(
+        1,
+        "rgba(224, 247, 255, 1)"
+      );
+
+      context.save();
+
+      context.beginPath();
+
+      points.forEach(
+        (point, index) => {
+          if (index === 0) {
+            context.moveTo(
+              point.x,
+              point.y
+            );
+          } else {
+            context.lineTo(
+              point.x,
+              point.y
+            );
+          }
+        }
+      );
+
+      context.lineWidth = 4;
+      context.strokeStyle =
+        "rgba(56, 189, 248, 0.18)";
+
+      context.shadowColor =
+        "rgba(56, 189, 248, 0.42)";
+
+      context.shadowBlur = 5;
+      context.stroke();
+      context.restore();
+
+      context.beginPath();
+
+      points.forEach(
+        (point, index) => {
+          if (index === 0) {
+            context.moveTo(
+              point.x,
+              point.y
+            );
+          } else {
+            context.lineTo(
+              point.x,
+              point.y
+            );
+          }
+        }
+      );
+
+      context.lineWidth = 1.8;
+      context.lineCap = "round";
+      context.lineJoin = "round";
+      context.strokeStyle =
+        gradient;
+
+      context.stroke();
+
+      /*
+       * A short bright tail moves with the actual
+       * waveform. It is not a static CSS dash and
+       * does not jump to a newly selected endpoint.
+       */
+      const tailLength =
+        Math.max(
+          10,
+          Math.round(
+            CONTINUOUS_PPG_DRAW_POINTS *
+              0.16
+          )
+        );
+
+      const tailStart =
+        Math.max(
+          0,
+          points.length -
+          tailLength
+        );
+
+      context.beginPath();
+
+      for (
+        let index = tailStart;
+        index < points.length;
+        index += 1
+      ) {
+        const point =
+          points[index];
+
+        if (index === tailStart) {
+          context.moveTo(
+            point.x,
+            point.y
+          );
+        } else {
+          context.lineTo(
+            point.x,
+            point.y
+          );
+        }
+      }
+
+      context.lineWidth = 2.35;
+      context.strokeStyle =
+        "rgba(224, 247, 255, 0.96)";
+
+      context.shadowColor =
+        "rgba(125, 211, 252, 0.74)";
+
+      context.shadowBlur = 4;
+      context.stroke();
+
+      context.shadowBlur = 0;
+
+      animationFrame =
+        requestAnimationFrame(
+          draw
+        );
+    }
+
+    animationFrame =
+      requestAnimationFrame(
+        draw
+      );
+
+    return () => {
+      mounted = false;
+
+      resizeObserver?.disconnect();
+
+      cancelAnimationFrame(
+        animationFrame
+      );
+    };
+  }, []);
 
   return (
-    <svg
-      className="wave7-spo2-reference-graph"
-      viewBox={`0 0 ${width} ${height}`}
+    <canvas
+      ref={canvasRef}
+      className="wave7-spo2-reference-graph wave7-spo2-continuous-canvas"
       aria-hidden="true"
-    >
-      <polyline points={points} />
-      <circle cx={lastX} cy={lastY} r="2.6" />
-    </svg>
+    />
   );
 }
+
+
+function finiteBedsideValue(
+  value
+) {
+  const parsed =
+    Number(value);
+
+  return Number.isFinite(parsed)
+    ? parsed
+    : null;
+}
+
+function formatResolvedVital(
+  value,
+  decimals = 0,
+  invalidWhenNonPositive = false
+) {
+  const parsed =
+    finiteBedsideValue(
+      value
+    );
+
+  if (
+    parsed === null ||
+    (
+      invalidWhenNonPositive &&
+      parsed <= 0
+    )
+  ) {
+    return "--";
+  }
+
+  return parsed.toFixed(
+    decimals
+  );
+}
+
 function BedsideVitalsPanel({
   waveFrame,
-  evaluationMode = false,
-  injectionState,
+  injectionStatus,
   scenarioId,
 }) {
-  const vitals =
-    waveFrame.vitals || {};
+  const rawVitals =
+    waveFrame?.vitals || {};
 
   const resolved =
     resolveBedsideWidgetValues({
-      enabled: evaluationMode,
+      enabled:
+        Boolean(scenarioId),
       scenarioId,
-      injectionState,
-      vitals,
+      injectionState:
+        injectionStatus?.state,
+      vitals: rawVitals,
     });
 
-  const heartRate =
-    resolved.heartRate;
-  const spo2 =
-    resolved.spo2;
-  const systolic =
-    resolved.systolic;
-  const diastolic =
-    resolved.diastolic;
-  const respiratoryRate =
-    resolved.respiratoryRate;
-  const temperature =
-    resolved.temperature;
+  /*
+   * Do not turn the numeric SpO₂ history into a
+   * waveform. The canvas keeps the last learned
+   * real PPG pulse moving through short or long
+   * capture-boundary gaps.
+   */
+  const ppgSeries =
+    Array.isArray(
+      rawVitals.ppgTrace
+    )
+      ? rawVitals.ppgTrace
+      : [];
 
-  const rollingSpo2Series =
-    useRollingSeries(
-      spo2,
-      28
+  const systolic =
+    finiteBedsideValue(
+      resolved.systolic
     );
 
-  const ppgSeries =
-    Array.isArray(vitals.ppgTrace) &&
-    vitals.ppgTrace.length
-      ? vitals.ppgTrace
-      : rollingSpo2Series;
+  const diastolic =
+    finiteBedsideValue(
+      resolved.diastolic
+    );
+
+  const bloodPressure =
+    systolic !== null &&
+    diastolic !== null &&
+    systolic > 0 &&
+    diastolic > 0
+      ? `${Math.round(
+          systolic
+        )}/${Math.round(
+          diastolic
+        )}`
+      : "--/--";
+
+  const signalLabel =
+    waveFrame?.status ===
+    "connected"
+      ? "Live signal"
+      : scenarioId
+      ? "Scenario signal"
+      : "Waiting";
 
   return (
     <aside className="wave7-vitals-panel wave7-reference-vitals">
@@ -2443,19 +3410,19 @@ function BedsideVitalsPanel({
         <p className="wave7-eyebrow">
           Bedside widgets
         </p>
+
         <span>
-          {waveFrame.status ===
-          "connected"
-            ? "Live signal"
-            : "Waiting"}
+          {signalLabel}
         </span>
       </div>
 
       <ReferenceVitalCard
         className="hr"
         label="HR"
-        value={formatVitalValue(
-          heartRate
+        value={formatResolvedVital(
+          resolved.heartRate,
+          0,
+          true
         )}
         unit=""
       />
@@ -2463,19 +3430,27 @@ function BedsideVitalsPanel({
       <ReferenceVitalCard
         className="spo2"
         label="SpO₂"
-        value={formatVitalValue(
-          spo2
+        value={formatResolvedVital(
+          resolved.spo2,
+          0,
+          true
         )}
         unit=""
         graph={
           <MiniPpgWaveform
             series={ppgSeries}
             sampleRate={
-              waveFrame.sampleRate ||
+              waveFrame?.sampleRate ||
               220
             }
-            heartRate={heartRate}
-            source={waveFrame.source}
+            heartRate={
+              resolved.heartRate ||
+              72
+            }
+            source={
+              waveFrame?.source ||
+              ""
+            }
           />
         }
       />
@@ -2483,19 +3458,17 @@ function BedsideVitalsPanel({
       <ReferenceVitalCard
         className="bp"
         label="NIBP"
-        value={`${formatVitalValue(
-          systolic
-        )}/${formatVitalValue(
-          diastolic
-        )}`}
+        value={bloodPressure}
         unit=""
       />
 
       <ReferenceVitalCard
         className="rr"
         label="RR"
-        value={formatVitalValue(
-          respiratoryRate
+        value={formatResolvedVital(
+          resolved.respiratoryRate,
+          0,
+          true
         )}
         unit=""
       />
@@ -2503,8 +3476,8 @@ function BedsideVitalsPanel({
       <ReferenceVitalCard
         className="temp"
         label="Temp"
-        value={formatVitalValue(
-          temperature,
+        value={formatResolvedVital(
+          resolved.temperature,
           1
         )}
         unit=""
