@@ -286,9 +286,9 @@ function InterpretationModal({
               <p>{widget.episodeNarrative}</p>
             </DetailSection>
 
-            <DetailSection title="Detected Episode Context">
+            {/* <DetailSection title="Detected Episode Context">
               <p>{widget.arrhythmiaNarrative}</p>
-            </DetailSection>
+            </DetailSection> */}
 
             {widget.morphologyNarrative && (
               <DetailSection title="Morphology and ECG Context">
