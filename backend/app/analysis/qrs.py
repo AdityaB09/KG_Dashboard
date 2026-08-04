@@ -16,6 +16,53 @@ from typing import Mapping
 
 import numpy as np
 
+
+def trapezoidal_integral(
+    values: np.ndarray,
+    *,
+    dx: float,
+) -> float:
+    """
+    Compute a trapezoidal integral across supported NumPy versions.
+
+    NumPy 2.0 introduced ``numpy.trapezoid`` and later NumPy releases
+    removed the deprecated ``numpy.trapz`` alias. Older local
+    environments may still expose only ``numpy.trapz``.
+    """
+    current = getattr(
+        np,
+        "trapezoid",
+        None,
+    )
+
+    if callable(current):
+        return float(
+            current(
+                values,
+                dx=dx,
+            )
+        )
+
+    legacy = getattr(
+        np,
+        "trapz",
+        None,
+    )
+
+    if callable(legacy):
+        return float(
+            legacy(
+                values,
+                dx=dx,
+            )
+        )
+
+    raise RuntimeError(
+        "The installed NumPy version provides neither "
+        "numpy.trapezoid nor numpy.trapz."
+    )
+
+
 def measure_qrs(
     segment: np.ndarray | None,
     sampling_rate_hz: float,
@@ -309,14 +356,12 @@ def measure_qrs(
             6,
         ),
         "qrsAreaMvSeconds": round(
-            float(
-                np.trapz(
-                    np.abs(qrs),
-                    dx=(
-                        1.0
-                        / sampling_rate_hz
-                    ),
-                )
+            trapezoidal_integral(
+                np.abs(qrs),
+                dx=(
+                    1.0
+                    / sampling_rate_hz
+                ),
             ),
             8,
         ),
