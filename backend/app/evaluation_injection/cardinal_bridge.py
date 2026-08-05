@@ -21,6 +21,7 @@ from app.evaluation_injection.evidence_consistency import (
     evidence_invalid_validation,
 )
 from app.evaluation_injection.etiology_context_scorer import (
+    _validation_hard_pass,
     score_etiology_context_response,
 )
 from app.evaluation_injection.grounded_cardinal_client import (
