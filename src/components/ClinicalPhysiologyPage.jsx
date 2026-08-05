@@ -984,7 +984,7 @@ function LabResultsTable({
         compact ? "compact" : ""
       }`}
     >
-      <div
+      {/* <div
         className="kgen-pointed-trend-legend"
         aria-label="Laboratory trend indicator legend"
       >
@@ -1000,7 +1000,7 @@ function LabResultsTable({
           <i className="down" />
           Decreasing
         </span>
-      </div>
+      </div> */}
 
       <table className="kgen-ehr-lab-table">
         <thead>
@@ -3671,7 +3671,7 @@ evaluationWaveformsView ? (
             <b>{live.potassium.toFixed(1)}</b>
           </div> */}
 
-<div className="kgen-episode-lab-summary ehr compact">
+{/* <div className="kgen-episode-lab-summary ehr compact">
   <strong>
     {displayedLabCards.length} documented result{
       displayedLabCards.length === 1
@@ -3682,7 +3682,7 @@ evaluationWaveformsView ? (
   <span>
     Trend indicator
   </span>
-</div>
+</div> */}
           <button className="kgen-blue-btn" type="button" onClick={onOpenLabs}>
             Access full table
           </button>
