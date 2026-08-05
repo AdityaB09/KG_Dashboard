@@ -12,7 +12,7 @@ class PrecomputedResponseError(RuntimeError):
 
 
 DEFAULT_EVALUATED_FOLDER = "medgemma-v6-0-3-1-dual"
-DEFAULT_PROFILE = "medgemma-27b-it"
+DEFAULT_PROFILE = "curated"
 DEFAULT_RUN = 2
 DEFAULT_RESPONSE_SET_ID = "medgemma-dual-v6-0-3-1"
 DEFAULT_RESPONSE_CONTRACT_VERSION = "model-clinical-output-v6.0.3"
@@ -61,6 +61,62 @@ REQUIRED_SCENARIOS = (
     "SVT-PSVT-007",
     "NSVT-ECTOPY-008",
 )
+
+
+MODEL_RESPONSE_KEYS = (
+    "episodeSummary",
+    "mostLikelyEtiologyAndClinicalContext",
+    "contributingFactors",
+    "materialEtiologicUncertainty",
+)
+
+
+def _validate_four_field_response(
+    response: dict[str, Any],
+    *,
+    run_directory: Path,
+) -> None:
+    actual_keys = set(response)
+    expected_keys = set(MODEL_RESPONSE_KEYS)
+    if actual_keys != expected_keys:
+        raise PrecomputedResponseError(
+            "Precomputed response does not match the exact V6.0.3 "
+            "four-field contract. "
+            f"expected={sorted(expected_keys)}; actual={sorted(actual_keys)}; "
+            f"directory={run_directory}"
+        )
+
+    for field in (
+        "episodeSummary",
+        "mostLikelyEtiologyAndClinicalContext",
+    ):
+        if not isinstance(response.get(field), str) or not response[field].strip():
+            raise PrecomputedResponseError(
+                f"Precomputed response field {field!r} must be a non-empty string: "
+                f"{run_directory}"
+            )
+
+    contributing = response.get("contributingFactors")
+    if (
+        not isinstance(contributing, list)
+        or not 1 <= len(contributing) <= 5
+        or any(not isinstance(item, str) or not item.strip() for item in contributing)
+    ):
+        raise PrecomputedResponseError(
+            "Precomputed contributingFactors must contain 1 to 5 non-empty strings: "
+            f"{run_directory}"
+        )
+
+    uncertainty = response.get("materialEtiologicUncertainty")
+    if (
+        not isinstance(uncertainty, list)
+        or len(uncertainty) > 2
+        or any(not isinstance(item, str) or not item.strip() for item in uncertainty)
+    ):
+        raise PrecomputedResponseError(
+            "Precomputed materialEtiologicUncertainty must contain 0 to 2 "
+            f"non-empty strings: {run_directory}"
+        )
 
 
 @dataclass(frozen=True)
@@ -373,12 +429,11 @@ def load_precomputed_response(scenario_id: str) -> PrecomputedResponseArtifacts:
         )
 
     response = cardinal.get("displayModelResponse") or cardinal.get("modelResponse") or {}
-    if not isinstance(response, dict) or not str(
-        response.get("episodeSummary") or ""
-    ).strip():
+    if not isinstance(response, dict):
         raise PrecomputedResponseError(
-            f"Precomputed response is missing displayable model content: {run_directory}"
+            f"Precomputed response is not a JSON object: {run_directory}"
         )
+    _validate_four_field_response(response, run_directory=run_directory)
 
     validation_passed = bool(
         validation.get("validatorPassed", validation.get("accepted"))
