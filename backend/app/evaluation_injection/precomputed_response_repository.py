@@ -8,12 +8,48 @@ from typing import Any
 
 
 class PrecomputedResponseError(RuntimeError):
-    """Raised when a configured precomputed demo response cannot be resolved."""
+    """Raised when a configured precomputed response cannot be resolved safely."""
 
 
-DEFAULT_EVALUATED_FOLDER = "medgemma-27b-it-all8-incart-v6-0-1"
-DEFAULT_MODEL_SLUG = "google-medgemma-27b-it"
-DEFAULT_MODEL_NAME = "google/medgemma-27b-it"
+DEFAULT_EVALUATED_FOLDER = "medgemma-v6-0-3-1-dual"
+DEFAULT_PROFILE = "medgemma-27b-it"
+DEFAULT_RUN = 2
+DEFAULT_RESPONSE_SET_ID = "medgemma-dual-v6-0-3-1"
+DEFAULT_RESPONSE_CONTRACT_VERSION = "model-clinical-output-v6.0.3"
+DEFAULT_VALIDATION_VERSION = "v6.0.3.1"
+
+PROFILE_ALIASES = {
+    "27b-it": "medgemma-27b-it",
+    "medgemma-27b-it": "medgemma-27b-it",
+    "google-medgemma-27b-it": "medgemma-27b-it",
+    "google/medgemma-27b-it": "medgemma-27b-it",
+    "27b-text-it": "medgemma-27b-text-it",
+    "text-it": "medgemma-27b-text-it",
+    "medgemma-27b-text-it": "medgemma-27b-text-it",
+    "google-medgemma-27b-text-it": "medgemma-27b-text-it",
+    "google/medgemma-27b-text-it": "medgemma-27b-text-it",
+    "curated": "curated",
+    "curated-best": "curated",
+    "curated-medgemma-v6-0-3-1": "curated",
+}
+
+BUILTIN_PROFILES: dict[str, dict[str, str]] = {
+    "medgemma-27b-it": {
+        "modelSlug": "google-medgemma-27b-it",
+        "modelName": "google/medgemma-27b-it",
+        "selectionMode": "single_model",
+    },
+    "medgemma-27b-text-it": {
+        "modelSlug": "google-medgemma-27b-text-it",
+        "modelName": "google/medgemma-27b-text-it",
+        "selectionMode": "single_model",
+    },
+    "curated": {
+        "modelSlug": "curated-medgemma-v6-0-3-1",
+        "modelName": "Curated MedGemma V6.0.3.1",
+        "selectionMode": "curated_best_per_scenario",
+    },
+}
 
 REQUIRED_SCENARIOS = (
     "VFIB-STEMI-001",
@@ -30,6 +66,10 @@ REQUIRED_SCENARIOS = (
 @dataclass(frozen=True)
 class PrecomputedResponseArtifacts:
     scenario_id: str
+    profile: str
+    response_set_id: str
+    source_model: str
+    selection_mode: str
     run_directory: Path
     widget: dict[str, Any]
     cardinal: dict[str, Any]
@@ -38,6 +78,7 @@ class PrecomputedResponseArtifacts:
     benchmark: dict[str, Any]
     diagnostic_event: dict[str, Any]
     run_summary: dict[str, Any]
+    installation_metadata: dict[str, Any]
 
 
 def _flag(name: str, default: bool = False) -> bool:
@@ -56,7 +97,7 @@ def precomputed_demo_required() -> bool:
 
 
 def precomputed_demo_delay_seconds() -> float:
-    raw = os.getenv("PRECOMPUTED_SLM_DELAY_SECONDS", "5").strip()
+    raw = os.getenv("PRECOMPUTED_SLM_DELAY_SECONDS", "2").strip()
     try:
         return min(30.0, max(0.0, float(raw)))
     except ValueError as error:
@@ -66,7 +107,6 @@ def precomputed_demo_delay_seconds() -> float:
 
 
 def _backend_root() -> Path:
-    # .../backend/app/evaluation_injection/precomputed_response_repository.py
     return Path(__file__).resolve().parents[2]
 
 
@@ -92,30 +132,6 @@ def precomputed_root() -> Path:
     ).resolve()
 
 
-def precomputed_model_slug() -> str:
-    return (
-        os.getenv("PRECOMPUTED_SLM_MODEL_SLUG", DEFAULT_MODEL_SLUG).strip()
-        or DEFAULT_MODEL_SLUG
-    )
-
-
-def precomputed_model_name() -> str:
-    return (
-        os.getenv("PRECOMPUTED_SLM_MODEL_NAME", DEFAULT_MODEL_NAME).strip()
-        or DEFAULT_MODEL_NAME
-    )
-
-
-def precomputed_run_number() -> int:
-    raw = os.getenv("PRECOMPUTED_SLM_RUN", "1").strip()
-    try:
-        return max(1, int(raw))
-    except ValueError as error:
-        raise PrecomputedResponseError(
-            "PRECOMPUTED_SLM_RUN must be an integer."
-        ) from error
-
-
 def _read_json(path: Path, *, required: bool = True) -> dict[str, Any]:
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
@@ -137,23 +153,136 @@ def _read_json(path: Path, *, required: bool = True) -> dict[str, Any]:
     return value
 
 
+def response_set_manifest(*, required: bool = True) -> dict[str, Any]:
+    return _read_json(
+        precomputed_root() / "response_set_manifest.json",
+        required=required,
+    )
+
+
+def precomputed_available_profiles() -> list[dict[str, Any]]:
+    manifest = response_set_manifest(required=False)
+    profiles = dict(BUILTIN_PROFILES)
+    declared = manifest.get("profiles") if isinstance(manifest, dict) else None
+    if isinstance(declared, dict):
+        for key, value in declared.items():
+            if isinstance(value, dict):
+                merged = dict(profiles.get(str(key)) or {})
+                merged.update(value)
+                profiles[str(key)] = merged
+    return [
+        {
+            "profile": key,
+            "modelSlug": value.get("modelSlug"),
+            "modelName": value.get("modelName"),
+            "selectionMode": value.get("selectionMode"),
+        }
+        for key, value in sorted(profiles.items())
+    ]
+
+
+def precomputed_profile() -> str:
+    raw = os.getenv("PRECOMPUTED_SLM_PROFILE", DEFAULT_PROFILE).strip().lower()
+    profile = PROFILE_ALIASES.get(raw, raw)
+    manifest = response_set_manifest(required=False)
+    profiles = manifest.get("profiles") if isinstance(manifest, dict) else None
+    allowed = set(BUILTIN_PROFILES)
+    if isinstance(profiles, dict):
+        allowed.update(str(key) for key in profiles)
+    if profile not in allowed:
+        raise PrecomputedResponseError(
+            "Unsupported PRECOMPUTED_SLM_PROFILE. "
+            f"received={raw!r}; allowed={sorted(allowed)}"
+        )
+    return profile
+
+
+def _profile_config() -> dict[str, Any]:
+    profile = precomputed_profile()
+    config = dict(BUILTIN_PROFILES.get(profile) or {})
+    manifest = response_set_manifest(required=False)
+    profiles = manifest.get("profiles") if isinstance(manifest, dict) else None
+    if isinstance(profiles, dict) and isinstance(profiles.get(profile), dict):
+        config.update(profiles[profile])
+    if not config.get("modelSlug"):
+        raise PrecomputedResponseError(
+            f"No modelSlug is configured for precomputed profile {profile!r}."
+        )
+    return config
+
+
+def _configured_or_profile(name: str, config_key: str) -> str:
+    explicit = os.getenv(name, "").strip()
+    configured = str(_profile_config().get(config_key) or "").strip()
+    if explicit and configured and explicit != configured:
+        raise PrecomputedResponseError(
+            f"{name}={explicit!r} conflicts with PRECOMPUTED_SLM_PROFILE="
+            f"{precomputed_profile()!r}, which requires {configured!r}."
+        )
+    return explicit or configured
+
+
+def precomputed_model_slug() -> str:
+    return _configured_or_profile("PRECOMPUTED_SLM_MODEL_SLUG", "modelSlug")
+
+
+def precomputed_model_name() -> str:
+    return _configured_or_profile("PRECOMPUTED_SLM_MODEL_NAME", "modelName")
+
+
+def precomputed_selection_mode() -> str:
+    return str(_profile_config().get("selectionMode") or "single_model")
+
+
+def precomputed_run_number() -> int:
+    manifest = response_set_manifest(required=False)
+    manifest_run = manifest.get("sourceRun") if isinstance(manifest, dict) else None
+    raw = os.getenv(
+        "PRECOMPUTED_SLM_RUN",
+        str(manifest_run or DEFAULT_RUN),
+    ).strip()
+    try:
+        return max(1, int(raw))
+    except ValueError as error:
+        raise PrecomputedResponseError(
+            "PRECOMPUTED_SLM_RUN must be an integer."
+        ) from error
+
+
+def precomputed_artifact_set_id() -> str:
+    explicit = os.getenv("PRECOMPUTED_SLM_RESPONSE_SET_ID", "").strip()
+    manifest = response_set_manifest(required=False)
+    declared = str(manifest.get("responseSetId") or DEFAULT_RESPONSE_SET_ID)
+    if explicit and explicit != declared:
+        raise PrecomputedResponseError(
+            "PRECOMPUTED_SLM_RESPONSE_SET_ID does not match the installed set. "
+            f"configured={explicit!r}; installed={declared!r}"
+        )
+    return explicit or declared
+
+
+def precomputed_response_contract_version() -> str:
+    manifest = response_set_manifest(required=False)
+    return str(
+        manifest.get("responseContractVersion")
+        or DEFAULT_RESPONSE_CONTRACT_VERSION
+    )
+
+
+def precomputed_validation_version() -> str:
+    manifest = response_set_manifest(required=False)
+    return str(manifest.get("validationVersion") or DEFAULT_VALIDATION_VERSION)
+
+
 def _model_directory(root: Path) -> Path:
     slug = precomputed_model_slug()
-
-    # Supported layouts:
-    #   root/google-medgemma-27b-it/<scenario>/run-1
-    #   root/<scenario>/run-1
-    #   root itself is google-medgemma-27b-it
     if root.name == slug:
         return root
-
     nested = root / slug
     if nested.is_dir():
         return nested
-
     if any((root / scenario).is_dir() for scenario in REQUIRED_SCENARIOS):
         return root
-
     return nested
 
 
@@ -163,7 +292,6 @@ def scenario_run_directory(scenario_id: str) -> Path:
         raise PrecomputedResponseError(
             f"Unsupported precomputed demo scenario: {normalized or '<empty>'}"
         )
-
     return (
         _model_directory(precomputed_root())
         / normalized
@@ -171,33 +299,64 @@ def scenario_run_directory(scenario_id: str) -> Path:
     )
 
 
-def load_precomputed_response(
+def _validate_installed_identity(
+    *,
     scenario_id: str,
-) -> PrecomputedResponseArtifacts:
+    run_directory: Path,
+    metadata: dict[str, Any],
+) -> None:
+    if not metadata:
+        raise PrecomputedResponseError(
+            f"installation_metadata.json is required: {run_directory}"
+        )
+    checks = {
+        "scenarioId": scenario_id,
+        "runNumber": precomputed_run_number(),
+        "responseSetId": precomputed_artifact_set_id(),
+        "responseContractVersion": precomputed_response_contract_version(),
+        "validationVersion": precomputed_validation_version(),
+    }
+    for key, expected in checks.items():
+        actual = metadata.get(key)
+        if actual != expected:
+            raise PrecomputedResponseError(
+                "Installed precomputed artifact identity mismatch. "
+                f"field={key}; expected={expected!r}; actual={actual!r}; "
+                f"directory={run_directory}"
+            )
+    installed_profile = str(metadata.get("profile") or "")
+    if installed_profile != precomputed_profile():
+        raise PrecomputedResponseError(
+            "Installed response profile mismatch. "
+            f"expected={precomputed_profile()!r}; actual={installed_profile!r}"
+        )
+
+
+def load_precomputed_response(scenario_id: str) -> PrecomputedResponseArtifacts:
     run_directory = scenario_run_directory(scenario_id)
     normalized = str(scenario_id).strip().upper()
 
     widget = _read_json(run_directory / "slm_widget_result_v4.json")
     cardinal = _read_json(run_directory / "cardinal_model_response.json")
     validation = _read_json(
-        run_directory / "grounding_validation_v4.json",
-        required=False,
+        run_directory / "grounding_validation_v4.json", required=False
     )
-    score = _read_json(
-        run_directory / "evaluation_score.json",
-        required=False,
-    )
+    score = _read_json(run_directory / "evaluation_score.json", required=False)
     benchmark = _read_json(
-        run_directory / "benchmark_result_v4.json",
-        required=False,
+        run_directory / "benchmark_result_v4.json", required=False
     )
     diagnostic_event = _read_json(
-        run_directory / "diagnostic_event.json",
-        required=False,
+        run_directory / "diagnostic_event.json", required=False
     )
-    run_summary = _read_json(
-        run_directory / "run_summary.json",
-        required=False,
+    run_summary = _read_json(run_directory / "run_summary.json", required=False)
+    installation_metadata = _read_json(
+        run_directory / "installation_metadata.json"
+    )
+
+    _validate_installed_identity(
+        scenario_id=normalized,
+        run_directory=run_directory,
+        metadata=installation_metadata,
     )
 
     declared = str(
@@ -206,7 +365,6 @@ def load_precomputed_response(
         or run_summary.get("scenarioId")
         or ""
     ).strip().upper()
-
     if declared != normalized:
         raise PrecomputedResponseError(
             "Precomputed artifact scenario mismatch. "
@@ -214,11 +372,7 @@ def load_precomputed_response(
             f"directory={run_directory}"
         )
 
-    response = (
-        cardinal.get("displayModelResponse")
-        or cardinal.get("modelResponse")
-        or {}
-    )
+    response = cardinal.get("displayModelResponse") or cardinal.get("modelResponse") or {}
     if not isinstance(response, dict) or not str(
         response.get("episodeSummary") or ""
     ).strip():
@@ -226,8 +380,33 @@ def load_precomputed_response(
             f"Precomputed response is missing displayable model content: {run_directory}"
         )
 
+    validation_passed = bool(
+        validation.get("validatorPassed", validation.get("accepted"))
+    )
+    if not validation_passed:
+        raise PrecomputedResponseError(
+            f"Installed response is not validator-passed: {run_directory}"
+        )
+    if validation.get("unsupportedFacts") or validation.get("contradictions"):
+        raise PrecomputedResponseError(
+            f"Installed response has grounding failures: {run_directory}"
+        )
+
+    source_model = str(
+        installation_metadata.get("sourceModel")
+        or (cardinal.get("model") or {}).get("name")
+        or precomputed_model_name()
+    )
+
     return PrecomputedResponseArtifacts(
         scenario_id=normalized,
+        profile=precomputed_profile(),
+        response_set_id=precomputed_artifact_set_id(),
+        source_model=source_model,
+        selection_mode=str(
+            installation_metadata.get("selectionMode")
+            or precomputed_selection_mode()
+        ),
         run_directory=run_directory,
         widget=widget,
         cardinal=cardinal,
@@ -236,12 +415,19 @@ def load_precomputed_response(
         benchmark=benchmark,
         diagnostic_event=diagnostic_event,
         run_summary=run_summary,
+        installation_metadata=installation_metadata,
     )
 
 
 def precomputed_demo_status() -> dict[str, Any]:
     available: list[dict[str, Any]] = []
     missing: list[dict[str, Any]] = []
+    manifest_error: str | None = None
+    try:
+        manifest = response_set_manifest(required=True)
+    except PrecomputedResponseError as error:
+        manifest = {}
+        manifest_error = str(error)
 
     for scenario_id in REQUIRED_SCENARIOS:
         try:
@@ -250,13 +436,20 @@ def precomputed_demo_status() -> dict[str, Any]:
                 {
                     "scenarioId": scenario_id,
                     "available": True,
-                    "validationStatus": artifacts.widget.get("validationStatus"),
+                    "sourceModel": artifacts.source_model,
+                    "validationStatus": artifacts.validation.get("groundingStatus")
+                    or artifacts.validation.get("status"),
+                    "validatorPassed": bool(
+                        artifacts.validation.get(
+                            "validatorPassed",
+                            artifacts.validation.get("accepted"),
+                        )
+                    ),
                     "benchmarkScore": (
                         artifacts.widget.get("benchmark") or {}
-                    ).get("score"),
-                    "model": (
-                        artifacts.widget.get("model") or {}
-                    ).get("name") or precomputed_model_name(),
+                    ).get("score")
+                    or artifacts.score.get("total"),
+                    "runDirectory": str(artifacts.run_directory),
                 }
             )
         except PrecomputedResponseError as error:
@@ -269,18 +462,27 @@ def precomputed_demo_status() -> dict[str, Any]:
             )
 
     return {
-        "schemaVersion": "precomputed-slm-demo-status-v1",
+        "schemaVersion": "precomputed-slm-demo-status-v2",
         "enabled": precomputed_demo_enabled(),
         "required": precomputed_demo_required(),
         "provider": "precomputed_lightning_artifact",
+        "profile": precomputed_profile(),
+        "responseSetId": precomputed_artifact_set_id(),
+        "selectionMode": precomputed_selection_mode(),
         "model": precomputed_model_name(),
+        "modelSlug": precomputed_model_slug(),
         "lookupMode": "scenario_id",
         "liveInference": False,
+        "generationAttempted": False,
         "run": precomputed_run_number(),
         "delaySeconds": precomputed_demo_delay_seconds(),
+        "responseContractVersion": precomputed_response_contract_version(),
+        "validationVersion": precomputed_validation_version(),
+        "manifestSchemaVersion": manifest.get("schemaVersion"),
+        "manifestError": manifest_error,
         "scenarioCount": len(REQUIRED_SCENARIOS),
         "availableCount": len(available),
         "missingCount": len(missing),
-        "allScenariosReady": not missing,
+        "allScenariosReady": not missing and manifest_error is None,
         "scenarios": available + missing,
     }

@@ -976,22 +976,33 @@ function LabPointedTrendIndicator({
 function LabResultsTable({
   rows,
   compact = false,
+  onOpen,
 }) {
-  const visibleRows = rows.slice(0, 4);
-
   return (
     <div
       className={`kgen-ehr-lab-table-wrap ${
         compact ? "compact" : ""
       }`}
     >
-      <table className="kgen-ehr-lab-table">
-        <colgroup>
-          <col className="kgen-lab-col-test" />
-          <col className="kgen-lab-col-result" />
-          <col className="kgen-lab-col-trend" />
-        </colgroup>
+      <div
+        className="kgen-pointed-trend-legend"
+        aria-label="Laboratory trend indicator legend"
+      >
+        <span>
+          <i className="stable" />
+          Stable
+        </span>
+        <span>
+          <i className="up" />
+          Increasing
+        </span>
+        <span>
+          <i className="down" />
+          Decreasing
+        </span>
+      </div>
 
+      <table className="kgen-ehr-lab-table">
         <thead>
           <tr>
             <th>Test</th>
@@ -999,41 +1010,63 @@ function LabResultsTable({
             <th className="kgen-lab-trend-heading">
               Trend
             </th>
+            <th aria-label="Open details" />
           </tr>
         </thead>
 
         <tbody>
-          {visibleRows.map((item) => (
-            <tr key={item.name}>
-              <td>
-  <strong title={item.name}>
-    {item.name}
-  </strong>
+          {rows.map((item) => {
+            return (
+              <tr key={item.name}>
+                <td>
+                  <strong title={item.name}>
+                    {item.name}
+                  </strong>
+                  <small>
+                    {item.timing ||
+                      "Controlled event"}
+                    {" • "}
+                    Episode pack
+                  </small>
+                </td>
 
-  <small>
-    {item.timing || "Episode pack"}
-  </small>
-</td>
+                <td>
+                  <strong>
+                    {item.value}
+                    {item.unit ? (
+                      <em>
+                        {" "}
+                        {item.unit}
+                      </em>
+                    ) : null}
+                  </strong>
+                  <small>
+                    {item.timing ||
+                      "Controlled event"}
+                  </small>
+                </td>
 
-<td>
-  <strong>
-    {item.value}
-    {item.unit ? (
-      <em>
-        {" "}
-        {item.unit}
-      </em>
-    ) : null}
-  </strong>
-</td>
+                <td className="kgen-lab-trend-cell">
+                  <LabPointedTrendIndicator
+                    item={item}
+                  />
+                </td>
 
-              <td className="kgen-lab-trend-cell">
-                <LabPointedTrendIndicator
-                  item={item}
-                />
-              </td>
-            </tr>
-          ))}
+                <td>
+                  <button
+                    type="button"
+                    className="kgen-lab-detail-btn"
+                    aria-label={`Open ${item.name} laboratory details`}
+                    onClick={() =>
+                      onOpen(item)
+                    }
+                  >
+                    ›
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
@@ -2235,42 +2268,8 @@ const evaluationWidgetResult =
         ),
       };
 
-      const existing =
-        Array.isArray(
-          interpretation
-            .importantLimitations
-        )
-          ? interpretation
-              .importantLimitations
-          : [];
-
-      const scoreNotes = [];
-
-      if (
-        score.total != null
-      ) {
-        scoreNotes.push(
-          `Evaluator score: ${score.total}/100`
-        );
-      }
-
-      if (
-        score.safetyPass != null
-      ) {
-        scoreNotes.push(
-          `Safety gate: ${
-            score.safetyPass
-              ? "PASS"
-              : "PASS"
-          }`
-        );
-      }
-
-      interpretation
-        .importantLimitations = [
-          ...existing,
-          ...scoreNotes,
-        ];
+      // Evaluation score and safety status belong in the metrics panel.
+      // They must not be appended to clinical uncertainty.
 
       const existingMetrics =
         Array.isArray(
@@ -2309,7 +2308,7 @@ const evaluationWidgetResult =
                 value:
                   score.safetyPass
                     ? "PASS"
-                    : "PASS",
+                    : "FAIL",
                 unit: "",
               },
             ]
@@ -3672,7 +3671,7 @@ evaluationWaveformsView ? (
             <b>{live.potassium.toFixed(1)}</b>
           </div> */}
 
-{/* <div className="kgen-episode-lab-summary ehr compact">
+<div className="kgen-episode-lab-summary ehr compact">
   <strong>
     {displayedLabCards.length} documented result{
       displayedLabCards.length === 1
@@ -3683,7 +3682,7 @@ evaluationWaveformsView ? (
   <span>
     Trend indicator
   </span>
-</div> */}
+</div>
           <button className="kgen-blue-btn" type="button" onClick={onOpenLabs}>
             Access full table
           </button>

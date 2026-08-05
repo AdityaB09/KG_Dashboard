@@ -11,6 +11,7 @@ from app.evaluation_injection.service import (
     evaluation_injection_service,
 )
 from app.evaluation_injection.precomputed_response_repository import (
+    precomputed_available_profiles,
     precomputed_demo_status,
 )
 
@@ -55,8 +56,17 @@ async def health():
 
 @router.get("/precomputed-responses")
 async def precomputed_responses():
-    """Deployment readiness for the eight offline MedGemma demo responses."""
+    """Deployment readiness for the active offline MedGemma response profile."""
     return precomputed_demo_status()
+
+
+@router.get("/precomputed-responses/profiles")
+async def precomputed_response_profiles():
+    """List installed/selectable response profiles. Switching requires env restart."""
+    return {
+        "schemaVersion": "precomputed-slm-profiles-v1",
+        "profiles": precomputed_available_profiles(),
+    }
 
 
 @router.get("/scenarios")

@@ -390,16 +390,19 @@ export function adaptEvaluationRunToWidget({
 
   const episodeNarrative =
     responseText(modelResponse.episodeSummary);
-  const arrhythmiaNarrative =
-    responseText(modelResponse.rhythmInterpretation);
-  const currentSituationNarrative =
-    responseText(modelResponse.clinicalContext);
-  const rootCauseNarrative =
-    responseText(modelResponse.mostLikelyEtiology);
+  const etiologyContextNarrative =
+    responseText(
+      modelResponse.mostLikelyEtiologyAndClinicalContext ||
+      modelResponse.mostLikelyEtiology ||
+      modelResponse.clinicalContext
+    );
   const possibleContributors =
     responseList(modelResponse.contributingFactors);
   const importantLimitations =
-    responseList(modelResponse.uncertaintyAndMissingData);
+    responseList(
+      modelResponse.materialEtiologicUncertainty ||
+      modelResponse.uncertaintyAndMissingData
+    );
 
   const strictlyAccepted =
     Boolean(validation?.accepted);
@@ -459,21 +462,20 @@ export function adaptEvaluationRunToWidget({
       episodeNarrative:
         episodeNarrative ||
         "No model episode summary was returned.",
-      arrhythmiaNarrative:
-        arrhythmiaNarrative ||
-        "The fixed upstream rhythm remains available.",
-      morphologyNarrative:
-        morphologySummary(
-          episode?.ecg?.measurements
-        ),
-      currentSituation: {
-        narrative:
-          currentSituationNarrative ||
-          vitalSummary(episode?.vitals),
-      },
+      etiologyContextNarrative:
+        etiologyContextNarrative ||
+        "No model-generated etiologic explanation was returned.",
       rootCauseNarrative:
-        rootCauseNarrative ||
-        "No model-generated etiology was returned.",
+        etiologyContextNarrative ||
+        "No model-generated etiologic explanation was returned.",
+
+      // Compatibility fields are intentionally empty so the presentation
+      // does not repeat context or merge deterministic limitations.
+      arrhythmiaNarrative: "",
+      morphologyNarrative: "",
+      currentSituation: {
+        narrative: "",
+      },
       keyMetrics:
         buildKeyMetrics(episode),
       possibleContributors:

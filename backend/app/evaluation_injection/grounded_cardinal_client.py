@@ -18,6 +18,11 @@ from app.evaluation.config import (
     slm_timeout_seconds,
 )
 
+from .model_clinical_evidence import (
+    adapt_model_output_v603_to_legacy,
+    validate_model_output_v603,
+)
+
 
 class GroundedCardinalModelError(RuntimeError):
     """Raised when a grounded model request or response is invalid."""
@@ -47,6 +52,50 @@ GROUND_RESPONSE_SCHEMA: dict[str, Any] = {
         "uncertaintyAndMissingData",
     ],
 }
+
+MODEL_RESPONSE_SCHEMA_V6_0_3: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "properties": {
+        "episodeSummary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1200,
+        },
+        "mostLikelyEtiologyAndClinicalContext": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1800,
+        },
+        "contributingFactors": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 5,
+            "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500,
+            },
+        },
+        "materialEtiologicUncertainty": {
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 2,
+            "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500,
+            },
+        },
+    },
+    "required": [
+        "episodeSummary",
+        "mostLikelyEtiologyAndClinicalContext",
+        "contributingFactors",
+        "materialEtiologicUncertainty",
+    ],
+}
+
 
 
 def _atomic_json(path: Path, value: dict[str, Any]) -> None:
@@ -116,20 +165,64 @@ def _validate_shape(payload: dict[str, Any]) -> None:
         )
 
 
+def _uses_v603_contract(messages: list[dict[str, str]]) -> bool:
+    return any(
+        "mostLikelyEtiologyAndClinicalContext" in str(message.get("content") or "")
+        and "materialEtiologicUncertainty" in str(message.get("content") or "")
+        for message in messages
+    )
+
+
+def _response_schema(messages: list[dict[str, str]]) -> dict[str, Any]:
+    return (
+        MODEL_RESPONSE_SCHEMA_V6_0_3
+        if _uses_v603_contract(messages)
+        else GROUND_RESPONSE_SCHEMA
+    )
+
+
+def _validate_and_adapt_response(payload: dict[str, Any]) -> dict[str, Any]:
+    if {
+        "mostLikelyEtiologyAndClinicalContext",
+        "materialEtiologicUncertainty",
+    }.issubset(payload):
+        try:
+            validate_model_output_v603(payload)
+            return adapt_model_output_v603_to_legacy(payload)
+        except ValueError as exc:
+            raise GroundedCardinalModelError(str(exc)) from exc
+
+    _validate_shape(payload)
+    return payload
+
+
+
 def build_strict_messages(messages: list[dict[str, str]]) -> list[dict[str, str]]:
-    schema_text = json.dumps(GROUND_RESPONSE_SCHEMA, ensure_ascii=False, separators=(",", ":"))
+    schema = _response_schema(messages)
+    schema_text = json.dumps(
+        schema,
+        ensure_ascii=False,
+        separators=(",", ":"),
+    )
+    contract_label = (
+        "four-field clinical narrative contract"
+        if schema is MODEL_RESPONSE_SCHEMA_V6_0_3
+        else "five-field compatibility contract"
+    )
     return [
         *messages,
         {
             "role": "user",
             "content": (
-                "Return JSON only. Use exactly the schema below. Write clinical content only. "
-                "Never copy prompt rules, field definitions, task wording, or schema text into "
-                "the response. Do not add diagnosis, treatment, recommendation, action, or "
+                f"Return JSON only using the {contract_label} below. "
+                "Write clinical content only. Never copy prompt rules, field "
+                "definitions, task wording, or schema text into the response. "
+                "Do not add diagnosis, treatment, recommendation, action, or "
                 "next-step fields.\n" + schema_text
             ),
         },
     ]
+
 
 
 def message_fingerprint(messages: list[dict[str, str]]) -> str:
@@ -146,6 +239,7 @@ def _provider() -> str:
 
 
 def _request_log(*, provider: str, model: str, endpoint: str, messages: list[dict[str, str]], label: str) -> dict[str, Any]:
+    schema = _response_schema(messages)
     return {
         "schemaVersion": "grounded-model-request-universal-v2",
         "label": label,
@@ -154,10 +248,13 @@ def _request_log(*, provider: str, model: str, endpoint: str, messages: list[dic
         "endpoint": endpoint,
         "messages": messages,
         "promptFingerprint": message_fingerprint(messages),
-        "format": GROUND_RESPONSE_SCHEMA,
+        "format": schema,
         "containsAnswerKey": False,
-        "modelOwnedFields": GROUND_RESPONSE_SCHEMA["required"],
+        "modelOwnedFields": schema["required"],
         "recommendedActionsRequired": False,
+        "legacyCompatibilityAppliedAfterParsing": (
+            schema is MODEL_RESPONSE_SCHEMA_V6_0_3
+        ),
     }
 
 
@@ -207,8 +304,8 @@ def _call_colab_file(*, strict_messages: list[dict[str, str]], model_name: str, 
         raise GroundedCardinalModelError(f"Could not read imported Colab response: {response_path}") from exc
     if payload.get("error"):
         raise GroundedCardinalModelError(f"Colab generation failed: {payload['error']}")
-    parsed = _parse_json_object(payload.get("modelResponse") or payload.get("response"))
-    _validate_shape(parsed)
+    raw_parsed = _parse_json_object(payload.get("modelResponse") or payload.get("response"))
+    parsed = _validate_and_adapt_response(raw_parsed)
     def number(key: str) -> float | None:
         try:
             value = payload.get(key)
@@ -229,7 +326,13 @@ def _call_colab_file(*, strict_messages: list[dict[str, str]], model_name: str, 
         "gpuName": payload.get("gpuName"),
         "quantization": payload.get("quantization"),
         "structuredOutput": True,
-        "schema": "grounded-etiology-context-universal-v1",
+        "schema": "grounded-etiology-context-v6.0.3-compatible",
+        "modelOutputContract": "four-field-v6.0.3-or-legacy-five-field",
+        "rawModelOutputV602": (
+            raw_parsed
+            if "mostLikelyEtiologyAndClinicalContext" in raw_parsed
+            else None
+        ),
         "recommendedActionsRequired": False,
     }
     print("[KGEN COLAB FILE RESPONSE LOADED]", {
@@ -244,11 +347,12 @@ async def _call_ollama(*, strict_messages: list[dict[str, str]], model_name: str
     headers = {"Content-Type": "application/json"}
     if slm_api_key():
         headers["Authorization"] = f"Bearer {slm_api_key()}"
+    response_schema = _response_schema(strict_messages)
     payload = {
         "model": model_name,
         "messages": strict_messages,
         "stream": False,
-        "format": GROUND_RESPONSE_SCHEMA,
+        "format": response_schema,
         "options": {"temperature": temperature, "num_predict": slm_max_output_tokens()},
         "keep_alive": "10m",
     }
@@ -277,8 +381,8 @@ async def _call_ollama(*, strict_messages: list[dict[str, str]], model_name: str
         raw = response.json()
     except ValueError as exc:
         raise GroundedCardinalModelError("Ollama returned non-JSON HTTP content.") from exc
-    parsed = _parse_json_object((raw.get("message") or {}).get("content"))
-    _validate_shape(parsed)
+    raw_parsed = _parse_json_object((raw.get("message") or {}).get("content"))
+    parsed = _validate_and_adapt_response(raw_parsed)
     metadata = {
         "provider": "ollama",
         "name": model_name,
@@ -289,7 +393,13 @@ async def _call_ollama(*, strict_messages: list[dict[str, str]], model_name: str
         "totalDuration": raw.get("total_duration"),
         "elapsedSeconds": elapsed,
         "structuredOutput": True,
-        "schema": "grounded-etiology-context-universal-v1",
+        "schema": "grounded-etiology-context-v6.0.3-compatible",
+        "modelOutputContract": "four-field-v6.0.3-or-legacy-five-field",
+        "rawModelOutputV602": (
+            raw_parsed
+            if "mostLikelyEtiologyAndClinicalContext" in raw_parsed
+            else None
+        ),
         "recommendedActionsRequired": False,
     }
     return parsed, metadata

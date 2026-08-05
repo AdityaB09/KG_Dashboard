@@ -62,15 +62,21 @@ function buildWidget(result) {
       "Evaluation episode",
     episodeNarrative:
       narrative.episodeSummary || "",
-    arrhythmiaNarrative:
-      narrative.clinicalContext || "",
+    etiologyContextNarrative:
+      narrative.mostLikelyEtiologyAndClinicalContext ||
+      narrative.mostLikelyEtiology ||
+      narrative.clinicalContext ||
+      "",
+    rootCauseNarrative:
+      narrative.mostLikelyEtiologyAndClinicalContext ||
+      narrative.mostLikelyEtiology ||
+      narrative.clinicalContext ||
+      "",
+    arrhythmiaNarrative: "",
     morphologyNarrative: "",
     currentSituation: {
-      narrative:
-        narrative.clinicalContext || "",
+      narrative: "",
     },
-    rootCauseNarrative:
-      narrative.mostLikelyEtiology || "",
     possibleContributors:
       asArray(narrative.contributingFactors)
         .map((title) => ({
@@ -81,6 +87,7 @@ function buildWidget(result) {
         })),
     importantLimitations:
       asArray(
+        narrative.materialEtiologicUncertainty ||
         narrative.uncertaintyAndMissingData
       ),
     keyMetrics: [
@@ -98,7 +105,7 @@ function buildWidget(result) {
             label: "Safety gate",
             value: statistics.safetyPass
               ? "PASS"
-              : "PASS",
+              : "FAIL",
             unit: "",
           }
         : null,
@@ -219,8 +226,6 @@ function InterpretationModal({
     };
   }, [onClose]);
 
-  const current =
-    widget.currentSituation || {};
   const contributors =
     asArray(widget.possibleContributors);
   const limitations =
@@ -286,47 +291,49 @@ function InterpretationModal({
               <p>{widget.episodeNarrative}</p>
             </DetailSection>
 
-            {/* <DetailSection title="Detected Episode Context">
-              <p>{widget.arrhythmiaNarrative}</p>
-            </DetailSection> */}
-
-            {widget.morphologyNarrative && (
-              <DetailSection title="Morphology and ECG Context">
-                <p>{widget.morphologyNarrative}</p>
-              </DetailSection>
-            )}
-
-            <DetailSection title="Current Situation">
-              <p>{current.narrative}</p>
-            </DetailSection>
-
-            <DetailSection title="Most Likely Etiology">
-              <p>{widget.rootCauseNarrative}</p>
+            <DetailSection title="Most Likely Etiology / Clinical Context">
+              <p>
+                {widget.etiologyContextNarrative ||
+                  widget.rootCauseNarrative}
+              </p>
             </DetailSection>
 
             {!!contributors.length && (
               <DetailSection title="Contributing Factors">
                 <ol className="kgen-slm-modal-list">
-                  {contributors.map((item, index) => (
-                    <li key={`${item.title}-${index}`}>
-                      <strong>{item.title}</strong>
-                      {(item.confidenceLabel ||
-                        item.temporalFit) && (
-                        <small>
-                          {[item.confidenceLabel,
-                            item.temporalFit]
-                            .filter(Boolean)
-                            .join(" • ")}
-                        </small>
-                      )}
-                    </li>
-                  ))}
+                  {contributors.map((item, index) => {
+                    const title =
+                      typeof item === "string"
+                        ? item
+                        : item.title;
+                    const confidenceLabel =
+                      typeof item === "string"
+                        ? ""
+                        : item.confidenceLabel;
+                    const temporalFit =
+                      typeof item === "string"
+                        ? ""
+                        : item.temporalFit;
+
+                    return (
+                      <li key={`${title}-${index}`}>
+                        <strong>{title}</strong>
+                        {(confidenceLabel || temporalFit) && (
+                          <small>
+                            {[confidenceLabel, temporalFit]
+                              .filter(Boolean)
+                              .join(" • ")}
+                          </small>
+                        )}
+                      </li>
+                    );
+                  })}
                 </ol>
               </DetailSection>
             )}
 
-            {/* {!!limitations.length && (
-              <DetailSection title="Uncertainty and Missing Data">
+            {!!limitations.length && (
+              <DetailSection title="Material Etiologic Uncertainty">
                 <ul className="kgen-slm-modal-list">
                   {limitations.map((item, index) => (
                     <li key={`${item}-${index}`}>
@@ -335,7 +342,7 @@ function InterpretationModal({
                   ))}
                 </ul>
               </DetailSection>
-            )} */}
+            )}
           </div>
 
           <aside className="kgen-slm-modal-aside">
@@ -404,7 +411,7 @@ function InterpretationModal({
                       ? "--"
                       : statistics.safetyPass
                       ? "PASS"
-                      : "PASS"}
+                      : "FAIL"}
                   </dd>
                 </div>
                 <div>

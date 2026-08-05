@@ -1,0 +1,147 @@
+{
+  "schemaVersion": "etiology-context-answer-key-v1",
+  "scenarioId": "VT-ISCHEMIC-003",
+  "authoritativeDiagnosis": {
+    "code": "MONOMORPHIC_VT",
+    "display": "Monomorphic ventricular tachycardia"
+  },
+  "expectedEtiologyConcepts": [
+    "scarMediatedReentry",
+    "postInfarctionSubstrate"
+  ],
+  "expectedContextConcepts": [
+    "severeIschemicCardiomyopathy",
+    "reducedLvef",
+    "avDissociationFusionBeats",
+    "borderlineHemodynamicsConscious",
+    "normalPotassiumMagnesium",
+    "demandTroponinWithoutStemi"
+  ],
+  "expectedContributingFactors": [
+    "priorMyocardialScar",
+    "severeLvDysfunction"
+  ],
+  "acceptableUncertaintyConcepts": [
+    "exactTransientTriggerUnknown"
+  ],
+  "forbiddenClaims": [
+    "acuteStemiEstablished",
+    "severeElectrolyteDepletion",
+    "noAtrialActivity",
+    "accessoryPathwayUnsupported",
+    "furosemideCausedVolumeOverload",
+    "accessoryPathway"
+  ],
+  "distractorAssertions": [
+    "svtWithAberrancy"
+  ],
+  "synonymGroups": {
+    "scarMediatedReentry": [
+      "scar-mediated reentry",
+      "scar related reentrant vt",
+      "reentry around infarct scar",
+      "reentrant ventricular tachycardia"
+    ],
+    "postInfarctionSubstrate": [
+      "post-infarction substrate",
+      "prior infarcted myocardium",
+      "myocardial scar from prior infarction"
+    ],
+    "severeIschemicCardiomyopathy": [
+      "severe ischemic cardiomyopathy",
+      "ischemic cardiomyopathy"
+    ],
+    "reducedLvef": [
+      "lvef 25%",
+      "ejection fraction 25%",
+      "severe left ventricular systolic dysfunction"
+    ],
+    "avDissociationFusionBeats": [
+      "av dissociation and fusion beats",
+      "capture or fusion beats",
+      "atrioventricular dissociation",
+      "av dissociation",
+      "fusion beats",
+      "capture beats",
+      "capture and fusion beats"
+    ],
+    "borderlineHemodynamicsConscious": [
+      "hemodynamically borderline but conscious",
+      "bp 88/58 with map 68",
+      "borderline blood pressure while conscious"
+    ],
+    "normalPotassiumMagnesium": [
+      "normal potassium and magnesium",
+      "potassium and magnesium within reference",
+      "major electrolyte trigger is not supported",
+      "potassium 4.3 and magnesium 2.1 are within range",
+      "electrolyte disturbance is not strongly supported"
+    ],
+    "demandTroponinWithoutStemi": [
+      "mild demand-related troponin without stemi",
+      "demand ischemia with no acute stemi",
+      "small troponin rise consistent with demand",
+      "mild troponin elevation consistent with demand without acute coronary syndrome",
+      "no acute chest pain or st elevation with demand troponin"
+    ],
+    "priorMyocardialScar": [
+      "prior myocardial scar",
+      "prior myocardial infarction",
+      "prior infarct scar"
+    ],
+    "severeLvDysfunction": [
+      "severe lv dysfunction",
+      "lvef 25%",
+      "severe systolic dysfunction"
+    ],
+    "exactTransientTriggerUnknown": [
+      "exact transient trigger is not established",
+      "initiating trigger remains uncertain"
+    ],
+    "acuteStemiEstablished": [
+      "acute stemi caused the episode",
+      "acute myocardial infarction was the established cause"
+    ],
+    "severeElectrolyteDepletion": [
+      "severe electrolyte depletion",
+      "severe hypokalemia or hypomagnesemia"
+    ],
+    "noAtrialActivity": [
+      "no atrial activity",
+      "no p waves were present"
+    ],
+    "svtWithAberrancy": [
+      "svt with aberrancy",
+      "supraventricular tachycardia with aberrant conduction"
+    ],
+    "accessoryPathwayUnsupported": [
+      "accessory pathway",
+      "pre-excitation pathway"
+    ],
+    "furosemideCausedVolumeOverload": [
+      "volume overload from furosemide",
+      "furosemide caused volume overload",
+      "volume overload caused by lasix",
+      "volume overload from furosemide use",
+      "furosemide contributed to volume overload"
+    ],
+    "accessoryPathway": [
+      "accessory pathway caused the ventricular tachycardia",
+      "accessory pathway was the likely mechanism"
+    ]
+  },
+  "uncertaintyPolicy": {
+    "emptyAllowed": true,
+    "partialCreditForEmpty": true
+  },
+  "scoringWeights": {
+    "diagnosisConsistency": 20,
+    "primaryEtiology": 35,
+    "contextualEvidence": 30,
+    "uncertaintyAndMissingData": 10,
+    "avoidsDistractors": 5
+  },
+  "verificationStatus": "verify_against_project_scenario_json",
+  "source": "UNIVERSAL_GROUNDED_SLM_EVALUATION_README",
+  "validatorContract": "deterministic-universal-v2"
+}

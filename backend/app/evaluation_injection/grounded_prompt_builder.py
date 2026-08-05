@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 from datetime import datetime
+import json
 import re
 from typing import Any
+
+from .model_clinical_evidence import build_model_clinical_evidence
 
 
 LEGACY_SYSTEM_PROMPT = """
@@ -75,54 +78,96 @@ Return only these JSON fields:
 """.strip()
 
 EPISODE_PACK_SYSTEM_PROMPT = """
-You are a clinical episode-context and etiology summarizer.
+You are a clinical episode etiology summarizer.
 
-Use only the complete episode package and qualified independent Phase 6
-measurements printed in this request. Launch and routing metadata are not
-clinical evidence.
+Use only the clinical evidence supplied in this request. Treat the episode
+label as established clinical context. Explain what happened, the most likely
+etiology, and the clinical evidence connecting that etiology to the episode.
 
-Source ownership:
-- The COMPLETE EPISODE PACKAGE supplies the patient, history, symptoms, vitals,
-  laboratories, medications, clinical context, fixed rhythm diagnosis, and
-  controlled-event measurements.
-- PHASE 6 supplies independent deterministic waveform measurements,
-  measurement validity, confidence, provenance, and limitations. It does not
-  diagnose or confirm the rhythm.
-- The SLM supplies episode summary, detected episode context, most likely
-  etiology, contributing factors, and uncertainty only.
+Do not discuss technical implementation, data transport, capture mechanics,
+validation, storage, provenance, or the generation process.
 
-Rules:
-1. Preserve the fixed upstream rhythm diagnosis.
-2. Do not diagnose, reclassify, dispute, or provide a competing rhythm
-   differential.
-3. Explain the most likely etiology using only the episode-package evidence.
-4. Do not describe Phase 6 as diagnosing or confirming the rhythm.
-5. Discuss a difference between episode-package and Phase 6 measurements only
-   when the supplied evidence explicitly marks the measurements as
-   controlled-event-window aligned, comparable, valid, materially different,
-   and supported by moderate or high confidence.
-6. When Phase 6 confidence is low or insufficient, describe the measurement as
-   limited. Do not use it to dispute, reinterpret, or replace the
-   controlled-event measurement or authoritative diagnosis, and do not repeat a
-   low-confidence number unless it is clinically necessary to explain the
-   limitation.
-7. Use only facts printed in the request. Missing information is not a negative
-   or normal finding.
-8. In uncertaintyAndMissingData, prioritize information whose absence
-   materially limits the etiologic conclusion. Do not list routine unavailable
-   values unless they meaningfully affect the etiologic assessment. Do not say
-   information is unavailable when the supplied evidence contains it.
-9. contributingFactors must contain one to five concise strings.
-10. Do not provide treatment recommendations, medication advice, procedures,
-    management plans, next steps, or action fields.
-11. Return only the five required JSON fields.
+Clinical reasoning rules:
+1. Do not reclassify, replace, or independently diagnose the supplied episode
+   label.
 
-Required fields:
+2. Use the complete episode context, including relevant history, symptoms,
+   recent events, hemodynamics, ECG and morphology, laboratory values,
+   medication exposures, and valid Phase 6 measurements.
+
+3. Use Phase 6 measurements only when they are valid, clinically
+   interpretable, and relevant to the etiologic explanation. Do not mention a
+   Phase 6 value merely because it was supplied.
+
+4. Do not invent facts, diagnoses, laboratory values, medication exposures,
+   causal mechanisms, or temporal relationships.
+
+5. Do not treat omitted information as a negative or normal finding.
+
+6. Do not mention routine missing values or implementation-related
+   limitations.
+
+7. Keep the episode summary concise. Describe the event and immediate clinical
+   state without explaining the full etiology.
+
+8. In mostLikelyEtiologyAndClinicalContext, state the leading etiology first.
+   Then connect it to the strongest supplied evidence. Do not repeat the
+   episode summary.
+
+9. contributingFactors must contain only supported causal, precipitating, or predisposing
+   factors that help explain why the episode occurred.
+
+10. Do not use the following as contributing factors unless the item itself is
+    a causal exposure or physiologic trigger:
+    - the leading etiology repeated under another name,
+    - diagnostic biomarkers,
+    - ECG findings used only to recognize the episode,
+    - symptoms used only as evidence,
+    - hemodynamic status,
+    - treatment already in progress,
+    - consequences occurring after the episode.
+
+11. Examples of appropriate contributing factors include:
+    - pre-existing structural heart disease,
+    - prior myocardial scar,
+    - medication exposure or toxicity,
+    - impaired medication clearance,
+    - electrolyte depletion,
+    - missed dialysis,
+    - infection or systemic inflammatory stress,
+    - a supported physiologic or autonomic trigger.
+
+12. Include materialEtiologicUncertainty only when the supplied evidence leaves
+    a clinically meaningful causal mechanism unresolved, when two plausible
+    etiologies remain, or when a missing or conflicting fact could materially
+    alter the leading conclusion.
+
+13. Return an empty materialEtiologicUncertainty array when one leading
+    etiology is adequately supported and no clinically meaningful alternative
+    mechanism remains unresolved.
+
+14. Do not use materialEtiologicUncertainty to list routine unavailable laboratory
+    values, technical limitations, data-source information, or
+    general disclaimers.
+
+15. When the evidence establishes a syndrome but cannot distinguish between
+    clinically meaningful mechanisms, state that uncertainty concisely. For
+    example, if a re-entrant PSVT is supported but the evidence cannot
+    distinguish AVNRT from AVRT, state that distinction as material uncertainty.
+
+16. Return one to five concise contributing factors and no more than two
+    material uncertainty statements.
+
+17. Do not provide treatment recommendations, management plans, next steps,
+    medication advice, procedures, or action items.
+
+18. Return valid JSON only.
+
+Return exactly these four model-owned content fields:
 - episodeSummary
-- detectedEpisodeContext
-- mostLikelyEtiology
+- mostLikelyEtiologyAndClinicalContext
 - contributingFactors
-- uncertaintyAndMissingData
+- materialEtiologicUncertainty
 """.strip()
 
 
@@ -1030,18 +1075,18 @@ def build_grounded_messages(
 ) -> list[dict[str, str]]:
     is_v4 = evidence_bundle.get("schemaVersion") == "slm-evidence-envelope-v4"
 
+    episode_pack_only = (
+        is_v4
+        and evidence_bundle.get("clinicalPromptMode") == "episode_pack_only"
+    )
+
     if is_v4:
         system_prompt = (
             EPISODE_PACK_SYSTEM_PROMPT
-            if (
-                evidence_bundle.get(
-                    "clinicalPromptMode"
-                )
-                == "episode_pack_only"
-            )
+            if episode_pack_only
             else V4_SYSTEM_PROMPT
         )
-        body = _v4_lines(evidence_bundle)
+        body = [] if episode_pack_only else _v4_lines(evidence_bundle)
     else:
         system_prompt = LEGACY_SYSTEM_PROMPT
         body: list[str] = []
@@ -1062,25 +1107,59 @@ def build_grounded_messages(
             body += _scenario_context_lines(evidence_bundle)
         body += _coverage_lines(evidence_bundle)
 
-    user_content = (
-        "CLINICAL EVIDENCE\n\n"
-        + "\n".join(body).strip()
-    )
+    if episode_pack_only:
+        model_clinical_evidence = build_model_clinical_evidence(
+            evidence_bundle=evidence_bundle,
+        )
+        evidence_json = json.dumps(
+            model_clinical_evidence,
+            ensure_ascii=False,
+            indent=2,
+            sort_keys=False,
+        )
+        user_content = (
+            "CLINICAL EPISODE EVIDENCE\n\n"
+            + evidence_json
+            + "\n\nTASK\n\n"
+            + "Create a concise clinical episode interpretation using only the supplied\n"
+              "evidence.\n\n"
+            + "OUTPUT REQUIREMENTS\n\n"
+            + "- episodeSummary:\n"
+              "  Return 2 to 4 concise sentences describing the episode and immediate\n"
+              "  clinical state. Do not provide the full etiologic explanation here.\n\n"
+            + "- mostLikelyEtiologyAndClinicalContext:\n"
+              "  State the leading etiology first, then connect it to the strongest relevant\n"
+              "  evidence. Do not repeat the episode summary.\n\n"
+            + "- contributingFactors:\n"
+              "  Return 1 to 5 concise causal, precipitating, or predisposing factors\n"
+              "  supported by the evidence. Do not repeat the leading etiology and do not\n"
+              "  list biomarkers, diagnostic ECG findings, symptoms, hemodynamic status,\n"
+              "  treatment, or post-event consequences unless the item itself is a causal\n"
+              "  exposure or physiologic trigger.\n\n"
+            + "- materialEtiologicUncertainty:\n"
+              "  Return 0 to 2 concise statements. Return an empty array only when one\n"
+              "  leading etiology is adequately supported and no clinically meaningful\n"
+              "  causal mechanism remains unresolved. Include a concise statement when the\n"
+              "  evidence cannot distinguish between meaningful mechanisms, such as AVNRT\n"
+              "  versus AVRT. Do not list routine missing values or technical limitations.\n\n"
+            + "Return JSON only."
+        )
+    else:
+        user_content = (
+            "CLINICAL EVIDENCE\n\n"
+            + "\n".join(body).strip()
+        )
 
-    if (
-        is_v4
-        and evidence_bundle.get(
-            "clinicalPromptMode"
-        )
-        == "episode_pack_only"
-        and re.search(
-            r"\b(?:ORACLE|FHIR)\b",
-            user_content,
-            flags=re.IGNORECASE,
-        )
+    if episode_pack_only and re.search(
+        r"\b(?:INCART|API Range|Oracle|FHIR|SMART|reference annotation|"
+        r"independent diagnosis|raw ECG arrays?|waveform storage|deduplicat(?:ed|ion)|"
+        r"source manifest|evaluation detector|model ownership|generated by the SLM|"
+        r"available=no|value=null|measured_unspecified_pattern)\b",
+        user_content,
+        flags=re.IGNORECASE,
     ):
         raise ValueError(
-            "Episode-pack-only prompt contains forbidden Oracle/FHIR content."
+            "Episode-pack-only prompt contains forbidden implementation or missing-value content."
         )
 
     messages: list[dict[str, str]] = [
@@ -1111,11 +1190,11 @@ def build_grounded_messages(
         correction += [
             "",
             "SAFE REWRITE RULES",
-            "- Keep negation local to the concept it modifies; do not let words such as 'absence' negate a different fact earlier in the sentence.",
-            "- Say 'controlled-event evidence did not support infection/renal impairment' instead of claiming the patient had none.",
-            "- For partial electrolyte panels, name the supplied analytes and their values; do not generalize to all electrolytes.",
-            "- If Oracle returned no conditions, say that no conditions were returned, not that disease was excluded.",
-            "- Do not invent facts, introduce another rhythm diagnosis, convert an order into administration, or omit temporal qualification.",
+            "- Correct only the listed errors using the already supplied clinical evidence.",
+            "- Do not add omitted facts or routine missing-value statements.",
+            "- Keep the established episode label unchanged.",
+            "- Keep the combined etiologic explanation concise and evidence-linked.",
+            "- Do not add treatment, recommendation, provenance, source-system, or implementation language.",
         ]
         messages.append({"role": "user", "content": "\n".join(correction)})
 

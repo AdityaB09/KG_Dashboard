@@ -1,0 +1,18 @@
+﻿{
+    "schemaVersion":  "kgen-validator-scorer-fix-apply-v1",
+    "fixVersion":  "6.0.3.1",
+    "appliedAtUtc":  "2026-08-05T05:39:26.2761286Z",
+    "projectRoot":  "C:\\Users\\adity\\Downloads\\588_\\7 Waveform",
+    "backendRoot":  "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend",
+    "python":  "C:\\Users\\adity\\Downloads\\588_\\7 Waveform\\backend\\.venv\\Scripts\\python.exe",
+    "testsSkipped":  false,
+    "status":  "passed",
+    "changes":  [
+                    "Mandatory scenario answer-key loading in validation/scoring CLI",
+                    "Empty uncertainty partial credit applied before concept matching",
+                    "Token-boundary and negation-safe phrase matching",
+                    "Non-sustained versus sustained VT protection",
+                    "Safe numeric rounding tolerance",
+                    "Only etiologically material Phase 6 conflicts required in presentation"
+                ]
+}

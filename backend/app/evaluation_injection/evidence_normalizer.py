@@ -2556,3 +2556,8 @@ def serialize_normalized_input(
         indent=2,
         ensure_ascii=False,
     )
+
+# V6.0.3 compact model-facing input builder. Kept here as a re-export so
+# existing imports that treat evidence_normalizer.py as the evidence boundary
+# can adopt the new clinical-only object without changing the response cue.
+from .model_clinical_evidence import build_model_clinical_evidence  # noqa: E402,F401
