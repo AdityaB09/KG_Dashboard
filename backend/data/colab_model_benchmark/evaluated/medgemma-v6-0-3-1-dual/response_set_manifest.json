@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "kgen-precomputed-response-set-v2",
+  "createdAtUtc": "2026-08-05T16:52:50.996960+00:00",
+  "responseSetId": "medgemma-dual-v6-0-3-1",
+  "sourceRun": 2,
+  "sourcePromptVersion": "episode-pack-phase6-v6.0.3",
+  "responseContractVersion": "model-clinical-output-v6.0.3",
+  "validationVersion": "v6.0.3.1",
+  "scenarioCount": 8,
+  "installedProfiles": [
+    "medgemma-27b-it",
+    "medgemma-27b-text-it",
+    "curated"
+  ],
+  "profiles": {
+    "medgemma-27b-it": {
+      "modelSlug": "google-medgemma-27b-it",
+      "modelName": "google/medgemma-27b-it",
+      "selectionMode": "single_model",
+      "scenarioCount": 8
+    },
+    "medgemma-27b-text-it": {
+      "modelSlug": "google-medgemma-27b-text-it",
+      "modelName": "google/medgemma-27b-text-it",
+      "selectionMode": "single_model",
+      "scenarioCount": 8
+    },
+    "curated": {
+      "modelSlug": "curated-medgemma-v6-0-3-1",
+      "modelName": "Curated MedGemma V6.0.3.1",
+      "selectionMode": "curated_best_per_scenario",
+      "scenarioCount": 8
+    }
+  }
+}

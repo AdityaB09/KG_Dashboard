@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "precomputed-run-summary-v2",
+  "createdAtUtc": "2026-08-05T16:52:50.644276+00:00",
+  "scenarioId": "BRADY-DIGTOX-006",
+  "episodeId": "evalflow-BRADY-DIGTOX-006-20260731-194940-741c22",
+  "runNumber": 2,
+  "profile": "medgemma-27b-text-it",
+  "responseSetId": "medgemma-dual-v6-0-3-1",
+  "selectionMode": "single_model",
+  "sourceModel": "google/medgemma-27b-text-it",
+  "promptFingerprint": "45b38e3b0d593480dd38775ef697949a3cc14281d75f1c48c0745af4553eea05",
+  "validContract": true,
+  "validatorPassed": true,
+  "strictlyAccepted": true,
+  "displayableWithReview": false,
+  "unsupportedFactCount": 0,
+  "contradictionCount": 0,
+  "score": 64,
+  "sourceLatencySeconds": 25.387,
+  "sourceInputTokens": 2350,
+  "sourceOutputTokens": 221
+}

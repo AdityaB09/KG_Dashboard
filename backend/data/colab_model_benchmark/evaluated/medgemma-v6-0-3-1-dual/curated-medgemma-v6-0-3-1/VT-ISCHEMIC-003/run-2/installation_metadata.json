@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "kgen-precomputed-installation-v2",
+  "createdAtUtc": "2026-08-05T16:52:50.776018+00:00",
+  "responseSetId": "medgemma-dual-v6-0-3-1",
+  "profile": "curated",
+  "selectionMode": "curated_best_per_scenario",
+  "scenarioId": "VT-ISCHEMIC-003",
+  "sourceModel": "google/medgemma-27b-text-it",
+  "modelSlug": "curated-medgemma-v6-0-3-1",
+  "runNumber": 2,
+  "promptFingerprint": "f88093a906a3b86a964eedf5a35201e5f5d61fb564e48b971ee200b5cc42b0e3",
+  "sourcePromptVersion": "episode-pack-phase6-v6.0.3",
+  "responseContractVersion": "model-clinical-output-v6.0.3",
+  "validationVersion": "v6.0.3.1",
+  "inputZipSha256": "a59b3b99691d3da0c9474266248107726fcc053b11d8cdd5de38155f6274a084",
+  "resultsZipSha256": "61fd6440a4aeb4eeb57b938000cc051fe5b0ce51255e6b433372fd5f392fad71",
+  "validatorPassed": true,
+  "unsupportedFactCount": 0,
+  "contradictionCount": 0,
+  "score": 78,
+  "sourceGeneratedOffline": true
+}

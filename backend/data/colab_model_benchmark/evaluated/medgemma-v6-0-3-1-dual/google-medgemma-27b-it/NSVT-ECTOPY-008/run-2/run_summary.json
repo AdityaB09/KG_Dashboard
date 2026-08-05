@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "precomputed-run-summary-v2",
+  "createdAtUtc": "2026-08-05T16:52:50.510612+00:00",
+  "scenarioId": "NSVT-ECTOPY-008",
+  "episodeId": "evalflow-NSVT-ECTOPY-008-20260731-193752-f75aa3",
+  "runNumber": 2,
+  "profile": "medgemma-27b-it",
+  "responseSetId": "medgemma-dual-v6-0-3-1",
+  "selectionMode": "single_model",
+  "sourceModel": "google/medgemma-27b-it",
+  "promptFingerprint": "28aa656844cd5e2240e94bf39d24d45d87d1b4ba457a941b8fcabd896697b8c6",
+  "validContract": true,
+  "validatorPassed": true,
+  "strictlyAccepted": true,
+  "displayableWithReview": false,
+  "unsupportedFactCount": 0,
+  "contradictionCount": 0,
+  "score": 60,
+  "sourceLatencySeconds": 29.484,
+  "sourceInputTokens": 2460,
+  "sourceOutputTokens": 255
+}

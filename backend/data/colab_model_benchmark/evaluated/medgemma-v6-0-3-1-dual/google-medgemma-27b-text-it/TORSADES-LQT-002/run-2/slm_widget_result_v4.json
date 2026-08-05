@@ -1,0 +1,113 @@
+{
+  "schemaVersion": "slm-widget-result-v4",
+  "createdAt": "2026-08-05T16:52:50.548417+00:00",
+  "scenarioId": "TORSADES-LQT-002",
+  "episodeId": "evalflow-TORSADES-LQT-002-20260731-191927-44081e",
+  "incidentId": "inc-INCART-EVAL-TORSADES-LQT-002-loop-1-polymorphic-ventricular-tachycardia-000001584-6bOcUoz1vGzRTvi1",
+  "status": "complete",
+  "validationStatus": "accepted",
+  "displayPolicy": "always_show_model_response",
+  "clinicalResponseLabel": "MedGemma Clinical Context",
+  "model": {
+    "provider": "lightning-ai-studio",
+    "name": "google/medgemma-27b-text-it",
+    "modelId": "google/medgemma-27b-text-it",
+    "modelKey": "google-medgemma-27b-text-it",
+    "loaderType": "text",
+    "quantization": "4-bit-nf4-double-quant",
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "promptFingerprint": "67a9690066b831415bf7cb082734a838aee42946bb1b5f4721410ac48e2108cb",
+    "responseContractVersion": "model-clinical-output-v6.0.3",
+    "sourceRun": 2,
+    "generatedOffline": true
+  },
+  "modelResponse": {
+    "episodeSummary": "A 74-year-old female experienced a witnessed syncopal episode associated with hemodynamic instability (hypotension, hypoxia). ECG revealed a polymorphic ventricular tachycardia with axis twisting, consistent with Torsades de pointes, at a rate of 228 bpm. A baseline ECG 6 minutes prior showed sinus rhythm with marked QT prolongation (QTc 618 ms).",
+    "mostLikelyEtiologyAndClinicalContext": "Acquired Long QT Syndrome (LQTS) is the most likely etiology, leading to Torsades de pointes. This is supported by the documented baseline QTc prolongation (618 ms) and the presence of multiple QT-prolonging medications (sotalol, azithromycin, ondansetron). The patient also has significant electrolyte abnormalities (hypokalemia, hypomagnesemia, hypocalcemia) and acute kidney injury (creatinine 1.4 mg/dL), which further predispose to QT prolongation and TdP.",
+    "contributingFactors": [
+      "Exposure to multiple QT-prolonging medications (sotalol, azithromycin, ondansetron)",
+      "Hypokalemia (K 2.9 mmol/L)",
+      "Hypomagnesemia (Mg 1.2 mg/dL)",
+      "Hypocalcemia (Ca 7.9 mg/dL)",
+      "Acute kidney injury (Cr 1.4 mg/dL)"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "displayModelResponse": {
+    "episodeSummary": "A 74-year-old female experienced a witnessed syncopal episode associated with hemodynamic instability (hypotension, hypoxia). ECG revealed a polymorphic ventricular tachycardia with axis twisting, consistent with Torsades de pointes, at a rate of 228 bpm. A baseline ECG 6 minutes prior showed sinus rhythm with marked QT prolongation (QTc 618 ms).",
+    "mostLikelyEtiologyAndClinicalContext": "Acquired Long QT Syndrome (LQTS) is the most likely etiology, leading to Torsades de pointes. This is supported by the documented baseline QTc prolongation (618 ms) and the presence of multiple QT-prolonging medications (sotalol, azithromycin, ondansetron). The patient also has significant electrolyte abnormalities (hypokalemia, hypomagnesemia, hypocalcemia) and acute kidney injury (creatinine 1.4 mg/dL), which further predispose to QT prolongation and TdP.",
+    "contributingFactors": [
+      "Exposure to multiple QT-prolonging medications (sotalol, azithromycin, ondansetron)",
+      "Hypokalemia (K 2.9 mmol/L)",
+      "Hypomagnesemia (Mg 1.2 mg/dL)",
+      "Hypocalcemia (Ca 7.9 mg/dL)",
+      "Acute kidney injury (Cr 1.4 mg/dL)"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "interpretation": {
+    "headline": "Torsades de pointes",
+    "statusLabel": "Clinical interpretation",
+    "displayPolicy": "four_section_clinical_narrative",
+    "episodeNarrative": "A 74-year-old female experienced a witnessed syncopal episode associated with hemodynamic instability (hypotension, hypoxia). ECG revealed a polymorphic ventricular tachycardia with axis twisting, consistent with Torsades de pointes, at a rate of 228 bpm. A baseline ECG 6 minutes prior showed sinus rhythm with marked QT prolongation (QTc 618 ms).",
+    "etiologyContextNarrative": "Acquired Long QT Syndrome (LQTS) is the most likely etiology, leading to Torsades de pointes. This is supported by the documented baseline QTc prolongation (618 ms) and the presence of multiple QT-prolonging medications (sotalol, azithromycin, ondansetron). The patient also has significant electrolyte abnormalities (hypokalemia, hypomagnesemia, hypocalcemia) and acute kidney injury (creatinine 1.4 mg/dL), which further predispose to QT prolongation and TdP.",
+    "rootCauseNarrative": "Acquired Long QT Syndrome (LQTS) is the most likely etiology, leading to Torsades de pointes. This is supported by the documented baseline QTc prolongation (618 ms) and the presence of multiple QT-prolonging medications (sotalol, azithromycin, ondansetron). The patient also has significant electrolyte abnormalities (hypokalemia, hypomagnesemia, hypocalcemia) and acute kidney injury (creatinine 1.4 mg/dL), which further predispose to QT prolongation and TdP.",
+    "possibleContributors": [
+      "Exposure to multiple QT-prolonging medications (sotalol, azithromycin, ondansetron)",
+      "Hypokalemia (K 2.9 mmol/L)",
+      "Hypomagnesemia (Mg 1.2 mg/dL)",
+      "Hypocalcemia (Ca 7.9 mg/dL)",
+      "Acute kidney injury (Cr 1.4 mg/dL)"
+    ],
+    "importantFindings": [
+      "Exposure to multiple QT-prolonging medications (sotalol, azithromycin, ondansetron)",
+      "Hypokalemia (K 2.9 mmol/L)",
+      "Hypomagnesemia (Mg 1.2 mg/dL)",
+      "Hypocalcemia (Ca 7.9 mg/dL)",
+      "Acute kidney injury (Cr 1.4 mg/dL)"
+    ],
+    "importantLimitations": [],
+    "materialEtiologicUncertainty": [],
+    "arrhythmiaNarrative": "",
+    "morphologyNarrative": "",
+    "currentSituationNarrative": "",
+    "currentSituation": {
+      "narrative": ""
+    },
+    "recommendedNextChecks": [],
+    "recommendedActionsRequired": false
+  },
+  "responseValidation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "TORSADES_DE_POINTES",
+    "authoritativeDiagnosisDisplay": "Torsades de pointes",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "evidenceCoverage": {},
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 0,
+    "evidenceCoverageRequired": 0,
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-deterministic-v2.1",
+    "groundingStatus": "accepted"
+  },
+  "benchmark": {
+    "score": 76,
+    "grade": "needs_improvement",
+    "safetyPass": true,
+    "overallPass": false
+  },
+  "generationAttempted": false,
+  "liveInference": false,
+  "generatedOffline": true
+}

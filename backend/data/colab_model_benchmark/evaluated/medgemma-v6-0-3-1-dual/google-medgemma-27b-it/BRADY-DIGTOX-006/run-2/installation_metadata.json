@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "kgen-precomputed-installation-v2",
+  "createdAtUtc": "2026-08-05T16:52:50.468806+00:00",
+  "responseSetId": "medgemma-dual-v6-0-3-1",
+  "profile": "medgemma-27b-it",
+  "selectionMode": "single_model",
+  "scenarioId": "BRADY-DIGTOX-006",
+  "sourceModel": "google/medgemma-27b-it",
+  "modelSlug": "google-medgemma-27b-it",
+  "runNumber": 2,
+  "promptFingerprint": "45b38e3b0d593480dd38775ef697949a3cc14281d75f1c48c0745af4553eea05",
+  "sourcePromptVersion": "episode-pack-phase6-v6.0.3",
+  "responseContractVersion": "model-clinical-output-v6.0.3",
+  "validationVersion": "v6.0.3.1",
+  "inputZipSha256": "a59b3b99691d3da0c9474266248107726fcc053b11d8cdd5de38155f6274a084",
+  "resultsZipSha256": "61fd6440a4aeb4eeb57b938000cc051fe5b0ce51255e6b433372fd5f392fad71",
+  "validatorPassed": true,
+  "unsupportedFactCount": 0,
+  "contradictionCount": 0,
+  "score": 76,
+  "sourceGeneratedOffline": true
+}

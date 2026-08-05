@@ -1,0 +1,105 @@
+{
+  "schemaVersion": "slm-widget-result-v4",
+  "createdAt": "2026-08-05T16:52:50.387310+00:00",
+  "scenarioId": "VT-ISCHEMIC-003",
+  "episodeId": "evalflow-VT-ISCHEMIC-003-20260731-195433-6cc9c2",
+  "incidentId": "inc-INCART-EVAL-VT-ISCHEMIC-003-loop-1-ventricular-tachycardia-000001584-Dx7LEcmC-S0SlsPU",
+  "status": "complete",
+  "validationStatus": "accepted",
+  "displayPolicy": "always_show_model_response",
+  "clinicalResponseLabel": "MedGemma Clinical Context",
+  "model": {
+    "provider": "lightning-ai-studio",
+    "name": "google/medgemma-27b-it",
+    "modelId": "google/medgemma-27b-it",
+    "modelKey": "google-medgemma-27b-it",
+    "loaderType": "multimodal",
+    "quantization": "4-bit-nf4-double-quant",
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "promptFingerprint": "f88093a906a3b86a964eedf5a35201e5f5d61fb564e48b971ee200b5cc42b0e3",
+    "responseContractVersion": "model-clinical-output-v6.0.3",
+    "sourceRun": 2,
+    "generatedOffline": true
+  },
+  "modelResponse": {
+    "episodeSummary": "The patient experienced an 8-second episode of monomorphic ventricular tachycardia (VT) with a rate of 182 bpm. The ECG showed wide QRS complexes, AV dissociation, and occasional fusion/capture beats. Hemodynamics were borderline but the patient remained conscious. The patient has a history of ischemic cardiomyopathy with reduced LVEF (25%) and prior inferior MI.",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is re-entrant VT related to the patient's underlying structural heart disease (ischemic cardiomyopathy with prior MI and reduced LVEF). This is supported by the patient's history of ischemic cardiomyopathy, prior MI, and reduced LVEF, which are known substrates for re-entrant arrhythmias. The morphology of the VT (monomorphic) is also consistent with re-entry around a scar or other substrate.",
+    "contributingFactors": [
+      "Ischemic cardiomyopathy",
+      "Prior inferior MI",
+      "Reduced LVEF (25%)"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "displayModelResponse": {
+    "episodeSummary": "The patient experienced an 8-second episode of monomorphic ventricular tachycardia (VT) with a rate of 182 bpm. The ECG showed wide QRS complexes, AV dissociation, and occasional fusion/capture beats. Hemodynamics were borderline but the patient remained conscious. The patient has a history of ischemic cardiomyopathy with reduced LVEF (25%) and prior inferior MI.",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is re-entrant VT related to the patient's underlying structural heart disease (ischemic cardiomyopathy with prior MI and reduced LVEF). This is supported by the patient's history of ischemic cardiomyopathy, prior MI, and reduced LVEF, which are known substrates for re-entrant arrhythmias. The morphology of the VT (monomorphic) is also consistent with re-entry around a scar or other substrate.",
+    "contributingFactors": [
+      "Ischemic cardiomyopathy",
+      "Prior inferior MI",
+      "Reduced LVEF (25%)"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "interpretation": {
+    "headline": "Monomorphic ventricular tachycardia",
+    "statusLabel": "Clinical interpretation",
+    "displayPolicy": "four_section_clinical_narrative",
+    "episodeNarrative": "The patient experienced an 8-second episode of monomorphic ventricular tachycardia (VT) with a rate of 182 bpm. The ECG showed wide QRS complexes, AV dissociation, and occasional fusion/capture beats. Hemodynamics were borderline but the patient remained conscious. The patient has a history of ischemic cardiomyopathy with reduced LVEF (25%) and prior inferior MI.",
+    "etiologyContextNarrative": "The most likely etiology is re-entrant VT related to the patient's underlying structural heart disease (ischemic cardiomyopathy with prior MI and reduced LVEF). This is supported by the patient's history of ischemic cardiomyopathy, prior MI, and reduced LVEF, which are known substrates for re-entrant arrhythmias. The morphology of the VT (monomorphic) is also consistent with re-entry around a scar or other substrate.",
+    "rootCauseNarrative": "The most likely etiology is re-entrant VT related to the patient's underlying structural heart disease (ischemic cardiomyopathy with prior MI and reduced LVEF). This is supported by the patient's history of ischemic cardiomyopathy, prior MI, and reduced LVEF, which are known substrates for re-entrant arrhythmias. The morphology of the VT (monomorphic) is also consistent with re-entry around a scar or other substrate.",
+    "possibleContributors": [
+      "Ischemic cardiomyopathy",
+      "Prior inferior MI",
+      "Reduced LVEF (25%)"
+    ],
+    "importantFindings": [
+      "Ischemic cardiomyopathy",
+      "Prior inferior MI",
+      "Reduced LVEF (25%)"
+    ],
+    "importantLimitations": [],
+    "materialEtiologicUncertainty": [],
+    "arrhythmiaNarrative": "",
+    "morphologyNarrative": "",
+    "currentSituationNarrative": "",
+    "currentSituation": {
+      "narrative": ""
+    },
+    "recommendedNextChecks": [],
+    "recommendedActionsRequired": false
+  },
+  "responseValidation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "MONOMORPHIC_VENTRICULAR_TACHYCARDIA",
+    "authoritativeDiagnosisDisplay": "Monomorphic ventricular tachycardia",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "evidenceCoverage": {},
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 0,
+    "evidenceCoverageRequired": 0,
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-deterministic-v2.1",
+    "groundingStatus": "accepted"
+  },
+  "benchmark": {
+    "score": 71,
+    "grade": "needs_improvement",
+    "safetyPass": true,
+    "overallPass": false
+  },
+  "generationAttempted": false,
+  "liveInference": false,
+  "generatedOffline": true
+}

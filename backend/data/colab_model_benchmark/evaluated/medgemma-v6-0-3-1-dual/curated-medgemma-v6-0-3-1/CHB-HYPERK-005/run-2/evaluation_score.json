@@ -1,0 +1,165 @@
+{
+  "episodeId": "CHB-HYPERK-005",
+  "scoringContract": "etiology-context-deterministic-v2",
+  "recommendedActionsRequired": false,
+  "actionsScored": false,
+  "diagnosisConsistency": 20,
+  "primaryEtiology": 26,
+  "contextualEvidence": 18,
+  "uncertaintyAndMissingData": 5,
+  "avoidsDistractors": 5,
+  "total": 74,
+  "grade": "needs_improvement",
+  "validatorPassed": true,
+  "safetyPass": true,
+  "overallPass": false,
+  "overallDisposition": "grounded_but_below_benchmark_target",
+  "groundingPass": true,
+  "grounding": {
+    "status": "accepted",
+    "pass": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "accepted": true,
+    "displayableWithReview": false,
+    "hardErrorCount": 0,
+    "qualityErrorCount": 0
+  },
+  "benchmark": {
+    "score": 74,
+    "grade": "below_target",
+    "conceptGrade": "needs_improvement",
+    "alignmentMode": "full_scenario",
+    "informationalOnly": false,
+    "pass": false,
+    "disposition": "below_target"
+  },
+  "benchmarkAlignmentMode": "full_scenario",
+  "benchmarkInformationalOnly": false,
+  "benchmarkPass": false,
+  "benchmarkDisposition": "below_target",
+  "clinicalPromptMode": null,
+  "matched": {
+    "diagnosis": [
+      "Complete heart block"
+    ],
+    "etiology": [
+      "hyperkalemiaMediatedConductionFailure",
+      "renalFailureMissedDialysisMechanism"
+    ],
+    "context": [
+      "severeHyperkalemia",
+      "missedDialysis",
+      "esrd",
+      "peakedTWaves",
+      "qrsWidening",
+      "completeAvBlock",
+      "hyperkalemia"
+    ],
+    "uncertainty": []
+  },
+  "partial": {
+    "etiology": [],
+    "context": [
+      "renalFailure"
+    ],
+    "uncertainty": []
+  },
+  "missing": {
+    "etiology": [],
+    "context": [
+      "metabolicAcidosis",
+      "potassiumRaisingMedications",
+      "acidosis",
+      "medicationContribution"
+    ],
+    "uncertainty": [
+      "underlyingDegenerativeConductionDiseaseUncertain"
+    ]
+  },
+  "conceptStrengths": {
+    "etiology": {
+      "hyperkalemiaMediatedConductionFailure": 0.75,
+      "renalFailureMissedDialysisMechanism": 0.75
+    },
+    "context": {
+      "severeHyperkalemia": 0.9,
+      "missedDialysis": 1.0,
+      "esrd": 1.0,
+      "metabolicAcidosis": 0.0,
+      "peakedTWaves": 1.0,
+      "qrsWidening": 0.9,
+      "completeAvBlock": 1.0,
+      "potassiumRaisingMedications": 0.0,
+      "renalFailure": 0.5,
+      "hyperkalemia": 1.0,
+      "acidosis": 0.0,
+      "medicationContribution": 0.0
+    },
+    "uncertainty": {}
+  },
+  "distractorHits": [],
+  "forbiddenClaimHits": [],
+  "unsafeStatements": [],
+  "responseValidation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "COMPLETE_HEART_BLOCK",
+    "authoritativeDiagnosisDisplay": "Complete heart block",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "evidenceCoverage": {},
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 0,
+    "evidenceCoverageRequired": 0,
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-deterministic-v2.1",
+    "groundingStatus": "accepted"
+  },
+  "manualClinicalReviewRequired": true,
+  "scoringMethod": "scenario answer-key concept-strength matching with word-boundary, negation-aware terminology; grounding safety evaluated separately",
+  "scopedEvidenceSchemaVersion": null,
+  "rhythmIdentification": 20,
+  "contributingFactors": 18,
+  "recommendedActions": 0,
+  "mandatoryEmergencyActionsMissing": [],
+  "schemaVersion": "benchmark-result-v4",
+  "scenarioId": "CHB-HYPERK-005",
+  "sourceModel": "google/medgemma-27b-it",
+  "sourceRun": 2,
+  "responseSetId": "medgemma-dual-v6-0-3-1",
+  "profile": "curated",
+  "displayInClinicalWidget": true,
+  "generationAttempted": false,
+  "liveInference": false,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "The patient experienced a critical episode of complete heart block lasting 8 seconds, characterized by AV dissociation, a ventricular rate of 34 bpm, wide QRS escape beats, tall peaked T waves, and flattened P waves. This occurred in the context of symptomatic bradycardia with hypotension (MAP 59 mmHg). The patient has a history of end-stage renal disease on hemodialysis, hypertension, and heart failure. He missed his last two dialysis sessions. Laboratory findings show critical hyperkalemia (7.4 mmol/L), hypocalcemia (7.6 mg/dL), and severe renal impairment (creatinine 9.8 mg/dL, BUN 88 mg/dL).",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is hyperkalemia-induced complete heart block. The patient has critical hyperkalemia (K+ 7.4 mmol/L), which is a known cause of severe cardiac conduction abnormalities, including complete heart block. The ECG findings of peaked T waves and QRS widening are also consistent with hyperkalemia. The patient's end-stage renal disease and missed dialysis sessions strongly support the development of severe hyperkalemia.",
+    "contributingFactors": [
+      "End-stage renal disease",
+      "Missed dialysis sessions",
+      "Hyperkalemia"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "normalizedModelResponse": {
+    "episodeSummary": "The patient experienced a critical episode of complete heart block lasting 8 seconds, characterized by AV dissociation, a ventricular rate of 34 bpm, wide QRS escape beats, tall peaked T waves, and flattened P waves. This occurred in the context of symptomatic bradycardia with hypotension (MAP 59 mmHg). The patient has a history of end-stage renal disease on hemodialysis, hypertension, and heart failure. He missed his last two dialysis sessions. Laboratory findings show critical hyperkalemia (7.4 mmol/L), hypocalcemia (7.6 mg/dL), and severe renal impairment (creatinine 9.8 mg/dL, BUN 88 mg/dL).",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is hyperkalemia-induced complete heart block. The patient has critical hyperkalemia (K+ 7.4 mmol/L), which is a known cause of severe cardiac conduction abnormalities, including complete heart block. The ECG findings of peaked T waves and QRS widening are also consistent with hyperkalemia. The patient's end-stage renal disease and missed dialysis sessions strongly support the development of severe hyperkalemia.",
+    "contributingFactors": [
+      "End-stage renal disease",
+      "Missed dialysis sessions",
+      "Hyperkalemia"
+    ],
+    "materialEtiologicUncertainty": []
+  }
+}

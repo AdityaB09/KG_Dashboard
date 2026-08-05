@@ -1,0 +1,406 @@
+{
+  "schemaVersion": "grounded-cardinal-response-v4",
+  "status": "complete",
+  "createdAt": "2026-08-05T16:52:50.946717+00:00",
+  "mode": "precomputed_response_installation",
+  "scenarioId": "BRADY-DIGTOX-006",
+  "episodeId": "evalflow-BRADY-DIGTOX-006-20260731-194940-741c22",
+  "incidentId": "inc-INCART-EVAL-BRADY-DIGTOX-006-loop-1-bradyarrhythmia-000001650-LKi3uUXF7bxKBRcF",
+  "source": "validated_lightning_response_v6_0_3_1",
+  "diagnosticEvent": {
+    "schemaVersion": "diagnostic-event-universal-v2",
+    "eventDetected": true,
+    "episodeId": "evalflow-BRADY-DIGTOX-006-20260731-194940-741c22",
+    "incidentId": "inc-INCART-EVAL-BRADY-DIGTOX-006-loop-1-bradyarrhythmia-000001650-LKi3uUXF7bxKBRcF",
+    "diagnosis": {
+      "code": "JUNCTIONAL_BRADYCARDIA",
+      "display": "Junctional bradycardia",
+      "authoritative": true
+    },
+    "source": {
+      "type": "controlled_evaluation_scenario",
+      "name": "SLM_Eval",
+      "identifier": "BRADY-DIGTOX-006",
+      "futureReplacement": "ecg_ml_diagnostic_model"
+    },
+    "confidence": {
+      "value": 1.0,
+      "basis": "controlled_evaluation_label"
+    },
+    "measurements": {
+      "ventricularRateBpm": 38.0,
+      "atrialRateBpm": null,
+      "qrsDurationMs": 96.0,
+      "qtcMs": null,
+      "prIntervalMs": null,
+      "regularity": "regular",
+      "axisDegrees": null,
+      "pWavePresent": false,
+      "atrialActivityPresent": false,
+      "atrioventricularAssociation": null
+    },
+    "rhythmFeatures": {
+      "ventricularRateBpm": 38.0,
+      "atrialRateBpm": null,
+      "qrsDurationMs": 96.0,
+      "qtcMs": null,
+      "qtcEvidenceSource": null,
+      "prIntervalMs": null,
+      "regularity": "regular",
+      "axisDegrees": null,
+      "pWavePresent": false,
+      "atrialActivityPresent": false,
+      "atrioventricularAssociation": null,
+      "findings": [
+        "Narrow QRS"
+      ]
+    },
+    "hemodynamicStatus": {
+      "available": true,
+      "classification": "stable",
+      "conscious": null,
+      "pulseless": null,
+      "pulsePresent": null,
+      "shockSupported": null,
+      "vasopressorSupport": null,
+      "systolicBloodPressure": 104.0,
+      "diastolicBloodPressure": 62.0,
+      "map": 76.0,
+      "oxygenSaturationPct": 96.0,
+      "temperatureC": 36.6,
+      "sourceNote": "Mildly symptomatic"
+    },
+    "electrolyteContext": {
+      "available": true,
+      "potassium": {
+        "available": true,
+        "value": 5.6,
+        "unit": "mmol/L",
+        "withinReference": false,
+        "reference": {
+          "low": 3.5,
+          "high": 5.1
+        },
+        "note": "HIGH"
+      },
+      "magnesium": {
+        "available": true,
+        "value": 2.0,
+        "unit": "mg/dL",
+        "withinReference": true,
+        "reference": {
+          "low": 1.7,
+          "high": 2.2
+        },
+        "note": ""
+      },
+      "calcium": {
+        "available": false,
+        "value": null,
+        "unit": null,
+        "withinReference": null,
+        "reference": null
+      },
+      "sodium": {
+        "available": false,
+        "value": null,
+        "unit": null,
+        "withinReference": null,
+        "reference": null
+      },
+      "abnormalElectrolytes": [
+        "potassium"
+      ],
+      "electrolyteAbnormalityPresent": true,
+      "majorElectrolyteTriggerSupported": true
+    },
+    "ischemiaContext": {
+      "available": false,
+      "acuteChestPain": null,
+      "stElevationSupported": null,
+      "troponinValue": null,
+      "troponinPattern": "not_available",
+      "acuteStemiSupported": null
+    },
+    "infectionContext": {
+      "available": true,
+      "temperatureC": 36.6,
+      "wbc": null,
+      "procalcitonin": null,
+      "lactate": null,
+      "feverSupported": null,
+      "inflammatoryResponseSupported": null,
+      "infectionSupported": null,
+      "sepsisSupported": null,
+      "infectionExplicitlyDenied": null,
+      "suspectedSource": null
+    },
+    "qtContext": {
+      "available": false,
+      "qtcMs": null,
+      "prolonged": null,
+      "thresholdMs": 500,
+      "qtProlongingMedications": [],
+      "acquiredLongQtSupported": null,
+      "evidenceSource": null
+    },
+    "renalContext": {
+      "available": true,
+      "creatinine": 2.1,
+      "bun": null,
+      "egfr": null,
+      "esrd": null,
+      "dialysis": null,
+      "missedDialysis": null,
+      "chronicKidneyDiseaseSupported": true,
+      "acuteKidneyInjurySupported": null,
+      "renalImpairmentSupported": true,
+      "sourceTextContainsRenalImpairment": null
+    },
+    "medicationContext": {
+      "available": true,
+      "homeMedications": [
+        "Digoxin 0.25 mg daily",
+        "Furosemide 40 mg",
+        "Warfarin"
+      ],
+      "activeMedications": [
+        "Digoxin 0.25 mg daily",
+        "Furosemide 40 mg",
+        "Warfarin"
+      ],
+      "infusions": [],
+      "qtProlongingMedications": [],
+      "digoxinExposure": true,
+      "potassiumRaisingMedicationExposure": false,
+      "thiazideExposure": false
+    },
+    "toxicityContext": {
+      "available": true,
+      "digoxinLevel": 3.8,
+      "symptoms": [
+        "nausea",
+        "vomiting"
+      ],
+      "digoxinToxicitySupported": true,
+      "reducedClearanceSupported": true
+    },
+    "patientContext": {
+      "available": true,
+      "age": 82,
+      "sex": "F",
+      "primaryDiagnosis": "Nausea, vomiting, confusion",
+      "history": [
+        "Atrial fibrillation (rate-controlled on digoxin)",
+        "Heart failure",
+        "CKD stage 3"
+      ],
+      "leftVentricularEjectionFraction": null,
+      "priorAtrialFibrillation": null
+    },
+    "structuralHeartContext": {
+      "available": true,
+      "findings": [
+        "Heart failure"
+      ],
+      "lvefPct": null,
+      "severeLvDysfunction": null
+    },
+    "laboratoryContext": {
+      "digoxinLevel": {
+        "value": 3.8,
+        "unit": "ng/mL",
+        "reference": "0.8–2.0",
+        "flag": "TOXIC"
+      },
+      "potassium": {
+        "value": 5.6,
+        "unit": "mmol/L",
+        "reference": "3.5–5.1",
+        "flag": "HIGH"
+      },
+      "creatinine": {
+        "value": 2.1,
+        "unit": "mg/dL",
+        "reference": "0.6–1.1",
+        "flag": "HIGH (acute on CKD)"
+      },
+      "magnesium": {
+        "value": 2.0,
+        "unit": "mg/dL",
+        "reference": "1.7–2.2",
+        "flag": ""
+      },
+      "inr": {
+        "value": 2.4,
+        "unit": "",
+        "reference": "2.0–3.0",
+        "flag": ""
+      }
+    },
+    "recentClinicalContext": {
+      "recentEvents": [
+        "Nausea, vomiting, visual disturbance (yellow-green halos)",
+        "Recent decreased urine output / dehydration",
+        "AFib now slow and regular"
+      ]
+    },
+    "pairedOraclePatientContext": {
+      "available": false,
+      "sourceType": "oracle_smart_fhir"
+    },
+    "detector": {
+      "ruleId": "controlled-capture-fallback-v1",
+      "estimatedRateBpm": 38.0,
+      "triggerLatencySeconds": 1.5,
+      "referenceOnsetOffsetSeconds": 6.0,
+      "detectedTriggerOffsetSeconds": 7.5
+    },
+    "capture": {
+      "durationSeconds": 20.0,
+      "preSeconds": 6.0,
+      "eventSeconds": 8.0,
+      "postSeconds": 6.0,
+      "complete": true,
+      "sampleRateHz": 220.0,
+      "leads": [
+        "I",
+        "II",
+        "III",
+        "aVR",
+        "aVL",
+        "aVF"
+      ]
+    },
+    "provenance": {
+      "isIndependentDiagnosis": false,
+      "evaluationControlled": true,
+      "diagnosisOwnedByUpstreamSource": true,
+      "timingOwnedByDeterministicDetector": true,
+      "slmMayReclassify": false
+    }
+  },
+  "evidenceFingerprint": "45b38e3b0d593480dd38775ef697949a3cc14281d75f1c48c0745af4553eea05",
+  "model": {
+    "provider": "lightning-ai-studio",
+    "name": "google/medgemma-27b-it",
+    "modelId": "google/medgemma-27b-it",
+    "modelKey": "google-medgemma-27b-it",
+    "loaderType": "multimodal",
+    "quantization": "4-bit-nf4-double-quant",
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "promptFingerprint": "45b38e3b0d593480dd38775ef697949a3cc14281d75f1c48c0745af4553eea05",
+    "responseContractVersion": "model-clinical-output-v6.0.3",
+    "sourceRun": 2,
+    "generatedOffline": true
+  },
+  "sourceModelResponse": {
+    "episodeSummary": "The patient experienced an 8-second episode of junctional bradycardia (rate 38 bpm, regular) during which she was mildly symptomatic. Her atrial fibrillation rhythm became slow and regular. ECG showed a narrow QRS complex with scooped ST segments. She has a history of atrial fibrillation treated with digoxin, heart failure, and CKD stage 3. Recent symptoms include nausea, vomiting, and visual disturbances. Labs show hyperkalemia (5.6 mmol/L), elevated creatinine (2.1 mg/dL), and a toxic digoxin level (3.8 ng/mL).",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is digoxin toxicity causing junctional bradycardia. This is supported by the patient's history of atrial fibrillation treated with digoxin, symptoms consistent with digoxin toxicity (nausea, vomiting, visual disturbances), ECG findings of scooped ST segments (a classic digoxin effect), and a measured digoxin level of 3.8 ng/mL, which is above the toxic range (reference 0.8-2.0 ng/mL). The junctional bradycardia with a regular rhythm despite underlying AFib is also consistent with digoxin's effect on the AV node.",
+    "contributingFactors": [
+      "Digoxin use",
+      "Chronic kidney disease (CKD stage 3)",
+      "Hyperkalemia"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "modelResponse": {
+    "episodeSummary": "The patient experienced an 8-second episode of junctional bradycardia (rate 38 bpm, regular) during which she was mildly symptomatic. Her atrial fibrillation rhythm became slow and regular. ECG showed a narrow QRS complex with scooped ST segments. She has a history of atrial fibrillation treated with digoxin, heart failure, and CKD stage 3. Recent symptoms include nausea, vomiting, and visual disturbances. Labs show hyperkalemia (5.6 mmol/L), elevated creatinine (2.1 mg/dL), and a toxic digoxin level (3.8 ng/mL).",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is digoxin toxicity causing junctional bradycardia. This is supported by the patient's history of atrial fibrillation treated with digoxin, symptoms consistent with digoxin toxicity (nausea, vomiting, visual disturbances), ECG findings of scooped ST segments (a classic digoxin effect), and a measured digoxin level of 3.8 ng/mL, which is above the toxic range (reference 0.8-2.0 ng/mL). The junctional bradycardia with a regular rhythm despite underlying AFib is also consistent with digoxin's effect on the AV node.",
+    "contributingFactors": [
+      "Digoxin use",
+      "Chronic kidney disease (CKD stage 3)",
+      "Hyperkalemia"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "displayModelResponse": {
+    "episodeSummary": "The patient experienced an 8-second episode of junctional bradycardia (rate 38 bpm, regular) during which she was mildly symptomatic. Her atrial fibrillation rhythm became slow and regular. ECG showed a narrow QRS complex with scooped ST segments. She has a history of atrial fibrillation treated with digoxin, heart failure, and CKD stage 3. Recent symptoms include nausea, vomiting, and visual disturbances. Labs show hyperkalemia (5.6 mmol/L), elevated creatinine (2.1 mg/dL), and a toxic digoxin level (3.8 ng/mL).",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is digoxin toxicity causing junctional bradycardia. This is supported by the patient's history of atrial fibrillation treated with digoxin, symptoms consistent with digoxin toxicity (nausea, vomiting, visual disturbances), ECG findings of scooped ST segments (a classic digoxin effect), and a measured digoxin level of 3.8 ng/mL, which is above the toxic range (reference 0.8-2.0 ng/mL). The junctional bradycardia with a regular rhythm despite underlying AFib is also consistent with digoxin's effect on the AV node.",
+    "contributingFactors": [
+      "Digoxin use",
+      "Chronic kidney disease (CKD stage 3)",
+      "Hyperkalemia"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "validatedModelResponse": {
+    "episodeSummary": "The patient experienced an 8-second episode of junctional bradycardia (rate 38 bpm, regular) during which she was mildly symptomatic. Her atrial fibrillation rhythm became slow and regular. ECG showed a narrow QRS complex with scooped ST segments. She has a history of atrial fibrillation treated with digoxin, heart failure, and CKD stage 3. Recent symptoms include nausea, vomiting, and visual disturbances. Labs show hyperkalemia (5.6 mmol/L), elevated creatinine (2.1 mg/dL), and a toxic digoxin level (3.8 ng/mL).",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is digoxin toxicity causing junctional bradycardia. This is supported by the patient's history of atrial fibrillation treated with digoxin, symptoms consistent with digoxin toxicity (nausea, vomiting, visual disturbances), ECG findings of scooped ST segments (a classic digoxin effect), and a measured digoxin level of 3.8 ng/mL, which is above the toxic range (reference 0.8-2.0 ng/mL). The junctional bradycardia with a regular rhythm despite underlying AFib is also consistent with digoxin's effect on the AV node.",
+    "contributingFactors": [
+      "Digoxin use",
+      "Chronic kidney disease (CKD stage 3)",
+      "Hyperkalemia"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "legacyValidatorResponse": {
+    "episodeSummary": "The patient experienced an 8-second episode of junctional bradycardia (rate 38 bpm, regular) during which she was mildly symptomatic. Her atrial fibrillation rhythm became slow and regular. ECG showed a narrow QRS complex with scooped ST segments. She has a history of atrial fibrillation treated with digoxin, heart failure, and CKD stage 3. Recent symptoms include nausea, vomiting, and visual disturbances. Labs show hyperkalemia (5.6 mmol/L), elevated creatinine (2.1 mg/dL), and a toxic digoxin level (3.8 ng/mL).",
+    "detectedEpisodeContext": "The patient experienced an 8-second episode of junctional bradycardia (rate 38 bpm, regular) during which she was mildly symptomatic. Her atrial fibrillation rhythm became slow and regular. ECG showed a narrow QRS complex with scooped ST segments. She has a history of atrial fibrillation treated with digoxin, heart failure, and CKD stage 3. Recent symptoms include nausea, vomiting, and visual disturbances. Labs show hyperkalemia (5.6 mmol/L), elevated creatinine (2.1 mg/dL), and a toxic digoxin level (3.8 ng/mL).",
+    "mostLikelyEtiology": "The most likely etiology is digoxin toxicity causing junctional bradycardia. This is supported by the patient's history of atrial fibrillation treated with digoxin, symptoms consistent with digoxin toxicity (nausea, vomiting, visual disturbances), ECG findings of scooped ST segments (a classic digoxin effect), and a measured digoxin level of 3.8 ng/mL, which is above the toxic range (reference 0.8-2.0 ng/mL). The junctional bradycardia with a regular rhythm despite underlying AFib is also consistent with digoxin's effect on the AV node.",
+    "contributingFactors": [
+      "Digoxin use",
+      "Chronic kidney disease (CKD stage 3)",
+      "Hyperkalemia"
+    ],
+    "uncertaintyAndMissingData": []
+  },
+  "validation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "JUNCTIONAL_BRADYCARDIA",
+    "authoritativeDiagnosisDisplay": "Junctional bradycardia",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "evidenceCoverage": {},
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 0,
+    "evidenceCoverageRequired": 0,
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-deterministic-v2.1",
+    "groundingStatus": "accepted"
+  },
+  "reliability": {
+    "attemptCount": 1,
+    "firstAttemptAccepted": true,
+    "finalAttemptAccepted": true,
+    "contractNormalized": false,
+    "normalizationChanges": [],
+    "contradictionCount": 0,
+    "unsupportedFactCount": 0
+  },
+  "generationAttempted": true,
+  "liveInference": false,
+  "generatedOffline": true,
+  "installationMetadata": {
+    "schemaVersion": "kgen-precomputed-installation-v2",
+    "createdAtUtc": "2026-08-05T16:52:50.946717+00:00",
+    "responseSetId": "medgemma-dual-v6-0-3-1",
+    "profile": "curated",
+    "selectionMode": "curated_best_per_scenario",
+    "scenarioId": "BRADY-DIGTOX-006",
+    "sourceModel": "google/medgemma-27b-it",
+    "modelSlug": "curated-medgemma-v6-0-3-1",
+    "runNumber": 2,
+    "promptFingerprint": "45b38e3b0d593480dd38775ef697949a3cc14281d75f1c48c0745af4553eea05",
+    "sourcePromptVersion": "episode-pack-phase6-v6.0.3",
+    "responseContractVersion": "model-clinical-output-v6.0.3",
+    "validationVersion": "v6.0.3.1",
+    "inputZipSha256": "a59b3b99691d3da0c9474266248107726fcc053b11d8cdd5de38155f6274a084",
+    "resultsZipSha256": "61fd6440a4aeb4eeb57b938000cc051fe5b0ce51255e6b433372fd5f392fad71",
+    "validatorPassed": true,
+    "unsupportedFactCount": 0,
+    "contradictionCount": 0,
+    "score": 76,
+    "sourceGeneratedOffline": true
+  }
+}

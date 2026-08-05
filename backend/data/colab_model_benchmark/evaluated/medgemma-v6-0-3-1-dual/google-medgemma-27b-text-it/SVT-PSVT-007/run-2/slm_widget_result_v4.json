@@ -1,0 +1,105 @@
+{
+  "schemaVersion": "slm-widget-result-v4",
+  "createdAt": "2026-08-05T16:52:50.692848+00:00",
+  "scenarioId": "SVT-PSVT-007",
+  "episodeId": "evalflow-SVT-PSVT-007-20260731-191646-4d8420",
+  "incidentId": "inc-INCART-EVAL-SVT-PSVT-007-loop-1-supraventricular-tachycardia-000001584-BhI6IwRTha4r0XzM",
+  "status": "complete",
+  "validationStatus": "accepted",
+  "displayPolicy": "always_show_model_response",
+  "clinicalResponseLabel": "MedGemma Clinical Context",
+  "model": {
+    "provider": "lightning-ai-studio",
+    "name": "google/medgemma-27b-text-it",
+    "modelId": "google/medgemma-27b-text-it",
+    "modelKey": "google-medgemma-27b-text-it",
+    "loaderType": "text",
+    "quantization": "4-bit-nf4-double-quant",
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "promptFingerprint": "f06fdae10333baecfd572f1277b723f054d4492bdb85f74b2f89a643c2bf5227",
+    "responseContractVersion": "model-clinical-output-v6.0.3",
+    "sourceRun": 2,
+    "generatedOffline": true
+  },
+  "modelResponse": {
+    "episodeSummary": "A 34-year-old female experienced a brief episode of palpitations with a heart rate of 190 bpm, characterized by a regular, narrow QRS tachycardia without visible P waves. The episode was hemodynamically stable and self-terminated within 8 seconds. She has a history of similar, self-terminating episodes.",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is paroxysmal supraventricular tachycardia (PSVT), likely AVNRT or AVRT, given the abrupt onset of a regular, narrow-complex tachycardia at 190 bpm with absent P waves. The patient's history of prior self-terminating episodes supports a recurrent arrhythmia. The hemodynamic stability and brief duration are consistent with typical PSVT.",
+    "contributingFactors": [
+      "History of prior similar episodes"
+    ],
+    "materialEtiologicUncertainty": [
+      "The specific mechanism (AVNRT vs. AVRT) cannot be distinguished from the provided ECG."
+    ]
+  },
+  "displayModelResponse": {
+    "episodeSummary": "A 34-year-old female experienced a brief episode of palpitations with a heart rate of 190 bpm, characterized by a regular, narrow QRS tachycardia without visible P waves. The episode was hemodynamically stable and self-terminated within 8 seconds. She has a history of similar, self-terminating episodes.",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is paroxysmal supraventricular tachycardia (PSVT), likely AVNRT or AVRT, given the abrupt onset of a regular, narrow-complex tachycardia at 190 bpm with absent P waves. The patient's history of prior self-terminating episodes supports a recurrent arrhythmia. The hemodynamic stability and brief duration are consistent with typical PSVT.",
+    "contributingFactors": [
+      "History of prior similar episodes"
+    ],
+    "materialEtiologicUncertainty": [
+      "The specific mechanism (AVNRT vs. AVRT) cannot be distinguished from the provided ECG."
+    ]
+  },
+  "interpretation": {
+    "headline": "Paroxysmal supraventricular tachycardia",
+    "statusLabel": "Clinical interpretation",
+    "displayPolicy": "four_section_clinical_narrative",
+    "episodeNarrative": "A 34-year-old female experienced a brief episode of palpitations with a heart rate of 190 bpm, characterized by a regular, narrow QRS tachycardia without visible P waves. The episode was hemodynamically stable and self-terminated within 8 seconds. She has a history of similar, self-terminating episodes.",
+    "etiologyContextNarrative": "The most likely etiology is paroxysmal supraventricular tachycardia (PSVT), likely AVNRT or AVRT, given the abrupt onset of a regular, narrow-complex tachycardia at 190 bpm with absent P waves. The patient's history of prior self-terminating episodes supports a recurrent arrhythmia. The hemodynamic stability and brief duration are consistent with typical PSVT.",
+    "rootCauseNarrative": "The most likely etiology is paroxysmal supraventricular tachycardia (PSVT), likely AVNRT or AVRT, given the abrupt onset of a regular, narrow-complex tachycardia at 190 bpm with absent P waves. The patient's history of prior self-terminating episodes supports a recurrent arrhythmia. The hemodynamic stability and brief duration are consistent with typical PSVT.",
+    "possibleContributors": [
+      "History of prior similar episodes"
+    ],
+    "importantFindings": [
+      "History of prior similar episodes"
+    ],
+    "importantLimitations": [
+      "The specific mechanism (AVNRT vs. AVRT) cannot be distinguished from the provided ECG."
+    ],
+    "materialEtiologicUncertainty": [
+      "The specific mechanism (AVNRT vs. AVRT) cannot be distinguished from the provided ECG."
+    ],
+    "arrhythmiaNarrative": "",
+    "morphologyNarrative": "",
+    "currentSituationNarrative": "",
+    "currentSituation": {
+      "narrative": ""
+    },
+    "recommendedNextChecks": [],
+    "recommendedActionsRequired": false
+  },
+  "responseValidation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "SUPRAVENTRICULAR_TACHYCARDIA",
+    "authoritativeDiagnosisDisplay": "Paroxysmal supraventricular tachycardia",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "evidenceCoverage": {},
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 0,
+    "evidenceCoverageRequired": 0,
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-deterministic-v2.1",
+    "groundingStatus": "accepted"
+  },
+  "benchmark": {
+    "score": 66,
+    "grade": "fail",
+    "safetyPass": true,
+    "overallPass": false
+  },
+  "generationAttempted": false,
+  "liveInference": false,
+  "generatedOffline": true
+}

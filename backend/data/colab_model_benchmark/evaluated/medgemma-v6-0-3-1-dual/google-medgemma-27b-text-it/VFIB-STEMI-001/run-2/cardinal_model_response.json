@@ -1,0 +1,426 @@
+{
+  "schemaVersion": "grounded-cardinal-response-v4",
+  "status": "complete",
+  "createdAt": "2026-08-05T16:52:50.528429+00:00",
+  "mode": "precomputed_response_installation",
+  "scenarioId": "VFIB-STEMI-001",
+  "episodeId": "evalflow-VFIB-STEMI-001-20260731-191149-c3ca79",
+  "incidentId": "inc-INCART-EVAL-VFIB-STEMI-001-loop-1-ventricular-fibrillation-000001584-T-fMRMNztUUNQnMO",
+  "source": "validated_lightning_response_v6_0_3_1",
+  "diagnosticEvent": {
+    "schemaVersion": "diagnostic-event-universal-v2",
+    "eventDetected": true,
+    "episodeId": "evalflow-VFIB-STEMI-001-20260731-191149-c3ca79",
+    "incidentId": "inc-INCART-EVAL-VFIB-STEMI-001-loop-1-ventricular-fibrillation-000001584-T-fMRMNztUUNQnMO",
+    "diagnosis": {
+      "code": "VENTRICULAR_FIBRILLATION",
+      "display": "Ventricular fibrillation",
+      "authoritative": true
+    },
+    "source": {
+      "type": "controlled_evaluation_scenario",
+      "name": "SLM_Eval",
+      "identifier": "VFIB-STEMI-001",
+      "futureReplacement": "ecg_ml_diagnostic_model"
+    },
+    "confidence": {
+      "value": 1.0,
+      "basis": "controlled_evaluation_label"
+    },
+    "measurements": {
+      "ventricularRateBpm": null,
+      "atrialRateBpm": null,
+      "qrsDurationMs": null,
+      "qtcMs": null,
+      "prIntervalMs": null,
+      "regularity": "chaotic/irregular",
+      "axisDegrees": null,
+      "pWavePresent": false,
+      "atrialActivityPresent": false,
+      "atrioventricularAssociation": null
+    },
+    "rhythmFeatures": {
+      "ventricularRateBpm": null,
+      "atrialRateBpm": null,
+      "qrsDurationMs": null,
+      "qtcMs": null,
+      "qtcEvidenceSource": null,
+      "prIntervalMs": null,
+      "regularity": "chaotic/irregular",
+      "axisDegrees": null,
+      "pWavePresent": false,
+      "atrialActivityPresent": false,
+      "atrioventricularAssociation": null,
+      "findings": []
+    },
+    "hemodynamicStatus": {
+      "available": true,
+      "classification": "cardiac_arrest",
+      "conscious": false,
+      "pulseless": true,
+      "pulsePresent": false,
+      "shockSupported": null,
+      "vasopressorSupport": null,
+      "systolicBloodPressure": null,
+      "diastolicBloodPressure": null,
+      "map": null,
+      "oxygenSaturationPct": null,
+      "temperatureC": 36.9,
+      "sourceNote": "No pulse; arterial line flat"
+    },
+    "electrolyteContext": {
+      "available": true,
+      "potassium": {
+        "available": true,
+        "value": 4.1,
+        "unit": "mmol/L",
+        "withinReference": true,
+        "reference": {
+          "low": 3.5,
+          "high": 5.1
+        },
+        "note": ""
+      },
+      "magnesium": {
+        "available": true,
+        "value": 2.0,
+        "unit": "mg/dL",
+        "withinReference": true,
+        "reference": {
+          "low": 1.7,
+          "high": 2.2
+        },
+        "note": ""
+      },
+      "calcium": {
+        "available": false,
+        "value": null,
+        "unit": null,
+        "withinReference": null,
+        "reference": null
+      },
+      "sodium": {
+        "available": false,
+        "value": null,
+        "unit": null,
+        "withinReference": null,
+        "reference": null
+      },
+      "abnormalElectrolytes": [],
+      "electrolyteAbnormalityPresent": false,
+      "majorElectrolyteTriggerSupported": false
+    },
+    "ischemiaContext": {
+      "available": true,
+      "acuteChestPain": true,
+      "stElevationSupported": true,
+      "troponinValue": 1.85,
+      "troponinPattern": "measured_unspecified_pattern",
+      "acuteStemiSupported": true
+    },
+    "infectionContext": {
+      "available": true,
+      "temperatureC": 36.9,
+      "wbc": null,
+      "procalcitonin": null,
+      "lactate": 4.8,
+      "feverSupported": null,
+      "inflammatoryResponseSupported": null,
+      "infectionSupported": null,
+      "sepsisSupported": null,
+      "infectionExplicitlyDenied": null,
+      "suspectedSource": null
+    },
+    "qtContext": {
+      "available": false,
+      "qtcMs": null,
+      "prolonged": null,
+      "thresholdMs": 500,
+      "qtProlongingMedications": [],
+      "acquiredLongQtSupported": null,
+      "evidenceSource": null
+    },
+    "renalContext": {
+      "available": true,
+      "creatinine": 1.1,
+      "bun": null,
+      "egfr": null,
+      "esrd": null,
+      "dialysis": null,
+      "missedDialysis": null,
+      "chronicKidneyDiseaseSupported": null,
+      "acuteKidneyInjurySupported": null,
+      "renalImpairmentSupported": null,
+      "sourceTextContainsRenalImpairment": null
+    },
+    "medicationContext": {
+      "available": true,
+      "homeMedications": [
+        "Aspirin 81 mg",
+        "Atorvastatin 80 mg",
+        "Metoprolol 50 mg",
+        "Metformin 1000 mg"
+      ],
+      "activeMedications": [
+        "Aspirin 81 mg",
+        "Atorvastatin 80 mg",
+        "Metoprolol 50 mg",
+        "Metformin 1000 mg"
+      ],
+      "infusions": [
+        "Nitroglycerin IV (started for chest pain)"
+      ],
+      "qtProlongingMedications": [],
+      "digoxinExposure": false,
+      "potassiumRaisingMedicationExposure": false,
+      "thiazideExposure": false
+    },
+    "toxicityContext": {
+      "available": true,
+      "digoxinLevel": null,
+      "symptoms": [],
+      "digoxinToxicitySupported": false,
+      "reducedClearanceSupported": false
+    },
+    "patientContext": {
+      "available": true,
+      "age": 68,
+      "sex": "M",
+      "primaryDiagnosis": "Acute chest pain, rule-out ACS",
+      "history": [
+        "Coronary artery disease",
+        "Prior anterior MI (2019, DES to LAD)",
+        "Hyperlipidemia",
+        "Type 2 diabetes",
+        "Former smoker"
+      ],
+      "leftVentricularEjectionFraction": null,
+      "priorAtrialFibrillation": null
+    },
+    "structuralHeartContext": {
+      "available": false,
+      "findings": [],
+      "lvefPct": null,
+      "severeLvDysfunction": null
+    },
+    "laboratoryContext": {
+      "troponinT": {
+        "value": 1.85,
+        "unit": "ng/mL",
+        "reference": "<0.014",
+        "flag": "CRITICAL HIGH"
+      },
+      "ck_mb": {
+        "value": 48,
+        "unit": "ng/mL",
+        "reference": "0–5",
+        "flag": "HIGH"
+      },
+      "potassium": {
+        "value": 4.1,
+        "unit": "mmol/L",
+        "reference": "3.5–5.1",
+        "flag": ""
+      },
+      "magnesium": {
+        "value": 2.0,
+        "unit": "mg/dL",
+        "reference": "1.7–2.2",
+        "flag": ""
+      },
+      "glucose": {
+        "value": 212,
+        "unit": "mg/dL",
+        "reference": "70–140",
+        "flag": "HIGH"
+      },
+      "creatinine": {
+        "value": 1.1,
+        "unit": "mg/dL",
+        "reference": "0.7–1.3",
+        "flag": ""
+      },
+      "lactate": {
+        "value": 4.8,
+        "unit": "mmol/L",
+        "reference": "0.5–2.2",
+        "flag": "HIGH"
+      },
+      "ph": {
+        "value": 7.21,
+        "unit": "",
+        "reference": "7.35–7.45",
+        "flag": "LOW"
+      }
+    },
+    "recentClinicalContext": {
+      "recentEvents": [
+        "Sudden loss of consciousness on monitor",
+        "Preceded by crescendo chest pain and ST elevation",
+        "BLS/ACLS in progress"
+      ]
+    },
+    "pairedOraclePatientContext": {
+      "available": false,
+      "sourceType": "oracle_smart_fhir"
+    },
+    "detector": {
+      "ruleId": "multilead-waveform-change-v1",
+      "estimatedRateBpm": null,
+      "triggerLatencySeconds": 1.2,
+      "referenceOnsetOffsetSeconds": 6.0,
+      "detectedTriggerOffsetSeconds": 7.2
+    },
+    "capture": {
+      "durationSeconds": 20.0,
+      "preSeconds": 6.0,
+      "eventSeconds": 8.0,
+      "postSeconds": 6.0,
+      "complete": true,
+      "sampleRateHz": 220.0,
+      "leads": [
+        "I",
+        "II",
+        "III",
+        "aVR",
+        "aVL",
+        "aVF"
+      ]
+    },
+    "provenance": {
+      "isIndependentDiagnosis": false,
+      "evaluationControlled": true,
+      "diagnosisOwnedByUpstreamSource": true,
+      "timingOwnedByDeterministicDetector": true,
+      "slmMayReclassify": false
+    }
+  },
+  "evidenceFingerprint": "049e91955d9fa37744053d9fe5778b257b356addd465033c525573e30d4cebad",
+  "model": {
+    "provider": "lightning-ai-studio",
+    "name": "google/medgemma-27b-text-it",
+    "modelId": "google/medgemma-27b-text-it",
+    "modelKey": "google-medgemma-27b-text-it",
+    "loaderType": "text",
+    "quantization": "4-bit-nf4-double-quant",
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "promptFingerprint": "049e91955d9fa37744053d9fe5778b257b356addd465033c525573e30d4cebad",
+    "responseContractVersion": "model-clinical-output-v6.0.3",
+    "sourceRun": 2,
+    "generatedOffline": true
+  },
+  "sourceModelResponse": {
+    "episodeSummary": "A 68-year-old male experienced sudden loss of consciousness during monitoring, preceded by crescendo chest pain and ST elevation. The event progressed to ventricular fibrillation (VF) cardiac arrest, requiring BLS/ACLS. The patient has a history of coronary artery disease and prior anterior MI.",
+    "mostLikelyEtiologyAndClinicalContext": "Acute ST-elevation myocardial infarction (STEMI) is the most likely etiology. This is supported by the patient's history of coronary artery disease, the preceding crescendo chest pain, ST elevation in V2-V4 on the 12-lead ECG 8 minutes prior to arrest, and markedly elevated cardiac biomarkers (troponin T 1.85 ng/mL, CK-MB 48 ng/mL). The STEMI likely led to myocardial ischemia, electrical instability (runs of PVCs, R-on-T phenomenon), and subsequent degeneration into ventricular fibrillation.",
+    "contributingFactors": [
+      "Coronary artery disease",
+      "Prior anterior MI",
+      "Hyperlipidemia",
+      "Type 2 diabetes"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "modelResponse": {
+    "episodeSummary": "A 68-year-old male experienced sudden loss of consciousness during monitoring, preceded by crescendo chest pain and ST elevation. The event progressed to ventricular fibrillation (VF) cardiac arrest, requiring BLS/ACLS. The patient has a history of coronary artery disease and prior anterior MI.",
+    "mostLikelyEtiologyAndClinicalContext": "Acute ST-elevation myocardial infarction (STEMI) is the most likely etiology. This is supported by the patient's history of coronary artery disease, the preceding crescendo chest pain, ST elevation in V2-V4 on the 12-lead ECG 8 minutes prior to arrest, and markedly elevated cardiac biomarkers (troponin T 1.85 ng/mL, CK-MB 48 ng/mL). The STEMI likely led to myocardial ischemia, electrical instability (runs of PVCs, R-on-T phenomenon), and subsequent degeneration into ventricular fibrillation.",
+    "contributingFactors": [
+      "Coronary artery disease",
+      "Prior anterior MI",
+      "Hyperlipidemia",
+      "Type 2 diabetes"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "displayModelResponse": {
+    "episodeSummary": "A 68-year-old male experienced sudden loss of consciousness during monitoring, preceded by crescendo chest pain and ST elevation. The event progressed to ventricular fibrillation (VF) cardiac arrest, requiring BLS/ACLS. The patient has a history of coronary artery disease and prior anterior MI.",
+    "mostLikelyEtiologyAndClinicalContext": "Acute ST-elevation myocardial infarction (STEMI) is the most likely etiology. This is supported by the patient's history of coronary artery disease, the preceding crescendo chest pain, ST elevation in V2-V4 on the 12-lead ECG 8 minutes prior to arrest, and markedly elevated cardiac biomarkers (troponin T 1.85 ng/mL, CK-MB 48 ng/mL). The STEMI likely led to myocardial ischemia, electrical instability (runs of PVCs, R-on-T phenomenon), and subsequent degeneration into ventricular fibrillation.",
+    "contributingFactors": [
+      "Coronary artery disease",
+      "Prior anterior MI",
+      "Hyperlipidemia",
+      "Type 2 diabetes"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "validatedModelResponse": {
+    "episodeSummary": "A 68-year-old male experienced sudden loss of consciousness during monitoring, preceded by crescendo chest pain and ST elevation. The event progressed to ventricular fibrillation (VF) cardiac arrest, requiring BLS/ACLS. The patient has a history of coronary artery disease and prior anterior MI.",
+    "mostLikelyEtiologyAndClinicalContext": "Acute ST-elevation myocardial infarction (STEMI) is the most likely etiology. This is supported by the patient's history of coronary artery disease, the preceding crescendo chest pain, ST elevation in V2-V4 on the 12-lead ECG 8 minutes prior to arrest, and markedly elevated cardiac biomarkers (troponin T 1.85 ng/mL, CK-MB 48 ng/mL). The STEMI likely led to myocardial ischemia, electrical instability (runs of PVCs, R-on-T phenomenon), and subsequent degeneration into ventricular fibrillation.",
+    "contributingFactors": [
+      "Coronary artery disease",
+      "Prior anterior MI",
+      "Hyperlipidemia",
+      "Type 2 diabetes"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "legacyValidatorResponse": {
+    "episodeSummary": "A 68-year-old male experienced sudden loss of consciousness during monitoring, preceded by crescendo chest pain and ST elevation. The event progressed to ventricular fibrillation (VF) cardiac arrest, requiring BLS/ACLS. The patient has a history of coronary artery disease and prior anterior MI.",
+    "detectedEpisodeContext": "A 68-year-old male experienced sudden loss of consciousness during monitoring, preceded by crescendo chest pain and ST elevation. The event progressed to ventricular fibrillation (VF) cardiac arrest, requiring BLS/ACLS. The patient has a history of coronary artery disease and prior anterior MI.",
+    "mostLikelyEtiology": "Acute ST-elevation myocardial infarction (STEMI) is the most likely etiology. This is supported by the patient's history of coronary artery disease, the preceding crescendo chest pain, ST elevation in V2-V4 on the 12-lead ECG 8 minutes prior to arrest, and markedly elevated cardiac biomarkers (troponin T 1.85 ng/mL, CK-MB 48 ng/mL). The STEMI likely led to myocardial ischemia, electrical instability (runs of PVCs, R-on-T phenomenon), and subsequent degeneration into ventricular fibrillation.",
+    "contributingFactors": [
+      "Coronary artery disease",
+      "Prior anterior MI",
+      "Hyperlipidemia",
+      "Type 2 diabetes"
+    ],
+    "uncertaintyAndMissingData": []
+  },
+  "validation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "VENTRICULAR_FIBRILLATION",
+    "authoritativeDiagnosisDisplay": "Ventricular fibrillation",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "evidenceCoverage": {},
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 0,
+    "evidenceCoverageRequired": 0,
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-deterministic-v2.1",
+    "groundingStatus": "accepted"
+  },
+  "reliability": {
+    "attemptCount": 1,
+    "firstAttemptAccepted": true,
+    "finalAttemptAccepted": true,
+    "contractNormalized": false,
+    "normalizationChanges": [],
+    "contradictionCount": 0,
+    "unsupportedFactCount": 0
+  },
+  "generationAttempted": true,
+  "liveInference": false,
+  "generatedOffline": true,
+  "installationMetadata": {
+    "schemaVersion": "kgen-precomputed-installation-v2",
+    "createdAtUtc": "2026-08-05T16:52:50.528429+00:00",
+    "responseSetId": "medgemma-dual-v6-0-3-1",
+    "profile": "medgemma-27b-text-it",
+    "selectionMode": "single_model",
+    "scenarioId": "VFIB-STEMI-001",
+    "sourceModel": "google/medgemma-27b-text-it",
+    "modelSlug": "google-medgemma-27b-text-it",
+    "runNumber": 2,
+    "promptFingerprint": "049e91955d9fa37744053d9fe5778b257b356addd465033c525573e30d4cebad",
+    "sourcePromptVersion": "episode-pack-phase6-v6.0.3",
+    "responseContractVersion": "model-clinical-output-v6.0.3",
+    "validationVersion": "v6.0.3.1",
+    "inputZipSha256": "a59b3b99691d3da0c9474266248107726fcc053b11d8cdd5de38155f6274a084",
+    "resultsZipSha256": "61fd6440a4aeb4eeb57b938000cc051fe5b0ce51255e6b433372fd5f392fad71",
+    "validatorPassed": true,
+    "unsupportedFactCount": 0,
+    "contradictionCount": 0,
+    "score": 73,
+    "sourceGeneratedOffline": true
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "schemaVersion": "slm-widget-result-v4",
+  "createdAt": "2026-08-05T16:52:50.946717+00:00",
+  "scenarioId": "BRADY-DIGTOX-006",
+  "episodeId": "evalflow-BRADY-DIGTOX-006-20260731-194940-741c22",
+  "incidentId": "inc-INCART-EVAL-BRADY-DIGTOX-006-loop-1-bradyarrhythmia-000001650-LKi3uUXF7bxKBRcF",
+  "status": "complete",
+  "validationStatus": "accepted",
+  "displayPolicy": "always_show_model_response",
+  "clinicalResponseLabel": "MedGemma Clinical Context",
+  "model": {
+    "provider": "lightning-ai-studio",
+    "name": "google/medgemma-27b-it",
+    "modelId": "google/medgemma-27b-it",
+    "modelKey": "google-medgemma-27b-it",
+    "loaderType": "multimodal",
+    "quantization": "4-bit-nf4-double-quant",
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "promptFingerprint": "45b38e3b0d593480dd38775ef697949a3cc14281d75f1c48c0745af4553eea05",
+    "responseContractVersion": "model-clinical-output-v6.0.3",
+    "sourceRun": 2,
+    "generatedOffline": true
+  },
+  "modelResponse": {
+    "episodeSummary": "The patient experienced an 8-second episode of junctional bradycardia (rate 38 bpm, regular) during which she was mildly symptomatic. Her atrial fibrillation rhythm became slow and regular. ECG showed a narrow QRS complex with scooped ST segments. She has a history of atrial fibrillation treated with digoxin, heart failure, and CKD stage 3. Recent symptoms include nausea, vomiting, and visual disturbances. Labs show hyperkalemia (5.6 mmol/L), elevated creatinine (2.1 mg/dL), and a toxic digoxin level (3.8 ng/mL).",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is digoxin toxicity causing junctional bradycardia. This is supported by the patient's history of atrial fibrillation treated with digoxin, symptoms consistent with digoxin toxicity (nausea, vomiting, visual disturbances), ECG findings of scooped ST segments (a classic digoxin effect), and a measured digoxin level of 3.8 ng/mL, which is above the toxic range (reference 0.8-2.0 ng/mL). The junctional bradycardia with a regular rhythm despite underlying AFib is also consistent with digoxin's effect on the AV node.",
+    "contributingFactors": [
+      "Digoxin use",
+      "Chronic kidney disease (CKD stage 3)",
+      "Hyperkalemia"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "displayModelResponse": {
+    "episodeSummary": "The patient experienced an 8-second episode of junctional bradycardia (rate 38 bpm, regular) during which she was mildly symptomatic. Her atrial fibrillation rhythm became slow and regular. ECG showed a narrow QRS complex with scooped ST segments. She has a history of atrial fibrillation treated with digoxin, heart failure, and CKD stage 3. Recent symptoms include nausea, vomiting, and visual disturbances. Labs show hyperkalemia (5.6 mmol/L), elevated creatinine (2.1 mg/dL), and a toxic digoxin level (3.8 ng/mL).",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is digoxin toxicity causing junctional bradycardia. This is supported by the patient's history of atrial fibrillation treated with digoxin, symptoms consistent with digoxin toxicity (nausea, vomiting, visual disturbances), ECG findings of scooped ST segments (a classic digoxin effect), and a measured digoxin level of 3.8 ng/mL, which is above the toxic range (reference 0.8-2.0 ng/mL). The junctional bradycardia with a regular rhythm despite underlying AFib is also consistent with digoxin's effect on the AV node.",
+    "contributingFactors": [
+      "Digoxin use",
+      "Chronic kidney disease (CKD stage 3)",
+      "Hyperkalemia"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "interpretation": {
+    "headline": "Junctional bradycardia",
+    "statusLabel": "Clinical interpretation",
+    "displayPolicy": "four_section_clinical_narrative",
+    "episodeNarrative": "The patient experienced an 8-second episode of junctional bradycardia (rate 38 bpm, regular) during which she was mildly symptomatic. Her atrial fibrillation rhythm became slow and regular. ECG showed a narrow QRS complex with scooped ST segments. She has a history of atrial fibrillation treated with digoxin, heart failure, and CKD stage 3. Recent symptoms include nausea, vomiting, and visual disturbances. Labs show hyperkalemia (5.6 mmol/L), elevated creatinine (2.1 mg/dL), and a toxic digoxin level (3.8 ng/mL).",
+    "etiologyContextNarrative": "The most likely etiology is digoxin toxicity causing junctional bradycardia. This is supported by the patient's history of atrial fibrillation treated with digoxin, symptoms consistent with digoxin toxicity (nausea, vomiting, visual disturbances), ECG findings of scooped ST segments (a classic digoxin effect), and a measured digoxin level of 3.8 ng/mL, which is above the toxic range (reference 0.8-2.0 ng/mL). The junctional bradycardia with a regular rhythm despite underlying AFib is also consistent with digoxin's effect on the AV node.",
+    "rootCauseNarrative": "The most likely etiology is digoxin toxicity causing junctional bradycardia. This is supported by the patient's history of atrial fibrillation treated with digoxin, symptoms consistent with digoxin toxicity (nausea, vomiting, visual disturbances), ECG findings of scooped ST segments (a classic digoxin effect), and a measured digoxin level of 3.8 ng/mL, which is above the toxic range (reference 0.8-2.0 ng/mL). The junctional bradycardia with a regular rhythm despite underlying AFib is also consistent with digoxin's effect on the AV node.",
+    "possibleContributors": [
+      "Digoxin use",
+      "Chronic kidney disease (CKD stage 3)",
+      "Hyperkalemia"
+    ],
+    "importantFindings": [
+      "Digoxin use",
+      "Chronic kidney disease (CKD stage 3)",
+      "Hyperkalemia"
+    ],
+    "importantLimitations": [],
+    "materialEtiologicUncertainty": [],
+    "arrhythmiaNarrative": "",
+    "morphologyNarrative": "",
+    "currentSituationNarrative": "",
+    "currentSituation": {
+      "narrative": ""
+    },
+    "recommendedNextChecks": [],
+    "recommendedActionsRequired": false
+  },
+  "responseValidation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "JUNCTIONAL_BRADYCARDIA",
+    "authoritativeDiagnosisDisplay": "Junctional bradycardia",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "evidenceCoverage": {},
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 0,
+    "evidenceCoverageRequired": 0,
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-deterministic-v2.1",
+    "groundingStatus": "accepted"
+  },
+  "benchmark": {
+    "score": 76,
+    "grade": "needs_improvement",
+    "safetyPass": true,
+    "overallPass": false
+  },
+  "generationAttempted": false,
+  "liveInference": false,
+  "generatedOffline": true
+}

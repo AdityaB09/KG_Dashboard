@@ -1,0 +1,105 @@
+{
+  "schemaVersion": "slm-widget-result-v4",
+  "createdAt": "2026-08-05T16:52:50.330464+00:00",
+  "scenarioId": "VFIB-STEMI-001",
+  "episodeId": "evalflow-VFIB-STEMI-001-20260731-191149-c3ca79",
+  "incidentId": "inc-INCART-EVAL-VFIB-STEMI-001-loop-1-ventricular-fibrillation-000001584-T-fMRMNztUUNQnMO",
+  "status": "complete",
+  "validationStatus": "accepted",
+  "displayPolicy": "always_show_model_response",
+  "clinicalResponseLabel": "MedGemma Clinical Context",
+  "model": {
+    "provider": "lightning-ai-studio",
+    "name": "google/medgemma-27b-it",
+    "modelId": "google/medgemma-27b-it",
+    "modelKey": "google-medgemma-27b-it",
+    "loaderType": "multimodal",
+    "quantization": "4-bit-nf4-double-quant",
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "promptFingerprint": "049e91955d9fa37744053d9fe5778b257b356addd465033c525573e30d4cebad",
+    "responseContractVersion": "model-clinical-output-v6.0.3",
+    "sourceRun": 2,
+    "generatedOffline": true
+  },
+  "modelResponse": {
+    "episodeSummary": "A 68-year-old male with a history of coronary artery disease and prior MI experienced sudden loss of consciousness. Preceding events included crescendo chest pain and ST elevation on a 12-lead ECG 8 minutes prior. The patient arrested with pulselessness and hypotension, and the ECG showed ventricular fibrillation (VF). Basic and advanced cardiac life support were initiated.",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is acute myocardial infarction (MI) leading to VF. This is supported by the patient's history of coronary artery disease, prior MI, acute chest pain, ST elevation on ECG (V2-V4), and elevated cardiac biomarkers (troponin T 1.85 ng/mL, CK-MB 48 ng/mL). The VF likely occurred secondary to ischemia and electrical instability in the setting of the acute MI.",
+    "contributingFactors": [
+      "Coronary artery disease",
+      "Prior anterior MI",
+      "Acute ST-elevation myocardial infarction (STEMI)"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "displayModelResponse": {
+    "episodeSummary": "A 68-year-old male with a history of coronary artery disease and prior MI experienced sudden loss of consciousness. Preceding events included crescendo chest pain and ST elevation on a 12-lead ECG 8 minutes prior. The patient arrested with pulselessness and hypotension, and the ECG showed ventricular fibrillation (VF). Basic and advanced cardiac life support were initiated.",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is acute myocardial infarction (MI) leading to VF. This is supported by the patient's history of coronary artery disease, prior MI, acute chest pain, ST elevation on ECG (V2-V4), and elevated cardiac biomarkers (troponin T 1.85 ng/mL, CK-MB 48 ng/mL). The VF likely occurred secondary to ischemia and electrical instability in the setting of the acute MI.",
+    "contributingFactors": [
+      "Coronary artery disease",
+      "Prior anterior MI",
+      "Acute ST-elevation myocardial infarction (STEMI)"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "interpretation": {
+    "headline": "Ventricular fibrillation",
+    "statusLabel": "Clinical interpretation",
+    "displayPolicy": "four_section_clinical_narrative",
+    "episodeNarrative": "A 68-year-old male with a history of coronary artery disease and prior MI experienced sudden loss of consciousness. Preceding events included crescendo chest pain and ST elevation on a 12-lead ECG 8 minutes prior. The patient arrested with pulselessness and hypotension, and the ECG showed ventricular fibrillation (VF). Basic and advanced cardiac life support were initiated.",
+    "etiologyContextNarrative": "The most likely etiology is acute myocardial infarction (MI) leading to VF. This is supported by the patient's history of coronary artery disease, prior MI, acute chest pain, ST elevation on ECG (V2-V4), and elevated cardiac biomarkers (troponin T 1.85 ng/mL, CK-MB 48 ng/mL). The VF likely occurred secondary to ischemia and electrical instability in the setting of the acute MI.",
+    "rootCauseNarrative": "The most likely etiology is acute myocardial infarction (MI) leading to VF. This is supported by the patient's history of coronary artery disease, prior MI, acute chest pain, ST elevation on ECG (V2-V4), and elevated cardiac biomarkers (troponin T 1.85 ng/mL, CK-MB 48 ng/mL). The VF likely occurred secondary to ischemia and electrical instability in the setting of the acute MI.",
+    "possibleContributors": [
+      "Coronary artery disease",
+      "Prior anterior MI",
+      "Acute ST-elevation myocardial infarction (STEMI)"
+    ],
+    "importantFindings": [
+      "Coronary artery disease",
+      "Prior anterior MI",
+      "Acute ST-elevation myocardial infarction (STEMI)"
+    ],
+    "importantLimitations": [],
+    "materialEtiologicUncertainty": [],
+    "arrhythmiaNarrative": "",
+    "morphologyNarrative": "",
+    "currentSituationNarrative": "",
+    "currentSituation": {
+      "narrative": ""
+    },
+    "recommendedNextChecks": [],
+    "recommendedActionsRequired": false
+  },
+  "responseValidation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "VENTRICULAR_FIBRILLATION",
+    "authoritativeDiagnosisDisplay": "Ventricular fibrillation",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "evidenceCoverage": {},
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 0,
+    "evidenceCoverageRequired": 0,
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-deterministic-v2.1",
+    "groundingStatus": "accepted"
+  },
+  "benchmark": {
+    "score": 79,
+    "grade": "needs_improvement",
+    "safetyPass": true,
+    "overallPass": false
+  },
+  "generationAttempted": false,
+  "liveInference": false,
+  "generatedOffline": true
+}

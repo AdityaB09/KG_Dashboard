@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "precomputed-run-summary-v2",
+  "createdAtUtc": "2026-08-05T16:52:50.330464+00:00",
+  "scenarioId": "VFIB-STEMI-001",
+  "episodeId": "evalflow-VFIB-STEMI-001-20260731-191149-c3ca79",
+  "runNumber": 2,
+  "profile": "medgemma-27b-it",
+  "responseSetId": "medgemma-dual-v6-0-3-1",
+  "selectionMode": "single_model",
+  "sourceModel": "google/medgemma-27b-it",
+  "promptFingerprint": "049e91955d9fa37744053d9fe5778b257b356addd465033c525573e30d4cebad",
+  "validContract": true,
+  "validatorPassed": true,
+  "strictlyAccepted": true,
+  "displayableWithReview": false,
+  "unsupportedFactCount": 0,
+  "contradictionCount": 0,
+  "score": 79,
+  "sourceLatencySeconds": 28.397,
+  "sourceInputTokens": 2388,
+  "sourceOutputTokens": 248
+}

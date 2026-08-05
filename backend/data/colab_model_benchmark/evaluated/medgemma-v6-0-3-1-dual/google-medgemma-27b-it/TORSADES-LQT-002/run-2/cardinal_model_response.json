@@ -1,0 +1,434 @@
+{
+  "schemaVersion": "grounded-cardinal-response-v4",
+  "status": "complete",
+  "createdAt": "2026-08-05T16:52:50.358664+00:00",
+  "mode": "precomputed_response_installation",
+  "scenarioId": "TORSADES-LQT-002",
+  "episodeId": "evalflow-TORSADES-LQT-002-20260731-191927-44081e",
+  "incidentId": "inc-INCART-EVAL-TORSADES-LQT-002-loop-1-polymorphic-ventricular-tachycardia-000001584-6bOcUoz1vGzRTvi1",
+  "source": "validated_lightning_response_v6_0_3_1",
+  "diagnosticEvent": {
+    "schemaVersion": "diagnostic-event-universal-v2",
+    "eventDetected": true,
+    "episodeId": "evalflow-TORSADES-LQT-002-20260731-191927-44081e",
+    "incidentId": "inc-INCART-EVAL-TORSADES-LQT-002-loop-1-polymorphic-ventricular-tachycardia-000001584-6bOcUoz1vGzRTvi1",
+    "diagnosis": {
+      "code": "TORSADES_DE_POINTES",
+      "display": "Torsades de pointes",
+      "authoritative": true
+    },
+    "source": {
+      "type": "controlled_evaluation_scenario",
+      "name": "SLM_Eval",
+      "identifier": "TORSADES-LQT-002",
+      "futureReplacement": "ecg_ml_diagnostic_model"
+    },
+    "confidence": {
+      "value": 1.0,
+      "basis": "controlled_evaluation_label"
+    },
+    "measurements": {
+      "ventricularRateBpm": 228.0,
+      "atrialRateBpm": null,
+      "qrsDurationMs": 150.0,
+      "qtcMs": 618.0,
+      "prIntervalMs": null,
+      "regularity": "irregular",
+      "axisDegrees": null,
+      "pWavePresent": false,
+      "atrialActivityPresent": false,
+      "atrioventricularAssociation": null
+    },
+    "rhythmFeatures": {
+      "ventricularRateBpm": 228.0,
+      "atrialRateBpm": null,
+      "qrsDurationMs": 150.0,
+      "qtcMs": 618.0,
+      "qtcEvidenceSource": "complete_episode_pack.ecg.measurements.preEventNote",
+      "prIntervalMs": null,
+      "regularity": "irregular",
+      "axisDegrees": null,
+      "pWavePresent": false,
+      "atrialActivityPresent": false,
+      "atrioventricularAssociation": null,
+      "findings": [
+        "Twisting QRS axis"
+      ]
+    },
+    "hemodynamicStatus": {
+      "available": true,
+      "classification": "unstable",
+      "conscious": null,
+      "pulseless": null,
+      "pulsePresent": null,
+      "shockSupported": null,
+      "vasopressorSupport": null,
+      "systolicBloodPressure": 68.0,
+      "diastolicBloodPressure": 40.0,
+      "map": 49.0,
+      "oxygenSaturationPct": 88.0,
+      "temperatureC": 36.7,
+      "sourceNote": "Hypotensive during run"
+    },
+    "electrolyteContext": {
+      "available": true,
+      "potassium": {
+        "available": true,
+        "value": 2.9,
+        "unit": "mmol/L",
+        "withinReference": false,
+        "reference": {
+          "low": 3.5,
+          "high": 5.1
+        },
+        "note": "LOW"
+      },
+      "magnesium": {
+        "available": true,
+        "value": 1.2,
+        "unit": "mg/dL",
+        "withinReference": false,
+        "reference": {
+          "low": 1.7,
+          "high": 2.2
+        },
+        "note": "LOW"
+      },
+      "calcium": {
+        "available": true,
+        "value": 7.9,
+        "unit": "mg/dL",
+        "withinReference": false,
+        "reference": {
+          "low": 8.5,
+          "high": 10.2
+        },
+        "note": "LOW"
+      },
+      "sodium": {
+        "available": false,
+        "value": null,
+        "unit": null,
+        "withinReference": null,
+        "reference": null
+      },
+      "abnormalElectrolytes": [
+        "potassium",
+        "magnesium",
+        "calcium"
+      ],
+      "electrolyteAbnormalityPresent": true,
+      "majorElectrolyteTriggerSupported": true
+    },
+    "ischemiaContext": {
+      "available": true,
+      "acuteChestPain": null,
+      "stElevationSupported": null,
+      "troponinValue": 0.02,
+      "troponinPattern": "measured_unspecified_pattern",
+      "acuteStemiSupported": null
+    },
+    "infectionContext": {
+      "available": true,
+      "temperatureC": 36.7,
+      "wbc": null,
+      "procalcitonin": null,
+      "lactate": null,
+      "feverSupported": null,
+      "inflammatoryResponseSupported": null,
+      "infectionSupported": null,
+      "sepsisSupported": null,
+      "infectionExplicitlyDenied": null,
+      "suspectedSource": null
+    },
+    "qtContext": {
+      "available": true,
+      "qtcMs": 618.0,
+      "prolonged": true,
+      "thresholdMs": 500,
+      "qtProlongingMedications": [
+        "Azithromycin",
+        "Ondansetron",
+        "Sotalol"
+      ],
+      "acquiredLongQtSupported": true,
+      "evidenceSource": "complete_episode_pack.ecg.measurements.preEventNote"
+    },
+    "renalContext": {
+      "available": true,
+      "creatinine": 1.4,
+      "bun": null,
+      "egfr": null,
+      "esrd": null,
+      "dialysis": null,
+      "missedDialysis": null,
+      "chronicKidneyDiseaseSupported": null,
+      "acuteKidneyInjurySupported": null,
+      "renalImpairmentSupported": null,
+      "sourceTextContainsRenalImpairment": null
+    },
+    "medicationContext": {
+      "available": true,
+      "homeMedications": [
+        "Sotalol 120 mg BID",
+        "Lisinopril 20 mg"
+      ],
+      "activeMedications": [
+        "Sotalol 120 mg BID",
+        "Lisinopril 20 mg"
+      ],
+      "infusions": [],
+      "qtProlongingMedications": [
+        "Azithromycin",
+        "Ondansetron",
+        "Sotalol"
+      ],
+      "digoxinExposure": false,
+      "potassiumRaisingMedicationExposure": false,
+      "thiazideExposure": false
+    },
+    "toxicityContext": {
+      "available": true,
+      "digoxinLevel": null,
+      "symptoms": [
+        "vomiting"
+      ],
+      "digoxinToxicitySupported": false,
+      "reducedClearanceSupported": false
+    },
+    "patientContext": {
+      "available": true,
+      "age": 74,
+      "sex": "F",
+      "primaryDiagnosis": "Palpitations and syncope",
+      "history": [
+        "Atrial fibrillation (on sotalol)",
+        "Hypertension",
+        "Recent gastroenteritis with vomiting/diarrhea"
+      ],
+      "leftVentricularEjectionFraction": null,
+      "priorAtrialFibrillation": null
+    },
+    "structuralHeartContext": {
+      "available": false,
+      "findings": [],
+      "lvefPct": null,
+      "severeLvDysfunction": null
+    },
+    "laboratoryContext": {
+      "potassium": {
+        "value": 2.9,
+        "unit": "mmol/L",
+        "reference": "3.5–5.1",
+        "flag": "LOW"
+      },
+      "magnesium": {
+        "value": 1.2,
+        "unit": "mg/dL",
+        "reference": "1.7–2.2",
+        "flag": "LOW"
+      },
+      "calcium": {
+        "value": 7.9,
+        "unit": "mg/dL",
+        "reference": "8.5–10.2",
+        "flag": "LOW"
+      },
+      "troponinT": {
+        "value": 0.02,
+        "unit": "ng/mL",
+        "reference": "<0.014",
+        "flag": "mildly high (rate-related)"
+      },
+      "creatinine": {
+        "value": 1.4,
+        "unit": "mg/dL",
+        "reference": "0.6–1.1",
+        "flag": "HIGH"
+      },
+      "tsh": {
+        "value": 2.1,
+        "unit": "mIU/L",
+        "reference": "0.4–4.0",
+        "flag": ""
+      }
+    },
+    "recentClinicalContext": {
+      "recentEvents": [
+        "Recent added azithromycin (5 d) and ondansetron for gastroenteritis",
+        "Vomiting/diarrhea x3 days",
+        "Syncopal episode witnessed"
+      ]
+    },
+    "pairedOraclePatientContext": {
+      "available": false,
+      "sourceType": "oracle_smart_fhir"
+    },
+    "detector": {
+      "ruleId": "multilead-waveform-change-v1",
+      "estimatedRateBpm": 228.0,
+      "triggerLatencySeconds": 1.2,
+      "referenceOnsetOffsetSeconds": 6.0,
+      "detectedTriggerOffsetSeconds": 7.2
+    },
+    "capture": {
+      "durationSeconds": 20.0,
+      "preSeconds": 6.0,
+      "eventSeconds": 8.0,
+      "postSeconds": 6.0,
+      "complete": true,
+      "sampleRateHz": 220.0,
+      "leads": [
+        "I",
+        "II",
+        "III",
+        "aVR",
+        "aVL",
+        "aVF"
+      ]
+    },
+    "provenance": {
+      "isIndependentDiagnosis": false,
+      "evaluationControlled": true,
+      "diagnosisOwnedByUpstreamSource": true,
+      "timingOwnedByDeterministicDetector": true,
+      "slmMayReclassify": false
+    }
+  },
+  "evidenceFingerprint": "67a9690066b831415bf7cb082734a838aee42946bb1b5f4721410ac48e2108cb",
+  "model": {
+    "provider": "lightning-ai-studio",
+    "name": "google/medgemma-27b-it",
+    "modelId": "google/medgemma-27b-it",
+    "modelKey": "google-medgemma-27b-it",
+    "loaderType": "multimodal",
+    "quantization": "4-bit-nf4-double-quant",
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "promptFingerprint": "67a9690066b831415bf7cb082734a838aee42946bb1b5f4721410ac48e2108cb",
+    "responseContractVersion": "model-clinical-output-v6.0.3",
+    "sourceRun": 2,
+    "generatedOffline": true
+  },
+  "sourceModelResponse": {
+    "episodeSummary": "A 74-year-old female with a history of atrial fibrillation on sotalol presented with gastroenteritis, vomiting, and diarrhea. She experienced a witnessed syncopal episode associated with a critical, unstable hemodynamically significant arrhythmia characterized by a ventricular rate of 228 bpm, irregular rhythm, wide QRS complexes (150 ms), and sinusoidal amplitude modulation with axis twisting on ECG. Preceding ECG showed marked QT prolongation (QTc 618 ms). Electrolytes revealed hypokalemia, hypomagnesemia, and hypocalcemia.",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is Torsades de pointes (TdP) secondary to acquired long QT syndrome. This is supported by the ECG morphology (sinusoidal amplitude modulation with axis twisting), the preceding marked QT prolongation (QTc 618 ms), the presence of multiple QT-prolonging medications (sotalol, azithromycin, ondansetron), and electrolyte abnormalities (hypokalemia, hypomagnesemia, hypocalcemia) known to predispose to TdP.",
+    "contributingFactors": [
+      "Hypokalemia (2.9 mmol/L)",
+      "Hypomagnesemia (1.2 mg/dL)",
+      "Hypocalcemia (7.9 mg/dL)",
+      "Sotalol use",
+      "Azithromycin use"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "modelResponse": {
+    "episodeSummary": "A 74-year-old female with a history of atrial fibrillation on sotalol presented with gastroenteritis, vomiting, and diarrhea. She experienced a witnessed syncopal episode associated with a critical, unstable hemodynamically significant arrhythmia characterized by a ventricular rate of 228 bpm, irregular rhythm, wide QRS complexes (150 ms), and sinusoidal amplitude modulation with axis twisting on ECG. Preceding ECG showed marked QT prolongation (QTc 618 ms). Electrolytes revealed hypokalemia, hypomagnesemia, and hypocalcemia.",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is Torsades de pointes (TdP) secondary to acquired long QT syndrome. This is supported by the ECG morphology (sinusoidal amplitude modulation with axis twisting), the preceding marked QT prolongation (QTc 618 ms), the presence of multiple QT-prolonging medications (sotalol, azithromycin, ondansetron), and electrolyte abnormalities (hypokalemia, hypomagnesemia, hypocalcemia) known to predispose to TdP.",
+    "contributingFactors": [
+      "Hypokalemia (2.9 mmol/L)",
+      "Hypomagnesemia (1.2 mg/dL)",
+      "Hypocalcemia (7.9 mg/dL)",
+      "Sotalol use",
+      "Azithromycin use"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "displayModelResponse": {
+    "episodeSummary": "A 74-year-old female with a history of atrial fibrillation on sotalol presented with gastroenteritis, vomiting, and diarrhea. She experienced a witnessed syncopal episode associated with a critical, unstable hemodynamically significant arrhythmia characterized by a ventricular rate of 228 bpm, irregular rhythm, wide QRS complexes (150 ms), and sinusoidal amplitude modulation with axis twisting on ECG. Preceding ECG showed marked QT prolongation (QTc 618 ms). Electrolytes revealed hypokalemia, hypomagnesemia, and hypocalcemia.",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is Torsades de pointes (TdP) secondary to acquired long QT syndrome. This is supported by the ECG morphology (sinusoidal amplitude modulation with axis twisting), the preceding marked QT prolongation (QTc 618 ms), the presence of multiple QT-prolonging medications (sotalol, azithromycin, ondansetron), and electrolyte abnormalities (hypokalemia, hypomagnesemia, hypocalcemia) known to predispose to TdP.",
+    "contributingFactors": [
+      "Hypokalemia (2.9 mmol/L)",
+      "Hypomagnesemia (1.2 mg/dL)",
+      "Hypocalcemia (7.9 mg/dL)",
+      "Sotalol use",
+      "Azithromycin use"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "validatedModelResponse": {
+    "episodeSummary": "A 74-year-old female with a history of atrial fibrillation on sotalol presented with gastroenteritis, vomiting, and diarrhea. She experienced a witnessed syncopal episode associated with a critical, unstable hemodynamically significant arrhythmia characterized by a ventricular rate of 228 bpm, irregular rhythm, wide QRS complexes (150 ms), and sinusoidal amplitude modulation with axis twisting on ECG. Preceding ECG showed marked QT prolongation (QTc 618 ms). Electrolytes revealed hypokalemia, hypomagnesemia, and hypocalcemia.",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is Torsades de pointes (TdP) secondary to acquired long QT syndrome. This is supported by the ECG morphology (sinusoidal amplitude modulation with axis twisting), the preceding marked QT prolongation (QTc 618 ms), the presence of multiple QT-prolonging medications (sotalol, azithromycin, ondansetron), and electrolyte abnormalities (hypokalemia, hypomagnesemia, hypocalcemia) known to predispose to TdP.",
+    "contributingFactors": [
+      "Hypokalemia (2.9 mmol/L)",
+      "Hypomagnesemia (1.2 mg/dL)",
+      "Hypocalcemia (7.9 mg/dL)",
+      "Sotalol use",
+      "Azithromycin use"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "legacyValidatorResponse": {
+    "episodeSummary": "A 74-year-old female with a history of atrial fibrillation on sotalol presented with gastroenteritis, vomiting, and diarrhea. She experienced a witnessed syncopal episode associated with a critical, unstable hemodynamically significant arrhythmia characterized by a ventricular rate of 228 bpm, irregular rhythm, wide QRS complexes (150 ms), and sinusoidal amplitude modulation with axis twisting on ECG. Preceding ECG showed marked QT prolongation (QTc 618 ms). Electrolytes revealed hypokalemia, hypomagnesemia, and hypocalcemia.",
+    "detectedEpisodeContext": "A 74-year-old female with a history of atrial fibrillation on sotalol presented with gastroenteritis, vomiting, and diarrhea. She experienced a witnessed syncopal episode associated with a critical, unstable hemodynamically significant arrhythmia characterized by a ventricular rate of 228 bpm, irregular rhythm, wide QRS complexes (150 ms), and sinusoidal amplitude modulation with axis twisting on ECG. Preceding ECG showed marked QT prolongation (QTc 618 ms). Electrolytes revealed hypokalemia, hypomagnesemia, and hypocalcemia.",
+    "mostLikelyEtiology": "The most likely etiology is Torsades de pointes (TdP) secondary to acquired long QT syndrome. This is supported by the ECG morphology (sinusoidal amplitude modulation with axis twisting), the preceding marked QT prolongation (QTc 618 ms), the presence of multiple QT-prolonging medications (sotalol, azithromycin, ondansetron), and electrolyte abnormalities (hypokalemia, hypomagnesemia, hypocalcemia) known to predispose to TdP.",
+    "contributingFactors": [
+      "Hypokalemia (2.9 mmol/L)",
+      "Hypomagnesemia (1.2 mg/dL)",
+      "Hypocalcemia (7.9 mg/dL)",
+      "Sotalol use",
+      "Azithromycin use"
+    ],
+    "uncertaintyAndMissingData": []
+  },
+  "validation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "TORSADES_DE_POINTES",
+    "authoritativeDiagnosisDisplay": "Torsades de pointes",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "evidenceCoverage": {},
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 0,
+    "evidenceCoverageRequired": 0,
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-deterministic-v2.1",
+    "groundingStatus": "accepted"
+  },
+  "reliability": {
+    "attemptCount": 1,
+    "firstAttemptAccepted": true,
+    "finalAttemptAccepted": true,
+    "contractNormalized": true,
+    "normalizationChanges": [
+      "truncated contributingFactors to 5 items",
+      "normalized contributingFactors to a string array"
+    ],
+    "contradictionCount": 0,
+    "unsupportedFactCount": 0
+  },
+  "generationAttempted": true,
+  "liveInference": false,
+  "generatedOffline": true,
+  "installationMetadata": {
+    "schemaVersion": "kgen-precomputed-installation-v2",
+    "createdAtUtc": "2026-08-05T16:52:50.358664+00:00",
+    "responseSetId": "medgemma-dual-v6-0-3-1",
+    "profile": "medgemma-27b-it",
+    "selectionMode": "single_model",
+    "scenarioId": "TORSADES-LQT-002",
+    "sourceModel": "google/medgemma-27b-it",
+    "modelSlug": "google-medgemma-27b-it",
+    "runNumber": 2,
+    "promptFingerprint": "67a9690066b831415bf7cb082734a838aee42946bb1b5f4721410ac48e2108cb",
+    "sourcePromptVersion": "episode-pack-phase6-v6.0.3",
+    "responseContractVersion": "model-clinical-output-v6.0.3",
+    "validationVersion": "v6.0.3.1",
+    "inputZipSha256": "a59b3b99691d3da0c9474266248107726fcc053b11d8cdd5de38155f6274a084",
+    "resultsZipSha256": "61fd6440a4aeb4eeb57b938000cc051fe5b0ce51255e6b433372fd5f392fad71",
+    "validatorPassed": true,
+    "unsupportedFactCount": 0,
+    "contradictionCount": 0,
+    "score": 76,
+    "sourceGeneratedOffline": true
+  }
+}

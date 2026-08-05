@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "precomputed-run-summary-v2",
+  "createdAtUtc": "2026-08-05T16:52:50.491603+00:00",
+  "scenarioId": "SVT-PSVT-007",
+  "episodeId": "evalflow-SVT-PSVT-007-20260731-191646-4d8420",
+  "runNumber": 2,
+  "profile": "medgemma-27b-it",
+  "responseSetId": "medgemma-dual-v6-0-3-1",
+  "selectionMode": "single_model",
+  "sourceModel": "google/medgemma-27b-it",
+  "promptFingerprint": "f06fdae10333baecfd572f1277b723f054d4492bdb85f74b2f89a643c2bf5227",
+  "validContract": true,
+  "validatorPassed": true,
+  "strictlyAccepted": true,
+  "displayableWithReview": false,
+  "unsupportedFactCount": 0,
+  "contradictionCount": 0,
+  "score": 79,
+  "sourceLatencySeconds": 26.847,
+  "sourceInputTokens": 2360,
+  "sourceOutputTokens": 232
+}

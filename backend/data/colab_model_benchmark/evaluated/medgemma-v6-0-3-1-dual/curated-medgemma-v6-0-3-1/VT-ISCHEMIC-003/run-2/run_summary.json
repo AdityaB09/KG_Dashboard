@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "precomputed-run-summary-v2",
+  "createdAtUtc": "2026-08-05T16:52:50.776018+00:00",
+  "scenarioId": "VT-ISCHEMIC-003",
+  "episodeId": "evalflow-VT-ISCHEMIC-003-20260731-195433-6cc9c2",
+  "runNumber": 2,
+  "profile": "curated",
+  "responseSetId": "medgemma-dual-v6-0-3-1",
+  "selectionMode": "curated_best_per_scenario",
+  "sourceModel": "google/medgemma-27b-text-it",
+  "promptFingerprint": "f88093a906a3b86a964eedf5a35201e5f5d61fb564e48b971ee200b5cc42b0e3",
+  "validContract": true,
+  "validatorPassed": true,
+  "strictlyAccepted": true,
+  "displayableWithReview": false,
+  "unsupportedFactCount": 0,
+  "contradictionCount": 0,
+  "score": 78,
+  "sourceLatencySeconds": 28.271,
+  "sourceInputTokens": 2498,
+  "sourceOutputTokens": 239
+}

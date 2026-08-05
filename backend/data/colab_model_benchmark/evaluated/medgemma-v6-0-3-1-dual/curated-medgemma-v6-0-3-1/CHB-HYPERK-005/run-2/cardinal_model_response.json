@@ -1,0 +1,419 @@
+{
+  "schemaVersion": "grounded-cardinal-response-v4",
+  "status": "complete",
+  "createdAt": "2026-08-05T16:52:50.873192+00:00",
+  "mode": "precomputed_response_installation",
+  "scenarioId": "CHB-HYPERK-005",
+  "episodeId": "evalflow-CHB-HYPERK-005-20260731-194304-f282ff",
+  "incidentId": "inc-INCART-EVAL-CHB-HYPERK-005-loop-1-complete-heart-block-000001584-RtowvVFVNg2--Iex",
+  "source": "validated_lightning_response_v6_0_3_1",
+  "diagnosticEvent": {
+    "schemaVersion": "diagnostic-event-universal-v2",
+    "eventDetected": true,
+    "episodeId": "evalflow-CHB-HYPERK-005-20260731-194304-f282ff",
+    "incidentId": "inc-INCART-EVAL-CHB-HYPERK-005-loop-1-complete-heart-block-000001584-RtowvVFVNg2--Iex",
+    "diagnosis": {
+      "code": "COMPLETE_HEART_BLOCK",
+      "display": "Complete heart block",
+      "authoritative": true
+    },
+    "source": {
+      "type": "controlled_evaluation_scenario",
+      "name": "SLM_Eval",
+      "identifier": "CHB-HYPERK-005",
+      "futureReplacement": "ecg_ml_diagnostic_model"
+    },
+    "confidence": {
+      "value": 1.0,
+      "basis": "controlled_evaluation_label"
+    },
+    "measurements": {
+      "ventricularRateBpm": 34.0,
+      "atrialRateBpm": 84.0,
+      "qrsDurationMs": 150.0,
+      "qtcMs": null,
+      "prIntervalMs": null,
+      "regularity": "regular (dissociated)",
+      "axisDegrees": null,
+      "pWavePresent": true,
+      "atrialActivityPresent": true,
+      "atrioventricularAssociation": "dissociated"
+    },
+    "rhythmFeatures": {
+      "ventricularRateBpm": 34.0,
+      "atrialRateBpm": 84.0,
+      "qrsDurationMs": 150.0,
+      "qtcMs": null,
+      "qtcEvidenceSource": null,
+      "prIntervalMs": null,
+      "regularity": "regular (dissociated)",
+      "axisDegrees": null,
+      "pWavePresent": true,
+      "atrialActivityPresent": true,
+      "atrioventricularAssociation": "dissociated",
+      "findings": [
+        "Wide QRS",
+        "AV dissociation",
+        "Peaked T waves",
+        "Progressive QRS widening"
+      ]
+    },
+    "hemodynamicStatus": {
+      "available": true,
+      "classification": "unstable",
+      "conscious": null,
+      "pulseless": null,
+      "pulsePresent": null,
+      "shockSupported": null,
+      "vasopressorSupport": null,
+      "systolicBloodPressure": 78.0,
+      "diastolicBloodPressure": 50.0,
+      "map": 59.0,
+      "oxygenSaturationPct": 95.0,
+      "temperatureC": 36.5,
+      "sourceNote": "Symptomatic bradycardia"
+    },
+    "electrolyteContext": {
+      "available": true,
+      "potassium": {
+        "available": true,
+        "value": 7.4,
+        "unit": "mmol/L",
+        "withinReference": false,
+        "reference": {
+          "low": 3.5,
+          "high": 5.1
+        },
+        "note": "CRITICAL HIGH"
+      },
+      "magnesium": {
+        "available": false,
+        "value": null,
+        "unit": null,
+        "withinReference": null,
+        "reference": null
+      },
+      "calcium": {
+        "available": true,
+        "value": 7.6,
+        "unit": "mg/dL",
+        "withinReference": false,
+        "reference": {
+          "low": 8.5,
+          "high": 10.2
+        },
+        "note": "LOW"
+      },
+      "sodium": {
+        "available": false,
+        "value": null,
+        "unit": null,
+        "withinReference": null,
+        "reference": null
+      },
+      "abnormalElectrolytes": [
+        "potassium",
+        "calcium"
+      ],
+      "electrolyteAbnormalityPresent": true,
+      "majorElectrolyteTriggerSupported": true
+    },
+    "ischemiaContext": {
+      "available": false,
+      "acuteChestPain": null,
+      "stElevationSupported": null,
+      "troponinValue": null,
+      "troponinPattern": "not_available",
+      "acuteStemiSupported": null
+    },
+    "infectionContext": {
+      "available": true,
+      "temperatureC": 36.5,
+      "wbc": null,
+      "procalcitonin": null,
+      "lactate": null,
+      "feverSupported": null,
+      "inflammatoryResponseSupported": null,
+      "infectionSupported": null,
+      "sepsisSupported": null,
+      "infectionExplicitlyDenied": null,
+      "suspectedSource": null
+    },
+    "qtContext": {
+      "available": false,
+      "qtcMs": null,
+      "prolonged": null,
+      "thresholdMs": 500,
+      "qtProlongingMedications": [],
+      "acquiredLongQtSupported": null,
+      "evidenceSource": null
+    },
+    "renalContext": {
+      "available": true,
+      "creatinine": 9.8,
+      "bun": 88.0,
+      "egfr": null,
+      "esrd": true,
+      "dialysis": true,
+      "missedDialysis": true,
+      "chronicKidneyDiseaseSupported": null,
+      "acuteKidneyInjurySupported": null,
+      "renalImpairmentSupported": true,
+      "sourceTextContainsRenalImpairment": null
+    },
+    "medicationContext": {
+      "available": true,
+      "homeMedications": [
+        "Lisinopril 20 mg",
+        "Spironolactone 25 mg",
+        "Sevelamer"
+      ],
+      "activeMedications": [
+        "Lisinopril 20 mg",
+        "Spironolactone 25 mg",
+        "Sevelamer"
+      ],
+      "infusions": [],
+      "qtProlongingMedications": [],
+      "digoxinExposure": false,
+      "potassiumRaisingMedicationExposure": true,
+      "thiazideExposure": false
+    },
+    "toxicityContext": {
+      "available": true,
+      "digoxinLevel": null,
+      "symptoms": [],
+      "digoxinToxicitySupported": false,
+      "reducedClearanceSupported": false
+    },
+    "patientContext": {
+      "available": true,
+      "age": 70,
+      "sex": "M",
+      "primaryDiagnosis": "Missed hemodialysis, weakness",
+      "history": [
+        "End-stage renal disease on hemodialysis (MWF)",
+        "Hypertension",
+        "Heart failure"
+      ],
+      "leftVentricularEjectionFraction": null,
+      "priorAtrialFibrillation": null
+    },
+    "structuralHeartContext": {
+      "available": true,
+      "findings": [
+        "Heart failure"
+      ],
+      "lvefPct": null,
+      "severeLvDysfunction": null
+    },
+    "laboratoryContext": {
+      "potassium": {
+        "value": 7.4,
+        "unit": "mmol/L",
+        "reference": "3.5–5.1",
+        "flag": "CRITICAL HIGH"
+      },
+      "bicarbonate": {
+        "value": 15,
+        "unit": "mmol/L",
+        "reference": "22–29",
+        "flag": "LOW"
+      },
+      "creatinine": {
+        "value": 9.8,
+        "unit": "mg/dL",
+        "reference": "0.7–1.3",
+        "flag": "CRITICAL HIGH"
+      },
+      "bun": {
+        "value": 88,
+        "unit": "mg/dL",
+        "reference": "7–20",
+        "flag": "HIGH"
+      },
+      "calcium": {
+        "value": 7.6,
+        "unit": "mg/dL",
+        "reference": "8.5–10.2",
+        "flag": "LOW"
+      },
+      "ph": {
+        "value": 7.24,
+        "unit": "",
+        "reference": "7.35–7.45",
+        "flag": "LOW"
+      },
+      "glucose": {
+        "value": 118,
+        "unit": "mg/dL",
+        "reference": "70–140",
+        "flag": ""
+      }
+    },
+    "recentClinicalContext": {
+      "recentEvents": [
+        "Missed last 2 dialysis sessions",
+        "Generalized weakness",
+        "Peaked T waves and QRS widening on monitor"
+      ]
+    },
+    "pairedOraclePatientContext": {
+      "available": false,
+      "sourceType": "oracle_smart_fhir"
+    },
+    "detector": {
+      "ruleId": "multilead-waveform-change-v1",
+      "estimatedRateBpm": 34.0,
+      "triggerLatencySeconds": 1.2,
+      "referenceOnsetOffsetSeconds": 6.0,
+      "detectedTriggerOffsetSeconds": 7.2
+    },
+    "capture": {
+      "durationSeconds": 20.0,
+      "preSeconds": 6.0,
+      "eventSeconds": 8.0,
+      "postSeconds": 6.0,
+      "complete": true,
+      "sampleRateHz": 220.0,
+      "leads": [
+        "I",
+        "II",
+        "III",
+        "aVR",
+        "aVL",
+        "aVF"
+      ]
+    },
+    "provenance": {
+      "isIndependentDiagnosis": false,
+      "evaluationControlled": true,
+      "diagnosisOwnedByUpstreamSource": true,
+      "timingOwnedByDeterministicDetector": true,
+      "slmMayReclassify": false
+    }
+  },
+  "evidenceFingerprint": "3f21c1e98ddb9cd30bbba8b61816abec44356b21032e7036a208b7be188da930",
+  "model": {
+    "provider": "lightning-ai-studio",
+    "name": "google/medgemma-27b-it",
+    "modelId": "google/medgemma-27b-it",
+    "modelKey": "google-medgemma-27b-it",
+    "loaderType": "multimodal",
+    "quantization": "4-bit-nf4-double-quant",
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "promptFingerprint": "3f21c1e98ddb9cd30bbba8b61816abec44356b21032e7036a208b7be188da930",
+    "responseContractVersion": "model-clinical-output-v6.0.3",
+    "sourceRun": 2,
+    "generatedOffline": true
+  },
+  "sourceModelResponse": {
+    "episodeSummary": "The patient experienced a critical episode of complete heart block lasting 8 seconds, characterized by AV dissociation, a ventricular rate of 34 bpm, wide QRS escape beats, tall peaked T waves, and flattened P waves. This occurred in the context of symptomatic bradycardia with hypotension (MAP 59 mmHg). The patient has a history of end-stage renal disease on hemodialysis, hypertension, and heart failure. He missed his last two dialysis sessions. Laboratory findings show critical hyperkalemia (7.4 mmol/L), hypocalcemia (7.6 mg/dL), and severe renal impairment (creatinine 9.8 mg/dL, BUN 88 mg/dL).",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is hyperkalemia-induced complete heart block. The patient has critical hyperkalemia (K+ 7.4 mmol/L), which is a known cause of severe cardiac conduction abnormalities, including complete heart block. The ECG findings of peaked T waves and QRS widening are also consistent with hyperkalemia. The patient's end-stage renal disease and missed dialysis sessions strongly support the development of severe hyperkalemia.",
+    "contributingFactors": [
+      "End-stage renal disease",
+      "Missed dialysis sessions",
+      "Hyperkalemia"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "modelResponse": {
+    "episodeSummary": "The patient experienced a critical episode of complete heart block lasting 8 seconds, characterized by AV dissociation, a ventricular rate of 34 bpm, wide QRS escape beats, tall peaked T waves, and flattened P waves. This occurred in the context of symptomatic bradycardia with hypotension (MAP 59 mmHg). The patient has a history of end-stage renal disease on hemodialysis, hypertension, and heart failure. He missed his last two dialysis sessions. Laboratory findings show critical hyperkalemia (7.4 mmol/L), hypocalcemia (7.6 mg/dL), and severe renal impairment (creatinine 9.8 mg/dL, BUN 88 mg/dL).",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is hyperkalemia-induced complete heart block. The patient has critical hyperkalemia (K+ 7.4 mmol/L), which is a known cause of severe cardiac conduction abnormalities, including complete heart block. The ECG findings of peaked T waves and QRS widening are also consistent with hyperkalemia. The patient's end-stage renal disease and missed dialysis sessions strongly support the development of severe hyperkalemia.",
+    "contributingFactors": [
+      "End-stage renal disease",
+      "Missed dialysis sessions",
+      "Hyperkalemia"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "displayModelResponse": {
+    "episodeSummary": "The patient experienced a critical episode of complete heart block lasting 8 seconds, characterized by AV dissociation, a ventricular rate of 34 bpm, wide QRS escape beats, tall peaked T waves, and flattened P waves. This occurred in the context of symptomatic bradycardia with hypotension (MAP 59 mmHg). The patient has a history of end-stage renal disease on hemodialysis, hypertension, and heart failure. He missed his last two dialysis sessions. Laboratory findings show critical hyperkalemia (7.4 mmol/L), hypocalcemia (7.6 mg/dL), and severe renal impairment (creatinine 9.8 mg/dL, BUN 88 mg/dL).",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is hyperkalemia-induced complete heart block. The patient has critical hyperkalemia (K+ 7.4 mmol/L), which is a known cause of severe cardiac conduction abnormalities, including complete heart block. The ECG findings of peaked T waves and QRS widening are also consistent with hyperkalemia. The patient's end-stage renal disease and missed dialysis sessions strongly support the development of severe hyperkalemia.",
+    "contributingFactors": [
+      "End-stage renal disease",
+      "Missed dialysis sessions",
+      "Hyperkalemia"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "validatedModelResponse": {
+    "episodeSummary": "The patient experienced a critical episode of complete heart block lasting 8 seconds, characterized by AV dissociation, a ventricular rate of 34 bpm, wide QRS escape beats, tall peaked T waves, and flattened P waves. This occurred in the context of symptomatic bradycardia with hypotension (MAP 59 mmHg). The patient has a history of end-stage renal disease on hemodialysis, hypertension, and heart failure. He missed his last two dialysis sessions. Laboratory findings show critical hyperkalemia (7.4 mmol/L), hypocalcemia (7.6 mg/dL), and severe renal impairment (creatinine 9.8 mg/dL, BUN 88 mg/dL).",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is hyperkalemia-induced complete heart block. The patient has critical hyperkalemia (K+ 7.4 mmol/L), which is a known cause of severe cardiac conduction abnormalities, including complete heart block. The ECG findings of peaked T waves and QRS widening are also consistent with hyperkalemia. The patient's end-stage renal disease and missed dialysis sessions strongly support the development of severe hyperkalemia.",
+    "contributingFactors": [
+      "End-stage renal disease",
+      "Missed dialysis sessions",
+      "Hyperkalemia"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "legacyValidatorResponse": {
+    "episodeSummary": "The patient experienced a critical episode of complete heart block lasting 8 seconds, characterized by AV dissociation, a ventricular rate of 34 bpm, wide QRS escape beats, tall peaked T waves, and flattened P waves. This occurred in the context of symptomatic bradycardia with hypotension (MAP 59 mmHg). The patient has a history of end-stage renal disease on hemodialysis, hypertension, and heart failure. He missed his last two dialysis sessions. Laboratory findings show critical hyperkalemia (7.4 mmol/L), hypocalcemia (7.6 mg/dL), and severe renal impairment (creatinine 9.8 mg/dL, BUN 88 mg/dL).",
+    "detectedEpisodeContext": "The patient experienced a critical episode of complete heart block lasting 8 seconds, characterized by AV dissociation, a ventricular rate of 34 bpm, wide QRS escape beats, tall peaked T waves, and flattened P waves. This occurred in the context of symptomatic bradycardia with hypotension (MAP 59 mmHg). The patient has a history of end-stage renal disease on hemodialysis, hypertension, and heart failure. He missed his last two dialysis sessions. Laboratory findings show critical hyperkalemia (7.4 mmol/L), hypocalcemia (7.6 mg/dL), and severe renal impairment (creatinine 9.8 mg/dL, BUN 88 mg/dL).",
+    "mostLikelyEtiology": "The most likely etiology is hyperkalemia-induced complete heart block. The patient has critical hyperkalemia (K+ 7.4 mmol/L), which is a known cause of severe cardiac conduction abnormalities, including complete heart block. The ECG findings of peaked T waves and QRS widening are also consistent with hyperkalemia. The patient's end-stage renal disease and missed dialysis sessions strongly support the development of severe hyperkalemia.",
+    "contributingFactors": [
+      "End-stage renal disease",
+      "Missed dialysis sessions",
+      "Hyperkalemia"
+    ],
+    "uncertaintyAndMissingData": []
+  },
+  "validation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "COMPLETE_HEART_BLOCK",
+    "authoritativeDiagnosisDisplay": "Complete heart block",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "evidenceCoverage": {},
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 0,
+    "evidenceCoverageRequired": 0,
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-deterministic-v2.1",
+    "groundingStatus": "accepted"
+  },
+  "reliability": {
+    "attemptCount": 1,
+    "firstAttemptAccepted": true,
+    "finalAttemptAccepted": true,
+    "contractNormalized": false,
+    "normalizationChanges": [],
+    "contradictionCount": 0,
+    "unsupportedFactCount": 0
+  },
+  "generationAttempted": true,
+  "liveInference": false,
+  "generatedOffline": true,
+  "installationMetadata": {
+    "schemaVersion": "kgen-precomputed-installation-v2",
+    "createdAtUtc": "2026-08-05T16:52:50.873192+00:00",
+    "responseSetId": "medgemma-dual-v6-0-3-1",
+    "profile": "curated",
+    "selectionMode": "curated_best_per_scenario",
+    "scenarioId": "CHB-HYPERK-005",
+    "sourceModel": "google/medgemma-27b-it",
+    "modelSlug": "curated-medgemma-v6-0-3-1",
+    "runNumber": 2,
+    "promptFingerprint": "3f21c1e98ddb9cd30bbba8b61816abec44356b21032e7036a208b7be188da930",
+    "sourcePromptVersion": "episode-pack-phase6-v6.0.3",
+    "responseContractVersion": "model-clinical-output-v6.0.3",
+    "validationVersion": "v6.0.3.1",
+    "inputZipSha256": "a59b3b99691d3da0c9474266248107726fcc053b11d8cdd5de38155f6274a084",
+    "resultsZipSha256": "61fd6440a4aeb4eeb57b938000cc051fe5b0ce51255e6b433372fd5f392fad71",
+    "validatorPassed": true,
+    "unsupportedFactCount": 0,
+    "contradictionCount": 0,
+    "score": 74,
+    "sourceGeneratedOffline": true
+  }
+}

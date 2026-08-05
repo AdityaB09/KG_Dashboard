@@ -1,0 +1,113 @@
+{
+  "schemaVersion": "slm-widget-result-v4",
+  "createdAt": "2026-08-05T16:52:50.358664+00:00",
+  "scenarioId": "TORSADES-LQT-002",
+  "episodeId": "evalflow-TORSADES-LQT-002-20260731-191927-44081e",
+  "incidentId": "inc-INCART-EVAL-TORSADES-LQT-002-loop-1-polymorphic-ventricular-tachycardia-000001584-6bOcUoz1vGzRTvi1",
+  "status": "complete",
+  "validationStatus": "accepted",
+  "displayPolicy": "always_show_model_response",
+  "clinicalResponseLabel": "MedGemma Clinical Context",
+  "model": {
+    "provider": "lightning-ai-studio",
+    "name": "google/medgemma-27b-it",
+    "modelId": "google/medgemma-27b-it",
+    "modelKey": "google-medgemma-27b-it",
+    "loaderType": "multimodal",
+    "quantization": "4-bit-nf4-double-quant",
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "promptFingerprint": "67a9690066b831415bf7cb082734a838aee42946bb1b5f4721410ac48e2108cb",
+    "responseContractVersion": "model-clinical-output-v6.0.3",
+    "sourceRun": 2,
+    "generatedOffline": true
+  },
+  "modelResponse": {
+    "episodeSummary": "A 74-year-old female with a history of atrial fibrillation on sotalol presented with gastroenteritis, vomiting, and diarrhea. She experienced a witnessed syncopal episode associated with a critical, unstable hemodynamically significant arrhythmia characterized by a ventricular rate of 228 bpm, irregular rhythm, wide QRS complexes (150 ms), and sinusoidal amplitude modulation with axis twisting on ECG. Preceding ECG showed marked QT prolongation (QTc 618 ms). Electrolytes revealed hypokalemia, hypomagnesemia, and hypocalcemia.",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is Torsades de pointes (TdP) secondary to acquired long QT syndrome. This is supported by the ECG morphology (sinusoidal amplitude modulation with axis twisting), the preceding marked QT prolongation (QTc 618 ms), the presence of multiple QT-prolonging medications (sotalol, azithromycin, ondansetron), and electrolyte abnormalities (hypokalemia, hypomagnesemia, hypocalcemia) known to predispose to TdP.",
+    "contributingFactors": [
+      "Hypokalemia (2.9 mmol/L)",
+      "Hypomagnesemia (1.2 mg/dL)",
+      "Hypocalcemia (7.9 mg/dL)",
+      "Sotalol use",
+      "Azithromycin use"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "displayModelResponse": {
+    "episodeSummary": "A 74-year-old female with a history of atrial fibrillation on sotalol presented with gastroenteritis, vomiting, and diarrhea. She experienced a witnessed syncopal episode associated with a critical, unstable hemodynamically significant arrhythmia characterized by a ventricular rate of 228 bpm, irregular rhythm, wide QRS complexes (150 ms), and sinusoidal amplitude modulation with axis twisting on ECG. Preceding ECG showed marked QT prolongation (QTc 618 ms). Electrolytes revealed hypokalemia, hypomagnesemia, and hypocalcemia.",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is Torsades de pointes (TdP) secondary to acquired long QT syndrome. This is supported by the ECG morphology (sinusoidal amplitude modulation with axis twisting), the preceding marked QT prolongation (QTc 618 ms), the presence of multiple QT-prolonging medications (sotalol, azithromycin, ondansetron), and electrolyte abnormalities (hypokalemia, hypomagnesemia, hypocalcemia) known to predispose to TdP.",
+    "contributingFactors": [
+      "Hypokalemia (2.9 mmol/L)",
+      "Hypomagnesemia (1.2 mg/dL)",
+      "Hypocalcemia (7.9 mg/dL)",
+      "Sotalol use",
+      "Azithromycin use"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "interpretation": {
+    "headline": "Torsades de pointes",
+    "statusLabel": "Clinical interpretation",
+    "displayPolicy": "four_section_clinical_narrative",
+    "episodeNarrative": "A 74-year-old female with a history of atrial fibrillation on sotalol presented with gastroenteritis, vomiting, and diarrhea. She experienced a witnessed syncopal episode associated with a critical, unstable hemodynamically significant arrhythmia characterized by a ventricular rate of 228 bpm, irregular rhythm, wide QRS complexes (150 ms), and sinusoidal amplitude modulation with axis twisting on ECG. Preceding ECG showed marked QT prolongation (QTc 618 ms). Electrolytes revealed hypokalemia, hypomagnesemia, and hypocalcemia.",
+    "etiologyContextNarrative": "The most likely etiology is Torsades de pointes (TdP) secondary to acquired long QT syndrome. This is supported by the ECG morphology (sinusoidal amplitude modulation with axis twisting), the preceding marked QT prolongation (QTc 618 ms), the presence of multiple QT-prolonging medications (sotalol, azithromycin, ondansetron), and electrolyte abnormalities (hypokalemia, hypomagnesemia, hypocalcemia) known to predispose to TdP.",
+    "rootCauseNarrative": "The most likely etiology is Torsades de pointes (TdP) secondary to acquired long QT syndrome. This is supported by the ECG morphology (sinusoidal amplitude modulation with axis twisting), the preceding marked QT prolongation (QTc 618 ms), the presence of multiple QT-prolonging medications (sotalol, azithromycin, ondansetron), and electrolyte abnormalities (hypokalemia, hypomagnesemia, hypocalcemia) known to predispose to TdP.",
+    "possibleContributors": [
+      "Hypokalemia (2.9 mmol/L)",
+      "Hypomagnesemia (1.2 mg/dL)",
+      "Hypocalcemia (7.9 mg/dL)",
+      "Sotalol use",
+      "Azithromycin use"
+    ],
+    "importantFindings": [
+      "Hypokalemia (2.9 mmol/L)",
+      "Hypomagnesemia (1.2 mg/dL)",
+      "Hypocalcemia (7.9 mg/dL)",
+      "Sotalol use",
+      "Azithromycin use"
+    ],
+    "importantLimitations": [],
+    "materialEtiologicUncertainty": [],
+    "arrhythmiaNarrative": "",
+    "morphologyNarrative": "",
+    "currentSituationNarrative": "",
+    "currentSituation": {
+      "narrative": ""
+    },
+    "recommendedNextChecks": [],
+    "recommendedActionsRequired": false
+  },
+  "responseValidation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "TORSADES_DE_POINTES",
+    "authoritativeDiagnosisDisplay": "Torsades de pointes",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "evidenceCoverage": {},
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 0,
+    "evidenceCoverageRequired": 0,
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-deterministic-v2.1",
+    "groundingStatus": "accepted"
+  },
+  "benchmark": {
+    "score": 76,
+    "grade": "needs_improvement",
+    "safetyPass": true,
+    "overallPass": false
+  },
+  "generationAttempted": false,
+  "liveInference": false,
+  "generatedOffline": true
+}

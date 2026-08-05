@@ -1,0 +1,422 @@
+{
+  "schemaVersion": "grounded-cardinal-response-v4",
+  "status": "complete",
+  "createdAt": "2026-08-05T16:52:50.816981+00:00",
+  "mode": "precomputed_response_installation",
+  "scenarioId": "AFIB-RVR-SEPSIS-004",
+  "episodeId": "evalflow-AFIB-RVR-SEPSIS-004-20260731-193246-9f31c0",
+  "incidentId": "inc-INCART-EVAL-AFIB-RVR-SEPSIS-004-loop-1-atrial-fibrillation-rvr-000001584-DtTF9M1Ng-BhvC-q",
+  "source": "validated_lightning_response_v6_0_3_1",
+  "diagnosticEvent": {
+    "schemaVersion": "diagnostic-event-universal-v2",
+    "eventDetected": true,
+    "episodeId": "evalflow-AFIB-RVR-SEPSIS-004-20260731-193246-9f31c0",
+    "incidentId": "inc-INCART-EVAL-AFIB-RVR-SEPSIS-004-loop-1-atrial-fibrillation-rvr-000001584-DtTF9M1Ng-BhvC-q",
+    "diagnosis": {
+      "code": "ATRIAL_FIBRILLATION_RVR",
+      "display": "Atrial fibrillation with rapid ventricular response",
+      "authoritative": true
+    },
+    "source": {
+      "type": "controlled_evaluation_scenario",
+      "name": "SLM_Eval",
+      "identifier": "AFIB-RVR-SEPSIS-004",
+      "futureReplacement": "ecg_ml_diagnostic_model"
+    },
+    "confidence": {
+      "value": 1.0,
+      "basis": "controlled_evaluation_label"
+    },
+    "measurements": {
+      "ventricularRateBpm": 150.0,
+      "atrialRateBpm": null,
+      "qrsDurationMs": 92.0,
+      "qtcMs": 430.0,
+      "prIntervalMs": null,
+      "regularity": "irregularly irregular",
+      "axisDegrees": 40.0,
+      "pWavePresent": false,
+      "atrialActivityPresent": false,
+      "atrioventricularAssociation": null
+    },
+    "rhythmFeatures": {
+      "ventricularRateBpm": 150.0,
+      "atrialRateBpm": null,
+      "qrsDurationMs": 92.0,
+      "qtcMs": 430.0,
+      "qtcEvidenceSource": "complete_episode_pack.ecg.measurements.qtcMs",
+      "prIntervalMs": null,
+      "regularity": "irregularly irregular",
+      "axisDegrees": 40.0,
+      "pWavePresent": false,
+      "atrialActivityPresent": false,
+      "atrioventricularAssociation": null,
+      "findings": [
+        "Narrow QRS"
+      ]
+    },
+    "hemodynamicStatus": {
+      "available": true,
+      "classification": "unstable",
+      "conscious": null,
+      "pulseless": null,
+      "pulsePresent": null,
+      "shockSupported": true,
+      "vasopressorSupport": true,
+      "systolicBloodPressure": 92.0,
+      "diastolicBloodPressure": 54.0,
+      "map": 67.0,
+      "oxygenSaturationPct": 93.0,
+      "temperatureC": 38.9,
+      "sourceNote": "On low-dose norepinephrine"
+    },
+    "electrolyteContext": {
+      "available": true,
+      "potassium": {
+        "available": true,
+        "value": 3.6,
+        "unit": "mmol/L",
+        "withinReference": true,
+        "reference": {
+          "low": 3.5,
+          "high": 5.1
+        },
+        "note": ""
+      },
+      "magnesium": {
+        "available": true,
+        "value": 1.8,
+        "unit": "mg/dL",
+        "withinReference": true,
+        "reference": {
+          "low": 1.7,
+          "high": 2.2
+        },
+        "note": ""
+      },
+      "calcium": {
+        "available": false,
+        "value": null,
+        "unit": null,
+        "withinReference": null,
+        "reference": null
+      },
+      "sodium": {
+        "available": false,
+        "value": null,
+        "unit": null,
+        "withinReference": null,
+        "reference": null
+      },
+      "abnormalElectrolytes": [],
+      "electrolyteAbnormalityPresent": false,
+      "majorElectrolyteTriggerSupported": false
+    },
+    "ischemiaContext": {
+      "available": true,
+      "acuteChestPain": null,
+      "stElevationSupported": null,
+      "troponinValue": 0.03,
+      "troponinPattern": "measured_unspecified_pattern",
+      "acuteStemiSupported": null
+    },
+    "infectionContext": {
+      "available": true,
+      "temperatureC": 38.9,
+      "wbc": 18.4,
+      "procalcitonin": 6.2,
+      "lactate": 3.1,
+      "feverSupported": true,
+      "inflammatoryResponseSupported": true,
+      "infectionSupported": true,
+      "sepsisSupported": true,
+      "infectionExplicitlyDenied": null,
+      "suspectedSource": null
+    },
+    "qtContext": {
+      "available": true,
+      "qtcMs": 430.0,
+      "prolonged": false,
+      "thresholdMs": 500,
+      "qtProlongingMedications": [],
+      "acquiredLongQtSupported": false,
+      "evidenceSource": "complete_episode_pack.ecg.measurements.qtcMs"
+    },
+    "renalContext": {
+      "available": true,
+      "creatinine": 1.7,
+      "bun": null,
+      "egfr": null,
+      "esrd": null,
+      "dialysis": null,
+      "missedDialysis": null,
+      "chronicKidneyDiseaseSupported": true,
+      "acuteKidneyInjurySupported": null,
+      "renalImpairmentSupported": true,
+      "sourceTextContainsRenalImpairment": null
+    },
+    "medicationContext": {
+      "available": true,
+      "homeMedications": [
+        "Amlodipine 5 mg"
+      ],
+      "activeMedications": [
+        "Amlodipine 5 mg"
+      ],
+      "infusions": [
+        "Norepinephrine (low dose)",
+        "Piperacillin-tazobactam",
+        "IV crystalloid"
+      ],
+      "qtProlongingMedications": [],
+      "digoxinExposure": false,
+      "potassiumRaisingMedicationExposure": false,
+      "thiazideExposure": false
+    },
+    "toxicityContext": {
+      "available": true,
+      "digoxinLevel": null,
+      "symptoms": [],
+      "digoxinToxicitySupported": false,
+      "reducedClearanceSupported": false
+    },
+    "patientContext": {
+      "available": true,
+      "age": 79,
+      "sex": "F",
+      "primaryDiagnosis": "Urosepsis",
+      "history": [
+        "Hypertension",
+        "Chronic kidney disease",
+        "No prior atrial fibrillation"
+      ],
+      "leftVentricularEjectionFraction": null,
+      "priorAtrialFibrillation": false
+    },
+    "structuralHeartContext": {
+      "available": false,
+      "findings": [],
+      "lvefPct": null,
+      "severeLvDysfunction": null
+    },
+    "laboratoryContext": {
+      "wbc": {
+        "value": 18.4,
+        "unit": "10^3/uL",
+        "reference": "4–11",
+        "flag": "HIGH"
+      },
+      "lactate": {
+        "value": 3.1,
+        "unit": "mmol/L",
+        "reference": "0.5–2.2",
+        "flag": "HIGH"
+      },
+      "potassium": {
+        "value": 3.6,
+        "unit": "mmol/L",
+        "reference": "3.5–5.1",
+        "flag": ""
+      },
+      "magnesium": {
+        "value": 1.8,
+        "unit": "mg/dL",
+        "reference": "1.7–2.2",
+        "flag": ""
+      },
+      "creatinine": {
+        "value": 1.7,
+        "unit": "mg/dL",
+        "reference": "0.6–1.1",
+        "flag": "HIGH"
+      },
+      "tsh": {
+        "value": 1.8,
+        "unit": "mIU/L",
+        "reference": "0.4–4.0",
+        "flag": ""
+      },
+      "procalcitonin": {
+        "value": 6.2,
+        "unit": "ng/mL",
+        "reference": "<0.5",
+        "flag": "HIGH"
+      },
+      "troponinT": {
+        "value": 0.03,
+        "unit": "ng/mL",
+        "reference": "<0.014",
+        "flag": "mild"
+      }
+    },
+    "recentClinicalContext": {
+      "recentEvents": [
+        "Fever to 38.9, rigors",
+        "Urinalysis positive, blood cultures pending",
+        "New irregular tachycardia coincident with fever spike"
+      ]
+    },
+    "pairedOraclePatientContext": {
+      "available": false,
+      "sourceType": "oracle_smart_fhir"
+    },
+    "detector": {
+      "ruleId": "multilead-waveform-change-v1",
+      "estimatedRateBpm": 150.0,
+      "triggerLatencySeconds": 1.2,
+      "referenceOnsetOffsetSeconds": 6.0,
+      "detectedTriggerOffsetSeconds": 7.2
+    },
+    "capture": {
+      "durationSeconds": 20.0,
+      "preSeconds": 6.0,
+      "eventSeconds": 8.0,
+      "postSeconds": 6.0,
+      "complete": true,
+      "sampleRateHz": 220.0,
+      "leads": [
+        "I",
+        "II",
+        "III",
+        "aVR",
+        "aVL",
+        "aVF"
+      ]
+    },
+    "provenance": {
+      "isIndependentDiagnosis": false,
+      "evaluationControlled": true,
+      "diagnosisOwnedByUpstreamSource": true,
+      "timingOwnedByDeterministicDetector": true,
+      "slmMayReclassify": false
+    }
+  },
+  "evidenceFingerprint": "d7b0dfde575e5e585b65f45f4268c1c0f22fd9c270788029c9670953b3169db0",
+  "model": {
+    "provider": "lightning-ai-studio",
+    "name": "google/medgemma-27b-it",
+    "modelId": "google/medgemma-27b-it",
+    "modelKey": "google-medgemma-27b-it",
+    "loaderType": "multimodal",
+    "quantization": "4-bit-nf4-double-quant",
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "promptFingerprint": "d7b0dfde575e5e585b65f45f4268c1c0f22fd9c270788029c9670953b3169db0",
+    "responseContractVersion": "model-clinical-output-v6.0.3",
+    "sourceRun": 2,
+    "generatedOffline": true
+  },
+  "sourceModelResponse": {
+    "episodeSummary": "A 79-year-old female with a history of hypertension and chronic kidney disease presented with fever, rigors, and symptoms of sepsis (elevated WBC, procalcitonin, lactate, fever). During this acute illness, she developed new-onset atrial fibrillation with rapid ventricular response (HR 150 bpm, irregularly irregular rhythm, narrow QRS). Her blood pressure became unstable (SBP 92 mmHg, MAP 67 mmHg) requiring vasopressor support (norepinephrine).",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is atrial fibrillation triggered by an acute systemic inflammatory process, likely sepsis. The patient presents with clear signs of infection (fever, elevated WBC, procalcitonin) and sepsis (elevated lactate, hypotension requiring vasopressors). The new onset of atrial fibrillation occurred coincident with the fever spike and systemic inflammatory response, strongly suggesting the inflammation as a trigger.",
+    "contributingFactors": [
+      "Sepsis",
+      "Fever",
+      "Chronic kidney disease",
+      "Advanced age"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "modelResponse": {
+    "episodeSummary": "A 79-year-old female with a history of hypertension and chronic kidney disease presented with fever, rigors, and symptoms of sepsis (elevated WBC, procalcitonin, lactate, fever). During this acute illness, she developed new-onset atrial fibrillation with rapid ventricular response (HR 150 bpm, irregularly irregular rhythm, narrow QRS). Her blood pressure became unstable (SBP 92 mmHg, MAP 67 mmHg) requiring vasopressor support (norepinephrine).",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is atrial fibrillation triggered by an acute systemic inflammatory process, likely sepsis. The patient presents with clear signs of infection (fever, elevated WBC, procalcitonin) and sepsis (elevated lactate, hypotension requiring vasopressors). The new onset of atrial fibrillation occurred coincident with the fever spike and systemic inflammatory response, strongly suggesting the inflammation as a trigger.",
+    "contributingFactors": [
+      "Sepsis",
+      "Fever",
+      "Chronic kidney disease",
+      "Advanced age"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "displayModelResponse": {
+    "episodeSummary": "A 79-year-old female with a history of hypertension and chronic kidney disease presented with fever, rigors, and symptoms of sepsis (elevated WBC, procalcitonin, lactate, fever). During this acute illness, she developed new-onset atrial fibrillation with rapid ventricular response (HR 150 bpm, irregularly irregular rhythm, narrow QRS). Her blood pressure became unstable (SBP 92 mmHg, MAP 67 mmHg) requiring vasopressor support (norepinephrine).",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is atrial fibrillation triggered by an acute systemic inflammatory process, likely sepsis. The patient presents with clear signs of infection (fever, elevated WBC, procalcitonin) and sepsis (elevated lactate, hypotension requiring vasopressors). The new onset of atrial fibrillation occurred coincident with the fever spike and systemic inflammatory response, strongly suggesting the inflammation as a trigger.",
+    "contributingFactors": [
+      "Sepsis",
+      "Fever",
+      "Chronic kidney disease",
+      "Advanced age"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "validatedModelResponse": {
+    "episodeSummary": "A 79-year-old female with a history of hypertension and chronic kidney disease presented with fever, rigors, and symptoms of sepsis (elevated WBC, procalcitonin, lactate, fever). During this acute illness, she developed new-onset atrial fibrillation with rapid ventricular response (HR 150 bpm, irregularly irregular rhythm, narrow QRS). Her blood pressure became unstable (SBP 92 mmHg, MAP 67 mmHg) requiring vasopressor support (norepinephrine).",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is atrial fibrillation triggered by an acute systemic inflammatory process, likely sepsis. The patient presents with clear signs of infection (fever, elevated WBC, procalcitonin) and sepsis (elevated lactate, hypotension requiring vasopressors). The new onset of atrial fibrillation occurred coincident with the fever spike and systemic inflammatory response, strongly suggesting the inflammation as a trigger.",
+    "contributingFactors": [
+      "Sepsis",
+      "Fever",
+      "Chronic kidney disease",
+      "Advanced age"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "legacyValidatorResponse": {
+    "episodeSummary": "A 79-year-old female with a history of hypertension and chronic kidney disease presented with fever, rigors, and symptoms of sepsis (elevated WBC, procalcitonin, lactate, fever). During this acute illness, she developed new-onset atrial fibrillation with rapid ventricular response (HR 150 bpm, irregularly irregular rhythm, narrow QRS). Her blood pressure became unstable (SBP 92 mmHg, MAP 67 mmHg) requiring vasopressor support (norepinephrine).",
+    "detectedEpisodeContext": "A 79-year-old female with a history of hypertension and chronic kidney disease presented with fever, rigors, and symptoms of sepsis (elevated WBC, procalcitonin, lactate, fever). During this acute illness, she developed new-onset atrial fibrillation with rapid ventricular response (HR 150 bpm, irregularly irregular rhythm, narrow QRS). Her blood pressure became unstable (SBP 92 mmHg, MAP 67 mmHg) requiring vasopressor support (norepinephrine).",
+    "mostLikelyEtiology": "The most likely etiology is atrial fibrillation triggered by an acute systemic inflammatory process, likely sepsis. The patient presents with clear signs of infection (fever, elevated WBC, procalcitonin) and sepsis (elevated lactate, hypotension requiring vasopressors). The new onset of atrial fibrillation occurred coincident with the fever spike and systemic inflammatory response, strongly suggesting the inflammation as a trigger.",
+    "contributingFactors": [
+      "Sepsis",
+      "Fever",
+      "Chronic kidney disease",
+      "Advanced age"
+    ],
+    "uncertaintyAndMissingData": []
+  },
+  "validation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "ATRIAL_FIBRILLATION_RVR",
+    "authoritativeDiagnosisDisplay": "Atrial fibrillation with rapid ventricular response",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "evidenceCoverage": {},
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 0,
+    "evidenceCoverageRequired": 0,
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-deterministic-v2.1",
+    "groundingStatus": "accepted"
+  },
+  "reliability": {
+    "attemptCount": 1,
+    "firstAttemptAccepted": true,
+    "finalAttemptAccepted": true,
+    "contractNormalized": false,
+    "normalizationChanges": [],
+    "contradictionCount": 0,
+    "unsupportedFactCount": 0
+  },
+  "generationAttempted": true,
+  "liveInference": false,
+  "generatedOffline": true,
+  "installationMetadata": {
+    "schemaVersion": "kgen-precomputed-installation-v2",
+    "createdAtUtc": "2026-08-05T16:52:50.816981+00:00",
+    "responseSetId": "medgemma-dual-v6-0-3-1",
+    "profile": "curated",
+    "selectionMode": "curated_best_per_scenario",
+    "scenarioId": "AFIB-RVR-SEPSIS-004",
+    "sourceModel": "google/medgemma-27b-it",
+    "modelSlug": "curated-medgemma-v6-0-3-1",
+    "runNumber": 2,
+    "promptFingerprint": "d7b0dfde575e5e585b65f45f4268c1c0f22fd9c270788029c9670953b3169db0",
+    "sourcePromptVersion": "episode-pack-phase6-v6.0.3",
+    "responseContractVersion": "model-clinical-output-v6.0.3",
+    "validationVersion": "v6.0.3.1",
+    "inputZipSha256": "a59b3b99691d3da0c9474266248107726fcc053b11d8cdd5de38155f6274a084",
+    "resultsZipSha256": "61fd6440a4aeb4eeb57b938000cc051fe5b0ce51255e6b433372fd5f392fad71",
+    "validatorPassed": true,
+    "unsupportedFactCount": 0,
+    "contradictionCount": 0,
+    "score": 73,
+    "sourceGeneratedOffline": true
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "precomputed-run-summary-v2",
+  "createdAtUtc": "2026-08-05T16:52:50.749021+00:00",
+  "scenarioId": "TORSADES-LQT-002",
+  "episodeId": "evalflow-TORSADES-LQT-002-20260731-191927-44081e",
+  "runNumber": 2,
+  "profile": "curated",
+  "responseSetId": "medgemma-dual-v6-0-3-1",
+  "selectionMode": "curated_best_per_scenario",
+  "sourceModel": "google/medgemma-27b-it",
+  "promptFingerprint": "67a9690066b831415bf7cb082734a838aee42946bb1b5f4721410ac48e2108cb",
+  "validContract": true,
+  "validatorPassed": true,
+  "strictlyAccepted": true,
+  "displayableWithReview": false,
+  "unsupportedFactCount": 0,
+  "contradictionCount": 0,
+  "score": 76,
+  "sourceLatencySeconds": 40.66,
+  "sourceInputTokens": 2507,
+  "sourceOutputTokens": 355
+}

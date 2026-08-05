@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "slm-widget-result-v4",
+  "createdAt": "2026-08-05T16:52:50.644276+00:00",
+  "scenarioId": "BRADY-DIGTOX-006",
+  "episodeId": "evalflow-BRADY-DIGTOX-006-20260731-194940-741c22",
+  "incidentId": "inc-INCART-EVAL-BRADY-DIGTOX-006-loop-1-bradyarrhythmia-000001650-LKi3uUXF7bxKBRcF",
+  "status": "complete",
+  "validationStatus": "accepted",
+  "displayPolicy": "always_show_model_response",
+  "clinicalResponseLabel": "MedGemma Clinical Context",
+  "model": {
+    "provider": "lightning-ai-studio",
+    "name": "google/medgemma-27b-text-it",
+    "modelId": "google/medgemma-27b-text-it",
+    "modelKey": "google-medgemma-27b-text-it",
+    "loaderType": "text",
+    "quantization": "4-bit-nf4-double-quant",
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "promptFingerprint": "45b38e3b0d593480dd38775ef697949a3cc14281d75f1c48c0745af4553eea05",
+    "responseContractVersion": "model-clinical-output-v6.0.3",
+    "sourceRun": 2,
+    "generatedOffline": true
+  },
+  "modelResponse": {
+    "episodeSummary": "An 82-year-old female with a history of atrial fibrillation (AFib) on digoxin presented with nausea, vomiting, and visual disturbances. Her heart rate slowed to 38 bpm with a regular rhythm, transitioning from AFib. She exhibited ECG changes consistent with digoxin effect and mild symptoms with stable hemodynamics.",
+    "mostLikelyEtiologyAndClinicalContext": "Digoxin toxicity is the most likely etiology, causing excessive AV nodal blockade leading to junctional bradycardia. This is supported by the toxic digoxin level (3.8 ng/mL), symptoms of nausea and vomiting, visual disturbances (yellow-green halos), and ECG findings of scooped ST segments ('digoxin effect'). The regular rhythm despite a history of AFib suggests AV junctional takeover, a common manifestation of digoxin toxicity.",
+    "contributingFactors": [
+      "Chronic kidney disease stage 3",
+      "Recent decreased urine output / dehydration"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "displayModelResponse": {
+    "episodeSummary": "An 82-year-old female with a history of atrial fibrillation (AFib) on digoxin presented with nausea, vomiting, and visual disturbances. Her heart rate slowed to 38 bpm with a regular rhythm, transitioning from AFib. She exhibited ECG changes consistent with digoxin effect and mild symptoms with stable hemodynamics.",
+    "mostLikelyEtiologyAndClinicalContext": "Digoxin toxicity is the most likely etiology, causing excessive AV nodal blockade leading to junctional bradycardia. This is supported by the toxic digoxin level (3.8 ng/mL), symptoms of nausea and vomiting, visual disturbances (yellow-green halos), and ECG findings of scooped ST segments ('digoxin effect'). The regular rhythm despite a history of AFib suggests AV junctional takeover, a common manifestation of digoxin toxicity.",
+    "contributingFactors": [
+      "Chronic kidney disease stage 3",
+      "Recent decreased urine output / dehydration"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "interpretation": {
+    "headline": "Junctional bradycardia",
+    "statusLabel": "Clinical interpretation",
+    "displayPolicy": "four_section_clinical_narrative",
+    "episodeNarrative": "An 82-year-old female with a history of atrial fibrillation (AFib) on digoxin presented with nausea, vomiting, and visual disturbances. Her heart rate slowed to 38 bpm with a regular rhythm, transitioning from AFib. She exhibited ECG changes consistent with digoxin effect and mild symptoms with stable hemodynamics.",
+    "etiologyContextNarrative": "Digoxin toxicity is the most likely etiology, causing excessive AV nodal blockade leading to junctional bradycardia. This is supported by the toxic digoxin level (3.8 ng/mL), symptoms of nausea and vomiting, visual disturbances (yellow-green halos), and ECG findings of scooped ST segments ('digoxin effect'). The regular rhythm despite a history of AFib suggests AV junctional takeover, a common manifestation of digoxin toxicity.",
+    "rootCauseNarrative": "Digoxin toxicity is the most likely etiology, causing excessive AV nodal blockade leading to junctional bradycardia. This is supported by the toxic digoxin level (3.8 ng/mL), symptoms of nausea and vomiting, visual disturbances (yellow-green halos), and ECG findings of scooped ST segments ('digoxin effect'). The regular rhythm despite a history of AFib suggests AV junctional takeover, a common manifestation of digoxin toxicity.",
+    "possibleContributors": [
+      "Chronic kidney disease stage 3",
+      "Recent decreased urine output / dehydration"
+    ],
+    "importantFindings": [
+      "Chronic kidney disease stage 3",
+      "Recent decreased urine output / dehydration"
+    ],
+    "importantLimitations": [],
+    "materialEtiologicUncertainty": [],
+    "arrhythmiaNarrative": "",
+    "morphologyNarrative": "",
+    "currentSituationNarrative": "",
+    "currentSituation": {
+      "narrative": ""
+    },
+    "recommendedNextChecks": [],
+    "recommendedActionsRequired": false
+  },
+  "responseValidation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "JUNCTIONAL_BRADYCARDIA",
+    "authoritativeDiagnosisDisplay": "Junctional bradycardia",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "evidenceCoverage": {},
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 0,
+    "evidenceCoverageRequired": 0,
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-deterministic-v2.1",
+    "groundingStatus": "accepted"
+  },
+  "benchmark": {
+    "score": 64,
+    "grade": "fail",
+    "safetyPass": true,
+    "overallPass": false
+  },
+  "generationAttempted": false,
+  "liveInference": false,
+  "generatedOffline": true
+}

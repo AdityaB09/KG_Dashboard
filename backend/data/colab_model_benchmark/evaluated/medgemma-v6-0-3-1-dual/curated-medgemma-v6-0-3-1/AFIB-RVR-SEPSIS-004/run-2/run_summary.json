@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "precomputed-run-summary-v2",
+  "createdAtUtc": "2026-08-05T16:52:50.816981+00:00",
+  "scenarioId": "AFIB-RVR-SEPSIS-004",
+  "episodeId": "evalflow-AFIB-RVR-SEPSIS-004-20260731-193246-9f31c0",
+  "runNumber": 2,
+  "profile": "curated",
+  "responseSetId": "medgemma-dual-v6-0-3-1",
+  "selectionMode": "curated_best_per_scenario",
+  "sourceModel": "google/medgemma-27b-it",
+  "promptFingerprint": "d7b0dfde575e5e585b65f45f4268c1c0f22fd9c270788029c9670953b3169db0",
+  "validContract": true,
+  "validatorPassed": true,
+  "strictlyAccepted": true,
+  "displayableWithReview": false,
+  "unsupportedFactCount": 0,
+  "contradictionCount": 0,
+  "score": 73,
+  "sourceLatencySeconds": 29.548,
+  "sourceInputTokens": 2701,
+  "sourceOutputTokens": 255
+}

@@ -1,0 +1,109 @@
+{
+  "schemaVersion": "slm-widget-result-v4",
+  "createdAt": "2026-08-05T16:52:50.419162+00:00",
+  "scenarioId": "AFIB-RVR-SEPSIS-004",
+  "episodeId": "evalflow-AFIB-RVR-SEPSIS-004-20260731-193246-9f31c0",
+  "incidentId": "inc-INCART-EVAL-AFIB-RVR-SEPSIS-004-loop-1-atrial-fibrillation-rvr-000001584-DtTF9M1Ng-BhvC-q",
+  "status": "complete",
+  "validationStatus": "accepted",
+  "displayPolicy": "always_show_model_response",
+  "clinicalResponseLabel": "MedGemma Clinical Context",
+  "model": {
+    "provider": "lightning-ai-studio",
+    "name": "google/medgemma-27b-it",
+    "modelId": "google/medgemma-27b-it",
+    "modelKey": "google-medgemma-27b-it",
+    "loaderType": "multimodal",
+    "quantization": "4-bit-nf4-double-quant",
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "promptFingerprint": "d7b0dfde575e5e585b65f45f4268c1c0f22fd9c270788029c9670953b3169db0",
+    "responseContractVersion": "model-clinical-output-v6.0.3",
+    "sourceRun": 2,
+    "generatedOffline": true
+  },
+  "modelResponse": {
+    "episodeSummary": "A 79-year-old female with a history of hypertension and chronic kidney disease presented with fever, rigors, and symptoms of sepsis (elevated WBC, procalcitonin, lactate, fever). During this acute illness, she developed new-onset atrial fibrillation with rapid ventricular response (HR 150 bpm, irregularly irregular rhythm, narrow QRS). Her blood pressure became unstable (SBP 92 mmHg, MAP 67 mmHg) requiring vasopressor support (norepinephrine).",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is atrial fibrillation triggered by an acute systemic inflammatory process, likely sepsis. The patient presents with clear signs of infection (fever, elevated WBC, procalcitonin) and sepsis (elevated lactate, hypotension requiring vasopressors). The new onset of atrial fibrillation occurred coincident with the fever spike and systemic inflammatory response, strongly suggesting the inflammation as a trigger.",
+    "contributingFactors": [
+      "Sepsis",
+      "Fever",
+      "Chronic kidney disease",
+      "Advanced age"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "displayModelResponse": {
+    "episodeSummary": "A 79-year-old female with a history of hypertension and chronic kidney disease presented with fever, rigors, and symptoms of sepsis (elevated WBC, procalcitonin, lactate, fever). During this acute illness, she developed new-onset atrial fibrillation with rapid ventricular response (HR 150 bpm, irregularly irregular rhythm, narrow QRS). Her blood pressure became unstable (SBP 92 mmHg, MAP 67 mmHg) requiring vasopressor support (norepinephrine).",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is atrial fibrillation triggered by an acute systemic inflammatory process, likely sepsis. The patient presents with clear signs of infection (fever, elevated WBC, procalcitonin) and sepsis (elevated lactate, hypotension requiring vasopressors). The new onset of atrial fibrillation occurred coincident with the fever spike and systemic inflammatory response, strongly suggesting the inflammation as a trigger.",
+    "contributingFactors": [
+      "Sepsis",
+      "Fever",
+      "Chronic kidney disease",
+      "Advanced age"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "interpretation": {
+    "headline": "Atrial fibrillation with rapid ventricular response",
+    "statusLabel": "Clinical interpretation",
+    "displayPolicy": "four_section_clinical_narrative",
+    "episodeNarrative": "A 79-year-old female with a history of hypertension and chronic kidney disease presented with fever, rigors, and symptoms of sepsis (elevated WBC, procalcitonin, lactate, fever). During this acute illness, she developed new-onset atrial fibrillation with rapid ventricular response (HR 150 bpm, irregularly irregular rhythm, narrow QRS). Her blood pressure became unstable (SBP 92 mmHg, MAP 67 mmHg) requiring vasopressor support (norepinephrine).",
+    "etiologyContextNarrative": "The most likely etiology is atrial fibrillation triggered by an acute systemic inflammatory process, likely sepsis. The patient presents with clear signs of infection (fever, elevated WBC, procalcitonin) and sepsis (elevated lactate, hypotension requiring vasopressors). The new onset of atrial fibrillation occurred coincident with the fever spike and systemic inflammatory response, strongly suggesting the inflammation as a trigger.",
+    "rootCauseNarrative": "The most likely etiology is atrial fibrillation triggered by an acute systemic inflammatory process, likely sepsis. The patient presents with clear signs of infection (fever, elevated WBC, procalcitonin) and sepsis (elevated lactate, hypotension requiring vasopressors). The new onset of atrial fibrillation occurred coincident with the fever spike and systemic inflammatory response, strongly suggesting the inflammation as a trigger.",
+    "possibleContributors": [
+      "Sepsis",
+      "Fever",
+      "Chronic kidney disease",
+      "Advanced age"
+    ],
+    "importantFindings": [
+      "Sepsis",
+      "Fever",
+      "Chronic kidney disease",
+      "Advanced age"
+    ],
+    "importantLimitations": [],
+    "materialEtiologicUncertainty": [],
+    "arrhythmiaNarrative": "",
+    "morphologyNarrative": "",
+    "currentSituationNarrative": "",
+    "currentSituation": {
+      "narrative": ""
+    },
+    "recommendedNextChecks": [],
+    "recommendedActionsRequired": false
+  },
+  "responseValidation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "ATRIAL_FIBRILLATION_RVR",
+    "authoritativeDiagnosisDisplay": "Atrial fibrillation with rapid ventricular response",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "evidenceCoverage": {},
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 0,
+    "evidenceCoverageRequired": 0,
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-deterministic-v2.1",
+    "groundingStatus": "accepted"
+  },
+  "benchmark": {
+    "score": 73,
+    "grade": "needs_improvement",
+    "safetyPass": true,
+    "overallPass": false
+  },
+  "generationAttempted": false,
+  "liveInference": false,
+  "generatedOffline": true
+}

@@ -1,0 +1,109 @@
+{
+  "schemaVersion": "slm-widget-result-v4",
+  "createdAt": "2026-08-05T16:52:50.993459+00:00",
+  "scenarioId": "NSVT-ECTOPY-008",
+  "episodeId": "evalflow-NSVT-ECTOPY-008-20260731-193752-f75aa3",
+  "incidentId": "inc-INCART-EVAL-NSVT-ECTOPY-008-loop-1-nonsustained-ventricular-tachycardia-000001650-IVd74VSLICeLh8Ud",
+  "status": "complete",
+  "validationStatus": "accepted",
+  "displayPolicy": "always_show_model_response",
+  "clinicalResponseLabel": "MedGemma Clinical Context",
+  "model": {
+    "provider": "lightning-ai-studio",
+    "name": "google/medgemma-27b-it",
+    "modelId": "google/medgemma-27b-it",
+    "modelKey": "google-medgemma-27b-it",
+    "loaderType": "multimodal",
+    "quantization": "4-bit-nf4-double-quant",
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "promptFingerprint": "28aa656844cd5e2240e94bf39d24d45d87d1b4ba457a941b8fcabd896697b8c6",
+    "responseContractVersion": "model-clinical-output-v6.0.3",
+    "sourceRun": 2,
+    "generatedOffline": true
+  },
+  "modelResponse": {
+    "episodeSummary": "The patient experienced frequent PVCs and a brief non-sustained VT run (4 beats) on post-operative day 1. The patient was hemodynamically stable. ECG showed multifocal wide PVCs, couplets, and the NSVT run, with an ectopy rate of 6 per 10 seconds. Electrolytes revealed hypokalemia (3.1 mmol/L) and hypomagnesemia (1.5 mg/dL).",
+    "mostLikelyEtiologyAndClinicalContext": "Electrolyte abnormalities (hypokalemia and hypomagnesemia) are the most likely etiology for the frequent PVCs and non-sustained VT. Thiazide diuretics, such as hydrochlorothiazide, are known to cause potassium and magnesium wasting, leading to electrolyte depletion. The patient is taking hydrochlorothiazide and has documented low potassium and magnesium levels.",
+    "contributingFactors": [
+      "Post-operative state",
+      "Thiazide diuretic (hydrochlorothiazide) use",
+      "Hypokalemia",
+      "Hypomagnesemia"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "displayModelResponse": {
+    "episodeSummary": "The patient experienced frequent PVCs and a brief non-sustained VT run (4 beats) on post-operative day 1. The patient was hemodynamically stable. ECG showed multifocal wide PVCs, couplets, and the NSVT run, with an ectopy rate of 6 per 10 seconds. Electrolytes revealed hypokalemia (3.1 mmol/L) and hypomagnesemia (1.5 mg/dL).",
+    "mostLikelyEtiologyAndClinicalContext": "Electrolyte abnormalities (hypokalemia and hypomagnesemia) are the most likely etiology for the frequent PVCs and non-sustained VT. Thiazide diuretics, such as hydrochlorothiazide, are known to cause potassium and magnesium wasting, leading to electrolyte depletion. The patient is taking hydrochlorothiazide and has documented low potassium and magnesium levels.",
+    "contributingFactors": [
+      "Post-operative state",
+      "Thiazide diuretic (hydrochlorothiazide) use",
+      "Hypokalemia",
+      "Hypomagnesemia"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "interpretation": {
+    "headline": "Frequent PVCs with non-sustained VT run",
+    "statusLabel": "Clinical interpretation",
+    "displayPolicy": "four_section_clinical_narrative",
+    "episodeNarrative": "The patient experienced frequent PVCs and a brief non-sustained VT run (4 beats) on post-operative day 1. The patient was hemodynamically stable. ECG showed multifocal wide PVCs, couplets, and the NSVT run, with an ectopy rate of 6 per 10 seconds. Electrolytes revealed hypokalemia (3.1 mmol/L) and hypomagnesemia (1.5 mg/dL).",
+    "etiologyContextNarrative": "Electrolyte abnormalities (hypokalemia and hypomagnesemia) are the most likely etiology for the frequent PVCs and non-sustained VT. Thiazide diuretics, such as hydrochlorothiazide, are known to cause potassium and magnesium wasting, leading to electrolyte depletion. The patient is taking hydrochlorothiazide and has documented low potassium and magnesium levels.",
+    "rootCauseNarrative": "Electrolyte abnormalities (hypokalemia and hypomagnesemia) are the most likely etiology for the frequent PVCs and non-sustained VT. Thiazide diuretics, such as hydrochlorothiazide, are known to cause potassium and magnesium wasting, leading to electrolyte depletion. The patient is taking hydrochlorothiazide and has documented low potassium and magnesium levels.",
+    "possibleContributors": [
+      "Post-operative state",
+      "Thiazide diuretic (hydrochlorothiazide) use",
+      "Hypokalemia",
+      "Hypomagnesemia"
+    ],
+    "importantFindings": [
+      "Post-operative state",
+      "Thiazide diuretic (hydrochlorothiazide) use",
+      "Hypokalemia",
+      "Hypomagnesemia"
+    ],
+    "importantLimitations": [],
+    "materialEtiologicUncertainty": [],
+    "arrhythmiaNarrative": "",
+    "morphologyNarrative": "",
+    "currentSituationNarrative": "",
+    "currentSituation": {
+      "narrative": ""
+    },
+    "recommendedNextChecks": [],
+    "recommendedActionsRequired": false
+  },
+  "responseValidation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "NONSUSTAINED_VENTRICULAR_TACHYCARDIA",
+    "authoritativeDiagnosisDisplay": "Frequent PVCs with non-sustained VT run",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "evidenceCoverage": {},
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 0,
+    "evidenceCoverageRequired": 0,
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-deterministic-v2.1",
+    "groundingStatus": "accepted"
+  },
+  "benchmark": {
+    "score": 60,
+    "grade": "fail",
+    "safetyPass": true,
+    "overallPass": false
+  },
+  "generationAttempted": false,
+  "liveInference": false,
+  "generatedOffline": true
+}

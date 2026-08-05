@@ -1,0 +1,168 @@
+{
+  "episodeId": "TORSADES-LQT-002",
+  "scoringContract": "etiology-context-deterministic-v2",
+  "recommendedActionsRequired": false,
+  "actionsScored": false,
+  "diagnosisConsistency": 20,
+  "primaryEtiology": 26,
+  "contextualEvidence": 20,
+  "uncertaintyAndMissingData": 5,
+  "avoidsDistractors": 5,
+  "total": 76,
+  "grade": "needs_improvement",
+  "validatorPassed": true,
+  "safetyPass": true,
+  "overallPass": false,
+  "overallDisposition": "grounded_but_below_benchmark_target",
+  "groundingPass": true,
+  "grounding": {
+    "status": "accepted",
+    "pass": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "accepted": true,
+    "displayableWithReview": false,
+    "hardErrorCount": 0,
+    "qualityErrorCount": 0
+  },
+  "benchmark": {
+    "score": 76,
+    "grade": "below_target",
+    "conceptGrade": "needs_improvement",
+    "alignmentMode": "full_scenario",
+    "informationalOnly": false,
+    "pass": false,
+    "disposition": "below_target"
+  },
+  "benchmarkAlignmentMode": "full_scenario",
+  "benchmarkInformationalOnly": false,
+  "benchmarkPass": false,
+  "benchmarkDisposition": "below_target",
+  "clinicalPromptMode": null,
+  "matched": {
+    "diagnosis": [
+      "Torsades de pointes"
+    ],
+    "etiology": [
+      "acquiredLongQtMechanism"
+    ],
+    "context": [
+      "markedQtProlongation",
+      "qtProlongingMedications",
+      "hypokalemia",
+      "hypomagnesemia",
+      "possibleHypocalcemia",
+      "polymorphicTwistingMorphology",
+      "qtProlongingDrugExposure"
+    ],
+    "uncertainty": []
+  },
+  "partial": {
+    "etiology": [
+      "electrolyteAndMedicationTrigger"
+    ],
+    "context": [
+      "syncopeHypotension"
+    ],
+    "uncertainty": []
+  },
+  "missing": {
+    "etiology": [],
+    "context": [
+      "gastrointestinalLosses",
+      "electrolyteDepletion",
+      "vomitingDiarrhea"
+    ],
+    "uncertainty": [
+      "congenitalVsAcquiredUncertain"
+    ]
+  },
+  "conceptStrengths": {
+    "etiology": {
+      "acquiredLongQtMechanism": 1.0,
+      "electrolyteAndMedicationTrigger": 0.5
+    },
+    "context": {
+      "markedQtProlongation": 1.0,
+      "qtProlongingMedications": 1.0,
+      "hypokalemia": 1.0,
+      "hypomagnesemia": 1.0,
+      "possibleHypocalcemia": 1.0,
+      "gastrointestinalLosses": 0.0,
+      "polymorphicTwistingMorphology": 0.75,
+      "syncopeHypotension": 0.5,
+      "qtProlongingDrugExposure": 1.0,
+      "electrolyteDepletion": 0.0,
+      "vomitingDiarrhea": 0.0
+    },
+    "uncertainty": {}
+  },
+  "distractorHits": [],
+  "forbiddenClaimHits": [],
+  "unsafeStatements": [],
+  "responseValidation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "TORSADES_DE_POINTES",
+    "authoritativeDiagnosisDisplay": "Torsades de pointes",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "evidenceCoverage": {},
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 0,
+    "evidenceCoverageRequired": 0,
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-deterministic-v2.1",
+    "groundingStatus": "accepted"
+  },
+  "manualClinicalReviewRequired": true,
+  "scoringMethod": "scenario answer-key concept-strength matching with word-boundary, negation-aware terminology; grounding safety evaluated separately",
+  "scopedEvidenceSchemaVersion": null,
+  "rhythmIdentification": 20,
+  "contributingFactors": 20,
+  "recommendedActions": 0,
+  "mandatoryEmergencyActionsMissing": [],
+  "schemaVersion": "benchmark-result-v4",
+  "scenarioId": "TORSADES-LQT-002",
+  "sourceModel": "google/medgemma-27b-text-it",
+  "sourceRun": 2,
+  "responseSetId": "medgemma-dual-v6-0-3-1",
+  "profile": "medgemma-27b-text-it",
+  "displayInClinicalWidget": true,
+  "generationAttempted": false,
+  "liveInference": false,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "A 74-year-old female experienced a witnessed syncopal episode associated with hemodynamic instability (hypotension, hypoxia). ECG revealed a polymorphic ventricular tachycardia with axis twisting, consistent with Torsades de pointes, at a rate of 228 bpm. A baseline ECG 6 minutes prior showed sinus rhythm with marked QT prolongation (QTc 618 ms).",
+    "mostLikelyEtiologyAndClinicalContext": "Acquired Long QT Syndrome (LQTS) is the most likely etiology, leading to Torsades de pointes. This is supported by the documented baseline QTc prolongation (618 ms) and the presence of multiple QT-prolonging medications (sotalol, azithromycin, ondansetron). The patient also has significant electrolyte abnormalities (hypokalemia, hypomagnesemia, hypocalcemia) and acute kidney injury (creatinine 1.4 mg/dL), which further predispose to QT prolongation and TdP.",
+    "contributingFactors": [
+      "Exposure to multiple QT-prolonging medications (sotalol, azithromycin, ondansetron)",
+      "Hypokalemia (K 2.9 mmol/L)",
+      "Hypomagnesemia (Mg 1.2 mg/dL)",
+      "Hypocalcemia (Ca 7.9 mg/dL)",
+      "Acute kidney injury (Cr 1.4 mg/dL)"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "normalizedModelResponse": {
+    "episodeSummary": "A 74-year-old female experienced a witnessed syncopal episode associated with hemodynamic instability (hypotension, hypoxia). ECG revealed a polymorphic ventricular tachycardia with axis twisting, consistent with Torsades de pointes, at a rate of 228 bpm. A baseline ECG 6 minutes prior showed sinus rhythm with marked QT prolongation (QTc 618 ms).",
+    "mostLikelyEtiologyAndClinicalContext": "Acquired Long QT Syndrome (LQTS) is the most likely etiology, leading to Torsades de pointes. This is supported by the documented baseline QTc prolongation (618 ms) and the presence of multiple QT-prolonging medications (sotalol, azithromycin, ondansetron). The patient also has significant electrolyte abnormalities (hypokalemia, hypomagnesemia, hypocalcemia) and acute kidney injury (creatinine 1.4 mg/dL), which further predispose to QT prolongation and TdP.",
+    "contributingFactors": [
+      "Exposure to multiple QT-prolonging medications (sotalol, azithromycin, ondansetron)",
+      "Hypokalemia (K 2.9 mmol/L)",
+      "Hypomagnesemia (Mg 1.2 mg/dL)",
+      "Hypocalcemia (Ca 7.9 mg/dL)",
+      "Acute kidney injury (Cr 1.4 mg/dL)"
+    ],
+    "materialEtiologicUncertainty": []
+  }
+}

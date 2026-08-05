@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "slm-widget-result-v4",
+  "createdAt": "2026-08-05T16:52:50.627129+00:00",
+  "scenarioId": "CHB-HYPERK-005",
+  "episodeId": "evalflow-CHB-HYPERK-005-20260731-194304-f282ff",
+  "incidentId": "inc-INCART-EVAL-CHB-HYPERK-005-loop-1-complete-heart-block-000001584-RtowvVFVNg2--Iex",
+  "status": "complete",
+  "validationStatus": "accepted",
+  "displayPolicy": "always_show_model_response",
+  "clinicalResponseLabel": "MedGemma Clinical Context",
+  "model": {
+    "provider": "lightning-ai-studio",
+    "name": "google/medgemma-27b-text-it",
+    "modelId": "google/medgemma-27b-text-it",
+    "modelKey": "google-medgemma-27b-text-it",
+    "loaderType": "text",
+    "quantization": "4-bit-nf4-double-quant",
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "promptFingerprint": "3f21c1e98ddb9cd30bbba8b61816abec44356b21032e7036a208b7be188da930",
+    "responseContractVersion": "model-clinical-output-v6.0.3",
+    "sourceRun": 2,
+    "generatedOffline": true
+  },
+  "modelResponse": {
+    "episodeSummary": "A 70-year-old male with end-stage renal disease presented with symptomatic bradycardia, generalized weakness, and missed dialysis sessions. The ECG showed complete heart block with AV dissociation, a ventricular rate of 34 bpm, wide QRS complexes, and peaked T waves. Hemodynamics were unstable with a systolic blood pressure of 78 mmHg.",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is severe hyperkalemia causing conduction system block. This is strongly supported by the critical potassium level of 7.4 mmol/L, ECG findings of peaked T waves, QRS widening, and AV dissociation, and the patient's history of missed dialysis sessions.",
+    "contributingFactors": [
+      "Missed dialysis sessions",
+      "End-stage renal disease"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "displayModelResponse": {
+    "episodeSummary": "A 70-year-old male with end-stage renal disease presented with symptomatic bradycardia, generalized weakness, and missed dialysis sessions. The ECG showed complete heart block with AV dissociation, a ventricular rate of 34 bpm, wide QRS complexes, and peaked T waves. Hemodynamics were unstable with a systolic blood pressure of 78 mmHg.",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is severe hyperkalemia causing conduction system block. This is strongly supported by the critical potassium level of 7.4 mmol/L, ECG findings of peaked T waves, QRS widening, and AV dissociation, and the patient's history of missed dialysis sessions.",
+    "contributingFactors": [
+      "Missed dialysis sessions",
+      "End-stage renal disease"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "interpretation": {
+    "headline": "Complete heart block",
+    "statusLabel": "Clinical interpretation",
+    "displayPolicy": "four_section_clinical_narrative",
+    "episodeNarrative": "A 70-year-old male with end-stage renal disease presented with symptomatic bradycardia, generalized weakness, and missed dialysis sessions. The ECG showed complete heart block with AV dissociation, a ventricular rate of 34 bpm, wide QRS complexes, and peaked T waves. Hemodynamics were unstable with a systolic blood pressure of 78 mmHg.",
+    "etiologyContextNarrative": "The most likely etiology is severe hyperkalemia causing conduction system block. This is strongly supported by the critical potassium level of 7.4 mmol/L, ECG findings of peaked T waves, QRS widening, and AV dissociation, and the patient's history of missed dialysis sessions.",
+    "rootCauseNarrative": "The most likely etiology is severe hyperkalemia causing conduction system block. This is strongly supported by the critical potassium level of 7.4 mmol/L, ECG findings of peaked T waves, QRS widening, and AV dissociation, and the patient's history of missed dialysis sessions.",
+    "possibleContributors": [
+      "Missed dialysis sessions",
+      "End-stage renal disease"
+    ],
+    "importantFindings": [
+      "Missed dialysis sessions",
+      "End-stage renal disease"
+    ],
+    "importantLimitations": [],
+    "materialEtiologicUncertainty": [],
+    "arrhythmiaNarrative": "",
+    "morphologyNarrative": "",
+    "currentSituationNarrative": "",
+    "currentSituation": {
+      "narrative": ""
+    },
+    "recommendedNextChecks": [],
+    "recommendedActionsRequired": false
+  },
+  "responseValidation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "COMPLETE_HEART_BLOCK",
+    "authoritativeDiagnosisDisplay": "Complete heart block",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "evidenceCoverage": {},
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 0,
+    "evidenceCoverageRequired": 0,
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-deterministic-v2.1",
+    "groundingStatus": "accepted"
+  },
+  "benchmark": {
+    "score": 65,
+    "grade": "fail",
+    "safetyPass": true,
+    "overallPass": false
+  },
+  "generationAttempted": false,
+  "liveInference": false,
+  "generatedOffline": true
+}

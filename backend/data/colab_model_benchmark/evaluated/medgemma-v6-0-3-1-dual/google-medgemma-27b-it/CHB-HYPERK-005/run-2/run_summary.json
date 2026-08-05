@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "precomputed-run-summary-v2",
+  "createdAtUtc": "2026-08-05T16:52:50.443922+00:00",
+  "scenarioId": "CHB-HYPERK-005",
+  "episodeId": "evalflow-CHB-HYPERK-005-20260731-194304-f282ff",
+  "runNumber": 2,
+  "profile": "medgemma-27b-it",
+  "responseSetId": "medgemma-dual-v6-0-3-1",
+  "selectionMode": "single_model",
+  "sourceModel": "google/medgemma-27b-it",
+  "promptFingerprint": "3f21c1e98ddb9cd30bbba8b61816abec44356b21032e7036a208b7be188da930",
+  "validContract": true,
+  "validatorPassed": true,
+  "strictlyAccepted": true,
+  "displayableWithReview": false,
+  "unsupportedFactCount": 0,
+  "contradictionCount": 0,
+  "score": 74,
+  "sourceLatencySeconds": 35.452,
+  "sourceInputTokens": 2448,
+  "sourceOutputTokens": 308
+}

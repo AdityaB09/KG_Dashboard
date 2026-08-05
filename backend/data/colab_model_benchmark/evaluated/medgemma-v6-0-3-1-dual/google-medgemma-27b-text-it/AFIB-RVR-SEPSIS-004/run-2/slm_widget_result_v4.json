@@ -1,0 +1,105 @@
+{
+  "schemaVersion": "slm-widget-result-v4",
+  "createdAt": "2026-08-05T16:52:50.605807+00:00",
+  "scenarioId": "AFIB-RVR-SEPSIS-004",
+  "episodeId": "evalflow-AFIB-RVR-SEPSIS-004-20260731-193246-9f31c0",
+  "incidentId": "inc-INCART-EVAL-AFIB-RVR-SEPSIS-004-loop-1-atrial-fibrillation-rvr-000001584-DtTF9M1Ng-BhvC-q",
+  "status": "complete",
+  "validationStatus": "accepted",
+  "displayPolicy": "always_show_model_response",
+  "clinicalResponseLabel": "MedGemma Clinical Context",
+  "model": {
+    "provider": "lightning-ai-studio",
+    "name": "google/medgemma-27b-text-it",
+    "modelId": "google/medgemma-27b-text-it",
+    "modelKey": "google-medgemma-27b-text-it",
+    "loaderType": "text",
+    "quantization": "4-bit-nf4-double-quant",
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "promptFingerprint": "d7b0dfde575e5e585b65f45f4268c1c0f22fd9c270788029c9670953b3169db0",
+    "responseContractVersion": "model-clinical-output-v6.0.3",
+    "sourceRun": 2,
+    "generatedOffline": true
+  },
+  "modelResponse": {
+    "episodeSummary": "The patient experienced a new episode of atrial fibrillation with rapid ventricular response (RVR) coinciding with a fever spike. The ECG showed an irregularly irregular rhythm at 150 bpm with absent P waves and narrow QRS complexes. The patient is hemodynamically unstable, requiring vasopressor support, and presents with signs of sepsis including fever, leukocytosis, elevated procalcitonin, and elevated lactate.",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is atrial fibrillation triggered by sepsis. The patient presents with clinical and laboratory evidence of sepsis (fever, leukocytosis, elevated procalcitonin, elevated lactate) which is a known precipitant for atrial fibrillation, particularly in the elderly. The new onset atrial fibrillation with RVR occurred concurrently with the fever spike, further supporting this link.",
+    "contributingFactors": [
+      "Advanced age",
+      "Hypertension",
+      "Chronic kidney disease"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "displayModelResponse": {
+    "episodeSummary": "The patient experienced a new episode of atrial fibrillation with rapid ventricular response (RVR) coinciding with a fever spike. The ECG showed an irregularly irregular rhythm at 150 bpm with absent P waves and narrow QRS complexes. The patient is hemodynamically unstable, requiring vasopressor support, and presents with signs of sepsis including fever, leukocytosis, elevated procalcitonin, and elevated lactate.",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is atrial fibrillation triggered by sepsis. The patient presents with clinical and laboratory evidence of sepsis (fever, leukocytosis, elevated procalcitonin, elevated lactate) which is a known precipitant for atrial fibrillation, particularly in the elderly. The new onset atrial fibrillation with RVR occurred concurrently with the fever spike, further supporting this link.",
+    "contributingFactors": [
+      "Advanced age",
+      "Hypertension",
+      "Chronic kidney disease"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "interpretation": {
+    "headline": "Atrial fibrillation with rapid ventricular response",
+    "statusLabel": "Clinical interpretation",
+    "displayPolicy": "four_section_clinical_narrative",
+    "episodeNarrative": "The patient experienced a new episode of atrial fibrillation with rapid ventricular response (RVR) coinciding with a fever spike. The ECG showed an irregularly irregular rhythm at 150 bpm with absent P waves and narrow QRS complexes. The patient is hemodynamically unstable, requiring vasopressor support, and presents with signs of sepsis including fever, leukocytosis, elevated procalcitonin, and elevated lactate.",
+    "etiologyContextNarrative": "The most likely etiology is atrial fibrillation triggered by sepsis. The patient presents with clinical and laboratory evidence of sepsis (fever, leukocytosis, elevated procalcitonin, elevated lactate) which is a known precipitant for atrial fibrillation, particularly in the elderly. The new onset atrial fibrillation with RVR occurred concurrently with the fever spike, further supporting this link.",
+    "rootCauseNarrative": "The most likely etiology is atrial fibrillation triggered by sepsis. The patient presents with clinical and laboratory evidence of sepsis (fever, leukocytosis, elevated procalcitonin, elevated lactate) which is a known precipitant for atrial fibrillation, particularly in the elderly. The new onset atrial fibrillation with RVR occurred concurrently with the fever spike, further supporting this link.",
+    "possibleContributors": [
+      "Advanced age",
+      "Hypertension",
+      "Chronic kidney disease"
+    ],
+    "importantFindings": [
+      "Advanced age",
+      "Hypertension",
+      "Chronic kidney disease"
+    ],
+    "importantLimitations": [],
+    "materialEtiologicUncertainty": [],
+    "arrhythmiaNarrative": "",
+    "morphologyNarrative": "",
+    "currentSituationNarrative": "",
+    "currentSituation": {
+      "narrative": ""
+    },
+    "recommendedNextChecks": [],
+    "recommendedActionsRequired": false
+  },
+  "responseValidation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "ATRIAL_FIBRILLATION_RVR",
+    "authoritativeDiagnosisDisplay": "Atrial fibrillation with rapid ventricular response",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "evidenceCoverage": {},
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 0,
+    "evidenceCoverageRequired": 0,
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-deterministic-v2.1",
+    "groundingStatus": "accepted"
+  },
+  "benchmark": {
+    "score": 68,
+    "grade": "fail",
+    "safetyPass": true,
+    "overallPass": false
+  },
+  "generationAttempted": false,
+  "liveInference": false,
+  "generatedOffline": true
+}

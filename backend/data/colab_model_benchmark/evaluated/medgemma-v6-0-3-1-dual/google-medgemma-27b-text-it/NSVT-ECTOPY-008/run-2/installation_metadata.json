@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "kgen-precomputed-installation-v2",
+  "createdAtUtc": "2026-08-05T16:52:50.712048+00:00",
+  "responseSetId": "medgemma-dual-v6-0-3-1",
+  "profile": "medgemma-27b-text-it",
+  "selectionMode": "single_model",
+  "scenarioId": "NSVT-ECTOPY-008",
+  "sourceModel": "google/medgemma-27b-text-it",
+  "modelSlug": "google-medgemma-27b-text-it",
+  "runNumber": 2,
+  "promptFingerprint": "28aa656844cd5e2240e94bf39d24d45d87d1b4ba457a941b8fcabd896697b8c6",
+  "sourcePromptVersion": "episode-pack-phase6-v6.0.3",
+  "responseContractVersion": "model-clinical-output-v6.0.3",
+  "validationVersion": "v6.0.3.1",
+  "inputZipSha256": "a59b3b99691d3da0c9474266248107726fcc053b11d8cdd5de38155f6274a084",
+  "resultsZipSha256": "61fd6440a4aeb4eeb57b938000cc051fe5b0ce51255e6b433372fd5f392fad71",
+  "validatorPassed": true,
+  "unsupportedFactCount": 0,
+  "contradictionCount": 0,
+  "score": 62,
+  "sourceGeneratedOffline": true
+}

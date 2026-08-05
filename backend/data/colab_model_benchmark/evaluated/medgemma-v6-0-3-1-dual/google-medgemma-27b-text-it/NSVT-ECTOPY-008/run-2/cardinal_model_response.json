@@ -1,0 +1,400 @@
+{
+  "schemaVersion": "grounded-cardinal-response-v4",
+  "status": "complete",
+  "createdAt": "2026-08-05T16:52:50.712048+00:00",
+  "mode": "precomputed_response_installation",
+  "scenarioId": "NSVT-ECTOPY-008",
+  "episodeId": "evalflow-NSVT-ECTOPY-008-20260731-193752-f75aa3",
+  "incidentId": "inc-INCART-EVAL-NSVT-ECTOPY-008-loop-1-nonsustained-ventricular-tachycardia-000001650-IVd74VSLICeLh8Ud",
+  "source": "validated_lightning_response_v6_0_3_1",
+  "diagnosticEvent": {
+    "schemaVersion": "diagnostic-event-universal-v2",
+    "eventDetected": true,
+    "episodeId": "evalflow-NSVT-ECTOPY-008-20260731-193752-f75aa3",
+    "incidentId": "inc-INCART-EVAL-NSVT-ECTOPY-008-loop-1-nonsustained-ventricular-tachycardia-000001650-IVd74VSLICeLh8Ud",
+    "diagnosis": {
+      "code": "NONSUSTAINED_VENTRICULAR_TACHYCARDIA",
+      "display": "Frequent PVCs with non-sustained VT run",
+      "authoritative": true
+    },
+    "source": {
+      "type": "controlled_evaluation_scenario",
+      "name": "SLM_Eval",
+      "identifier": "NSVT-ECTOPY-008",
+      "futureReplacement": "ecg_ml_diagnostic_model"
+    },
+    "confidence": {
+      "value": 1.0,
+      "basis": "controlled_evaluation_label"
+    },
+    "measurements": {
+      "ventricularRateBpm": 78.0,
+      "atrialRateBpm": 78.0,
+      "qrsDurationMs": 94.0,
+      "qtcMs": 445.0,
+      "prIntervalMs": 160.0,
+      "regularity": "occasionally irregular",
+      "axisDegrees": 30.0,
+      "pWavePresent": true,
+      "atrialActivityPresent": true,
+      "atrioventricularAssociation": null
+    },
+    "rhythmFeatures": {
+      "ventricularRateBpm": 78.0,
+      "atrialRateBpm": 78.0,
+      "qrsDurationMs": 94.0,
+      "qtcMs": 445.0,
+      "qtcEvidenceSource": "complete_episode_pack.ecg.measurements.qtcMs",
+      "prIntervalMs": 160.0,
+      "regularity": "occasionally irregular",
+      "axisDegrees": 30.0,
+      "pWavePresent": true,
+      "atrialActivityPresent": true,
+      "atrioventricularAssociation": null,
+      "findings": [
+        "Multifocal PVCs"
+      ]
+    },
+    "hemodynamicStatus": {
+      "available": true,
+      "classification": "stable",
+      "conscious": null,
+      "pulseless": null,
+      "pulsePresent": null,
+      "shockSupported": null,
+      "vasopressorSupport": null,
+      "systolicBloodPressure": 128.0,
+      "diastolicBloodPressure": 80.0,
+      "map": 96.0,
+      "oxygenSaturationPct": 96.0,
+      "temperatureC": 37.0,
+      "sourceNote": "Stable"
+    },
+    "electrolyteContext": {
+      "available": true,
+      "potassium": {
+        "available": true,
+        "value": 3.1,
+        "unit": "mmol/L",
+        "withinReference": false,
+        "reference": {
+          "low": 3.5,
+          "high": 5.1
+        },
+        "note": "LOW"
+      },
+      "magnesium": {
+        "available": true,
+        "value": 1.5,
+        "unit": "mg/dL",
+        "withinReference": false,
+        "reference": {
+          "low": 1.7,
+          "high": 2.2
+        },
+        "note": "LOW"
+      },
+      "calcium": {
+        "available": true,
+        "value": 8.8,
+        "unit": "mg/dL",
+        "withinReference": true,
+        "reference": {
+          "low": 8.5,
+          "high": 10.2
+        },
+        "note": ""
+      },
+      "sodium": {
+        "available": false,
+        "value": null,
+        "unit": null,
+        "withinReference": null,
+        "reference": null
+      },
+      "abnormalElectrolytes": [
+        "potassium",
+        "magnesium"
+      ],
+      "electrolyteAbnormalityPresent": true,
+      "majorElectrolyteTriggerSupported": true
+    },
+    "ischemiaContext": {
+      "available": true,
+      "acuteChestPain": null,
+      "stElevationSupported": null,
+      "troponinValue": 0.02,
+      "troponinPattern": "measured_unspecified_pattern",
+      "acuteStemiSupported": null
+    },
+    "infectionContext": {
+      "available": true,
+      "temperatureC": 37.0,
+      "wbc": null,
+      "procalcitonin": null,
+      "lactate": null,
+      "feverSupported": null,
+      "inflammatoryResponseSupported": null,
+      "infectionSupported": null,
+      "sepsisSupported": null,
+      "infectionExplicitlyDenied": null,
+      "suspectedSource": null
+    },
+    "qtContext": {
+      "available": true,
+      "qtcMs": 445.0,
+      "prolonged": false,
+      "thresholdMs": 500,
+      "qtProlongingMedications": [],
+      "acquiredLongQtSupported": false,
+      "evidenceSource": "complete_episode_pack.ecg.measurements.qtcMs"
+    },
+    "renalContext": {
+      "available": true,
+      "creatinine": 1.0,
+      "bun": null,
+      "egfr": null,
+      "esrd": null,
+      "dialysis": null,
+      "missedDialysis": null,
+      "chronicKidneyDiseaseSupported": null,
+      "acuteKidneyInjurySupported": null,
+      "renalImpairmentSupported": null,
+      "sourceTextContainsRenalImpairment": null
+    },
+    "medicationContext": {
+      "available": true,
+      "homeMedications": [
+        "Hydrochlorothiazide 25 mg",
+        "Lisinopril 10 mg"
+      ],
+      "activeMedications": [
+        "Hydrochlorothiazide 25 mg",
+        "Lisinopril 10 mg"
+      ],
+      "infusions": [
+        "Maintenance IV fluids"
+      ],
+      "qtProlongingMedications": [],
+      "digoxinExposure": false,
+      "potassiumRaisingMedicationExposure": false,
+      "thiazideExposure": true
+    },
+    "toxicityContext": {
+      "available": true,
+      "digoxinLevel": null,
+      "symptoms": [],
+      "digoxinToxicitySupported": false,
+      "reducedClearanceSupported": false
+    },
+    "patientContext": {
+      "available": true,
+      "age": 55,
+      "sex": "M",
+      "primaryDiagnosis": "Post-op monitoring (day 1 after abdominal surgery)",
+      "history": [
+        "Hypertension",
+        "Mild diastolic dysfunction"
+      ],
+      "leftVentricularEjectionFraction": null,
+      "priorAtrialFibrillation": null
+    },
+    "structuralHeartContext": {
+      "available": false,
+      "findings": [],
+      "lvefPct": null,
+      "severeLvDysfunction": null
+    },
+    "laboratoryContext": {
+      "potassium": {
+        "value": 3.1,
+        "unit": "mmol/L",
+        "reference": "3.5–5.1",
+        "flag": "LOW"
+      },
+      "magnesium": {
+        "value": 1.5,
+        "unit": "mg/dL",
+        "reference": "1.7–2.2",
+        "flag": "LOW"
+      },
+      "troponinT": {
+        "value": 0.02,
+        "unit": "ng/mL",
+        "reference": "<0.014",
+        "flag": "mild post-op"
+      },
+      "creatinine": {
+        "value": 1.0,
+        "unit": "mg/dL",
+        "reference": "0.7–1.3",
+        "flag": ""
+      },
+      "calcium": {
+        "value": 8.8,
+        "unit": "mg/dL",
+        "reference": "8.5–10.2",
+        "flag": ""
+      }
+    },
+    "recentClinicalContext": {
+      "recentEvents": [
+        "Post-operative day 1",
+        "On thiazide diuretic (K/Mg wasting)",
+        "PVC burden rising; brief NSVT run, asymptomatic"
+      ]
+    },
+    "pairedOraclePatientContext": {
+      "available": false,
+      "sourceType": "oracle_smart_fhir"
+    },
+    "detector": {
+      "ruleId": "controlled-capture-fallback-v1",
+      "estimatedRateBpm": 78.0,
+      "triggerLatencySeconds": 1.5,
+      "referenceOnsetOffsetSeconds": 6.0,
+      "detectedTriggerOffsetSeconds": 7.5
+    },
+    "capture": {
+      "durationSeconds": 20.0,
+      "preSeconds": 6.0,
+      "eventSeconds": 8.0,
+      "postSeconds": 6.0,
+      "complete": true,
+      "sampleRateHz": 220.0,
+      "leads": [
+        "I",
+        "II",
+        "III",
+        "aVR",
+        "aVL",
+        "aVF"
+      ]
+    },
+    "provenance": {
+      "isIndependentDiagnosis": false,
+      "evaluationControlled": true,
+      "diagnosisOwnedByUpstreamSource": true,
+      "timingOwnedByDeterministicDetector": true,
+      "slmMayReclassify": false
+    }
+  },
+  "evidenceFingerprint": "28aa656844cd5e2240e94bf39d24d45d87d1b4ba457a941b8fcabd896697b8c6",
+  "model": {
+    "provider": "lightning-ai-studio",
+    "name": "google/medgemma-27b-text-it",
+    "modelId": "google/medgemma-27b-text-it",
+    "modelKey": "google-medgemma-27b-text-it",
+    "loaderType": "text",
+    "quantization": "4-bit-nf4-double-quant",
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "promptFingerprint": "28aa656844cd5e2240e94bf39d24d45d87d1b4ba457a941b8fcabd896697b8c6",
+    "responseContractVersion": "model-clinical-output-v6.0.3",
+    "sourceRun": 2,
+    "generatedOffline": true
+  },
+  "sourceModelResponse": {
+    "episodeSummary": "A 55-year-old male on post-operative day 1 experienced an episode of frequent premature ventricular contractions (PVCs) with a brief run of non-sustained ventricular tachycardia (NSVT). The patient is hemodynamically stable with a heart rate of 78 bpm and blood pressure of 128/80 mmHg. The episode involved sinus beats with multifocal wide PVCs, couplets, and a 4-beat NSVT run.",
+    "mostLikelyEtiologyAndClinicalContext": "Electrolyte abnormalities, specifically hypokalemia and hypomagnesemia, are the most likely etiology for the increased ventricular ectopy and NSVT. The patient's potassium is low at 3.1 mmol/L and magnesium is low at 1.5 mg/dL. These electrolyte disturbances lower the threshold for ventricular irritability, promoting PVCs and potentially triggering NSVT.",
+    "contributingFactors": [
+      "Thiazide diuretic use (K/Mg wasting)",
+      "Post-operative state"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "modelResponse": {
+    "episodeSummary": "A 55-year-old male on post-operative day 1 experienced an episode of frequent premature ventricular contractions (PVCs) with a brief run of non-sustained ventricular tachycardia (NSVT). The patient is hemodynamically stable with a heart rate of 78 bpm and blood pressure of 128/80 mmHg. The episode involved sinus beats with multifocal wide PVCs, couplets, and a 4-beat NSVT run.",
+    "mostLikelyEtiologyAndClinicalContext": "Electrolyte abnormalities, specifically hypokalemia and hypomagnesemia, are the most likely etiology for the increased ventricular ectopy and NSVT. The patient's potassium is low at 3.1 mmol/L and magnesium is low at 1.5 mg/dL. These electrolyte disturbances lower the threshold for ventricular irritability, promoting PVCs and potentially triggering NSVT.",
+    "contributingFactors": [
+      "Thiazide diuretic use (K/Mg wasting)",
+      "Post-operative state"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "displayModelResponse": {
+    "episodeSummary": "A 55-year-old male on post-operative day 1 experienced an episode of frequent premature ventricular contractions (PVCs) with a brief run of non-sustained ventricular tachycardia (NSVT). The patient is hemodynamically stable with a heart rate of 78 bpm and blood pressure of 128/80 mmHg. The episode involved sinus beats with multifocal wide PVCs, couplets, and a 4-beat NSVT run.",
+    "mostLikelyEtiologyAndClinicalContext": "Electrolyte abnormalities, specifically hypokalemia and hypomagnesemia, are the most likely etiology for the increased ventricular ectopy and NSVT. The patient's potassium is low at 3.1 mmol/L and magnesium is low at 1.5 mg/dL. These electrolyte disturbances lower the threshold for ventricular irritability, promoting PVCs and potentially triggering NSVT.",
+    "contributingFactors": [
+      "Thiazide diuretic use (K/Mg wasting)",
+      "Post-operative state"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "validatedModelResponse": {
+    "episodeSummary": "A 55-year-old male on post-operative day 1 experienced an episode of frequent premature ventricular contractions (PVCs) with a brief run of non-sustained ventricular tachycardia (NSVT). The patient is hemodynamically stable with a heart rate of 78 bpm and blood pressure of 128/80 mmHg. The episode involved sinus beats with multifocal wide PVCs, couplets, and a 4-beat NSVT run.",
+    "mostLikelyEtiologyAndClinicalContext": "Electrolyte abnormalities, specifically hypokalemia and hypomagnesemia, are the most likely etiology for the increased ventricular ectopy and NSVT. The patient's potassium is low at 3.1 mmol/L and magnesium is low at 1.5 mg/dL. These electrolyte disturbances lower the threshold for ventricular irritability, promoting PVCs and potentially triggering NSVT.",
+    "contributingFactors": [
+      "Thiazide diuretic use (K/Mg wasting)",
+      "Post-operative state"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "legacyValidatorResponse": {
+    "episodeSummary": "A 55-year-old male on post-operative day 1 experienced an episode of frequent premature ventricular contractions (PVCs) with a brief run of non-sustained ventricular tachycardia (NSVT). The patient is hemodynamically stable with a heart rate of 78 bpm and blood pressure of 128/80 mmHg. The episode involved sinus beats with multifocal wide PVCs, couplets, and a 4-beat NSVT run.",
+    "detectedEpisodeContext": "A 55-year-old male on post-operative day 1 experienced an episode of frequent premature ventricular contractions (PVCs) with a brief run of non-sustained ventricular tachycardia (NSVT). The patient is hemodynamically stable with a heart rate of 78 bpm and blood pressure of 128/80 mmHg. The episode involved sinus beats with multifocal wide PVCs, couplets, and a 4-beat NSVT run.",
+    "mostLikelyEtiology": "Electrolyte abnormalities, specifically hypokalemia and hypomagnesemia, are the most likely etiology for the increased ventricular ectopy and NSVT. The patient's potassium is low at 3.1 mmol/L and magnesium is low at 1.5 mg/dL. These electrolyte disturbances lower the threshold for ventricular irritability, promoting PVCs and potentially triggering NSVT.",
+    "contributingFactors": [
+      "Thiazide diuretic use (K/Mg wasting)",
+      "Post-operative state"
+    ],
+    "uncertaintyAndMissingData": []
+  },
+  "validation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "NONSUSTAINED_VENTRICULAR_TACHYCARDIA",
+    "authoritativeDiagnosisDisplay": "Frequent PVCs with non-sustained VT run",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "evidenceCoverage": {},
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 0,
+    "evidenceCoverageRequired": 0,
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-deterministic-v2.1",
+    "groundingStatus": "accepted"
+  },
+  "reliability": {
+    "attemptCount": 1,
+    "firstAttemptAccepted": true,
+    "finalAttemptAccepted": true,
+    "contractNormalized": false,
+    "normalizationChanges": [],
+    "contradictionCount": 0,
+    "unsupportedFactCount": 0
+  },
+  "generationAttempted": true,
+  "liveInference": false,
+  "generatedOffline": true,
+  "installationMetadata": {
+    "schemaVersion": "kgen-precomputed-installation-v2",
+    "createdAtUtc": "2026-08-05T16:52:50.712048+00:00",
+    "responseSetId": "medgemma-dual-v6-0-3-1",
+    "profile": "medgemma-27b-text-it",
+    "selectionMode": "single_model",
+    "scenarioId": "NSVT-ECTOPY-008",
+    "sourceModel": "google/medgemma-27b-text-it",
+    "modelSlug": "google-medgemma-27b-text-it",
+    "runNumber": 2,
+    "promptFingerprint": "28aa656844cd5e2240e94bf39d24d45d87d1b4ba457a941b8fcabd896697b8c6",
+    "sourcePromptVersion": "episode-pack-phase6-v6.0.3",
+    "responseContractVersion": "model-clinical-output-v6.0.3",
+    "validationVersion": "v6.0.3.1",
+    "inputZipSha256": "a59b3b99691d3da0c9474266248107726fcc053b11d8cdd5de38155f6274a084",
+    "resultsZipSha256": "61fd6440a4aeb4eeb57b938000cc051fe5b0ce51255e6b433372fd5f392fad71",
+    "validatorPassed": true,
+    "unsupportedFactCount": 0,
+    "contradictionCount": 0,
+    "score": 62,
+    "sourceGeneratedOffline": true
+  }
+}

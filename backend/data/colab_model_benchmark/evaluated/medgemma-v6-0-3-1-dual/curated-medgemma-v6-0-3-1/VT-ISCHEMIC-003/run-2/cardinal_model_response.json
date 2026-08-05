@@ -1,0 +1,411 @@
+{
+  "schemaVersion": "grounded-cardinal-response-v4",
+  "status": "complete",
+  "createdAt": "2026-08-05T16:52:50.776018+00:00",
+  "mode": "precomputed_response_installation",
+  "scenarioId": "VT-ISCHEMIC-003",
+  "episodeId": "evalflow-VT-ISCHEMIC-003-20260731-195433-6cc9c2",
+  "incidentId": "inc-INCART-EVAL-VT-ISCHEMIC-003-loop-1-ventricular-tachycardia-000001584-Dx7LEcmC-S0SlsPU",
+  "source": "validated_lightning_response_v6_0_3_1",
+  "diagnosticEvent": {
+    "schemaVersion": "diagnostic-event-universal-v2",
+    "eventDetected": true,
+    "episodeId": "evalflow-VT-ISCHEMIC-003-20260731-195433-6cc9c2",
+    "incidentId": "inc-INCART-EVAL-VT-ISCHEMIC-003-loop-1-ventricular-tachycardia-000001584-Dx7LEcmC-S0SlsPU",
+    "diagnosis": {
+      "code": "MONOMORPHIC_VENTRICULAR_TACHYCARDIA",
+      "display": "Monomorphic ventricular tachycardia",
+      "authoritative": true
+    },
+    "source": {
+      "type": "controlled_evaluation_scenario",
+      "name": "SLM_Eval",
+      "identifier": "VT-ISCHEMIC-003",
+      "futureReplacement": "ecg_ml_diagnostic_model"
+    },
+    "confidence": {
+      "value": 1.0,
+      "basis": "controlled_evaluation_label"
+    },
+    "measurements": {
+      "ventricularRateBpm": 182.0,
+      "atrialRateBpm": 96.0,
+      "qrsDurationMs": 168.0,
+      "qtcMs": 460.0,
+      "prIntervalMs": null,
+      "regularity": "regular",
+      "axisDegrees": -120.0,
+      "pWavePresent": true,
+      "atrialActivityPresent": true,
+      "atrioventricularAssociation": "dissociated"
+    },
+    "rhythmFeatures": {
+      "ventricularRateBpm": 182.0,
+      "atrialRateBpm": 96.0,
+      "qrsDurationMs": 168.0,
+      "qtcMs": 460.0,
+      "qtcEvidenceSource": "complete_episode_pack.ecg.measurements.preEventNote",
+      "prIntervalMs": null,
+      "regularity": "regular",
+      "axisDegrees": -120.0,
+      "pWavePresent": true,
+      "atrialActivityPresent": true,
+      "atrioventricularAssociation": "dissociated",
+      "findings": [
+        "Wide monomorphic QRS",
+        "AV dissociation",
+        "Capture beats",
+        "Fusion beats"
+      ]
+    },
+    "hemodynamicStatus": {
+      "available": true,
+      "classification": "borderline",
+      "conscious": true,
+      "pulseless": null,
+      "pulsePresent": null,
+      "shockSupported": null,
+      "vasopressorSupport": null,
+      "systolicBloodPressure": 88.0,
+      "diastolicBloodPressure": 58.0,
+      "map": 68.0,
+      "oxygenSaturationPct": 94.0,
+      "temperatureC": 36.8,
+      "sourceNote": "Borderline; symptomatic but conscious"
+    },
+    "electrolyteContext": {
+      "available": true,
+      "potassium": {
+        "available": true,
+        "value": 4.3,
+        "unit": "mmol/L",
+        "withinReference": true,
+        "reference": {
+          "low": 3.5,
+          "high": 5.1
+        },
+        "note": ""
+      },
+      "magnesium": {
+        "available": true,
+        "value": 2.1,
+        "unit": "mg/dL",
+        "withinReference": true,
+        "reference": {
+          "low": 1.7,
+          "high": 2.2
+        },
+        "note": ""
+      },
+      "calcium": {
+        "available": false,
+        "value": null,
+        "unit": null,
+        "withinReference": null,
+        "reference": null
+      },
+      "sodium": {
+        "available": false,
+        "value": null,
+        "unit": null,
+        "withinReference": null,
+        "reference": null
+      },
+      "abnormalElectrolytes": [],
+      "electrolyteAbnormalityPresent": false,
+      "majorElectrolyteTriggerSupported": false
+    },
+    "ischemiaContext": {
+      "available": true,
+      "acuteChestPain": false,
+      "stElevationSupported": null,
+      "troponinValue": 0.09,
+      "troponinPattern": "mild_demand_related",
+      "acuteStemiSupported": false
+    },
+    "infectionContext": {
+      "available": true,
+      "temperatureC": 36.8,
+      "wbc": null,
+      "procalcitonin": null,
+      "lactate": null,
+      "feverSupported": null,
+      "inflammatoryResponseSupported": null,
+      "infectionSupported": null,
+      "sepsisSupported": null,
+      "infectionExplicitlyDenied": null,
+      "suspectedSource": null
+    },
+    "qtContext": {
+      "available": true,
+      "qtcMs": 460.0,
+      "prolonged": false,
+      "thresholdMs": 500,
+      "qtProlongingMedications": [],
+      "acquiredLongQtSupported": false,
+      "evidenceSource": "complete_episode_pack.ecg.measurements.preEventNote"
+    },
+    "renalContext": {
+      "available": true,
+      "creatinine": 1.9,
+      "bun": null,
+      "egfr": null,
+      "esrd": null,
+      "dialysis": null,
+      "missedDialysis": null,
+      "chronicKidneyDiseaseSupported": true,
+      "acuteKidneyInjurySupported": null,
+      "renalImpairmentSupported": true,
+      "sourceTextContainsRenalImpairment": null
+    },
+    "medicationContext": {
+      "available": true,
+      "homeMedications": [
+        "Carvedilol 25 mg",
+        "Sacubitril-valsartan",
+        "Spironolactone 25 mg",
+        "Furosemide 40 mg"
+      ],
+      "activeMedications": [
+        "Carvedilol 25 mg",
+        "Sacubitril-valsartan",
+        "Spironolactone 25 mg",
+        "Furosemide 40 mg"
+      ],
+      "infusions": [
+        "Furosemide drip"
+      ],
+      "qtProlongingMedications": [],
+      "digoxinExposure": false,
+      "potassiumRaisingMedicationExposure": true,
+      "thiazideExposure": false
+    },
+    "toxicityContext": {
+      "available": true,
+      "digoxinLevel": null,
+      "symptoms": [],
+      "digoxinToxicitySupported": false,
+      "reducedClearanceSupported": false
+    },
+    "patientContext": {
+      "available": true,
+      "age": 61,
+      "sex": "M",
+      "primaryDiagnosis": "Decompensated ischemic cardiomyopathy",
+      "history": [
+        "Ischemic cardiomyopathy, LVEF 25%",
+        "Prior inferior MI",
+        "ICD evaluation pending",
+        "CKD stage 3"
+      ],
+      "leftVentricularEjectionFraction": 25.0,
+      "priorAtrialFibrillation": null
+    },
+    "structuralHeartContext": {
+      "available": true,
+      "findings": [
+        "Ischemic cardiomyopathy",
+        "Prior inferior myocardial infarction",
+        "LVEF 25%"
+      ],
+      "lvefPct": 25.0,
+      "severeLvDysfunction": true
+    },
+    "laboratoryContext": {
+      "potassium": {
+        "value": 4.3,
+        "unit": "mmol/L",
+        "reference": "3.5–5.1",
+        "flag": ""
+      },
+      "magnesium": {
+        "value": 2.1,
+        "unit": "mg/dL",
+        "reference": "1.7–2.2",
+        "flag": ""
+      },
+      "troponinT": {
+        "value": 0.09,
+        "unit": "ng/mL",
+        "reference": "<0.014",
+        "flag": "mildly HIGH (demand)"
+      },
+      "bnp": {
+        "value": 1840,
+        "unit": "pg/mL",
+        "reference": "<100",
+        "flag": "HIGH"
+      },
+      "creatinine": {
+        "value": 1.9,
+        "unit": "mg/dL",
+        "reference": "0.7–1.3",
+        "flag": "HIGH"
+      }
+    },
+    "recentClinicalContext": {
+      "recentEvents": [
+        "Progressive dyspnea and volume overload",
+        "No acute chest pain",
+        "AV dissociation with fusion beats seen"
+      ]
+    },
+    "pairedOraclePatientContext": {
+      "available": false,
+      "sourceType": "oracle_smart_fhir"
+    },
+    "detector": {
+      "ruleId": "sustained-multilead-tachycardia-v2",
+      "estimatedRateBpm": 180.8,
+      "triggerLatencySeconds": 1.2,
+      "referenceOnsetOffsetSeconds": 6.0,
+      "detectedTriggerOffsetSeconds": 7.2
+    },
+    "capture": {
+      "durationSeconds": 20.0,
+      "preSeconds": 6.0,
+      "eventSeconds": 8.0,
+      "postSeconds": 6.0,
+      "complete": true,
+      "sampleRateHz": 220.0,
+      "leads": [
+        "I",
+        "II",
+        "III",
+        "aVR",
+        "aVL",
+        "aVF"
+      ]
+    },
+    "provenance": {
+      "isIndependentDiagnosis": false,
+      "evaluationControlled": true,
+      "diagnosisOwnedByUpstreamSource": true,
+      "timingOwnedByDeterministicDetector": true,
+      "slmMayReclassify": false
+    }
+  },
+  "evidenceFingerprint": "f88093a906a3b86a964eedf5a35201e5f5d61fb564e48b971ee200b5cc42b0e3",
+  "model": {
+    "provider": "lightning-ai-studio",
+    "name": "google/medgemma-27b-text-it",
+    "modelId": "google/medgemma-27b-text-it",
+    "modelKey": "google-medgemma-27b-text-it",
+    "loaderType": "text",
+    "quantization": "4-bit-nf4-double-quant",
+    "gpuName": "NVIDIA A100-SXM4-40GB",
+    "promptFingerprint": "f88093a906a3b86a964eedf5a35201e5f5d61fb564e48b971ee200b5cc42b0e3",
+    "responseContractVersion": "model-clinical-output-v6.0.3",
+    "sourceRun": 2,
+    "generatedOffline": true
+  },
+  "sourceModelResponse": {
+    "episodeSummary": "A 61-year-old male with ischemic cardiomyopathy and LVEF 25% experienced an 8-second episode of monomorphic ventricular tachycardia at a rate of 182 bpm. The patient presented with progressive dyspnea and volume overload but no acute chest pain. Hemodynamics were borderline with a systolic blood pressure of 88 mmHg. ECG showed wide monomorphic QRS, AV dissociation, and occasional capture/fusion beats.",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is re-entrant ventricular tachycardia related to structural heart disease. This is supported by the patient's history of ischemic cardiomyopathy with severely reduced LVEF (25%), prior inferior MI, and the ECG findings of monomorphic VT with AV dissociation and fusion beats, consistent with a re-entrant circuit within scarred myocardium.",
+    "contributingFactors": [
+      "Ischemic cardiomyopathy",
+      "Prior myocardial infarction",
+      "Severely reduced left ventricular ejection fraction (25%)"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "modelResponse": {
+    "episodeSummary": "A 61-year-old male with ischemic cardiomyopathy and LVEF 25% experienced an 8-second episode of monomorphic ventricular tachycardia at a rate of 182 bpm. The patient presented with progressive dyspnea and volume overload but no acute chest pain. Hemodynamics were borderline with a systolic blood pressure of 88 mmHg. ECG showed wide monomorphic QRS, AV dissociation, and occasional capture/fusion beats.",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is re-entrant ventricular tachycardia related to structural heart disease. This is supported by the patient's history of ischemic cardiomyopathy with severely reduced LVEF (25%), prior inferior MI, and the ECG findings of monomorphic VT with AV dissociation and fusion beats, consistent with a re-entrant circuit within scarred myocardium.",
+    "contributingFactors": [
+      "Ischemic cardiomyopathy",
+      "Prior myocardial infarction",
+      "Severely reduced left ventricular ejection fraction (25%)"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "displayModelResponse": {
+    "episodeSummary": "A 61-year-old male with ischemic cardiomyopathy and LVEF 25% experienced an 8-second episode of monomorphic ventricular tachycardia at a rate of 182 bpm. The patient presented with progressive dyspnea and volume overload but no acute chest pain. Hemodynamics were borderline with a systolic blood pressure of 88 mmHg. ECG showed wide monomorphic QRS, AV dissociation, and occasional capture/fusion beats.",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is re-entrant ventricular tachycardia related to structural heart disease. This is supported by the patient's history of ischemic cardiomyopathy with severely reduced LVEF (25%), prior inferior MI, and the ECG findings of monomorphic VT with AV dissociation and fusion beats, consistent with a re-entrant circuit within scarred myocardium.",
+    "contributingFactors": [
+      "Ischemic cardiomyopathy",
+      "Prior myocardial infarction",
+      "Severely reduced left ventricular ejection fraction (25%)"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "validatedModelResponse": {
+    "episodeSummary": "A 61-year-old male with ischemic cardiomyopathy and LVEF 25% experienced an 8-second episode of monomorphic ventricular tachycardia at a rate of 182 bpm. The patient presented with progressive dyspnea and volume overload but no acute chest pain. Hemodynamics were borderline with a systolic blood pressure of 88 mmHg. ECG showed wide monomorphic QRS, AV dissociation, and occasional capture/fusion beats.",
+    "mostLikelyEtiologyAndClinicalContext": "The most likely etiology is re-entrant ventricular tachycardia related to structural heart disease. This is supported by the patient's history of ischemic cardiomyopathy with severely reduced LVEF (25%), prior inferior MI, and the ECG findings of monomorphic VT with AV dissociation and fusion beats, consistent with a re-entrant circuit within scarred myocardium.",
+    "contributingFactors": [
+      "Ischemic cardiomyopathy",
+      "Prior myocardial infarction",
+      "Severely reduced left ventricular ejection fraction (25%)"
+    ],
+    "materialEtiologicUncertainty": []
+  },
+  "legacyValidatorResponse": {
+    "episodeSummary": "A 61-year-old male with ischemic cardiomyopathy and LVEF 25% experienced an 8-second episode of monomorphic ventricular tachycardia at a rate of 182 bpm. The patient presented with progressive dyspnea and volume overload but no acute chest pain. Hemodynamics were borderline with a systolic blood pressure of 88 mmHg. ECG showed wide monomorphic QRS, AV dissociation, and occasional capture/fusion beats.",
+    "detectedEpisodeContext": "A 61-year-old male with ischemic cardiomyopathy and LVEF 25% experienced an 8-second episode of monomorphic ventricular tachycardia at a rate of 182 bpm. The patient presented with progressive dyspnea and volume overload but no acute chest pain. Hemodynamics were borderline with a systolic blood pressure of 88 mmHg. ECG showed wide monomorphic QRS, AV dissociation, and occasional capture/fusion beats.",
+    "mostLikelyEtiology": "The most likely etiology is re-entrant ventricular tachycardia related to structural heart disease. This is supported by the patient's history of ischemic cardiomyopathy with severely reduced LVEF (25%), prior inferior MI, and the ECG findings of monomorphic VT with AV dissociation and fusion beats, consistent with a re-entrant circuit within scarred myocardium.",
+    "contributingFactors": [
+      "Ischemic cardiomyopathy",
+      "Prior myocardial infarction",
+      "Severely reduced left ventricular ejection fraction (25%)"
+    ],
+    "uncertaintyAndMissingData": []
+  },
+  "validation": {
+    "status": "accepted",
+    "accepted": true,
+    "hardAccepted": true,
+    "validatorPassed": true,
+    "displayableWithReview": false,
+    "qualityReviewRequired": false,
+    "retryable": false,
+    "authoritativeDiagnosisCode": "MONOMORPHIC_VENTRICULAR_TACHYCARDIA",
+    "authoritativeDiagnosisDisplay": "Monomorphic ventricular tachycardia",
+    "errors": [],
+    "hardErrors": [],
+    "qualityErrors": [],
+    "warnings": [],
+    "contradictions": [],
+    "unsupportedFacts": [],
+    "evidenceCoverage": {},
+    "missingRequiredCoverage": [],
+    "evidenceCoverageCount": 0,
+    "evidenceCoverageRequired": 0,
+    "recommendedActionsRequired": false,
+    "policyVersion": "grounded-response-validator-deterministic-v2.1",
+    "groundingStatus": "accepted"
+  },
+  "reliability": {
+    "attemptCount": 1,
+    "firstAttemptAccepted": true,
+    "finalAttemptAccepted": true,
+    "contractNormalized": false,
+    "normalizationChanges": [],
+    "contradictionCount": 0,
+    "unsupportedFactCount": 0
+  },
+  "generationAttempted": true,
+  "liveInference": false,
+  "generatedOffline": true,
+  "installationMetadata": {
+    "schemaVersion": "kgen-precomputed-installation-v2",
+    "createdAtUtc": "2026-08-05T16:52:50.776018+00:00",
+    "responseSetId": "medgemma-dual-v6-0-3-1",
+    "profile": "curated",
+    "selectionMode": "curated_best_per_scenario",
+    "scenarioId": "VT-ISCHEMIC-003",
+    "sourceModel": "google/medgemma-27b-text-it",
+    "modelSlug": "curated-medgemma-v6-0-3-1",
+    "runNumber": 2,
+    "promptFingerprint": "f88093a906a3b86a964eedf5a35201e5f5d61fb564e48b971ee200b5cc42b0e3",
+    "sourcePromptVersion": "episode-pack-phase6-v6.0.3",
+    "responseContractVersion": "model-clinical-output-v6.0.3",
+    "validationVersion": "v6.0.3.1",
+    "inputZipSha256": "a59b3b99691d3da0c9474266248107726fcc053b11d8cdd5de38155f6274a084",
+    "resultsZipSha256": "61fd6440a4aeb4eeb57b938000cc051fe5b0ce51255e6b433372fd5f392fad71",
+    "validatorPassed": true,
+    "unsupportedFactCount": 0,
+    "contradictionCount": 0,
+    "score": 78,
+    "sourceGeneratedOffline": true
+  }
+}
