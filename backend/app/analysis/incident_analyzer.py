@@ -703,27 +703,27 @@ class IncidentAnalyzer:
             status = "failed"
 
         limitations = [
-            (
-                "The incident is grouped "
-                "from overlapping episode "
-                "views; trigger and beat "
-                "evidence is deduplicated "
-                "by record, loop, and "
-                "absolute sample."
-            ),
-            (
-                "INCART V annotations "
-                "remain dataset reference "
-                "evidence and are not an "
-                "independent diagnosis."
-            ),
-            (
-                "FHIR context is a "
-                "controlled research "
-                "pairing and is not verified "
-                "as same-patient clinical "
-                "data."
-            ),
+            # (
+            #     "The incident is grouped "
+            #     "from overlapping episode "
+            #     "views; trigger and beat "
+            #     "evidence is deduplicated "
+            #     "by record, loop, and "
+            #     "absolute sample."
+            # ),
+            # (
+            #     "INCART V annotations "
+            #     "remain dataset reference "
+            #     "evidence and are not an "
+            #     "independent diagnosis."
+            # ),
+            # (
+            #     "FHIR context is a "
+            #     "controlled research "
+            #     "pairing and is not verified "
+            #     "as same-patient clinical "
+            #     "data."
+            # ),
         ]
 
         if failures:

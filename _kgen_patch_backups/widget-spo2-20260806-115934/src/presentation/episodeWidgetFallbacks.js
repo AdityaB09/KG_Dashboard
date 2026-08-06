@@ -9,10 +9,6 @@
  * validation, scoring, or precomputed MedGemma artifacts.
  */
 
-export const PRESENTATION_SPO2_MIN = 95;
-export const PRESENTATION_SPO2_MAX = 100;
-export const PRESENTATION_SPO2_DEFAULT = 98;
-
 const SCENARIO_WIDGET_VALUES = {
   "VFIB-STEMI-001": {
     pre: {
@@ -259,135 +255,11 @@ const DEFAULTS = {
 };
 
 function finite(value) {
-  if (
-    value === null ||
-    value === undefined ||
-    typeof value === "boolean" ||
-    (
-      typeof value === "string" &&
-      !value.trim()
-    )
-  ) {
-    return null;
-  }
-
   const numeric = Number(value);
 
   return Number.isFinite(numeric)
     ? numeric
     : null;
-}
-
-function clamp(value, minimum, maximum) {
-  return Math.min(
-    maximum,
-    Math.max(minimum, value)
-  );
-}
-
-export function normalizePresentationSpo2(
-  value,
-  fallback = PRESENTATION_SPO2_DEFAULT
-) {
-  const numeric = finite(value);
-  const fallbackNumeric = finite(fallback);
-  const resolved =
-    numeric ??
-    fallbackNumeric ??
-    PRESENTATION_SPO2_DEFAULT;
-
-  return clamp(
-    resolved,
-    PRESENTATION_SPO2_MIN,
-    PRESENTATION_SPO2_MAX
-  );
-}
-
-export function nextStableSpo2State(
-  previous,
-  rawValue,
-  nowMs = Date.now()
-) {
-  const numeric = finite(rawValue);
-
-  /*
-   * Invalid/missing frames are treated as short telemetry dropouts.
-   * The last stable bedside value is held instead of flashing -- or
-   * snapping back to a default value.
-   */
-  if (numeric === null && previous) {
-    return {
-      ...previous,
-      updatedAt: nowMs,
-    };
-  }
-
-  const target = normalizePresentationSpo2(
-    numeric,
-    previous?.filtered ??
-      PRESENTATION_SPO2_DEFAULT
-  );
-
-  if (!previous) {
-    const displayed = Math.round(target);
-
-    return {
-      filtered: target,
-      displayed: clamp(
-        displayed,
-        PRESENTATION_SPO2_MIN,
-        PRESENTATION_SPO2_MAX
-      ),
-      updatedAt: nowMs,
-    };
-  }
-
-  const elapsedSeconds = clamp(
-    (nowMs - previous.updatedAt) / 1000,
-    0.02,
-    1.5
-  );
-  const alpha =
-    1 - Math.exp(-elapsedSeconds / 1.8);
-  const requestedDelta =
-    (target - previous.filtered) * alpha;
-  const maxDelta = Math.max(
-    0.08,
-    elapsedSeconds * 0.75
-  );
-  const filtered = clamp(
-    previous.filtered +
-      clamp(
-        requestedDelta,
-        -maxDelta,
-        maxDelta
-      ),
-    PRESENTATION_SPO2_MIN,
-    PRESENTATION_SPO2_MAX
-  );
-
-  let displayed = previous.displayed;
-
-  /*
-   * Integer hysteresis prevents 97/98/97/98 flicker when source values
-   * hover around a rounding boundary. A new integer is shown only after
-   * the filtered signal has moved far enough from the displayed value.
-   */
-  if (filtered >= displayed + 0.72) {
-    displayed += 1;
-  } else if (filtered <= displayed - 0.72) {
-    displayed -= 1;
-  }
-
-  return {
-    filtered,
-    displayed: clamp(
-      displayed,
-      PRESENTATION_SPO2_MIN,
-      PRESENTATION_SPO2_MAX
-    ),
-    updatedAt: nowMs,
-  };
 }
 
 function phaseFromState(state) {
@@ -480,9 +352,7 @@ export function resolveBedsideWidgetValues({
       heartRate:
         finite(fallback.heartRate),
       spo2:
-        normalizePresentationSpo2(
-          fallback.spo2
-        ),
+        finite(fallback.spo2),
       systolic:
         finite(fallback.systolic),
       diastolic:
@@ -501,10 +371,8 @@ export function resolveBedsideWidgetValues({
       live.heartRate ??
       fallback.heartRate,
     spo2:
-      normalizePresentationSpo2(
-        live.spo2,
-        fallback.spo2
-      ),
+      live.spo2 ??
+      fallback.spo2,
     systolic:
       live.systolic ??
       fallback.systolic,

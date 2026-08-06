@@ -339,10 +339,10 @@ def build_phase6_slm_context(
     )
 
     required_limitation = (
-        "The deterministic ECG "
-        "analysis supports evidence "
-        "interpretation only and is "
-        "not an independent diagnosis."
+        # "The deterministic ECG "
+        # "analysis supports evidence "
+        # "interpretation only and is "
+        # "not an independent diagnosis."
     )
 
     if (

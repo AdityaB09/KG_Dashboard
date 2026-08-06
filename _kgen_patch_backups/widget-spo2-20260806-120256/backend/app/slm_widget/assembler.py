@@ -381,42 +381,12 @@ def _extract_widget_narrative(
 ) -> dict[str, Any]:
     widget = _dict(model_payload.get("widgetInterpretation"))
     if not widget:
-        widget = _dict(model_payload.get("interpretation"))
-    if not widget:
         widget = _dict(model_payload.get("modelNarrative"))
     if widget:
         return widget
 
-    cardinal = _dict(model_payload.get("cardinalEvaluation"))
-    response = (
-        _dict(model_payload.get("displayModelResponse"))
-        or _dict(model_payload.get("modelResponse"))
-        or cardinal
-    )
-
     return {
-        "displayPolicy": model_payload.get("displayPolicy"),
-        "episodeNarrative": (
-            response.get("episodeSummary")
-            or model_payload.get("evidenceSummary")
-        ),
-        "etiologyContextNarrative": (
-            response.get("mostLikelyEtiologyAndClinicalContext")
-            or response.get("mostLikelyEtiology")
-            or response.get("clinicalContext")
-        ),
-        "rootCauseNarrative": (
-            response.get("mostLikelyEtiologyAndClinicalContext")
-            or response.get("mostLikelyEtiology")
-            or response.get("clinicalContext")
-            or " ".join(
-                safe_string_list(
-                    model_payload.get("contradictionsAndUncertainty"),
-                    maximum=3,
-                    allow_ecg_terms=True,
-                )
-            )
-        ),
+        "episodeNarrative": model_payload.get("evidenceSummary"),
         "arrhythmiaNarrative": " ".join(
             safe_string_list(
                 model_payload.get("ecgFindings"),
@@ -430,164 +400,18 @@ def _extract_widget_narrative(
                 maximum=3,
             )
         ),
-        "possibleContributors": (
-            response.get("contributingFactors")
-            or model_payload.get("possibleContributors")
-            or []
+        "rootCauseNarrative": " ".join(
+            safe_string_list(
+                model_payload.get("contradictionsAndUncertainty"),
+                maximum=3,
+                allow_ecg_terms=True,
+            )
         ),
-        "materialEtiologicUncertainty": (
-            response.get("materialEtiologicUncertainty")
-            if "materialEtiologicUncertainty" in response
-            else response.get("uncertaintyAndMissingData")
-            or []
+        "importantLimitations": safe_string_list(
+            model_payload.get("missingEvidence"),
+            maximum=5,
         ),
     }
-
-
-_TECHNICAL_LIMITATION_MARKERS = (
-    "not an independent diagnosis",
-    "independent diagnosis",
-    "incart",
-    "reference annotation",
-    "reference marker",
-    "dataset reference",
-    "controlled evaluation",
-    "diagnosis owned by",
-    "diagnostic ownership",
-    "upstream diagnosis",
-    "slm may reclassify",
-)
-
-
-def _is_technical_limitation(value: Any) -> bool:
-    if not isinstance(value, str):
-        return False
-
-    normalized = " ".join(value.split()).strip().lower()
-    return any(
-        marker in normalized
-        for marker in _TECHNICAL_LIMITATION_MARKERS
-    )
-
-
-def _clinical_string_list(
-    value: Any,
-    *,
-    maximum: int,
-    allow_ecg_terms: bool = True,
-) -> list[str]:
-    del allow_ecg_terms  # The V6 response was already validated upstream.
-
-    if isinstance(value, str):
-        source = [value]
-    elif isinstance(value, list):
-        source = value
-    else:
-        return []
-
-    output: list[str] = []
-    for item in source:
-        if isinstance(item, dict):
-            item = (
-                item.get("title")
-                or item.get("name")
-                or item.get("label")
-                or item.get("text")
-                or item.get("detail")
-                or item.get("summary")
-                or item.get("reason")
-            )
-        if not isinstance(item, str):
-            continue
-
-        text = " ".join(item.split()).strip()[:1800]
-        if (
-            text
-            and not _is_technical_limitation(text)
-            and text not in output
-        ):
-            output.append(text)
-
-        if len(output) >= maximum:
-            break
-
-    return output
-
-
-def _first_present(
-    sources: list[dict[str, Any]],
-    keys: tuple[str, ...],
-) -> Any:
-    """Return the first explicitly present field, preserving empty arrays."""
-    for source in sources:
-        for key in keys:
-            if key in source:
-                return source.get(key)
-    return None
-
-
-def _model_clinical_sections(
-    *,
-    model_payload: dict[str, Any],
-    narrative: dict[str, Any],
-) -> tuple[list[str], list[str], bool, bool]:
-    cardinal = _dict(model_payload.get("cardinalEvaluation"))
-    display_response = _dict(model_payload.get("displayModelResponse"))
-    model_response = _dict(model_payload.get("modelResponse"))
-
-    sources = [
-        narrative,
-        display_response,
-        model_response,
-        cardinal,
-        model_payload,
-    ]
-
-    contributor_keys = (
-        "possibleContributors",
-        "contributingFactors",
-        "importantFindings",
-    )
-    uncertainty_keys = (
-        "materialEtiologicUncertainty",
-        "importantLimitations",
-        "uncertaintyAndMissingData",
-    )
-    contributors_present = any(
-        key in source
-        for source in sources
-        for key in contributor_keys
-    )
-    uncertainty_present = any(
-        key in source
-        for source in sources
-        for key in uncertainty_keys
-    )
-    contributors_source = _first_present(
-        sources,
-        contributor_keys,
-    )
-    uncertainty_source = _first_present(
-        sources,
-        uncertainty_keys,
-    )
-
-    contributors = _clinical_string_list(
-        contributors_source,
-        maximum=5,
-        allow_ecg_terms=True,
-    )
-    uncertainty = _clinical_string_list(
-        uncertainty_source,
-        maximum=2,
-        allow_ecg_terms=True,
-    )
-    return (
-        contributors,
-        uncertainty,
-        contributors_present,
-        uncertainty_present,
-    )
 
 
 class SlmWidgetAssembler:
@@ -634,14 +458,8 @@ class SlmWidgetAssembler:
             narrative.get("currentSituationNarrative")
             or _dict(narrative.get("currentSituation")).get("narrative")
         )
-        etiology_context_text = safe_text(
-            narrative.get("etiologyContextNarrative")
-            or narrative.get("rootCauseNarrative"),
-            allow_ecg_terms=True,
-        )
         root_cause_text = safe_text(
-            narrative.get("rootCauseNarrative")
-            or narrative.get("etiologyContextNarrative"),
+            narrative.get("rootCauseNarrative"),
             allow_ecg_terms=True,
         )
 
@@ -670,25 +488,22 @@ class SlmWidgetAssembler:
             or 0
         )
 
-        (
-            contributors,
-            material_uncertainty,
-            contributors_present,
-            _uncertainty_present,
-        ) = _model_clinical_sections(
-            model_payload=model_payload,
-            narrative=narrative,
+        limitations = []
+        limitations.extend(
+            safe_string_list(
+                evidence.get("limitations"),
+                maximum=6,
+                allow_ecg_terms=True,
+            )
         )
-
-        # Evidence/provenance limitations remain available for audit, but they
-        # are deliberately separated from model-owned etiologic uncertainty.
-        # This prevents INCART/reference-annotation/diagnosis-ownership text
-        # from being rendered as a clinical uncertainty statement.
-        technical_limitations = safe_string_list(
-            evidence.get("limitations"),
-            maximum=8,
-            allow_ecg_terms=True,
+        limitations.extend(
+            safe_string_list(
+                narrative.get("importantLimitations"),
+                maximum=4,
+                allow_ecg_terms=True,
+            )
         )
+        limitations = list(dict.fromkeys(limitations))[:8]
 
         analysis_status = (
             evidence.get("analysisStatus")
@@ -702,20 +517,12 @@ class SlmWidgetAssembler:
             or "warning"
         )
 
-        legacy_contributors = []
-        if not contributors_present:
-            legacy_contributors = validated_contributors(
-                model_payload,
-                episode_near_medication_administration_count=(
-                    episode_near_administration_count
-                ),
-                maximum=5,
-            )
-
-        displayed_contributors: list[Any] = (
-            contributors
-            if contributors
-            else legacy_contributors
+        contributors = validated_contributors(
+            model_payload,
+            episode_near_medication_administration_count=(
+                episode_near_administration_count
+            ),
+            maximum=2,
         )
 
         widget = {
@@ -755,20 +562,17 @@ class SlmWidgetAssembler:
                     or deterministic["currentSituation"]["narrative"]
                 ),
             },
-            "etiologyContextNarrative": (
-                etiology_context_text
-                or deterministic["rootCauseNarrative"]
-            ),
             "rootCauseNarrative": (
                 root_cause_text
-                or etiology_context_text
                 or deterministic["rootCauseNarrative"]
             ),
-            "possibleContributors": displayed_contributors,
-            "importantFindings": displayed_contributors,
-            "importantLimitations": material_uncertainty,
-            "materialEtiologicUncertainty": material_uncertainty,
-            "technicalLimitations": technical_limitations,
+            "possibleContributors": contributors,
+            "importantFindings": safe_string_list(
+                narrative.get("importantFindings"),
+                maximum=5,
+                allow_ecg_terms=True,
+            ),
+            "importantLimitations": limitations,
             "recommendedNextChecks": RECOMMENDED_NEXT_CHECKS,
             "keyMetrics": _deterministic_metrics(evidence),
             "confidence": {
@@ -781,18 +585,13 @@ class SlmWidgetAssembler:
                 ),
                 "rootCauseConfidenceScore": max(
                     [
-                        float(item.get("confidenceScore") or 0.0)
-                        for item in displayed_contributors
-                        if isinstance(item, dict)
+                        item["confidenceScore"]
+                        for item in contributors
                     ],
                     default=0.0,
                 ),
                 "rootCauseConfidenceLabel": (
-                    "model-provided"
-                    if contributors
-                    else "low"
-                    if legacy_contributors
-                    else "insufficient"
+                    "low" if contributors else "insufficient"
                 ),
             },
             "rootCauseConclusion": "No confirmed root cause",

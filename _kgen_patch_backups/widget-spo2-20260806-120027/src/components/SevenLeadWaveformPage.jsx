@@ -31,7 +31,6 @@ import {
   startOracleEvaluationDemo,
 } from "../evaluation/oracleEvaluationDemo";
 import {
-  nextStableSpo2State,
   resolveBedsideWidgetValues,
 } from "../presentation/episodeWidgetFallbacks";
 
@@ -3308,49 +3307,6 @@ function MiniPpgWaveform({
 }
 
 
-function useStablePresentationSpo2(
-  value
-) {
-  const stableStateRef =
-    useRef(null);
-
-  const [displayed, setDisplayed] =
-    useState(() => {
-      const initial =
-        nextStableSpo2State(
-          null,
-          value,
-          Date.now()
-        );
-
-      stableStateRef.current =
-        initial;
-
-      return initial.displayed;
-    });
-
-  useEffect(() => {
-    const next =
-      nextStableSpo2State(
-        stableStateRef.current,
-        value,
-        Date.now()
-      );
-
-    stableStateRef.current =
-      next;
-
-    setDisplayed((previous) =>
-      previous === next.displayed
-        ? previous
-        : next.displayed
-    );
-  }, [value]);
-
-  return displayed;
-}
-
-
 function finiteBedsideValue(
   value
 ) {
@@ -3404,11 +3360,6 @@ function BedsideVitalsPanel({
         injectionStatus?.state,
       vitals: rawVitals,
     });
-
-  const stableSpo2 =
-    useStablePresentationSpo2(
-      resolved.spo2
-    );
 
   /*
    * Do not turn the numeric SpO₂ history into a
@@ -3480,7 +3431,7 @@ function BedsideVitalsPanel({
         className="spo2"
         label="SpO₂"
         value={formatResolvedVital(
-          stableSpo2,
+          resolved.spo2,
           0,
           true
         )}

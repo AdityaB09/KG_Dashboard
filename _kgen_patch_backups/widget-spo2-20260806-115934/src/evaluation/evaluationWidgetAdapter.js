@@ -490,8 +490,6 @@ export function adaptEvaluationRunToWidget({
           })
         ),
       importantLimitations,
-      materialEtiologicUncertainty:
-        importantLimitations,
       validationSummary: {
         status: validationStatus,
         strictlyAccepted,

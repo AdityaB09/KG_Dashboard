@@ -24,106 +24,6 @@ function asArray(value) {
     : [];
 }
 
-const TECHNICAL_UNCERTAINTY_PATTERNS = [
-  /not an independent diagnosis/i,
-  /\bindependent diagnosis\b/i,
-  /\bincart\b/i,
-  /reference annotation/i,
-  /reference marker/i,
-  /dataset reference/i,
-  /controlled evaluation/i,
-  /diagnostic ownership/i,
-  /diagnosis owned by/i,
-  /upstream diagnosis/i,
-  /slm may reclassify/i,
-];
-
-function compactText(value) {
-  return typeof value === "string"
-    ? value.replace(/\s+/g, " ").trim()
-    : "";
-}
-
-function isTechnicalUncertainty(value) {
-  const text = compactText(
-    typeof value === "string"
-      ? value
-      : value?.text ||
-        value?.detail ||
-        value?.summary ||
-        value?.reason
-  );
-
-  return (
-    !text ||
-    TECHNICAL_UNCERTAINTY_PATTERNS.some(
-      (pattern) => pattern.test(text)
-    )
-  );
-}
-
-function clinicalUncertaintyList(widget) {
-  const source = Array.isArray(
-    widget?.materialEtiologicUncertainty
-  )
-    ? widget.materialEtiologicUncertainty
-    : asArray(widget?.importantLimitations);
-
-  return source
-    .map((item) =>
-      typeof item === "string"
-        ? compactText(item)
-        : compactText(
-            item?.text ||
-            item?.detail ||
-            item?.summary ||
-            item?.reason
-          )
-    )
-    .filter(
-      (item, index, values) =>
-        item &&
-        !isTechnicalUncertainty(item) &&
-        values.indexOf(item) === index
-    )
-    .slice(0, 2);
-}
-
-function clinicalContributorList(widget) {
-  const source = Array.isArray(
-    widget?.possibleContributors
-  )
-    ? widget.possibleContributors
-    : asArray(widget?.importantFindings);
-
-  return source
-    .filter(Boolean)
-    .filter((item, index, values) => {
-      const title = compactText(
-        typeof item === "string"
-          ? item
-          : item?.title ||
-            item?.name ||
-            item?.label
-      );
-
-      if (!title) return false;
-
-      return (
-        values.findIndex((candidate) =>
-          compactText(
-            typeof candidate === "string"
-              ? candidate
-              : candidate?.title ||
-                candidate?.name ||
-                candidate?.label
-          ) === title
-        ) === index
-      );
-    })
-    .slice(0, 5);
-}
-
 function displayValue(value, fallback = "--") {
   if (
     value === null ||
@@ -186,11 +86,6 @@ function buildWidget(result) {
           evidenceAgainst: [],
         })),
     importantLimitations:
-      asArray(
-        narrative.materialEtiologicUncertainty ||
-        narrative.uncertaintyAndMissingData
-      ),
-    materialEtiologicUncertainty:
       asArray(
         narrative.materialEtiologicUncertainty ||
         narrative.uncertaintyAndMissingData
@@ -332,9 +227,9 @@ function InterpretationModal({
   }, [onClose]);
 
   const contributors =
-    clinicalContributorList(widget);
+    asArray(widget.possibleContributors);
   const limitations =
-    clinicalUncertaintyList(widget);
+    asArray(widget.importantLimitations);
 
   const modal = (
     <div
@@ -437,7 +332,7 @@ function InterpretationModal({
               </DetailSection>
             )}
 
-            {!!limitations.length && (
+            {/* {!!limitations.length && (
               <DetailSection title="Material Etiologic Uncertainty">
                 <ul className="kgen-slm-modal-list">
                   {limitations.map((item, index) => (
@@ -447,7 +342,7 @@ function InterpretationModal({
                   ))}
                 </ul>
               </DetailSection>
-            )}
+            )} */}
           </div>
 
           <aside className="kgen-slm-modal-aside">
@@ -615,8 +510,6 @@ export default function CriticalInterpretationWidget({
     );
   }
 
-  const compactContributors =
-    clinicalContributorList(widget);
   const validation =
     widget.validationSummary || {};
   const validationStatus = String(
@@ -662,25 +555,8 @@ export default function CriticalInterpretationWidget({
 
         <p className="kgen-slm-compact-etiology">
           <b>Most likely etiology:</b>{" "}
-          {widget.etiologyContextNarrative ||
-            widget.rootCauseNarrative}
+          {widget.rootCauseNarrative}
         </p>
-
-        {!!compactContributors.length && (
-          <p className="kgen-slm-compact-etiology">
-            <b>Contributing factors:</b>{" "}
-            {compactContributors
-              .map((item) =>
-                typeof item === "string"
-                  ? item
-                  : item.title ||
-                    item.name ||
-                    item.label
-              )
-              .filter(Boolean)
-              .join("; ")}
-          </p>
-        )}
 
         {!!compactMetrics.length && (
           <div className="kgen-slm-compact-metrics">

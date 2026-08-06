@@ -1352,16 +1352,16 @@ class IncidentCoordinator:
         ]
 
         limitations = [
-            (
-                "The incident was triggered from "
-                "INCART reference annotations and "
-                "is not an independent diagnosis."
-            ),
-            (
-                "Raw ECG arrays remain in waveform "
-                "storage and are not included in "
-                "the SLM input."
-            ),
+            # (
+            #     "The incident was triggered from "
+            #     "INCART reference annotations and "
+            #     "is not an independent diagnosis."
+            # ),
+            # (
+            #     "Raw ECG arrays remain in waveform "
+            #     "storage and are not included in "
+            #     "the SLM input."
+            # ),
         ]
 
         if not morphology_results:
