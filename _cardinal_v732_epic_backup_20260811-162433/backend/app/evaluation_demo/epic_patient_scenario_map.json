@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "epic-evaluation-patient-map-v1",
+  "description": "Separate Epic SMART patient routing. Replace template IDs after launching Epic sandbox patients. Until then the stable hash fallback lets any sandbox patient exercise the evaluation flow without affecting Oracle mappings.",
+  "patientsById": {},
+  "patientsByDisplay": {},
+  "catalogFallback": {
+    "scenarioIds": [
+      "VFIB-STEMI-001",
+      "TORSADES-LQT-002",
+      "VT-ISCHEMIC-003",
+      "AFIB-RVR-SEPSIS-004",
+      "CHB-HYPERK-005",
+      "BRADY-DIGTOX-006",
+      "SVT-PSVT-007",
+      "NSVT-ECTOPY-008",
+      "WCT-DIFF-009",
+      "WPW-AFIB-010",
+      "FLUTTER-IC-011",
+      "PERI-STEMI-012",
+      "BRASH-013",
+      "AMIO-DDI-014"
+    ],
+    "baselineSeconds": 10,
+    "preSeconds": 6,
+    "postSeconds": 6,
+    "runSlm": true
+  }
+}

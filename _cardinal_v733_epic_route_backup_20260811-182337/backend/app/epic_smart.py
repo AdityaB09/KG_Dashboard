@@ -10,7 +10,7 @@ from typing import Any
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from fastapi import APIRouter, HTTPException, Query, Request
-from fastapi.responses import HTMLResponse, RedirectResponse, Response
+from fastapi.responses import HTMLResponse, RedirectResponse
 from itsdangerous import BadSignature, URLSafeSerializer
 
 from app.config import settings
@@ -124,13 +124,6 @@ async def _read_and_verify_launch_patient(
         )
 
     return patient, identity
-
-
-@router.head("/auth/epic/launch", include_in_schema=False)
-async def epic_launch_head():
-    # Epic LaunchPad may probe the launch URL with HEAD before issuing GET.
-    # Return success without starting OAuth; the subsequent GET performs the launch.
-    return Response(status_code=204)
 
 
 @router.get("/auth/epic/launch")

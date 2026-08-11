@@ -60,3 +60,5 @@ src/evaluation/PATCHES
 /*.ps1
 /*.zip
 /*/*.zip
+
+backend/data/colab_model_benchmark/*

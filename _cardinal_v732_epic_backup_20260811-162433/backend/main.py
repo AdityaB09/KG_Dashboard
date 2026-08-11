@@ -1,4 +1,3 @@
-from app.epic_route_wiring import install_epic_routes
 import asyncio
 import hashlib
 import json
@@ -110,9 +109,6 @@ app.include_router(
 app.include_router(
     slm_widget_router
 )
-
-install_epic_routes(app)
-
 def observe_episode_frame_safely(
     *,
     session_id: str,
@@ -202,9 +198,6 @@ async def epic_session_debug(request: Request):
         "hasAccessToken": bool(token_state.get("access_token")),
         "hasRefreshToken": bool(token_state.get("refresh_token")),
         "patientIdFromToken": token_state.get("patient_id"),
-        "patientKey": token_state.get("patient_key"),
-        "patientDisplayName": token_state.get("patient_display_name"),
-        "patientVerified": bool(token_state.get("patient_verified")),
         "encounterIdFromToken": token_state.get("encounter_id"),
         "scope": token_state.get("scope"),
         "expiresAtEpoch": token_state.get("expires_at_epoch"),
@@ -224,6 +217,7 @@ async def epic_patient_debug(request: Request):
         f"/Patient/{patient_id}",
         access_token=token_state.get("access_token"),
     )
+
 
 
 # @app.get("/api/firely/raw")

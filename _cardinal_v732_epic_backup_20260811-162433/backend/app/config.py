@@ -497,5 +497,10 @@ class Settings:
         "app/evaluation_demo/epic_patient_scenario_map.json",
     ).strip()
 
+    EPIC_EVALUATION_DEMO_ALLOW_HASH_FALLBACK = os.getenv(
+        "EPIC_EVALUATION_DEMO_ALLOW_HASH_FALLBACK",
+        "true",
+    ).strip().lower() in {"1", "true", "yes", "on"}
+
 
 settings = Settings()

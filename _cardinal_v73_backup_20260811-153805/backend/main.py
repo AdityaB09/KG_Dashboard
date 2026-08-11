@@ -1,4 +1,3 @@
-from app.epic_route_wiring import install_epic_routes
 import asyncio
 import hashlib
 import json
@@ -49,13 +48,6 @@ from app.oracle_smart import (
     get_token_for_request,
     router as oracle_smart_router,
 )
-from app.epic_smart import (
-    get_epic_token_for_request,
-    router as epic_smart_router,
-)
-from app.evaluation_demo.epic_routes import (
-    router as epic_evaluation_demo_router,
-)
 from app.physionet_waveforms import build_physionet_frame
 from app.providers import (
     fetch_oracle_patient,
@@ -87,7 +79,6 @@ app.add_middleware(
 )
 
 app.include_router(oracle_smart_router)
-app.include_router(epic_smart_router)
 app.include_router(
     evaluation_router
 )
@@ -97,7 +88,6 @@ app.include_router(
 app.include_router(
     evaluation_demo_router
 )
-app.include_router(epic_evaluation_demo_router)
 app.include_router(episode_router)
 
 app.include_router(incident_router)
@@ -110,9 +100,6 @@ app.include_router(
 app.include_router(
     slm_widget_router
 )
-
-install_epic_routes(app)
-
 def observe_episode_frame_safely(
     *,
     session_id: str,
@@ -186,44 +173,6 @@ async def oracle_session_debug(request: Request):
         "expiresAtEpoch": token_state.get("expires_at_epoch"),
     }
 
-
-@app.get("/api/fhir/epic/session")
-async def epic_session_debug(request: Request):
-    token_state = get_epic_token_for_request(request)
-    if not token_state:
-        return {
-            "hasEpicSession": False,
-            "message": "No Epic SMART session cookie found. Complete Epic launch in this same browser.",
-        }
-    return {
-        "hasEpicSession": True,
-        "provider": token_state.get("provider"),
-        "fhirBaseUrl": token_state.get("fhir_base_url"),
-        "hasAccessToken": bool(token_state.get("access_token")),
-        "hasRefreshToken": bool(token_state.get("refresh_token")),
-        "patientIdFromToken": token_state.get("patient_id"),
-        "patientKey": token_state.get("patient_key"),
-        "patientDisplayName": token_state.get("patient_display_name"),
-        "patientVerified": bool(token_state.get("patient_verified")),
-        "encounterIdFromToken": token_state.get("encounter_id"),
-        "scope": token_state.get("scope"),
-        "expiresAtEpoch": token_state.get("expires_at_epoch"),
-    }
-
-
-@app.get("/api/fhir/epic/patient")
-async def epic_patient_debug(request: Request):
-    token_state = get_epic_token_for_request(request)
-    if not token_state:
-        raise HTTPException(status_code=401, detail="Epic SMART session unavailable.")
-    patient_id = str(token_state.get("patient_id") or "").strip()
-    if not patient_id:
-        raise HTTPException(status_code=400, detail="Epic SMART token has no patient context.")
-    return await fhir_get(
-        token_state.get("fhir_base_url"),
-        f"/Patient/{patient_id}",
-        access_token=token_state.get("access_token"),
-    )
 
 
 # @app.get("/api/firely/raw")
@@ -2081,29 +2030,3 @@ async def oracle_targeted_labs(
         "resultCount": len(results),
         "results": results,
     }
-
-# ---------------------------------------------------------------------------
-# Optional single-container frontend serving for Google Cloud Run.
-# On the existing Render deployment FRONTEND_DIST_DIR normally does not exist,
-# so this block is a no-op and cannot change the current API deployment.
-# Keep this at the very end so API/auth routes always win over the SPA fallback.
-# ---------------------------------------------------------------------------
-import os as _os
-from pathlib import Path as _Path
-from fastapi.responses import FileResponse as _FileResponse
-from fastapi.staticfiles import StaticFiles as _StaticFiles
-
-_FRONTEND_DIST = _Path(_os.getenv("FRONTEND_DIST_DIR", "/app/frontend_dist"))
-if _FRONTEND_DIST.exists():
-    _assets = _FRONTEND_DIST / "assets"
-    if _assets.exists():
-        app.mount("/assets", _StaticFiles(directory=str(_assets)), name="frontend-assets")
-
-    @app.get("/{frontend_path:path}", include_in_schema=False)
-    async def serve_frontend(frontend_path: str):
-        if frontend_path.startswith(("api/", "auth/")):
-            raise HTTPException(status_code=404, detail="Not found")
-        requested = _FRONTEND_DIST / frontend_path
-        if frontend_path and requested.exists() and requested.is_file():
-            return _FileResponse(requested)
-        return _FileResponse(_FRONTEND_DIST / "index.html")

@@ -1,4 +1,3 @@
-from app.epic_route_wiring import install_epic_routes
 import asyncio
 import hashlib
 import json
@@ -110,9 +109,6 @@ app.include_router(
 app.include_router(
     slm_widget_router
 )
-
-install_epic_routes(app)
-
 def observe_episode_frame_safely(
     *,
     session_id: str,
