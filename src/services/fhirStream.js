@@ -1,4 +1,5 @@
-const DEFAULT_STREAM_URL = "http://127.0.0.1:8000/api/stream?debug=true";
+const SAME_ORIGIN = typeof window !== "undefined" ? window.location.origin : "http://127.0.0.1:8000";
+const DEFAULT_STREAM_URL = `${SAME_ORIGIN}/api/stream?debug=true`;
 let activeEventSource = null;
 
 const DEBUG_SSE =
@@ -9,7 +10,7 @@ const DEBUG_SSE =
 function buildStreamUrl() {
   const baseUrl =
     import.meta.env.VITE_FHIR_STREAM_URL ||
-    "http://127.0.0.1:8000/api/stream?debug=true";
+    DEFAULT_STREAM_URL;
 
   const url = new URL(baseUrl);
 

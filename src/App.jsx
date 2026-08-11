@@ -21,6 +21,9 @@ import {
 import {
   getOracleEvaluationBootstrap,
 } from "./evaluation/oracleEvaluationDemo";
+import {
+  getEpicEvaluationBootstrap,
+} from "./evaluation/epicEvaluationDemo";
 import "./index.css";
 
 import { createInitialTelemetry, nextTelemetryFrame } from "./services/telemetryService";
@@ -144,6 +147,17 @@ export default function App() {
     existingRun: null,
     error: null,
   });
+  const [epicAutoDemo, setEpicAutoDemo] = useState({
+    enabled: false,
+    status: "idle",
+    patient: null,
+    scenario: null,
+    episodePack: null,
+    contextMode: "episode_pack_only",
+    encounterId: null,
+    existingRun: null,
+    error: null,
+  });
 const [
   evaluationDemo,
   setEvaluationDemo,
@@ -192,143 +206,40 @@ const evaluationInjectionIncidentRef =
   const [monitorSlots, setMonitorSlots] = useState([null, null, null, null]);
 
   useEffect(() => {
-    const mode = new URLSearchParams(
-      window.location.search
-    ).get("mode");
+    const mode = new URLSearchParams(window.location.search).get("mode");
+    const provider =
+      mode === "oracle-evaluation-auto" ? "oracle" :
+      mode === "epic-evaluation-auto" ? "epic" : null;
+    if (!provider) return undefined;
 
-    if (mode !== "oracle-evaluation-auto") {
-      return undefined;
-    }
-
+    const setAutoDemo = provider === "epic" ? setEpicAutoDemo : setOracleAutoDemo;
+    const bootstrap = provider === "epic" ? getEpicEvaluationBootstrap : getOracleEvaluationBootstrap;
+    const providerLabel = provider === "epic" ? "Epic" : "Oracle";
     let active = true;
-    setOracleAutoDemo((previous) => ({
-      ...previous,
-      enabled: true,
-      status: "bootstrapping",
-      error: null,
-    }));
+    setAutoDemo((previous) => ({...previous,enabled:true,status:"bootstrapping",error:null}));
 
-    getOracleEvaluationBootstrap()
+    bootstrap()
       .then((payload) => {
         if (!active) return;
-        if (!payload?.ready) {
-          throw new Error(
-            payload?.reason ||
-              "Oracle automatic evaluation is not ready."
-          );
-        }
-
-        const oraclePatient =
-          payload.patient || {};
-
-        const episodePackPatient =
-          payload?.episodePack?.patient ||
-          payload?.scenario?.patient ||
-          null;
-
-        // The Oracle patient is launch/routing metadata.
-        // The complete episode-pack patient is the visible
-        // evaluation patient. Normalize it to the shape used
-        // by the existing dashboard and PatientSidebar.
-        if (!episodePackPatient) {
-          throw new Error(
-            "The selected scenario did not return a complete episode-package patient."
-          );
-        }
-
-        const dashboardPatient =
-          normalizeDashboardPatient(
-            episodePackPatient,
-            {}
-          );
-
-        setPatients((previous) => [
-          dashboardPatient,
-          ...previous.filter(
-            (item) =>
-              item.id !==
-              dashboardPatient.id
-          ),
-        ]);
-
-        setSelectedPatientId(
-          dashboardPatient.id
-        );
-        // Keep the legacy direct-Firely mode off. Oracle SMART is used only
-        // for launch authentication and scenario routing.
+        if (!payload?.ready) throw new Error(payload?.reason || `${providerLabel} automatic evaluation is not ready.`);
+        const launchPatient=payload.patient||{};
+        const episodePackPatient=payload?.episodePack?.patient||payload?.scenario?.patient||null;
+        if(!episodePackPatient) throw new Error("The selected scenario did not return a complete episode-package patient.");
+        const dashboardPatient=normalizeDashboardPatient(episodePackPatient,{});
+        setPatients((previous)=>[dashboardPatient,...previous.filter((item)=>item.id!==dashboardPatient.id)]);
+        setSelectedPatientId(dashboardPatient.id);
         setFhirEnabled(false);
-        setFhirStatus(
-          `Episode package selected: ${
-            dashboardPatient.name
-          }`
-        );
-
-        const existingRun = payload?.existingRun || null;
-        const existingState = String(
-          existingRun?.state || ""
-        ).toUpperCase();
-
-        const existingIsComplete =
-          existingState === "COMPLETE" &&
-          existingRun?.episodeId &&
-          existingRun?.incidentId;
-
-        const existingIsActive = [
-          "ARMED",
-          "INJECTING",
-          "POST_EVENT",
-          "ANALYZING",
-        ].includes(existingState);
-
-        setOracleAutoDemo({
-          enabled: true,
-          status: existingIsComplete
-            ? "complete"
-            : existingIsActive
-            ? "running"
-            : "ready",
-          patient: oraclePatient,
-          scenario: payload.scenario,
-          episodePack:
-            payload.episodePack || null,
-          contextMode:
-            payload.clinicalContextMode ||
-            "episode_pack_only",
-          encounterId:
-            payload.encounterId || null,
-          existingRun,
-          error: null,
-        });
-
-        if (existingIsComplete) {
-          setSelectedEpisodeId(existingRun.episodeId);
-          setSelectedIncidentId(existingRun.incidentId);
-          setActivePage("physiology");
-        } else {
-          setActivePage("main");
-        }
+        setFhirStatus(`Episode package selected via ${providerLabel}: ${dashboardPatient.name}`);
+        const existingRun=payload?.existingRun||null;
+        const existingState=String(existingRun?.state||"").toUpperCase();
+        const existingIsComplete=existingState==="COMPLETE"&&existingRun?.episodeId&&existingRun?.incidentId;
+        const existingIsActive=["ARMED","INJECTING","POST_EVENT","ANALYZING"].includes(existingState);
+        setAutoDemo({enabled:true,status:existingIsComplete?"complete":existingIsActive?"running":"ready",patient:launchPatient,scenario:payload.scenario,episodePack:payload.episodePack||null,contextMode:payload.clinicalContextMode||"episode_pack_only",encounterId:payload.encounterId||null,existingRun,error:null});
+        if(existingIsComplete){ setSelectedEpisodeId(existingRun.episodeId); setSelectedIncidentId(existingRun.incidentId); setActivePage("physiology"); }
+        else setActivePage("main");
       })
-      .catch((error) => {
-        if (!active) return;
-        setOracleAutoDemo({
-          enabled: true,
-          status: "error",
-          patient: null,
-          scenario: null,
-          episodePack: null,
-          contextMode: "episode_pack_only",
-          encounterId: null,
-          existingRun: null,
-          error:
-            error instanceof Error
-              ? error.message
-              : "Oracle automatic evaluation bootstrap failed.",
-        });
-      });
-
-    return () => {
-      active = false;
-    };
+      .catch((error)=>{ if(!active)return; setAutoDemo({enabled:true,status:"error",patient:null,scenario:null,episodePack:null,contextMode:"episode_pack_only",encounterId:null,existingRun:null,error:error instanceof Error?error.message:`${providerLabel} automatic evaluation bootstrap failed.`}); });
+    return ()=>{ active=false; };
   }, []);
 
   const [telemetryMap, setTelemetryMap] = useState(() =>
@@ -435,6 +346,8 @@ useEffect(() => {
               event.score || null,
             oracleDemo:
               event.oracleDemo || null,
+            epicDemo:
+              event.epicDemo || null,
           });
 
           if (event.oracleDemo) {
@@ -450,6 +363,19 @@ useEffect(() => {
                 scenarioId:
                   event.scenarioId ||
                   event.oracleDemo.scenarioId,
+              },
+            }));
+          }
+
+          if (event.epicDemo) {
+            setEpicAutoDemo((previous) => ({
+              ...previous,
+              enabled: true,
+              status: "complete",
+              patient: event.epicDemo.patient || previous.patient,
+              scenario: {
+                ...(previous.scenario || {}),
+                scenarioId: event.scenarioId || event.epicDemo.scenarioId,
               },
             }));
           }
@@ -868,10 +794,11 @@ function renderMainPage() {
       patient={selectedPatient}
       oracleAutoDemo={oracleAutoDemo}
       onOracleAutoDemoChange={(update) =>
-        setOracleAutoDemo((previous) => ({
-          ...previous,
-          ...update,
-        }))
+        setOracleAutoDemo((previous) => ({...previous,...update}))
+      }
+      epicAutoDemo={epicAutoDemo}
+      onEpicAutoDemoChange={(update) =>
+        setEpicAutoDemo((previous) => ({...previous,...update}))
       }
 
       evaluationDemo={

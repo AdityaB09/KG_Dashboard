@@ -410,6 +410,8 @@ class InjectionSession:
     final_task_started: bool = False
     # Sanitized Oracle demo binding. Never place access tokens in this object.
     oracle_demo: dict[str, Any] | None = None
+    # Separate Epic demo binding. Kept distinct from Oracle to prevent provider mixups.
+    epic_demo: dict[str, Any] | None = None
     # Compatibility field only. Episode-pack-only evaluation never uses it.
     token_override: dict[str, Any] | None = field(default=None, repr=False)
     base_waveform_source: str | None = None
@@ -676,6 +678,11 @@ class InjectionSession:
             "oracleDemo": (
                 dict(self.oracle_demo)
                 if isinstance(self.oracle_demo, dict)
+                else None
+            ),
+            "epicDemo": (
+                dict(self.epic_demo)
+                if isinstance(self.epic_demo, dict)
                 else None
             ),
         }
@@ -1084,6 +1091,7 @@ class EvaluationInjectionService:
         post_seconds: float,
         run_slm: bool,
         oracle_demo: dict[str, Any] | None = None,
+        epic_demo: dict[str, Any] | None = None,
         token_override: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         if not self.enabled:
@@ -1132,7 +1140,12 @@ class EvaluationInjectionService:
                 if isinstance(oracle_demo, dict)
                 else None
             ),
-            # Oracle SMART is authentication and routing only. The
+            epic_demo=(
+                dict(epic_demo)
+                if isinstance(epic_demo, dict)
+                else None
+            ),
+            # SMART EHR context is authentication and routing only. The
             # evaluation session never retains the token for clinical context.
             token_override=None,
         )
@@ -3089,6 +3102,11 @@ class EvaluationInjectionService:
             if isinstance(session.oracle_demo, dict)
             else {}
         )
+        epic_demo = (
+            dict(session.epic_demo)
+            if isinstance(session.epic_demo, dict)
+            else {}
+        )
         stored_patient = dict(
             session.scenario.patient
             or {}
@@ -3261,6 +3279,8 @@ class EvaluationInjectionService:
                 "complete_episode_pack",
             "oracleFhirContextUsed":
                 False,
+            "epicFhirContextUsed":
+                False,
             "displayPatientSource":
                 "evaluationScenario.patient",
             "evaluationScenarioId": (
@@ -3271,6 +3291,9 @@ class EvaluationInjectionService:
             "patient": stored_patient,
             "oracleDemo": (
                 oracle_demo or None
+            ),
+            "epicDemo": (
+                epic_demo or None
             ),
             "scenarioPatient": (
                 session.scenario.patient
@@ -3700,10 +3723,12 @@ class EvaluationInjectionService:
             "complete_episode_pack"
         )
         incident["oracleFhirContextUsed"] = False
+        incident["epicFhirContextUsed"] = False
         incident["displayPatientSource"] = (
             "evaluationScenario.patient"
         )
         incident["oracleDemo"] = oracle_demo or None
+        incident["epicDemo"] = epic_demo or None
 
         incident.setdefault(
             "provenance",

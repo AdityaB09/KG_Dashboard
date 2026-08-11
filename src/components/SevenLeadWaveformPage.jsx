@@ -31,6 +31,9 @@ import {
   startOracleEvaluationDemo,
 } from "../evaluation/oracleEvaluationDemo";
 import {
+  startEpicEvaluationDemo,
+} from "../evaluation/epicEvaluationDemo";
+import {
   nextStableSpo2State,
   resolveBedsideWidgetValues,
 } from "../presentation/episodeWidgetFallbacks";
@@ -450,6 +453,8 @@ export default function SevenLeadWaveformPage({
   onEvaluationAnalysisComplete,
   oracleAutoDemo,
   onOracleAutoDemoChange,
+  epicAutoDemo,
+  onEpicAutoDemoChange,
 }) {
   const [waveFrame, setWaveFrame] = useState(() =>
   createEmptyFrame("incart")
@@ -469,6 +474,8 @@ export default function SevenLeadWaveformPage({
     );
 
   const autoOracleStartIssuedRef =
+    useRef(false);
+  const autoEpicStartIssuedRef =
     useRef(false);
 
   const [
@@ -634,6 +641,42 @@ export default function SevenLeadWaveformPage({
     streamStatus,
     onOracleAutoDemoChange,
   ]);
+
+  useEffect(() => {
+    if (!epicAutoDemo?.enabled) {
+      autoEpicStartIssuedRef.current = false;
+      return;
+    }
+    if (waveformSource !== API_RANGE_EPISODE_SOURCE) {
+      changeWaveformSource(API_RANGE_EPISODE_SOURCE);
+    }
+  }, [epicAutoDemo?.enabled]);
+
+  useEffect(() => {
+    if (
+      !epicAutoDemo?.enabled ||
+      epicAutoDemo?.status !== "ready" ||
+      waveformSource !== API_RANGE_EPISODE_SOURCE ||
+      streamStatus !== "live" ||
+      autoEpicStartIssuedRef.current
+    ) return;
+
+    autoEpicStartIssuedRef.current = true;
+    setInjectionError("");
+    onEpicAutoDemoChange?.({ status: "arming" });
+    startEpicEvaluationDemo(waveformSessionIdRef.current)
+      .then((result) => {
+        setInjectionStatus(result);
+        const state=String(result?.state||"").toUpperCase();
+        onEpicAutoDemoChange?.({status:state==="COMPLETE"?"complete":["FAILED","CANCELLED"].includes(state)?"error":"running",result});
+      })
+      .catch((error) => {
+        const message=error instanceof Error?error.message:"Automatic Epic evaluation could not start.";
+        setInjectionError(message);
+        onEpicAutoDemoChange?.({status:"error",error:message});
+      });
+  }, [epicAutoDemo?.enabled,epicAutoDemo?.status,waveformSource,streamStatus,onEpicAutoDemoChange]);
+
 
   useEffect(() => {
     if (!EVALUATION_ENABLED) {
@@ -1587,7 +1630,11 @@ gainMmPerMv: effectiveGain,
     injectionStatus?.episodePackPatient ||
     injectionStatus?.oracleDemo
       ?.episodePackPatient ||
+    injectionStatus?.epicDemo
+      ?.episodePackPatient ||
     oracleAutoDemo?.episodePack
+      ?.patient ||
+    epicAutoDemo?.episodePack
       ?.patient ||
     evaluationDemo?.episode
       ?.evaluationScenario
@@ -1668,8 +1715,8 @@ const completedInjectionEpisodeId =
                   }
                   disabled={
                     Boolean(
-                      oracleAutoDemo?.enabled &&
-                      oracleAutoDemo?.status !== "error"
+                      (oracleAutoDemo?.enabled && oracleAutoDemo?.status !== "error") ||
+                      (epicAutoDemo?.enabled && epicAutoDemo?.status !== "error")
                     )
                   }
                   onClick={() =>
@@ -1686,8 +1733,8 @@ const completedInjectionEpisodeId =
 
           {EVALUATION_ENABLED &&
           !(
-            oracleAutoDemo?.enabled &&
-            oracleAutoDemo?.status !== "error"
+            (oracleAutoDemo?.enabled && oracleAutoDemo?.status !== "error") ||
+            (epicAutoDemo?.enabled && epicAutoDemo?.status !== "error")
           ) &&
           waveformSource ===
             API_RANGE_EPISODE_SOURCE && (
@@ -2027,6 +2074,7 @@ const completedInjectionEpisodeId =
     scenarioId={
       injectionStatus?.scenarioId ||
       oracleAutoDemo?.scenarioId ||
+      epicAutoDemo?.scenarioId ||
       injectionScenarioId
     }
   />

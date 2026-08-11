@@ -48,6 +48,43 @@ class Settings:
     )
     ORACLE_TEST_PATIENT_ID = os.getenv("ORACLE_TEST_PATIENT_ID", "")
 
+
+    # Epic SMART on FHIR (kept separate from Oracle)
+    EPIC_FHIR_BASE_URL = os.getenv(
+        "EPIC_FHIR_BASE_URL",
+        "https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4",
+    ).rstrip("/")
+    # Epic explicitly provides a separate non-production client ID. Sandbox
+    # deployments should set EPIC_CLIENT_ID to the non-production ID.
+    EPIC_CLIENT_ID = os.getenv(
+        "EPIC_CLIENT_ID",
+        os.getenv("EPIC_NONPROD_CLIENT_ID", ""),
+    )
+    EPIC_NONPROD_CLIENT_ID = os.getenv("EPIC_NONPROD_CLIENT_ID", "")
+    EPIC_PRODUCTION_CLIENT_ID = os.getenv("EPIC_PRODUCTION_CLIENT_ID", "")
+    EPIC_REDIRECT_URI = os.getenv(
+        "EPIC_REDIRECT_URI",
+        "http://127.0.0.1:8000/auth/epic/callback",
+    )
+    EPIC_LAUNCH_URI = os.getenv(
+        "EPIC_LAUNCH_URI",
+        "http://127.0.0.1:8000/auth/epic/launch",
+    )
+    # Epic recommends launch + openid + fhirUser for EHR launch. Incoming API
+    # selection on the Epic app registration controls additional FHIR scopes.
+    EPIC_SCOPES = os.getenv(
+        "EPIC_SCOPES",
+        "launch openid fhirUser",
+    )
+    EPIC_ALLOWED_ISSUERS = [
+        item.strip().rstrip("/")
+        for item in os.getenv(
+            "EPIC_ALLOWED_ISSUERS",
+            "https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4",
+        ).split(",")
+        if item.strip()
+    ]
+
     # Local demo session signing only. Not production.
     SESSION_SECRET_KEY = os.getenv("SESSION_SECRET_KEY", "dev-only-change-me")
 
@@ -447,5 +484,23 @@ class Settings:
         "yes",
         "on",
     }
+
+    # Automatic Epic SMART -> API Range + episode + API Range evaluation flow.
+    # This is intentionally a separate mapping namespace from Oracle.
+    EPIC_EVALUATION_DEMO_ENABLED = os.getenv(
+        "EPIC_EVALUATION_DEMO_ENABLED",
+        "false",
+    ).strip().lower() in {"1", "true", "yes", "on"}
+
+    EPIC_EVALUATION_DEMO_MAP_PATH = os.getenv(
+        "EPIC_EVALUATION_DEMO_MAP_PATH",
+        "app/evaluation_demo/epic_patient_scenario_map.json",
+    ).strip()
+
+    EPIC_EVALUATION_DEMO_ALLOW_HASH_FALLBACK = os.getenv(
+        "EPIC_EVALUATION_DEMO_ALLOW_HASH_FALLBACK",
+        "true",
+    ).strip().lower() in {"1", "true", "yes", "on"}
+
 
 settings = Settings()

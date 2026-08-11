@@ -1,5 +1,5 @@
-const DEFAULT_WAVEFORM_STREAM_URL =
-  "http://127.0.0.1:8000/api/waveforms/stream?batch_ms=50";
+const SAME_ORIGIN = typeof window !== "undefined" ? window.location.origin : "http://127.0.0.1:8000";
+const DEFAULT_WAVEFORM_STREAM_URL = `${SAME_ORIGIN}/api/waveforms/stream?batch_ms=50`;
 
 
 function createSessionId() {
