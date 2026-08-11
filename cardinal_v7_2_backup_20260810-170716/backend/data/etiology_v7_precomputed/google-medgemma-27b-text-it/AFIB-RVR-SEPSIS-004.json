@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.1",
+  "provider": "lightning-ai-studio",
+  "model": "google/medgemma-27b-text-it",
+  "runNumber": 1,
+  "scenarioId": "AFIB-RVR-SEPSIS-004",
+  "promptFingerprint": "70fa160800dc533e650af8cfc69c4de70f354dfbfacf3fd3349cd2bac96ea785",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "Dorothy Chen, 79F, Atrial Fibrillation with Rapid Ventricular Response, warning, hemodynamically unstable",
+    "rhythm": "Atrial Fibrillation with Rapid Ventricular Response (AFib RVR)",
+    "keyECGEvidence": [
+      "ventricularRateBpm: 150",
+      "regularity: irregularly irregular",
+      "pWavePresent: false",
+      "morphology: Narrow QRS, absent P waves, fibrillatory baseline",
+      "preEventNote: Sinus tachycardia earlier in shift; converted to AFib RVR as fever spiked"
+    ],
+    "primaryEtiology": "Sepsis",
+    "mechanism": "Systemic inflammation and catecholamine surge secondary to sepsis triggering atrial electrical instability and rapid conduction.",
+    "contributingFactors": [
+      "Fever (38.9 C)",
+      "Hypotension (MAP 67 mmHg on norepinephrine)",
+      "Elevated lactate (3.1 mmol/L HIGH)",
+      "Elevated WBC (18.4 10^3/uL HIGH)",
+      "Elevated procalcitonin (6.2 ng/mL HIGH)"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Acute Myocardial Infarction",
+        "why": "Troponin T is only mildly elevated (0.03 ng/mL) and ECG shows no specific ST elevation or depression beyond rate-related changes. No chest pain reported."
+      },
+      {
+        "alternative": "Pulmonary Embolism",
+        "why": "No specific ECG signs of PE (e.g., S1Q3T3, RBBB) are present. While tachycardia and hypoxia are present, the primary clinical picture points strongly to sepsis."
+      },
+      {
+        "alternative": "Electrolyte Imbalance (Hypokalemia/Hypomagnesemia)",
+        "why": "Potassium (3.6 mmol/L) and Magnesium (1.8 mg/dL) are within normal limits."
+      },
+      {
+        "alternative": "Thyrotoxicosis",
+        "why": "TSH is normal (1.8 mIU/L)."
+      }
+    ],
+    "recommendedActions": [
+      "Administer IV Amiodarone 150mg over 10 minutes (loading dose) for rate control, monitor for hypotension.",
+      "Administer IV Diltiazem 0.25mg/kg bolus over 2 minutes, followed by infusion 5-15mg/hr, titrate to goal HR <110 bpm, monitor BP closely.",
+      "Continue aggressive fluid resuscitation and vasopressor support (norepinephrine) to maintain MAP > 65 mmHg.",
+      "Administer IV Acetaminophen 650mg for fever.",
+      "Obtain serial lactate levels.",
+      "Obtain serial troponin levels.",
+      "Consider echocardiogram to assess cardiac function and rule out structural causes.",
+      "Hold Amlodipine due to hypotension and bradycardia risk with rate control agents."
+    ],
+    "uncertainty": [
+      "Exact source of sepsis is pending culture results.",
+      "Underlying cardiac function is unknown without prior ECG or echocardiogram."
+    ]
+  },
+  "rawModelResponse": "```json\n{\n  \"episodeSummary\": \"Dorothy Chen, 79F, Atrial Fibrillation with Rapid Ventricular Response, warning, hemodynamically unstable\",\n  \"rhythm\": \"Atrial Fibrillation with Rapid Ventricular Response (AFib RVR)\",\n  \"keyECGEvidence\": [\n    \"ventricularRateBpm: 150\",\n    \"regularity: irregularly irregular\",\n    \"pWavePresent: false\",\n    \"morphology: Narrow QRS, absent P waves, fibrillatory baseline\",\n    \"preEventNote: Sinus tachycardia earlier in shift; converted to AFib RVR as fever spiked\"\n  ],\n  \"primaryEtiology\": \"Sepsis\",\n  \"mechanism\": \"Systemic inflammation and catecholamine surge secondary to sepsis triggering atrial electrical instability and rapid conduction.\",\n  \"contributingFactors\": [\n    \"Fever (38.9 C)\",\n    \"Hypotension (MAP 67 mmHg on norepinephrine)\",\n    \"Elevated lactate (3.1 mmol/L HIGH)\",\n    \"Elevated WBC (18.4 10^3/uL HIGH)\",\n    \"Elevated procalcitonin (6.2 ng/mL HIGH)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Acute Myocardial Infarction\",\n      \"why\": \"Troponin T is only mildly elevated (0.03 ng/mL) and ECG shows no specific ST elevation or depression beyond rate-related changes. No chest pain reported.\"\n    },\n    {\n      \"alternative\": \"Pulmonary Embolism\",\n      \"why\": \"No specific ECG signs of PE (e.g., S1Q3T3, RBBB) are present. While tachycardia and hypoxia are present, the primary clinical picture points strongly to sepsis.\"\n    },\n    {\n      \"alternative\": \"Electrolyte Imbalance (Hypokalemia/Hypomagnesemia)\",\n      \"why\": \"Potassium (3.6 mmol/L) and Magnesium (1.8 mg/dL) are within normal limits.\"\n    },\n    {\n      \"alternative\": \"Thyrotoxicosis\",\n      \"why\": \"TSH is normal (1.8 mIU/L).\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Administer IV Amiodarone 150mg over 10 minutes (loading dose) for rate control, monitor for hypotension.\",\n    \"Administer IV Diltiazem 0.25mg/kg bolus over 2 minutes, followed by infusion 5-15mg/hr, titrate to goal HR <110 bpm, monitor BP closely.\",\n    \"Continue aggressive fluid resuscitation and vasopressor support (norepinephrine) to maintain MAP > 65 mmHg.\",\n    \"Administer IV Acetaminophen 650mg for fever.\",\n    \"Obtain serial lactate levels.\",\n    \"Obtain serial troponin levels.\",\n    \"Consider echocardiogram to assess cardiac function and rule out structural causes.\",\n    \"Hold Amlodipine due to hypotension and bradycardia risk with rate control agents.\"\n  ],\n  \"uncertainty\": [\n    \"Exact source of sepsis is pending culture results.\",\n    \"Underlying cardiac function is unknown without prior ECG or echocardiogram.\"\n  ]\n}\n```",
+  "bestEffortParsedResponse": null,
+  "terminalStatus": "OK",
+  "hitMaxNewTokens": false,
+  "maxNewTokens": 2500,
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"Dorothy Chen, 79F, Atrial Fibrillation with Rapid Ventricular Response, warning, hemodynamically unstable\",\n  \"rhythm\": \"Atrial Fibrillation with Rapid Ventricular Response (AFib RVR)\",\n  \"keyECGEvidence\": [\n    \"ventricularRateBpm: 150\",\n    \"regularity: irregularly irregular\",\n    \"pWavePresent: false\",\n    \"morphology: Narrow QRS, absent P waves, fibrillatory baseline\",\n    \"preEventNote: Sinus tachycardia earlier in shift; converted to AFib RVR as fever spiked\"\n  ],\n  \"primaryEtiology\": \"Sepsis\",\n  \"mechanism\": \"Systemic inflammation and catecholamine surge secondary to sepsis triggering atrial electrical instability and rapid conduction.\",\n  \"contributingFactors\": [\n    \"Fever (38.9 C)\",\n    \"Hypotension (MAP 67 mmHg on norepinephrine)\",\n    \"Elevated lactate (3.1 mmol/L HIGH)\",\n    \"Elevated WBC (18.4 10^3/uL HIGH)\",\n    \"Elevated procalcitonin (6.2 ng/mL HIGH)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Acute Myocardial Infarction\",\n      \"why\": \"Troponin T is only mildly elevated (0.03 ng/mL) and ECG shows no specific ST elevation or depression beyond rate-related changes. No chest pain reported.\"\n    },\n    {\n      \"alternative\": \"Pulmonary Embolism\",\n      \"why\": \"No specific ECG signs of PE (e.g., S1Q3T3, RBBB) are present. While tachycardia and hypoxia are present, the primary clinical picture points strongly to sepsis.\"\n    },\n    {\n      \"alternative\": \"Electrolyte Imbalance (Hypokalemia/Hypomagnesemia)\",\n      \"why\": \"Potassium (3.6 mmol/L) and Magnesium (1.8 mg/dL) are within normal limits.\"\n    },\n    {\n      \"alternative\": \"Thyrotoxicosis\",\n      \"why\": \"TSH is normal (1.8 mIU/L).\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Administer IV Amiodarone 150mg over 10 minutes (loading dose) for rate control, monitor for hypotension.\",\n    \"Administer IV Diltiazem 0.25mg/kg bolus over 2 minutes, followed by infusion 5-15mg/hr, titrate to goal HR <110 bpm, monitor BP closely.\",\n    \"Continue aggressive fluid resuscitation and vasopressor support (norepinephrine) to maintain MAP > 65 mmHg.\",\n    \"Administer IV Acetaminophen 650mg for fever.\",\n    \"Obtain serial lactate levels.\",\n    \"Obtain serial troponin levels.\",\n    \"Consider echocardiogram to assess cardiac function and rule out structural causes.\",\n    \"Hold Amlodipine due to hypotension and bradycardia risk with rate control agents.\"\n  ],\n  \"uncertainty\": [\n    \"Exact source of sepsis is pending culture results.\",\n    \"Underlying cardiac function is unknown without prior ECG or echocardiogram.\"\n  ]\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1986,
+      "outputTokens": 738,
+      "elapsedSeconds": 81.36085023900068,
+      "peakGpuMemoryGiB": 25.224111557006836,
+      "hitMaxNewTokens": false
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 81.36085023900068,
+  "inputTokens": 1986,
+  "outputTokens": 738,
+  "peakGpuMemoryGiB": 25.224111557006836,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.1",
+  "provider": "lightning-ai-studio",
+  "model": "google/gemma-4-12B-it",
+  "runNumber": 1,
+  "scenarioId": "VT-ISCHEMIC-003",
+  "promptFingerprint": "a7562ccbf6b12d0bff83d638b24638a34fe3324dc057a1383d06280b9a2f7757",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "61-year-old male with ischemic cardiomyopathy presenting with critical monomorphic Ventricular Tachycardia (VT) and hemodynamic instability (MAP 68).",
+    "rhythm": "Monomorphic Ventricular Tachycardia",
+    "keyECGEvidence": [
+      "ventricularRateBpm: 182",
+      "regularity: regular",
+      "qrsDurationMs: 168 (wide)",
+      "morphology: Wide monomorphic QRS, AV dissociation, occasional capture/fusion beats",
+      "preEventNote: Baseline: sinus with LBBB-like conduction"
+    ],
+    "primaryEtiology": "Ischemic cardiomyopathy with structural heart disease (LVEF 25%) and acute demand ischemia.",
+    "mechanism": "Re-entry triggered by underlying structural heart disease (prior inferior MI, low LVEF) and acute demand ischemia, evidenced by elevated troponin T.",
+    "contributingFactors": [
+      "Decompensated heart failure (BNP 1840 pg/mL HIGH)",
+      "Chronic kidney disease (Creatinine 1.9 mg/dL HIGH)",
+      "Low ejection fraction (LVEF 25%)",
+      "Volume overload (Progressive dyspnea)"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Supraventricular Tachycardia (SVT) with aberrancy",
+        "why": "Presence of AV dissociation and fusion beats, combined with a wide QRS (168ms) and history of heart failure, strongly favors VT."
+      },
+      {
+        "alternative": "Torsades de Pointes",
+        "why": "Pre-event note states prior QTc 460 ms (normal) and current potassium (4.3 mmol/L) and magnesium (2.1 mg/dL) are within normal limits."
+      }
+    ],
+    "recommendedActions": [
+      "Immediate synchronized cardioversion or immediate defibrillation if pulse is lost (Patient is currently symptomatic with MAP 68).",
+      "Establish large-bore IV access and initiate emergency ACLS protocols.",
+      "Continuous bedside monitoring of ECG, SpO2, and blood pressure.",
+      "Prepare for potential emergency intervention (e.g., internal defibrillator if available).",
+      "Maintain oxygenation and consider vasopressors if MAP continues to decline."
+    ],
+    "uncertainty": [
+      "The exact site of the VT (e.g., RV vs LV origin) cannot be determined without 12-lead ECG or bedside echocardiogram."
+    ]
+  },
+  "rawModelResponse": "```json\n{\n  \"episodeSummary\": \"61-year-old male with ischemic cardiomyopathy presenting with critical monomorphic Ventricular Tachycardia (VT) and hemodynamic instability (MAP 68).\",\n  \"rhythm\": \"Monomorphic Ventricular Tachycardia\",\n  \"keyECGEvidence\": [\n    \"ventricularRateBpm: 182\",\n    \"regularity: regular\",\n    \"qrsDurationMs: 168 (wide)\",\n    \"morphology: Wide monomorphic QRS, AV dissociation, occasional capture/fusion beats\",\n    \"preEventNote: Baseline: sinus with LBBB-like conduction\"\n  ],\n  \"primaryEtiology\": \"Ischemic cardiomyopathy with structural heart disease (LVEF 25%) and acute demand ischemia.\",\n  \"mechanism\": \"Re-entry triggered by underlying structural heart disease (prior inferior MI, low LVEF) and acute demand ischemia, evidenced by elevated troponin T.\",\n  \"contributingFactors\": [\n    \"Decompensated heart failure (BNP 1840 pg/mL HIGH)\",\n    \"Chronic kidney disease (Creatinine 1.9 mg/dL HIGH)\",\n    \"Low ejection fraction (LVEF 25%)\",\n    \"Volume overload (Progressive dyspnea)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Supraventricular Tachycardia (SVT) with aberrancy\",\n      \"why\": \"Presence of AV dissociation and fusion beats, combined with a wide QRS (168ms) and history of heart failure, strongly favors VT.\"\n    },\n    {\n      \"alternative\": \"Torsades de Pointes\",\n      \"why\": \"Pre-event note states prior QTc 460 ms (normal) and current potassium (4.3 mmol/L) and magnesium (2.1 mg/dL) are within normal limits.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Immediate synchronized cardioversion or immediate defibrillation if pulse is lost (Patient is currently symptomatic with MAP 68).\",\n    \"Establish large-bore IV access and initiate emergency ACLS protocols.\",\n    \"Continuous bedside monitoring of ECG, SpO2, and blood pressure.\",\n    \"Prepare for potential emergency intervention (e.g., internal defibrillator if available).\",\n    \"Maintain oxygenation and consider vasopressors if MAP continues to decline.\"\n  ],\n  \"uncertainty\": [\n    \"The exact site of the VT (e.g., RV vs LV origin) cannot be determined without 12-lead ECG or bedside echocardiogram.\"\n  ]\n}\n```",
+  "bestEffortParsedResponse": null,
+  "terminalStatus": "OK",
+  "hitMaxNewTokens": false,
+  "maxNewTokens": 2500,
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"61-year-old male with ischemic cardiomyopathy presenting with critical monomorphic Ventricular Tachycardia (VT) and hemodynamic instability (MAP 68).\",\n  \"rhythm\": \"Monomorphic Ventricular Tachycardia\",\n  \"keyECGEvidence\": [\n    \"ventricularRateBpm: 182\",\n    \"regularity: regular\",\n    \"qrsDurationMs: 168 (wide)\",\n    \"morphology: Wide monomorphic QRS, AV dissociation, occasional capture/fusion beats\",\n    \"preEventNote: Baseline: sinus with LBBB-like conduction\"\n  ],\n  \"primaryEtiology\": \"Ischemic cardiomyopathy with structural heart disease (LVEF 25%) and acute demand ischemia.\",\n  \"mechanism\": \"Re-entry triggered by underlying structural heart disease (prior inferior MI, low LVEF) and acute demand ischemia, evidenced by elevated troponin T.\",\n  \"contributingFactors\": [\n    \"Decompensated heart failure (BNP 1840 pg/mL HIGH)\",\n    \"Chronic kidney disease (Creatinine 1.9 mg/dL HIGH)\",\n    \"Low ejection fraction (LVEF 25%)\",\n    \"Volume overload (Progressive dyspnea)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Supraventricular Tachycardia (SVT) with aberrancy\",\n      \"why\": \"Presence of AV dissociation and fusion beats, combined with a wide QRS (168ms) and history of heart failure, strongly favors VT.\"\n    },\n    {\n      \"alternative\": \"Torsades de Pointes\",\n      \"why\": \"Pre-event note states prior QTc 460 ms (normal) and current potassium (4.3 mmol/L) and magnesium (2.1 mg/dL) are within normal limits.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Immediate synchronized cardioversion or immediate defibrillation if pulse is lost (Patient is currently symptomatic with MAP 68).\",\n    \"Establish large-bore IV access and initiate emergency ACLS protocols.\",\n    \"Continuous bedside monitoring of ECG, SpO2, and blood pressure.\",\n    \"Prepare for potential emergency intervention (e.g., internal defibrillator if available).\",\n    \"Maintain oxygenation and consider vasopressors if MAP continues to decline.\"\n  ],\n  \"uncertainty\": [\n    \"The exact site of the VT (e.g., RV vs LV origin) cannot be determined without 12-lead ECG or bedside echocardiogram.\"\n  ]\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1867,
+      "outputTokens": 586,
+      "elapsedSeconds": 52.58023651900021,
+      "peakGpuMemoryGiB": 16.899061679840088,
+      "hitMaxNewTokens": false
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 52.58023651900021,
+  "inputTokens": 1867,
+  "outputTokens": 586,
+  "peakGpuMemoryGiB": 16.899061679840088,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

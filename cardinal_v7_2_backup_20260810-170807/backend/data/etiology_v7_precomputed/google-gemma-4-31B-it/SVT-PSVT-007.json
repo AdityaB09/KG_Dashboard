@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.0",
+  "provider": "lightning-ai-studio",
+  "model": "google/gemma-4-31B-it",
+  "runNumber": 1,
+  "scenarioId": "SVT-PSVT-007",
+  "promptFingerprint": "b623a8817caf00b26ec8d4f3895555ff32d72ce473184f0ed94c12f07d8cee56",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "34yo female, Paroxysmal Supraventricular Tachycardia (PSVT), warning severity, hemodynamically stable",
+    "rhythm": "Paroxysmal Supraventricular Tachycardia (PSVT)",
+    "keyECGEvidence": [
+      "ventricularRateBpm: 190",
+      "regularity: regular",
+      "qrsDurationMs: 88",
+      "pWavePresent: false",
+      "morphology: Narrow QRS, no clear P waves, abrupt onset"
+    ],
+    "primaryEtiology": "Reentrant Supraventricular Tachycardia (likely AVNRT)",
+    "mechanism": "Reentrant circuit within the AV node or accessory pathway, triggered by sympathetic surge",
+    "contributingFactors": [
+      "Caffeine intake ('Two cups of coffee')",
+      "Physical exertion ('Abrupt onset after exertion')"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Sinus Tachycardia",
+        "why": "Rate of 190 bpm is excessively high for simple sinus tachycardia in this context, and 'pWavePresent: false' with 'abrupt onset' contradicts sinus rhythm."
+      },
+      {
+        "alternative": "Atrial Flutter",
+        "why": "Rhythm is described as 'regular' with 'no clear P waves' and 'abrupt onset', and the rate is typically 150 bpm (2:1 block) or 300 bpm (1:1), whereas this is 190 bpm."
+      },
+      {
+        "alternative": "Hyperthyroidism",
+        "why": "tsh: 2.2 mIU/L is within reference range (0.4–4.0)."
+      },
+      {
+        "alternative": "Electrolyte Imbalance",
+        "why": "potassium: 4.0 mmol/L and magnesium: 2.0 mg/dL are both within normal reference ranges."
+      }
+    ],
+    "recommendedActions": [
+      "Attempt vagal maneuvers (e.g., Valsalva maneuver, carotid sinus massage)",
+      "Administer IV Adenosine (6mg rapid bolus) if vagal maneuvers fail",
+      "Establish IV access and continuous ECG monitoring"
+    ],
+    "uncertainty": [
+      "Exact reentrant circuit (AVNRT vs AVRT) cannot be distinguished without an electrophysiology study or seeing retrograde P-waves on a 12-lead ECG."
+    ]
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n \"episodeSummary\": \"34yo female, Paroxysmal Supraventricular Tachycardia (PSVT), warning severity, hemodynamically stable\",\n \"rhythm\": \"Paroxysmal Supraventricular Tachycardia (PSVT)\",\n \"keyECGEvidence\": [\n  \"ventricularRateBpm: 190\",\n  \"regularity: regular\",\n  \"qrsDurationMs: 88\",\n  \"pWavePresent: false\",\n  \"morphology: Narrow QRS, no clear P waves, abrupt onset\"\n ],\n \"primaryEtiology\": \"Reentrant Supraventricular Tachycardia (likely AVNRT)\",\n \"mechanism\": \"Reentrant circuit within the AV node or accessory pathway, triggered by sympathetic surge\",\n \"contributingFactors\": [\n  \"Caffeine intake ('Two cups of coffee')\",\n  \"Physical exertion ('Abrupt onset after exertion')\"\n ],\n \"rejectedAlternatives\": [\n  {\"alternative\": \"Sinus Tachycardia\", \"why\": \"Rate of 190 bpm is excessively high for simple sinus tachycardia in this context, and 'pWavePresent: false' with 'abrupt onset' contradicts sinus rhythm.\"},\n  {\"alternative\": \"Atrial Flutter\", \"why\": \"Rhythm is described as 'regular' with 'no clear P waves' and 'abrupt onset', and the rate is typically 150 bpm (2:1 block) or 300 bpm (1:1), whereas this is 190 bpm.\"},\n  {\"alternative\": \"Hyperthyroidism\", \"why\": \"tsh: 2.2 mIU/L is within reference range (0.4–4.0).\"},\n  {\"alternative\": \"Electrolyte Imbalance\", \"why\": \"potassium: 4.0 mmol/L and magnesium: 2.0 mg/dL are both within normal reference ranges.\"}\n ],\n \"recommendedActions\": [\n  \"Attempt vagal maneuvers (e.g., Valsalva maneuver, carotid sinus massage)\",\n  \"Administer IV Adenosine (6mg rapid bolus) if vagal maneuvers fail\",\n  \"Establish IV access and continuous ECG monitoring\"\n ],\n \"uncertainty\": [\n  \"Exact reentrant circuit (AVNRT vs AVRT) cannot be distinguished without an electrophysiology study or seeing retrograde P-waves on a 12-lead ECG.\"\n ]\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1761,
+      "outputTokens": 528,
+      "elapsedSeconds": 39.426388953999776,
+      "peakGpuMemoryGiB": 19.00676202774048
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 39.426388953999776,
+  "inputTokens": 1761,
+  "outputTokens": 528,
+  "peakGpuMemoryGiB": 19.00676202774048,
+  "gpuName": "NVIDIA H100 80GB HBM3",
+  "quantization": "4bit"
+}

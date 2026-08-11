@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.1",
+  "provider": "lightning-ai-studio",
+  "model": "google/gemma-4-12B-it",
+  "runNumber": 1,
+  "scenarioId": "NSVT-ECTOPY-008",
+  "promptFingerprint": "0b3b5d79c4b305f91478f6c28197ed4de6c053a2df79594cb9376c2b9ea2365f",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "Thomas B. Nguyen, non-sustained ventricular tachycardia (NSVT) with multifocal PVCs, hemodynamically stable.",
+    "rhythm": "Non-sustained Ventricular Tachycardia (NSVT) / Multifocal PVCs",
+    "keyECGEvidence": [
+      "morphology: Sinus beats with multifocal wide PVCs, couplets, one non-sustained VT run of 4 beats",
+      "ectopyPer10s: 6",
+      "preEventNote: Post-op, on thiazide; PVC burden increasing over last hour",
+      "ventricularRateBpm: 78"
+    ],
+    "primaryEtiology": "Electrolyte imbalance (Hypokalemia and Hypomagnesemia)",
+    "mechanism": "Reduced myocardial excitability and increased repolarization heterogeneity due to low serum potassium (3.1 mmol/L) and magnesium (1.5 mg/dL), exacerbated by thiazide diuretic use, predisposing to ventricular ectopy and non-sustained VT.",
+    "contributingFactors": [
+      "Thiazide diuretic use (K/Mg wasting)",
+      "Post-operative status (Day 1)",
+      "History of hypertension and mild diastolic dysfunction"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Acute Myocardial Infarction",
+        "why": "Troponin T 0.02 ng/mL is only 'mild post-op' and not indicative of acute ischemia; patient is hemodynamically stable."
+      },
+      {
+        "alternative": "Drug-induced (e.g., Digoxin toxicity)",
+        "why": "No evidence of digoxin use or associated ECG changes (e.g., 'scooped' ST segments) provided in data."
+      }
+    ],
+    "recommendedActions": [
+      "Immediate electrolyte replacement: Initiate potassium and magnesium replacement per institutional protocol to correct K 3.1 mmol/L LOW and Mg 1.5 mg/dL LOW.",
+      "Continuous cardiac monitoring for further arrhythmias.",
+      "Notify surgical team and primary provider of electrolyte status and NSVT episode.",
+      "Assess for symptoms of hypokalemia (weakness, palpitations).",
+      "Withhold further thiazide diuretics until electrolytes are stabilized."
+    ],
+    "uncertainty": [
+      "Current potassium and magnesium levels are low but not critically life-threatening; however, the trend of increasing PVC burden suggests active electrolyte depletion."
+    ]
+  },
+  "rawModelResponse": "```json\n{\n  \"episodeSummary\": \"Thomas B. Nguyen, non-sustained ventricular tachycardia (NSVT) with multifocal PVCs, hemodynamically stable.\",\n  \"rhythm\": \"Non-sustained Ventricular Tachycardia (NSVT) / Multifocal PVCs\",\n  \"keyECGEvidence\": [\n    \"morphology: Sinus beats with multifocal wide PVCs, couplets, one non-sustained VT run of 4 beats\",\n    \"ectopyPer10s: 6\",\n    \"preEventNote: Post-op, on thiazide; PVC burden increasing over last hour\",\n    \"ventricularRateBpm: 78\"\n  ],\n  \"primaryEtiology\": \"Electrolyte imbalance (Hypokalemia and Hypomagnesemia)\",\n  \"mechanism\": \"Reduced myocardial excitability and increased repolarization heterogeneity due to low serum potassium (3.1 mmol/L) and magnesium (1.5 mg/dL), exacerbated by thiazide diuretic use, predisposing to ventricular ectopy and non-sustained VT.\",\n  \"contributingFactors\": [\n    \"Thiazide diuretic use (K/Mg wasting)\",\n    \"Post-operative status (Day 1)\",\n    \"History of hypertension and mild diastolic dysfunction\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Acute Myocardial Infarction\",\n      \"why\": \"Troponin T 0.02 ng/mL is only 'mild post-op' and not indicative of acute ischemia; patient is hemodynamically stable.\"\n    },\n    {\n      \"alternative\": \"Drug-induced (e.g., Digoxin toxicity)\",\n      \"why\": \"No evidence of digoxin use or associated ECG changes (e.g., 'scooped' ST segments) provided in data.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Immediate electrolyte replacement: Initiate potassium and magnesium replacement per institutional protocol to correct K 3.1 mmol/L LOW and Mg 1.5 mg/dL LOW.\",\n    \"Continuous cardiac monitoring for further arrhythmias.\",\n    \"Notify surgical team and primary provider of electrolyte status and NSVT episode.\",\n    \"Assess for symptoms of hypokalemia (weakness, palpitations).\",\n    \"Withhold further thiazide diuretics until electrolytes are stabilized.\"\n  ],\n  \"uncertainty\": [\n    \"Current potassium and magnesium levels are low but not critically life-threatening; however, the trend of increasing PVC burden suggests active electrolyte depletion.\"\n  ]\n}\n```",
+  "bestEffortParsedResponse": null,
+  "terminalStatus": "OK",
+  "hitMaxNewTokens": false,
+  "maxNewTokens": 2500,
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"Thomas B. Nguyen, non-sustained ventricular tachycardia (NSVT) with multifocal PVCs, hemodynamically stable.\",\n  \"rhythm\": \"Non-sustained Ventricular Tachycardia (NSVT) / Multifocal PVCs\",\n  \"keyECGEvidence\": [\n    \"morphology: Sinus beats with multifocal wide PVCs, couplets, one non-sustained VT run of 4 beats\",\n    \"ectopyPer10s: 6\",\n    \"preEventNote: Post-op, on thiazide; PVC burden increasing over last hour\",\n    \"ventricularRateBpm: 78\"\n  ],\n  \"primaryEtiology\": \"Electrolyte imbalance (Hypokalemia and Hypomagnesemia)\",\n  \"mechanism\": \"Reduced myocardial excitability and increased repolarization heterogeneity due to low serum potassium (3.1 mmol/L) and magnesium (1.5 mg/dL), exacerbated by thiazide diuretic use, predisposing to ventricular ectopy and non-sustained VT.\",\n  \"contributingFactors\": [\n    \"Thiazide diuretic use (K/Mg wasting)\",\n    \"Post-operative status (Day 1)\",\n    \"History of hypertension and mild diastolic dysfunction\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Acute Myocardial Infarction\",\n      \"why\": \"Troponin T 0.02 ng/mL is only 'mild post-op' and not indicative of acute ischemia; patient is hemodynamically stable.\"\n    },\n    {\n      \"alternative\": \"Drug-induced (e.g., Digoxin toxicity)\",\n      \"why\": \"No evidence of digoxin use or associated ECG changes (e.g., 'scooped' ST segments) provided in data.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Immediate electrolyte replacement: Initiate potassium and magnesium replacement per institutional protocol to correct K 3.1 mmol/L LOW and Mg 1.5 mg/dL LOW.\",\n    \"Continuous cardiac monitoring for further arrhythmias.\",\n    \"Notify surgical team and primary provider of electrolyte status and NSVT episode.\",\n    \"Assess for symptoms of hypokalemia (weakness, palpitations).\",\n    \"Withhold further thiazide diuretics until electrolytes are stabilized.\"\n  ],\n  \"uncertainty\": [\n    \"Current potassium and magnesium levels are low but not critically life-threatening; however, the trend of increasing PVC burden suggests active electrolyte depletion.\"\n  ]\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1823,
+      "outputTokens": 557,
+      "elapsedSeconds": 50.6817861010004,
+      "peakGpuMemoryGiB": 16.88552761077881,
+      "hitMaxNewTokens": false
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 50.6817861010004,
+  "inputTokens": 1823,
+  "outputTokens": 557,
+  "peakGpuMemoryGiB": 16.88552761077881,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

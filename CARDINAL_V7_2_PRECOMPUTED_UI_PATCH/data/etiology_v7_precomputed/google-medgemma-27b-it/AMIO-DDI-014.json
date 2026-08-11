@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.1",
+  "provider": "lightning-ai-studio",
+  "model": "google/medgemma-27b-it",
+  "runNumber": 1,
+  "scenarioId": "AMIO-DDI-014",
+  "promptFingerprint": "77a98a8a32d6250e7713da81837d315c95b8b4b2c88b5b6287285ce5dc072992",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "George F. Antonelli, 70M, sinus bradycardia (48 bpm), hemodynamically stable but symptomatic, likely due to digoxin toxicity exacerbated by amiodarone interaction and warfarin interaction.",
+    "rhythm": "Sinus bradycardia",
+    "keyECGEvidence": [
+      "ventricularRate_bpm: 48",
+      "atrialRate_bpm: 48",
+      "regularity: regular",
+      "pWavePresent: true",
+      "morphology: Sinus P waves with prolonged PR; narrow QRS; scooped ST segments; prolonged QTc 510 ms; U waves present",
+      "stDeviation: Scooped/sagging ST segments (digoxin effect)"
+    ],
+    "primaryEtiology": "Digoxin toxicity",
+    "mechanism": "Increased digoxin levels due to decreased metabolism/clearance (likely via CYP3A4 inhibition by amiodarone) leading to excessive vagal tone and AV nodal blockade, causing sinus bradycardia and potentially contributing to QTc prolongation and ST depression.",
+    "contributingFactors": [
+      "Amiodarone interaction: Amiodarone inhibits CYP3A4, potentially increasing digoxin levels.",
+      "Warfarin interaction: Amiodarone increases INR, increasing bleeding risk.",
+      "Patient symptoms: Nausea, muscle aches, weakness consistent with digoxin toxicity."
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Amiodarone toxicity",
+        "why": "While amiodarone can cause bradycardia and QTc prolongation, the ECG findings of scooped ST segments and U waves are more characteristic of digoxin effect. The patient's symptoms (nausea, muscle aches) are also more typical of digoxin toxicity than amiodarone toxicity."
+      },
+      {
+        "alternative": "Hypothyroidism",
+        "why": "TSH is within normal limits (2.1 mIU/L)."
+      },
+      {
+        "alternative": "Electrolyte abnormality (e.g., hyperkalemia)",
+        "why": "Potassium is within normal limits (4.0 mmol/L). Hyperkalemia can cause bradycardia and peaked T waves/ST depression, but the ST morphology here is characteristic of digoxin."
+      },
+      {
+        "alternative": "Intrinsic sinus node disease",
+        "why": "The patient has a history of AF, but the current ECG shows sinus rhythm with P waves. The bradycardia is likely drug-induced given the recent medication changes and lab findings."
+      }
+    ],
+    "recommendedActions": [
+      "HOLD Digoxin immediately",
+      "Administer IV calcium gluconate (if signs of severe digoxin toxicity like hyperkalemia or ventricular arrhythmias develop, although K is normal here)",
+      "Administer activated charcoal (if recent ingestion)",
+      "Monitor ECG continuously for arrhythmias (AV block, ventricular ectopy)",
+      "Monitor vital signs frequently",
+      "Check electrolytes (especially potassium and magnesium) and renal function",
+      "Reverse warfarin effect (administer Vitamin K and/or PCC depending on INR and bleeding risk)",
+      "Consult Cardiology and/or Toxicology urgently"
+    ],
+    "uncertainty": []
+  },
+  "rawModelResponse": "```json\n{\n  \"episodeSummary\": \"George F. Antonelli, 70M, sinus bradycardia (48 bpm), hemodynamically stable but symptomatic, likely due to digoxin toxicity exacerbated by amiodarone interaction and warfarin interaction.\",\n  \"rhythm\": \"Sinus bradycardia\",\n  \"keyECGEvidence\": [\n    \"ventricularRate_bpm: 48\",\n    \"atrialRate_bpm: 48\",\n    \"regularity: regular\",\n    \"pWavePresent: true\",\n    \"morphology: Sinus P waves with prolonged PR; narrow QRS; scooped ST segments; prolonged QTc 510 ms; U waves present\",\n    \"stDeviation: Scooped/sagging ST segments (digoxin effect)\"\n  ],\n  \"primaryEtiology\": \"Digoxin toxicity\",\n  \"mechanism\": \"Increased digoxin levels due to decreased metabolism/clearance (likely via CYP3A4 inhibition by amiodarone) leading to excessive vagal tone and AV nodal blockade, causing sinus bradycardia and potentially contributing to QTc prolongation and ST depression.\",\n  \"contributingFactors\": [\n    \"Amiodarone interaction: Amiodarone inhibits CYP3A4, potentially increasing digoxin levels.\",\n    \"Warfarin interaction: Amiodarone increases INR, increasing bleeding risk.\",\n    \"Patient symptoms: Nausea, muscle aches, weakness consistent with digoxin toxicity.\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Amiodarone toxicity\",\n      \"why\": \"While amiodarone can cause bradycardia and QTc prolongation, the ECG findings of scooped ST segments and U waves are more characteristic of digoxin effect. The patient's symptoms (nausea, muscle aches) are also more typical of digoxin toxicity than amiodarone toxicity.\"\n    },\n    {\n      \"alternative\": \"Hypothyroidism\",\n      \"why\": \"TSH is within normal limits (2.1 mIU/L).\"\n    },\n    {\n      \"alternative\": \"Electrolyte abnormality (e.g., hyperkalemia)\",\n      \"why\": \"Potassium is within normal limits (4.0 mmol/L). Hyperkalemia can cause bradycardia and peaked T waves/ST depression, but the ST morphology here is characteristic of digoxin.\"\n    },\n    {\n      \"alternative\": \"Intrinsic sinus node disease\",\n      \"why\": \"The patient has a history of AF, but the current ECG shows sinus rhythm with P waves. The bradycardia is likely drug-induced given the recent medication changes and lab findings.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"HOLD Digoxin immediately\",\n    \"Administer IV calcium gluconate (if signs of severe digoxin toxicity like hyperkalemia or ventricular arrhythmias develop, although K is normal here)\",\n    \"Administer activated charcoal (if recent ingestion)\",\n    \"Monitor ECG continuously for arrhythmias (AV block, ventricular ectopy)\",\n    \"Monitor vital signs frequently\",\n    \"Check electrolytes (especially potassium and magnesium) and renal function\",\n    \"Reverse warfarin effect (administer Vitamin K and/or PCC depending on INR and bleeding risk)\",\n    \"Consult Cardiology and/or Toxicology urgently\"\n  ],\n  \"uncertainty\": []\n}\n```",
+  "bestEffortParsedResponse": null,
+  "terminalStatus": "OK",
+  "hitMaxNewTokens": false,
+  "maxNewTokens": 2500,
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"George F. Antonelli, 70M, sinus bradycardia (48 bpm), hemodynamically stable but symptomatic, likely due to digoxin toxicity exacerbated by amiodarone interaction and warfarin interaction.\",\n  \"rhythm\": \"Sinus bradycardia\",\n  \"keyECGEvidence\": [\n    \"ventricularRate_bpm: 48\",\n    \"atrialRate_bpm: 48\",\n    \"regularity: regular\",\n    \"pWavePresent: true\",\n    \"morphology: Sinus P waves with prolonged PR; narrow QRS; scooped ST segments; prolonged QTc 510 ms; U waves present\",\n    \"stDeviation: Scooped/sagging ST segments (digoxin effect)\"\n  ],\n  \"primaryEtiology\": \"Digoxin toxicity\",\n  \"mechanism\": \"Increased digoxin levels due to decreased metabolism/clearance (likely via CYP3A4 inhibition by amiodarone) leading to excessive vagal tone and AV nodal blockade, causing sinus bradycardia and potentially contributing to QTc prolongation and ST depression.\",\n  \"contributingFactors\": [\n    \"Amiodarone interaction: Amiodarone inhibits CYP3A4, potentially increasing digoxin levels.\",\n    \"Warfarin interaction: Amiodarone increases INR, increasing bleeding risk.\",\n    \"Patient symptoms: Nausea, muscle aches, weakness consistent with digoxin toxicity.\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Amiodarone toxicity\",\n      \"why\": \"While amiodarone can cause bradycardia and QTc prolongation, the ECG findings of scooped ST segments and U waves are more characteristic of digoxin effect. The patient's symptoms (nausea, muscle aches) are also more typical of digoxin toxicity than amiodarone toxicity.\"\n    },\n    {\n      \"alternative\": \"Hypothyroidism\",\n      \"why\": \"TSH is within normal limits (2.1 mIU/L).\"\n    },\n    {\n      \"alternative\": \"Electrolyte abnormality (e.g., hyperkalemia)\",\n      \"why\": \"Potassium is within normal limits (4.0 mmol/L). Hyperkalemia can cause bradycardia and peaked T waves/ST depression, but the ST morphology here is characteristic of digoxin.\"\n    },\n    {\n      \"alternative\": \"Intrinsic sinus node disease\",\n      \"why\": \"The patient has a history of AF, but the current ECG shows sinus rhythm with P waves. The bradycardia is likely drug-induced given the recent medication changes and lab findings.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"HOLD Digoxin immediately\",\n    \"Administer IV calcium gluconate (if signs of severe digoxin toxicity like hyperkalemia or ventricular arrhythmias develop, although K is normal here)\",\n    \"Administer activated charcoal (if recent ingestion)\",\n    \"Monitor ECG continuously for arrhythmias (AV block, ventricular ectopy)\",\n    \"Monitor vital signs frequently\",\n    \"Check electrolytes (especially potassium and magnesium) and renal function\",\n    \"Reverse warfarin effect (administer Vitamin K and/or PCC depending on INR and bleeding risk)\",\n    \"Consult Cardiology and/or Toxicology urgently\"\n  ],\n  \"uncertainty\": []\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 2111,
+      "outputTokens": 713,
+      "elapsedSeconds": 77.55824721299996,
+      "peakGpuMemoryGiB": 25.517999172210693,
+      "hitMaxNewTokens": false
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 77.55824721299996,
+  "inputTokens": 2111,
+  "outputTokens": 713,
+  "peakGpuMemoryGiB": 25.517999172210693,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

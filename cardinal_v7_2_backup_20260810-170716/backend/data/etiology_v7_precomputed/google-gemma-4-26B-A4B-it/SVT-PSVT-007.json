@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.0",
+  "provider": "lightning-ai-studio",
+  "model": "google/gemma-4-26B-A4B-it",
+  "runNumber": 1,
+  "scenarioId": "SVT-PSVT-007",
+  "promptFingerprint": "b623a8817caf00b26ec8d4f3895555ff32d72ce473184f0ed94c12f07d8cee56",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "34F, Supraventricular Tachycardia, warning severity, hemodynamically stable (BP 118/76)",
+    "rhythm": "Supraventricular Tachycardia (SVT)",
+    "keyECGEvidence": [
+      "ventricularRateBpm 190",
+      "regularity: regular",
+      "qrsDurationMs 88 (narrow)",
+      "pWavePresent: false",
+      "morphology: Narrow QRS, no clear P waves, abrupt onset"
+    ],
+    "primaryEtiology": "Caffeine-induced autonomic/sympathetic stimulation",
+    "mechanism": "Caffeine-induced increased sympathetic tone and catecholamine release triggering a re-entrant circuit in the atria or AV node.",
+    "contributingFactors": [
+      "Exertion",
+      "Caffeine consumption (two cups of coffee)"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Sinus Tachycardia",
+        "why": "Abrupt onset and absence of discernible P-waves at a rate of 190 bpm is inconsistent with sinus rhythm."
+      },
+      {
+        "alternative": "Ventricular Tachycardia",
+        "why": "QRS duration is narrow (88 ms) and patient is hemodynamically stable; morphology is consistent with supraventricular origin."
+      },
+      {
+        "alternative": "Hyperthyroidism",
+        "why": "TSH is normal at 2.2 mIU/L."
+      }
+    ],
+    "recommendedActions": [
+      "Perform vagal maneuvers (e.g., Valsalva maneuver) to attempt termination of rhythm.",
+      "Monitor vital signs and ECG continuously.",
+      "Avoid further caffeine or stimulant intake.",
+      "Assess for chest pain or symptomatic changes."
+    ],
+    "uncertainty": [
+      "Specific type of SVT (e.g., AVNRT vs AVRT) cannot be definitively distinguished without further P-wave visualization or post-vagal maneuver analysis."
+    ]
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n \"episodeSummary\": \"34F, Supraventricular Tachycardia, warning severity, hemodynamically stable (BP 118/76)\",\n \"rhythm\": \"Supraventricular Tachycardia (SVT)\",\n \"keyECGEvidence\": [\n  \"ventricularRateBpm 190\",\n  \"regularity: regular\",\n  \"qrsDurationMs 88 (narrow)\",\n  \"pWavePresent: false\",\n  \"morphology: Narrow QRS, no clear P waves, abrupt onset\"\n ],\n \"primaryEtiology\": \"Caffeine-induced autonomic/sympathetic stimulation\",\n \"mechanism\": \"Caffeine-induced increased sympathetic tone and catecholamine release triggering a re-entrant circuit in the atria or AV node.\",\n \"contributingFactors\": [\n  \"Exertion\",\n  \"Caffeine consumption (two cups of coffee)\"\n ],\n \"rejectedAlternatives\": [\n  {\n   \"alternative\": \"Sinus Tachycardia\",\n   \"why\": \"Abrupt onset and absence of discernible P-waves at a rate of 190 bpm is inconsistent with sinus rhythm.\"\n  },\n  {\n   \"alternative\": \"Ventricular Tachycardia\",\n   \"why\": \"QRS duration is narrow (88 ms) and patient is hemodynamically stable; morphology is consistent with supraventricular origin.\"\n  },\n  {\n   \"alternative\": \"Hyperthyroidism\",\n   \"why\": \"TSH is normal at 2.2 mIU/L.\"\n  }\n ],\n \"recommendedActions\": [\n  \"Perform vagal maneuvers (e.g., Valsalva maneuver) to attempt termination of rhythm.\",\n  \"Monitor vital signs and ECG continuously.\",\n  \"Avoid further caffeine or stimulant intake.\",\n  \"Assess for chest pain or symptomatic changes.\"\n ],\n \"uncertainty\": [\n  \"Specific type of SVT (e.g., AVNRT vs AVRT) cannot be definitively distinguished without further P-wave visualization or post-vagal maneuver analysis.\"\n ]\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1761,
+      "outputTokens": 460,
+      "elapsedSeconds": 29.168008740000005,
+      "peakGpuMemoryGiB": 45.94293022155762
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 29.168008740000005,
+  "inputTokens": 1761,
+  "outputTokens": 460,
+  "peakGpuMemoryGiB": 45.94293022155762,
+  "gpuName": "NVIDIA H100 80GB HBM3",
+  "quantization": "4bit"
+}

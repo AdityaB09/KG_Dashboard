@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.1",
+  "provider": "lightning-ai-studio",
+  "model": "google/medgemma-27b-it",
+  "runNumber": 1,
+  "scenarioId": "BRASH-013",
+  "promptFingerprint": "f9a4a44237752b01310c2b760b06618b7ae0a1aa9ea4c384dcfdc6ce0d592ffe",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "Helen M. Kowalski, 72F, presents with symptomatic bradycardia (HR 32 bpm) and hypotension (MAP 53 mmHg) in the context of severe hyperkalemia (K 6.4 mmol/L) and acute kidney injury (Cr 3.2 mg/dL).",
+    "rhythm": "Symptomatic Bradycardia (likely Junctional Escape Rhythm)",
+    "keyECGEvidence": [
+      "Ventricular rate 32 bpm",
+      "Regular rhythm",
+      "QRS duration 108 ms (mildly wide)",
+      "P waves absent",
+      "Pre-event note: ECG changes disproportionately mild relative to potassium level; bradycardia severity exceeds what K+ 6.4 alone would typically produce; atropine 1 mg x2 administered with no heart rate response"
+    ],
+    "primaryEtiology": "Severe Hyperkalemia",
+    "mechanism": "Hyperkalemia impairs cardiac conduction by decreasing the resting membrane potential and slowing depolarization, leading to bradycardia and potentially life-threatening arrhythmias. The ECG changes (peaked T waves, QRS widening, loss of P waves) and the profound bradycardia unresponsive to atropine are consistent with this.",
+    "contributingFactors": [
+      "Acute Kidney Injury (Cr 3.2 mg/dL, BUN 68 mg/dL): Impaired renal excretion is the likely cause of the hyperkalemia.",
+      "Chronic Kidney Disease stage 3: Baseline renal impairment predisposes to electrolyte disturbances.",
+      "Medications: Lisinopril (ACE inhibitor) can contribute to hyperkalemia, especially in the setting of renal impairment."
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Beta-blocker toxicity (Atenolol)",
+        "why": "While Atenolol can cause bradycardia, the severe hyperkalemia and ECG changes (peaked T waves, QRS widening) are more prominent features. Also, the bradycardia is unresponsive to atropine, which is expected in severe hyperkalemia but less specific for beta-blocker toxicity alone."
+      },
+      {
+        "alternative": "Calcium channel blocker toxicity (Amlodipine)",
+        "why": "Amlodipine is less likely to cause severe bradycardia compared to non-dihydropyridines. The ECG findings are more typical of hyperkalemia than CCB toxicity."
+      },
+      {
+        "alternative": "Intrinsic Sinus Node Disease",
+        "why": "While possible given age, the acute presentation with severe hyperkalemia and ECG changes strongly points towards hyperkalemia as the primary driver of the bradycardia. The absence of P waves and the junctional escape rhythm morphology are consistent with hyperkalemia affecting conduction."
+      }
+    ],
+    "recommendedActions": [
+      "Administer IV calcium gluconate (or calcium chloride) immediately to stabilize the cardiac membrane (contraindicated if hypercalcemia present, but unlikely here).",
+      "Administer IV insulin and glucose to shift potassium intracellularly.",
+      "Administer IV sodium bicarbonate to shift potassium intracellularly (use cautiously given low bicarbonate).",
+      "Administer IV loop diuretics (e.g., furosemide) if urine output is adequate to promote potassium excretion (likely ineffective given AKI).",
+      "Consider emergent dialysis for definitive potassium removal, given severe hyperkalemia and AKI.",
+      "Continuous ECG monitoring.",
+      "Frequent potassium level checks.",
+      "Hold Lisinopril."
+    ],
+    "uncertainty": []
+  },
+  "rawModelResponse": "```json\n{\n  \"episodeSummary\": \"Helen M. Kowalski, 72F, presents with symptomatic bradycardia (HR 32 bpm) and hypotension (MAP 53 mmHg) in the context of severe hyperkalemia (K 6.4 mmol/L) and acute kidney injury (Cr 3.2 mg/dL).\",\n  \"rhythm\": \"Symptomatic Bradycardia (likely Junctional Escape Rhythm)\",\n  \"keyECGEvidence\": [\n    \"Ventricular rate 32 bpm\",\n    \"Regular rhythm\",\n    \"QRS duration 108 ms (mildly wide)\",\n    \"P waves absent\",\n    \"Pre-event note: ECG changes disproportionately mild relative to potassium level; bradycardia severity exceeds what K+ 6.4 alone would typically produce; atropine 1 mg x2 administered with no heart rate response\"\n  ],\n  \"primaryEtiology\": \"Severe Hyperkalemia\",\n  \"mechanism\": \"Hyperkalemia impairs cardiac conduction by decreasing the resting membrane potential and slowing depolarization, leading to bradycardia and potentially life-threatening arrhythmias. The ECG changes (peaked T waves, QRS widening, loss of P waves) and the profound bradycardia unresponsive to atropine are consistent with this.\",\n  \"contributingFactors\": [\n    \"Acute Kidney Injury (Cr 3.2 mg/dL, BUN 68 mg/dL): Impaired renal excretion is the likely cause of the hyperkalemia.\",\n    \"Chronic Kidney Disease stage 3: Baseline renal impairment predisposes to electrolyte disturbances.\",\n    \"Medications: Lisinopril (ACE inhibitor) can contribute to hyperkalemia, especially in the setting of renal impairment.\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Beta-blocker toxicity (Atenolol)\",\n      \"why\": \"While Atenolol can cause bradycardia, the severe hyperkalemia and ECG changes (peaked T waves, QRS widening) are more prominent features. Also, the bradycardia is unresponsive to atropine, which is expected in severe hyperkalemia but less specific for beta-blocker toxicity alone.\"\n    },\n    {\n      \"alternative\": \"Calcium channel blocker toxicity (Amlodipine)\",\n      \"why\": \"Amlodipine is less likely to cause severe bradycardia compared to non-dihydropyridines. The ECG findings are more typical of hyperkalemia than CCB toxicity.\"\n    },\n    {\n      \"alternative\": \"Intrinsic Sinus Node Disease\",\n      \"why\": \"While possible given age, the acute presentation with severe hyperkalemia and ECG changes strongly points towards hyperkalemia as the primary driver of the bradycardia. The absence of P waves and the junctional escape rhythm morphology are consistent with hyperkalemia affecting conduction.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Administer IV calcium gluconate (or calcium chloride) immediately to stabilize the cardiac membrane (contraindicated if hypercalcemia present, but unlikely here).\",\n    \"Administer IV insulin and glucose to shift potassium intracellularly.\",\n    \"Administer IV sodium bicarbonate to shift potassium intracellularly (use cautiously given low bicarbonate).\",\n    \"Administer IV loop diuretics (e.g., furosemide) if urine output is adequate to promote potassium excretion (likely ineffective given AKI).\",\n    \"Consider emergent dialysis for definitive potassium removal, given severe hyperkalemia and AKI.\",\n    \"Continuous ECG monitoring.\",\n    \"Frequent potassium level checks.\",\n    \"Hold Lisinopril.\"\n  ],\n  \"uncertainty\": []\n}\n```",
+  "bestEffortParsedResponse": null,
+  "terminalStatus": "OK",
+  "hitMaxNewTokens": false,
+  "maxNewTokens": 2500,
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"Helen M. Kowalski, 72F, presents with symptomatic bradycardia (HR 32 bpm) and hypotension (MAP 53 mmHg) in the context of severe hyperkalemia (K 6.4 mmol/L) and acute kidney injury (Cr 3.2 mg/dL).\",\n  \"rhythm\": \"Symptomatic Bradycardia (likely Junctional Escape Rhythm)\",\n  \"keyECGEvidence\": [\n    \"Ventricular rate 32 bpm\",\n    \"Regular rhythm\",\n    \"QRS duration 108 ms (mildly wide)\",\n    \"P waves absent\",\n    \"Pre-event note: ECG changes disproportionately mild relative to potassium level; bradycardia severity exceeds what K+ 6.4 alone would typically produce; atropine 1 mg x2 administered with no heart rate response\"\n  ],\n  \"primaryEtiology\": \"Severe Hyperkalemia\",\n  \"mechanism\": \"Hyperkalemia impairs cardiac conduction by decreasing the resting membrane potential and slowing depolarization, leading to bradycardia and potentially life-threatening arrhythmias. The ECG changes (peaked T waves, QRS widening, loss of P waves) and the profound bradycardia unresponsive to atropine are consistent with this.\",\n  \"contributingFactors\": [\n    \"Acute Kidney Injury (Cr 3.2 mg/dL, BUN 68 mg/dL): Impaired renal excretion is the likely cause of the hyperkalemia.\",\n    \"Chronic Kidney Disease stage 3: Baseline renal impairment predisposes to electrolyte disturbances.\",\n    \"Medications: Lisinopril (ACE inhibitor) can contribute to hyperkalemia, especially in the setting of renal impairment.\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Beta-blocker toxicity (Atenolol)\",\n      \"why\": \"While Atenolol can cause bradycardia, the severe hyperkalemia and ECG changes (peaked T waves, QRS widening) are more prominent features. Also, the bradycardia is unresponsive to atropine, which is expected in severe hyperkalemia but less specific for beta-blocker toxicity alone.\"\n    },\n    {\n      \"alternative\": \"Calcium channel blocker toxicity (Amlodipine)\",\n      \"why\": \"Amlodipine is less likely to cause severe bradycardia compared to non-dihydropyridines. The ECG findings are more typical of hyperkalemia than CCB toxicity.\"\n    },\n    {\n      \"alternative\": \"Intrinsic Sinus Node Disease\",\n      \"why\": \"While possible given age, the acute presentation with severe hyperkalemia and ECG changes strongly points towards hyperkalemia as the primary driver of the bradycardia. The absence of P waves and the junctional escape rhythm morphology are consistent with hyperkalemia affecting conduction.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Administer IV calcium gluconate (or calcium chloride) immediately to stabilize the cardiac membrane (contraindicated if hypercalcemia present, but unlikely here).\",\n    \"Administer IV insulin and glucose to shift potassium intracellularly.\",\n    \"Administer IV sodium bicarbonate to shift potassium intracellularly (use cautiously given low bicarbonate).\",\n    \"Administer IV loop diuretics (e.g., furosemide) if urine output is adequate to promote potassium excretion (likely ineffective given AKI).\",\n    \"Consider emergent dialysis for definitive potassium removal, given severe hyperkalemia and AKI.\",\n    \"Continuous ECG monitoring.\",\n    \"Frequent potassium level checks.\",\n    \"Hold Lisinopril.\"\n  ],\n  \"uncertainty\": []\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1965,
+      "outputTokens": 784,
+      "elapsedSeconds": 85.78740976300014,
+      "peakGpuMemoryGiB": 25.430346965789795,
+      "hitMaxNewTokens": false
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 85.78740976300014,
+  "inputTokens": 1965,
+  "outputTokens": 784,
+  "peakGpuMemoryGiB": 25.430346965789795,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.0",
+  "provider": "lightning-ai-studio",
+  "model": "google/gemma-4-26B-A4B-it",
+  "runNumber": 1,
+  "scenarioId": "VT-ISCHEMIC-003",
+  "promptFingerprint": "a7562ccbf6b12d0bff83d638b24638a34fe3324dc057a1383d06280b9a2f7757",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "James P. Whitfield, Ventricular Tachycardia, critical, hemodynamically borderline (BP 88/58)",
+    "rhythm": "Ventricular Tachycardia (VT)",
+    "keyECGEvidence": [
+      "ventricularRateBpm 182",
+      "qrsDurationMs 168",
+      "AV dissociation",
+      "Wide monomorphic QRS",
+      "occasional capture/fusion beats"
+    ],
+    "primaryEtiology": "Acute myocardial ischemia/demand ischemia in the setting of decompensated ischemic cardiomyopathy",
+    "mechanism": "Re-entry within the ventricular myocardium due to structural scarring and acute myocardial demand ischemia",
+    "contributingFactors": [
+      "Decompensated ischemic cardiomyopathy (LVEF 25%)",
+      "Troponin T 0.09 ng/mL mildly HIGH (demand)",
+      "BNP 1840 pg/mL HIGH",
+      "CKD stage 3 (Creatinine 1.9 mg/dL HIGH)"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Torsades de Pointes",
+        "why": "Rhythm is monomorphic with AV dissociation rather than polymorphic; baseline QTc 460 ms is not significantly prolonged."
+      },
+      {
+        "alternative": "Supraventricular Tachycardia with aberrancy",
+        "why": "Presence of AV dissociation and fusion beats confirms a ventricular origin."
+      },
+      {
+        "alternative": "Electrolyte-induced arrhythmia (Hypokalemia/Hypomagnesemia)",
+        "why": "K 4.3 mmol/L and Mg 2.1 mg/dL are within normal limits."
+      }
+    ],
+    "recommendedActions": [
+      "Assess for immediate cardioversion if blood pressure deteriorates further (patient is currently borderline at 88/58)",
+      "Administer Amiodarone or Lidocaine per ACLS protocol for stable/borderline VT",
+      "Evaluate for acute coronary syndrome (ACS) via serial troponins and urgent cardiology consultation",
+      "Optimize volume status; monitor renal function (Creatinine 1.9 mg/dL HIGH) and electrolyte trends",
+      "Continue continuous cardiac monitoring and prepare for potential ICD/PPM evaluation"
+    ],
+    "uncertainty": [
+      "The exact trigger for the acute rise in troponin (demand vs. acute coronary event) cannot be definitively distinguished without serial labs."
+    ]
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "{\n \"episodeSummary\": \"James P. Whitfield, Ventricular Tachycardia, critical, hemodynamically borderline (BP 88/58)\",\n \"rhythm\": \"Ventricular Tachycardia (VT)\",\n \"keyECGEvidence\": [\n  \"ventricularRateBpm 182\",\n  \"qrsDurationMs 168\",\n  \"AV dissociation\",\n  \"Wide monomorphic QRS\",\n  \"occasional capture/fusion beats\"\n ],\n \"primaryEtiology\": \"Acute myocardial ischemia/demand ischemia in the setting of decompensated ischemic cardiomyopathy\",\n \"mechanism\": \"Re-entry within the ventricular myocardium due to structural scarring and acute myocardial demand ischemia\",\n \"contributingFactors\": [\n  \"Decompensated ischemic cardiomyopathy (LVEF 25%)\",\n  \"Troponin T 0.09 ng/mL mildly HIGH (demand)\",\n  \"BNP 1840 pg/mL HIGH\",\n  \"CKD stage 3 (Creatinine 1.9 mg/dL HIGH)\"\n ],\n \"rejectedAlternatives\": [\n   {\n    \"alternative\": \"Torsades de Pointes\",\n    \"why\": \"Rhythm is monomorphic with AV dissociation rather than polymorphic; baseline QTc 460 ms is not significantly prolonged.\"\n   },\n   {\n    \"alternative\": \"Supraventricular Tachycardia with aberrancy\",\n    \"why\": \"Presence of AV dissociation and fusion beats confirms a ventricular origin.\"\n   },\n   {\n    \"alternative\": \"Electrolyte-induced arrhythmia (Hypokalemia/Hypomagnesemia)\",\n    \"why\": \"K 4.3 mmol/L and Mg 2.1 mg/dL are within normal limits.\"\n   }\n ]\n ],\n \"recommendedActions\": [\n  \"Assess for immediate cardioversion if blood pressure deteriorates further (patient is currently borderline at 88/58)\",\n  \"Administer Amiodarone or Lidocaine per ACLS protocol for stable/borderline VT\",\n  \"Evaluate for acute coronary syndrome (ACS) via serial troponins and urgent cardiology consultation\",\n  \"Optimize volume status; monitor renal function (Creatinine 1.9 mg/dL HIGH) and electrolyte trends\",\n  \"Continue continuous cardiac monitoring and prepare for potential ICD/PPM evaluation\"\n ],\n \"uncertainty\": [\n  \"The exact trigger for the acute rise in troponin (demand vs. acute coronary event) cannot be definitively distinguished without serial labs.\"\n ]\n}",
+      "contractErrors": [
+        "JSON parse: Expecting ',' delimiter: line 33 column 2 (char 1309)"
+      ],
+      "inputTokens": 1867,
+      "outputTokens": 551,
+      "elapsedSeconds": 35.343652816999565,
+      "peakGpuMemoryGiB": 45.996554374694824
+    },
+    {
+      "attempt": 2,
+      "rawText": "{\n \"episodeSummary\": \"James P. Whitfield, Ventricular Tachycardia, critical, hemodynamically borderline (BP 88/58)\",\n \"rhythm\": \"Ventricular Tachycardia (VT)\",\n \"keyECGEvidence\": [\n  \"ventricularRateBpm 182\",\n  \"qrsDurationMs 168\",\n  \"AV dissociation\",\n  \"Wide monomorphic QRS\",\n  \"occasional capture/fusion beats\"\n ],\n \"primaryEtiology\": \"Acute myocardial ischemia/demand ischemia in the setting of decompensated ischemic cardiomyopathy\",\n \"mechanism\": \"Re-entry within the ventricular myocardium due to structural scarring and acute myocardial demand ischemia\",\n \"contributingFactors\": [\n  \"Decompensated ischemic cardiomyopathy (LVEF 25%)\",\n  \"Troponin T 0.09 ng/mL mildly HIGH (demand)\",\n  \"BNP 1840 pg/mL HIGH\",\n  \"CKD stage 3 (Creatinine 1.9 mg/dL HIGH)\"\n ],\n \"rejectedAlternatives\": [\n   {\n    \"alternative\": \"Torsades de Pointes\",\n    \"why\": \"Rhythm is monomorphic with AV dissociation rather than polymorphic; baseline QTc 460 ms is not significantly prolonged.\"\n   },\n   {\n    \"alternative\": \"Supraventricular Tachycardia with aberrancy\",\n    \"why\": \"Presence of AV dissociation and fusion beats confirms a ventricular origin.\"\n   },\n   {\n    \"alternative\": \"Electrolyte-induced arrhythmia (Hypokalemia/Hypomagnesemia)\",\n    \"why\": \"K 4.3 mmol/L and Mg 2.1 mg/dL are within normal limits.\"\n   }\n ],\n \"recommendedActions\": [\n  \"Assess for immediate cardioversion if blood pressure deteriorates further (patient is currently borderline at 88/58)\",\n  \"Administer Amiodarone or Lidocaine per ACLS protocol for stable/borderline VT\",\n  \"Evaluate for acute coronary syndrome (ACS) via serial troponins and urgent cardiology consultation\",\n  \"Optimize volume status; monitor renal function (Creatinine 1.9 mg/dL HIGH) and electrolyte trends\",\n  \"Continue continuous cardiac monitoring and prepare for potential ICD/PPM evaluation\"\n ],\n \"uncertainty\": [\n  \"The exact trigger for the acute rise in troponin (demand vs. acute coronary event) cannot be definitively distinguished without serial labs.\"\n ]\n}",
+      "contractErrors": [],
+      "inputTokens": 2492,
+      "outputTokens": 549,
+      "elapsedSeconds": 35.15622663399972,
+      "peakGpuMemoryGiB": 46.30633020401001
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 70.49987945099929,
+  "inputTokens": 2492,
+  "outputTokens": 549,
+  "peakGpuMemoryGiB": 46.30633020401001,
+  "gpuName": "NVIDIA H100 80GB HBM3",
+  "quantization": "4bit"
+}

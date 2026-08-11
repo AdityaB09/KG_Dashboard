@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.0",
+  "provider": "lightning-ai-studio",
+  "model": "google/gemma-4-E4B-it",
+  "runNumber": 1,
+  "scenarioId": "WPW-AFIB-010",
+  "promptFingerprint": "94585a4fb77ccf37f1d4094a6ea5af86f6bf99014d9414cb357b3b299982a4bf",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "28M, Atrial Fibrillation with rapid ventricular response, Critical severity, Hemodynamically compromised (MAP 59 mmHg)",
+    "rhythm": "Atrial Fibrillation (AFib)",
+    "keyECGEvidence": [
+      "Regularity: irregularly irregular",
+      "P-wavePresent: false",
+      "Morphology: fibrillatory baseline",
+      "PreEventNote: abrupt onset during basketball game; patient diaphoretic and near-syncopal",
+      "VentricularRate_bpm: 210"
+    ],
+    "primaryEtiology": "Primary Cardiac Arrhythmia (Atrial Fibrillation)",
+    "mechanism": "Loss of organized atrial activity leading to chaotic electrical activity and subsequent rapid, uncontrolled ventricular response.",
+    "contributingFactors": [
+      "Acute physical exertion (basketball game)",
+      "Autonomic instability suggested by near-syncope and diaphoresis",
+      "Absence of baseline cardiac structural disease identified in provided data"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Supraventricular Tachycardia (SVT) with aberrancy",
+        "why": "The rhythm is described as 'irregularly irregular' with a 'fibrillatory baseline' and 'P-wavePresent: false', which is inconsistent with a regular SVT."
+      },
+      {
+        "alternative": "Ventricular Tachycardia (VT)",
+        "why": "The presence of a fibrillatory baseline and the description of the rhythm as atrial in origin (implied by the context of AFib diagnosis) makes VT less likely as the primary diagnosis, although rapid ventricular response is present."
+      }
+    ],
+    "recommendedActions": [
+      "Immediate ABC assessment and positioning to optimize perfusion.",
+      "Initiate IV access and obtain STAT labs (including lactate, renal function if not already done).",
+      "Administer IV fluids (e.g., 500 mL crystalloid bolus) while monitoring BP response.",
+      "Initiate rate control therapy (e.g., IV Beta-blocker or Calcium Channel Blocker) if hemodynamically stable enough to tolerate medication.",
+      "If hypotension persists or worsens despite fluids, consider synchronized cardioversion.",
+      "Maintain continuous cardiac monitoring and reassess rhythm control strategy once stable."
+    ],
+    "uncertainty": [
+      "The exact mechanism driving the AFib onset (e.g., atrial remodeling, electrolyte shift) cannot be determined without further cardiac imaging or history."
+    ]
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"28M, Atrial Fibrillation with rapid ventricular response, Critical severity, Hemodynamically compromised (MAP 59 mmHg)\",\n  \"rhythm\": \"Atrial Fibrillation (AFib)\",\n  \"keyECGEvidence\": [\n    \"Regularity: irregularly irregular\",\n    \"P-wavePresent: false\",\n    \"Morphology: fibrillatory baseline\",\n    \"PreEventNote: abrupt onset during basketball game; patient diaphoretic and near-syncopal\",\n    \"VentricularRate_bpm: 210\"\n  ],\n  \"primaryEtiology\": \"Primary Cardiac Arrhythmia (Atrial Fibrillation)\",\n  \"mechanism\": \"Loss of organized atrial activity leading to chaotic electrical activity and subsequent rapid, uncontrolled ventricular response.\",\n  \"contributingFactors\": [\n    \"Acute physical exertion (basketball game)\",\n    \"Autonomic instability suggested by near-syncope and diaphoresis\",\n    \"Absence of baseline cardiac structural disease identified in provided data\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Supraventricular Tachycardia (SVT) with aberrancy\",\n      \"why\": \"The rhythm is described as 'irregularly irregular' with a 'fibrillatory baseline' and 'P-wavePresent: false', which is inconsistent with a regular SVT.\"\n    },\n    {\n      \"alternative\": \"Ventricular Tachycardia (VT)\",\n      \"why\": \"The presence of a fibrillatory baseline and the description of the rhythm as atrial in origin (implied by the context of AFib diagnosis) makes VT less likely as the primary diagnosis, although rapid ventricular response is present.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Immediate ABC assessment and positioning to optimize perfusion.\",\n    \"Initiate IV access and obtain STAT labs (including lactate, renal function if not already done).\",\n    \"Administer IV fluids (e.g., 500 mL crystalloid bolus) while monitoring BP response.\",\n    \"Initiate rate control therapy (e.g., IV Beta-blocker or Calcium Channel Blocker) if hemodynamically stable enough to tolerate medication.\",\n    \"If hypotension persists or worsens despite fluids, consider synchronized cardioversion.\",\n    \"Maintain continuous cardiac monitoring and reassess rhythm control strategy once stable.\"\n  ],\n  \"uncertainty\": [\n    \"The exact mechanism driving the AFib onset (e.g., atrial remodeling, electrolyte shift) cannot be determined without further cardiac imaging or history.\"\n  ]\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1785,
+      "outputTokens": 568,
+      "elapsedSeconds": 48.097568752999905,
+      "peakGpuMemoryGiB": 9.017390727996826
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 48.097568752999905,
+  "inputTokens": 1785,
+  "outputTokens": 568,
+  "peakGpuMemoryGiB": 9.017390727996826,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.1",
+  "provider": "lightning-ai-studio",
+  "model": "google/gemma-4-E4B-it",
+  "runNumber": 1,
+  "scenarioId": "BRASH-013",
+  "promptFingerprint": "f9a4a44237752b01310c2b760b06618b7ae0a1aa9ea4c384dcfdc6ce0d592ffe",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "72 y.o. female, Sinus Bradycardia/Junctional Escape, Critical severity, Hemodynamically unstable (MAP 53 mmHg)",
+    "rhythm": "Sinus Bradycardia / Junctional Escape Rhythm",
+    "keyECGEvidence": [
+      "Ventricular Rate of 32 bpm",
+      "Regular rhythm",
+      "Narrow-to-mildly-wide QRS junctional escape",
+      "Pre-event note stating bradycardia severity exceeds what K+ 6.4 alone would typically produce"
+    ],
+    "primaryEtiology": "Severe Electrolyte Derangement and Uremia-induced Cardiac Depression",
+    "mechanism": "The combination of severe hyperkalemia (K 6.4 mmol/L HIGH) and acute kidney injury (Creatinine 3.2 mg/dL CRITICAL HIGH) has led to profound myocardial depression and autonomic dysfunction, manifesting as severe bradycardia refractory to atropine.",
+    "contributingFactors": [
+      "Chronic Kidney Disease Stage 3 baseline status",
+      "Poor oral intake leading to dehydration/electrolyte imbalance",
+      "Hypoperfusion evidenced by MAP 53 mmHg and Lactate 4.2 mmol/L HIGH"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Purely Medication Effect (Atenolol/Lisinopril)",
+        "why": "While medications contribute, the severity of the bradycardia refractory to atropine, coupled with the critical lab values (Cr 3.2, K 6.4), points to a multi-system failure driven by renal failure and electrolyte toxicity, not just baseline medication effect."
+      },
+      {
+        "alternative": "Hypoxia/Hypovolemia alone",
+        "why": "Hypoxia (SpO2 93%) and hypotension are present, but the ECG finding of a clear junctional escape rhythm suggests a primary conduction issue exacerbated by metabolic derangement, rather than hypoxia being the sole driver."
+      }
+    ],
+    "recommendedActions": [
+      "STAT Cardiac Monitoring and Advanced Airway Preparation (Maintain airway due to low MAP and bradycardia)",
+      "Initiate aggressive fluid resuscitation with warmed crystalloids (if MAP remains low despite initial bolus) while monitoring renal function response.",
+      "Administer IV Calcium Gluconate (to stabilize myocardial membranes against hyperkalemia, monitor closely for hypercalcemia effects).",
+      "Hold Lisinopril and Atenolol immediately due to acute kidney injury and hemodynamic instability.",
+      "Consult Nephrology STAT for urgent management of K 6.4 mmol/L and Cr 3.2 mg/dL.",
+      "Prepare for potential pacing support if rhythm deteriorates further."
+    ],
+    "uncertainty": [
+      "The exact contribution ratio between hyperkalemia, uremia, and volume status to the refractory bradycardia cannot be quantified with the provided data."
+    ]
+  },
+  "rawModelResponse": "```json\n{\n  \"episodeSummary\": \"72 y.o. female, Sinus Bradycardia/Junctional Escape, Critical severity, Hemodynamically unstable (MAP 53 mmHg)\",\n  \"rhythm\": \"Sinus Bradycardia / Junctional Escape Rhythm\",\n  \"keyECGEvidence\": [\n    \"Ventricular Rate of 32 bpm\",\n    \"Regular rhythm\",\n    \"Narrow-to-mildly-wide QRS junctional escape\",\n    \"Pre-event note stating bradycardia severity exceeds what K+ 6.4 alone would typically produce\"\n  ],\n  \"primaryEtiology\": \"Severe Electrolyte Derangement and Uremia-induced Cardiac Depression\",\n  \"mechanism\": \"The combination of severe hyperkalemia (K 6.4 mmol/L HIGH) and acute kidney injury (Creatinine 3.2 mg/dL CRITICAL HIGH) has led to profound myocardial depression and autonomic dysfunction, manifesting as severe bradycardia refractory to atropine.\",\n  \"contributingFactors\": [\n    \"Chronic Kidney Disease Stage 3 baseline status\",\n    \"Poor oral intake leading to dehydration/electrolyte imbalance\",\n    \"Hypoperfusion evidenced by MAP 53 mmHg and Lactate 4.2 mmol/L HIGH\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Purely Medication Effect (Atenolol/Lisinopril)\",\n      \"why\": \"While medications contribute, the severity of the bradycardia refractory to atropine, coupled with the critical lab values (Cr 3.2, K 6.4), points to a multi-system failure driven by renal failure and electrolyte toxicity, not just baseline medication effect.\"\n    },\n    {\n      \"alternative\": \"Hypoxia/Hypovolemia alone\",\n      \"why\": \"Hypoxia (SpO2 93%) and hypotension are present, but the ECG finding of a clear junctional escape rhythm suggests a primary conduction issue exacerbated by metabolic derangement, rather than hypoxia being the sole driver.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"STAT Cardiac Monitoring and Advanced Airway Preparation (Maintain airway due to low MAP and bradycardia)\",\n    \"Initiate aggressive fluid resuscitation with warmed crystalloids (if MAP remains low despite initial bolus) while monitoring renal function response.\",\n    \"Administer IV Calcium Gluconate (to stabilize myocardial membranes against hyperkalemia, monitor closely for hypercalcemia effects).\",\n    \"Hold Lisinopril and Atenolol immediately due to acute kidney injury and hemodynamic instability.\",\n    \"Consult Nephrology STAT for urgent management of K 6.4 mmol/L and Cr 3.2 mg/dL.\",\n    \"Prepare for potential pacing support if rhythm deteriorates further.\"\n  ],\n  \"uncertainty\": [\n    \"The exact contribution ratio between hyperkalemia, uremia, and volume status to the refractory bradycardia cannot be quantified with the provided data.\"\n  ]\n}\n```",
+  "bestEffortParsedResponse": null,
+  "terminalStatus": "OK",
+  "hitMaxNewTokens": false,
+  "maxNewTokens": 2500,
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"72 y.o. female, Sinus Bradycardia/Junctional Escape, Critical severity, Hemodynamically unstable (MAP 53 mmHg)\",\n  \"rhythm\": \"Sinus Bradycardia / Junctional Escape Rhythm\",\n  \"keyECGEvidence\": [\n    \"Ventricular Rate of 32 bpm\",\n    \"Regular rhythm\",\n    \"Narrow-to-mildly-wide QRS junctional escape\",\n    \"Pre-event note stating bradycardia severity exceeds what K+ 6.4 alone would typically produce\"\n  ],\n  \"primaryEtiology\": \"Severe Electrolyte Derangement and Uremia-induced Cardiac Depression\",\n  \"mechanism\": \"The combination of severe hyperkalemia (K 6.4 mmol/L HIGH) and acute kidney injury (Creatinine 3.2 mg/dL CRITICAL HIGH) has led to profound myocardial depression and autonomic dysfunction, manifesting as severe bradycardia refractory to atropine.\",\n  \"contributingFactors\": [\n    \"Chronic Kidney Disease Stage 3 baseline status\",\n    \"Poor oral intake leading to dehydration/electrolyte imbalance\",\n    \"Hypoperfusion evidenced by MAP 53 mmHg and Lactate 4.2 mmol/L HIGH\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Purely Medication Effect (Atenolol/Lisinopril)\",\n      \"why\": \"While medications contribute, the severity of the bradycardia refractory to atropine, coupled with the critical lab values (Cr 3.2, K 6.4), points to a multi-system failure driven by renal failure and electrolyte toxicity, not just baseline medication effect.\"\n    },\n    {\n      \"alternative\": \"Hypoxia/Hypovolemia alone\",\n      \"why\": \"Hypoxia (SpO2 93%) and hypotension are present, but the ECG finding of a clear junctional escape rhythm suggests a primary conduction issue exacerbated by metabolic derangement, rather than hypoxia being the sole driver.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"STAT Cardiac Monitoring and Advanced Airway Preparation (Maintain airway due to low MAP and bradycardia)\",\n    \"Initiate aggressive fluid resuscitation with warmed crystalloids (if MAP remains low despite initial bolus) while monitoring renal function response.\",\n    \"Administer IV Calcium Gluconate (to stabilize myocardial membranes against hyperkalemia, monitor closely for hypercalcemia effects).\",\n    \"Hold Lisinopril and Atenolol immediately due to acute kidney injury and hemodynamic instability.\",\n    \"Consult Nephrology STAT for urgent management of K 6.4 mmol/L and Cr 3.2 mg/dL.\",\n    \"Prepare for potential pacing support if rhythm deteriorates further.\"\n  ],\n  \"uncertainty\": [\n    \"The exact contribution ratio between hyperkalemia, uremia, and volume status to the refractory bradycardia cannot be quantified with the provided data.\"\n  ]\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1965,
+      "outputTokens": 644,
+      "elapsedSeconds": 54.35139718399978,
+      "peakGpuMemoryGiB": 17.898119926452637,
+      "hitMaxNewTokens": false
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 54.35139718399978,
+  "inputTokens": 1965,
+  "outputTokens": 644,
+  "peakGpuMemoryGiB": 17.898119926452637,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

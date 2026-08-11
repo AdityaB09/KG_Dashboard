@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.0",
+  "provider": "lightning-ai-studio",
+  "model": "google/gemma-4-31B-it",
+  "runNumber": 1,
+  "scenarioId": "BRADY-DIGTOX-006",
+  "promptFingerprint": "1e26d85f99ee9cff189f74100b7f821bbc53fdd930511f24e34f44f776dad813",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "82yo female, junctional bradycardia, warning severity, hemodynamically stable (MAP 76)",
+    "rhythm": "Junctional Bradycardia (AV junctional escape rhythm)",
+    "keyECGEvidence": [
+      "ventricularRateBpm: 38",
+      "pWavePresent: false",
+      "regularity: regular",
+      "stDeviationMm: Scooped/'sagging' ST segments (digoxin effect)",
+      "preEventNote: Known AFib now with slow REGULAR response — suggests AV junctional takeover"
+    ],
+    "primaryEtiology": "Digoxin Toxicity",
+    "mechanism": "Excessive inhibition of the AV node and increased vagal tone leading to high-grade AV block/junctional escape, exacerbated by reduced renal clearance.",
+    "contributingFactors": [
+      "Acute on CKD (creatinine 2.1 mg/dL HIGH)",
+      "Dehydration (Recent decreased urine output / nausea / vomiting)",
+      "Hyperkalemia (potassium 5.6 mmol/L HIGH)"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Sick Sinus Syndrome",
+        "why": "Patient has known AFib; the transition to a slow regular rhythm with scooped ST segments and toxic digoxin levels strongly points to drug toxicity over primary sinus node failure."
+      },
+      {
+        "alternative": "Hyperkalemia-induced bradycardia",
+        "why": "While potassium is 5.6 mmol/L HIGH, the digoxin level is 3.8 ng/mL TOXIC and the patient exhibits classic digoxin toxicity symptoms (yellow-green halos, nausea)."
+      }
+    ],
+    "recommendedActions": [
+      "STOP Digoxin immediately",
+      "Administer Digoxin-specific antibody fragments (DigiFab/Digibind)",
+      "Monitor potassium levels closely (avoid aggressive K+ lowering if toxicity is the primary driver, but manage hyperkalemia if it worsens)",
+      "IV fluid resuscitation for dehydration/acute kidney injury"
+    ],
+    "uncertainty": []
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n \"episodeSummary\": \"82yo female, junctional bradycardia, warning severity, hemodynamically stable (MAP 76)\",\n \"rhythm\": \"Junctional Bradycardia (AV junctional escape rhythm)\",\n \"keyECGEvidence\": [\n  \"ventricularRateBpm: 38\",\n  \"pWavePresent: false\",\n  \"regularity: regular\",\n  \"stDeviationMm: Scooped/'sagging' ST segments (digoxin effect)\",\n  \"preEventNote: Known AFib now with slow REGULAR response — suggests AV junctional takeover\"\n ],\n \"primaryEtiology\": \"Digoxin Toxicity\",\n \"mechanism\": \"Excessive inhibition of the AV node and increased vagal tone leading to high-grade AV block/junctional escape, exacerbated by reduced renal clearance.\",\n \"contributingFactors\": [\n  \"Acute on CKD (creatinine 2.1 mg/dL HIGH)\",\n  \"Dehydration (Recent decreased urine output / nausea / vomiting)\",\n  \"Hyperkalemia (potassium 5.6 mmol/L HIGH)\"\n ],\n \"rejectedAlternatives\": [\n  {\"alternative\": \"Sick Sinus Syndrome\", \"why\": \"Patient has known AFib; the transition to a slow regular rhythm with scooped ST segments and toxic digoxin levels strongly points to drug toxicity over primary sinus node failure.\"},\n  {\"alternative\": \"Hyperkalemia-induced bradycardia\", \"why\": \"While potassium is 5.6 mmol/L HIGH, the digoxin level is 3.8 ng/mL TOXIC and the patient exhibits classic digoxin toxicity symptoms (yellow-green halos, nausea).\"}\n ],\n \"recommendedActions\": [\n  \"STOP Digoxin immediately\",\n  \"Administer Digoxin-specific antibody fragments (DigiFab/Digibind)\",\n  \"Monitor potassium levels closely (avoid aggressive K+ lowering if toxicity is the primary driver, but manage hyperkalemia if it worsens)\",\n  \"IV fluid resuscitation for dehydration/acute kidney injury\"\n ],\n \"uncertainty\": []\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1822,
+      "outputTokens": 448,
+      "elapsedSeconds": 33.4285338210002,
+      "peakGpuMemoryGiB": 19.06556987762451
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 33.4285338210002,
+  "inputTokens": 1822,
+  "outputTokens": 448,
+  "peakGpuMemoryGiB": 19.06556987762451,
+  "gpuName": "NVIDIA H100 80GB HBM3",
+  "quantization": "4bit"
+}

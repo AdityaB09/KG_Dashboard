@@ -1,0 +1,75 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.1",
+  "provider": "lightning-ai-studio",
+  "model": "google/gemma-4-12B-it",
+  "runNumber": 1,
+  "scenarioId": "TORSADES-LQT-002",
+  "promptFingerprint": "e097ed9be53b4fdfc0f479c6b2a58b549edf0dd87d78a832c393b3a141bee92b",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "74F with Torsades de Pointes, critically hypotensive (MAP 49) and hypoxic (SpO2 88%) following electrolyte depletion.",
+    "rhythm": "Torsades de Pointes",
+    "keyECGEvidence": [
+      "ventricularRateBpm: 228",
+      "morphology: Sinusoidal amplitude modulation with axis twisting",
+      "preEventNote: Baseline ECG 6 min prior: sinus 62, marked QT prolongation QTc 618 ms, prominent U waves"
+    ],
+    "primaryEtiology": "Severe electrolyte imbalance (hypokalemia and hypomagnesemia) exacerbated by QT-prolonging medications and illness.",
+    "mechanism": "Prolonged repolarization (QTc 618 ms) and prominent U waves predisposed the patient to triggered activity, resulting in polymorphic ventricular tachycardia (Torsades de Pointes) during a period of hemodynamic instability.",
+    "contributingFactors": [
+      "Potassium 2.9 mmol/L LOW",
+      "Magnesium 1.2 mg/dL LOW",
+      "Calcium 7.9 mg/dL LOW",
+      "Sotalol use (known QT-prolonging agent)",
+      "Recent gastroenteritis with vomiting/diarrhea",
+      "Azithromycin use (known risk for QT prolongation)"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Ventricular Fibrillation",
+        "why": "The morphology is described as sinusoidal amplitude modulation with axis twisting, characteristic of Torsades de Pointes rather than the chaotic, disorganized waveform of VF."
+      },
+      {
+        "alternative": "Supraventricular Tachycardia (SVT)",
+        "why": "The rate of 228 bpm with 'axis twisting' morphology and a baseline of marked QT prolongation strongly favors a ventricular origin (Torsades de Pointes)."
+      }
+    ],
+    "recommendedActions": [
+      "Immediate synchronized cardioversion or immediate defibrillation if pulse is lost.",
+      "Emergency IV Magnesium Sulfate (e.g., 2g bolus) and aggressive potassium replacement.",
+      "Continuous cardiac monitoring and pulse oximetry.",
+      "Assess airway and provide supplemental oxygen for SpO2 88%.",
+      "Hold Sotalol and monitor for further electrolyte correction.",
+      "Consult Cardiology and initiate fluid resuscitation for hypotension (MAP 49)."
+    ],
+    "uncertainty": [
+      "Signal quality for PPG is 'poor', making SpO2 88% less reliable for oxygenation assessment.",
+      "Troponin T 0.02 ng/mL is only 'mildly high' and likely reflects rate-related stress rather than acute myocardial infarction."
+    ]
+  },
+  "rawModelResponse": "```json\n{\n  \"episodeSummary\": \"74F with Torsades de Pointes, critically hypotensive (MAP 49) and hypoxic (SpO2 88%) following electrolyte depletion.\",\n  \"rhythm\": \"Torsades de Pointes\",\n  \"keyECGEvidence\": [\n    \"ventricularRateBpm: 228\",\n    \"morphology: Sinusoidal amplitude modulation with axis twisting\",\n    \"preEventNote: Baseline ECG 6 min prior: sinus 62, marked QT prolongation QTc 618 ms, prominent U waves\"\n  ],\n  \"primaryEtiology\": \"Severe electrolyte imbalance (hypokalemia and hypomagnesemia) exacerbated by QT-prolonging medications and illness.\",\n  \"mechanism\": \"Prolonged repolarization (QTc 618 ms) and prominent U waves predisposed the patient to triggered activity, resulting in polymorphic ventricular tachycardia (Torsades de Pointes) during a period of hemodynamic instability.\",\n  \"contributingFactors\": [\n    \"Potassium 2.9 mmol/L LOW\",\n    \"Magnesium 1.2 mg/dL LOW\",\n    \"Calcium 7.9 mg/dL LOW\",\n    \"Sotalol use (known QT-prolonging agent)\",\n    \"Recent gastroenteritis with vomiting/diarrhea\",\n    \"Azithromycin use (known risk for QT prolongation)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Ventricular Fibrillation\",\n      \"why\": \"The morphology is described as sinusoidal amplitude modulation with axis twisting, characteristic of Torsades de Pointes rather than the chaotic, disorganized waveform of VF.\"\n    },\n    {\n      \"alternative\": \"Supraventricular Tachycardia (SVT)\",\n      \"why\": \"The rate of 228 bpm with 'axis twisting' morphology and a baseline of marked QT prolongation strongly favors a ventricular origin (Torsades de Pointes).\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Immediate synchronized cardioversion or immediate defibrillation if pulse is lost.\",\n    \"Emergency IV Magnesium Sulfate (e.g., 2g bolus) and aggressive potassium replacement.\",\n    \"Continuous cardiac monitoring and pulse oximetry.\",\n    \"Assess airway and provide supplemental oxygen for SpO2 88%.\",\n    \"Hold Sotalol and monitor for further electrolyte correction.\",\n    \"Consult Cardiology and initiate fluid resuscitation for hypotension (MAP 49).\"\n  ],\n  \"uncertainty\": [\n    \"Signal quality for PPG is 'poor', making SpO2 88% less reliable for oxygenation assessment.\",\n    \"Troponin T 0.02 ng/mL is only 'mildly high' and likely reflects rate-related stress rather than acute myocardial infarction.\"\n  ]\n}\n```",
+  "bestEffortParsedResponse": null,
+  "terminalStatus": "OK",
+  "hitMaxNewTokens": false,
+  "maxNewTokens": 2500,
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"74F with Torsades de Pointes, critically hypotensive (MAP 49) and hypoxic (SpO2 88%) following electrolyte depletion.\",\n  \"rhythm\": \"Torsades de Pointes\",\n  \"keyECGEvidence\": [\n    \"ventricularRateBpm: 228\",\n    \"morphology: Sinusoidal amplitude modulation with axis twisting\",\n    \"preEventNote: Baseline ECG 6 min prior: sinus 62, marked QT prolongation QTc 618 ms, prominent U waves\"\n  ],\n  \"primaryEtiology\": \"Severe electrolyte imbalance (hypokalemia and hypomagnesemia) exacerbated by QT-prolonging medications and illness.\",\n  \"mechanism\": \"Prolonged repolarization (QTc 618 ms) and prominent U waves predisposed the patient to triggered activity, resulting in polymorphic ventricular tachycardia (Torsades de Pointes) during a period of hemodynamic instability.\",\n  \"contributingFactors\": [\n    \"Potassium 2.9 mmol/L LOW\",\n    \"Magnesium 1.2 mg/dL LOW\",\n    \"Calcium 7.9 mg/dL LOW\",\n    \"Sotalol use (known QT-prolonging agent)\",\n    \"Recent gastroenteritis with vomiting/diarrhea\",\n    \"Azithromycin use (known risk for QT prolongation)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Ventricular Fibrillation\",\n      \"why\": \"The morphology is described as sinusoidal amplitude modulation with axis twisting, characteristic of Torsades de Pointes rather than the chaotic, disorganized waveform of VF.\"\n    },\n    {\n      \"alternative\": \"Supraventricular Tachycardia (SVT)\",\n      \"why\": \"The rate of 228 bpm with 'axis twisting' morphology and a baseline of marked QT prolongation strongly favors a ventricular origin (Torsades de Pointes).\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Immediate synchronized cardioversion or immediate defibrillation if pulse is lost.\",\n    \"Emergency IV Magnesium Sulfate (e.g., 2g bolus) and aggressive potassium replacement.\",\n    \"Continuous cardiac monitoring and pulse oximetry.\",\n    \"Assess airway and provide supplemental oxygen for SpO2 88%.\",\n    \"Hold Sotalol and monitor for further electrolyte correction.\",\n    \"Consult Cardiology and initiate fluid resuscitation for hypotension (MAP 49).\"\n  ],\n  \"uncertainty\": [\n    \"Signal quality for PPG is 'poor', making SpO2 88% less reliable for oxygenation assessment.\",\n    \"Troponin T 0.02 ng/mL is only 'mildly high' and likely reflects rate-related stress rather than acute myocardial infarction.\"\n  ]\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1885,
+      "outputTokens": 628,
+      "elapsedSeconds": 57.26680613999997,
+      "peakGpuMemoryGiB": 16.90632915496826,
+      "hitMaxNewTokens": false
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 57.26680613999997,
+  "inputTokens": 1885,
+  "outputTokens": 628,
+  "peakGpuMemoryGiB": 16.90632915496826,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

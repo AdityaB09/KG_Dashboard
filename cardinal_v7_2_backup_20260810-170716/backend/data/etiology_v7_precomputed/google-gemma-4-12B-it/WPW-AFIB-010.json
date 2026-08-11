@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.1",
+  "provider": "lightning-ai-studio",
+  "model": "google/gemma-4-12B-it",
+  "runNumber": 1,
+  "scenarioId": "WPW-AFIB-010",
+  "promptFingerprint": "94585a4fb77ccf37f1d4094a6ea5af86f6bf99014d9414cb357b3b299982a4bf",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "28-year-old male with sudden onset of irregular tachycardia and hemodynamic compromise (BP 82/48) during physical exertion.",
+    "rhythm": "Atrial Fibrillation with Pre-excitation (WPW Syndrome)",
+    "keyECGEvidence": [
+      "ventricularRate_bpm: 210",
+      "regularity: irregularly irregular",
+      "pWavePresent: false",
+      "morphology: Beat-to-beat QRS width and morphology variation; delta waves visible in wider beats",
+      "morphology: shortest R-R interval ~200 ms",
+      "morphology: fibrillatory baseline"
+    ],
+    "primaryEtiology": "Wolff-Parkinson-White (WPW) Syndrome with Atrial Fibrillation",
+    "mechanism": "Pre-excitation of the ventricles via an accessory pathway (delta waves) combined with rapid atrial fibrillation, leading to a high-rate, irregularly irregular ventricular response and acute hemodynamic instability.",
+    "contributingFactors": [
+      "Physical exertion (basketball) triggering rapid heart rate",
+      "Acute hemodynamic compromise (BP 82/48, MAP 59) due to tachycardia-induced reduced stroke volume",
+      "History of self-terminating rapid heart rate episodes"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Ventricular Tachycardia",
+        "why": "Rhythm is 'irregularly irregular' and morphology shows delta waves; VT is typically regular."
+      },
+      {
+        "alternative": "SVT (Supraventricular Tachycardia)",
+        "why": "Rhythm is irregularly irregular and lacks consistent P-wave morphology; high likelihood of AFib with pre-excitation."
+      }
+    ],
+    "recommendedActions": [
+      "Immediate synchronized cardioversion (if hemodynamically unstable)",
+      "Establish large-bore IV access and initiate fluid resuscitation",
+      "Continuous cardiac monitoring and 12-lead ECG",
+      "Consult Cardiology for urgent management",
+      "Avoid AV-node blocking agents (e.g., Beta-blockers, Calcium Channel Blockers, Adenosine) as they may accelerate conduction through the accessory pathway"
+    ],
+    "uncertainty": [
+      "Lack of prior ECG makes definitive diagnosis of WPW syndrome based on baseline morphology impossible, but clinical presentation and delta waves are highly suggestive.",
+      "SpO2_pct: 92 is slightly low but may be secondary to poor perfusion or respiratory rate of 26."
+    ]
+  },
+  "rawModelResponse": "```json\n{\n  \"episodeSummary\": \"28-year-old male with sudden onset of irregular tachycardia and hemodynamic compromise (BP 82/48) during physical exertion.\",\n  \"rhythm\": \"Atrial Fibrillation with Pre-excitation (WPW Syndrome)\",\n  \"keyECGEvidence\": [\n    \"ventricularRate_bpm: 210\",\n    \"regularity: irregularly irregular\",\n    \"pWavePresent: false\",\n    \"morphology: Beat-to-beat QRS width and morphology variation; delta waves visible in wider beats\",\n    \"morphology: shortest R-R interval ~200 ms\",\n    \"morphology: fibrillatory baseline\"\n  ],\n  \"primaryEtiology\": \"Wolff-Parkinson-White (WPW) Syndrome with Atrial Fibrillation\",\n  \"mechanism\": \"Pre-excitation of the ventricles via an accessory pathway (delta waves) combined with rapid atrial fibrillation, leading to a high-rate, irregularly irregular ventricular response and acute hemodynamic instability.\",\n  \"contributingFactors\": [\n    \"Physical exertion (basketball) triggering rapid heart rate\",\n    \"Acute hemodynamic compromise (BP 82/48, MAP 59) due to tachycardia-induced reduced stroke volume\",\n    \"History of self-terminating rapid heart rate episodes\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Ventricular Tachycardia\",\n      \"why\": \"Rhythm is 'irregularly irregular' and morphology shows delta waves; VT is typically regular.\"\n    },\n    {\n      \"alternative\": \"SVT (Supraventricular Tachycardia)\",\n      \"why\": \"Rhythm is irregularly irregular and lacks consistent P-wave morphology; high likelihood of AFib with pre-excitation.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Immediate synchronized cardioversion (if hemodynamically unstable)\",\n    \"Establish large-bore IV access and initiate fluid resuscitation\",\n    \"Continuous cardiac monitoring and 12-lead ECG\",\n    \"Consult Cardiology for urgent management\",\n    \"Avoid AV-node blocking agents (e.g., Beta-blockers, Calcium Channel Blockers, Adenosine) as they may accelerate conduction through the accessory pathway\"\n  ],\n  \"uncertainty\": [\n    \"Lack of prior ECG makes definitive diagnosis of WPW syndrome based on baseline morphology impossible, but clinical presentation and delta waves are highly suggestive.\",\n    \"SpO2_pct: 92 is slightly low but may be secondary to poor perfusion or respiratory rate of 26.\"\n  ]\n}\n```",
+  "bestEffortParsedResponse": null,
+  "terminalStatus": "OK",
+  "hitMaxNewTokens": false,
+  "maxNewTokens": 2500,
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"28-year-old male with sudden onset of irregular tachycardia and hemodynamic compromise (BP 82/48) during physical exertion.\",\n  \"rhythm\": \"Atrial Fibrillation with Pre-excitation (WPW Syndrome)\",\n  \"keyECGEvidence\": [\n    \"ventricularRate_bpm: 210\",\n    \"regularity: irregularly irregular\",\n    \"pWavePresent: false\",\n    \"morphology: Beat-to-beat QRS width and morphology variation; delta waves visible in wider beats\",\n    \"morphology: shortest R-R interval ~200 ms\",\n    \"morphology: fibrillatory baseline\"\n  ],\n  \"primaryEtiology\": \"Wolff-Parkinson-White (WPW) Syndrome with Atrial Fibrillation\",\n  \"mechanism\": \"Pre-excitation of the ventricles via an accessory pathway (delta waves) combined with rapid atrial fibrillation, leading to a high-rate, irregularly irregular ventricular response and acute hemodynamic instability.\",\n  \"contributingFactors\": [\n    \"Physical exertion (basketball) triggering rapid heart rate\",\n    \"Acute hemodynamic compromise (BP 82/48, MAP 59) due to tachycardia-induced reduced stroke volume\",\n    \"History of self-terminating rapid heart rate episodes\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Ventricular Tachycardia\",\n      \"why\": \"Rhythm is 'irregularly irregular' and morphology shows delta waves; VT is typically regular.\"\n    },\n    {\n      \"alternative\": \"SVT (Supraventricular Tachycardia)\",\n      \"why\": \"Rhythm is irregularly irregular and lacks consistent P-wave morphology; high likelihood of AFib with pre-excitation.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Immediate synchronized cardioversion (if hemodynamically unstable)\",\n    \"Establish large-bore IV access and initiate fluid resuscitation\",\n    \"Continuous cardiac monitoring and 12-lead ECG\",\n    \"Consult Cardiology for urgent management\",\n    \"Avoid AV-node blocking agents (e.g., Beta-blockers, Calcium Channel Blockers, Adenosine) as they may accelerate conduction through the accessory pathway\"\n  ],\n  \"uncertainty\": [\n    \"Lack of prior ECG makes definitive diagnosis of WPW syndrome based on baseline morphology impossible, but clinical presentation and delta waves are highly suggestive.\",\n    \"SpO2_pct: 92 is slightly low but may be secondary to poor perfusion or respiratory rate of 26.\"\n  ]\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1789,
+      "outputTokens": 575,
+      "elapsedSeconds": 52.044888377999996,
+      "peakGpuMemoryGiB": 16.872769832611084,
+      "hitMaxNewTokens": false
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 52.044888377999996,
+  "inputTokens": 1789,
+  "outputTokens": 575,
+  "peakGpuMemoryGiB": 16.872769832611084,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

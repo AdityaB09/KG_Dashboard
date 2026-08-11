@@ -1,0 +1,83 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.1",
+  "provider": "lightning-ai-studio",
+  "model": "google/medgemma-27b-it",
+  "runNumber": 1,
+  "scenarioId": "AFIB-RVR-SEPSIS-004",
+  "promptFingerprint": "70fa160800dc533e650af8cfc69c4de70f354dfbfacf3fd3349cd2bac96ea785",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "Dorothy E. Chen, 79F, Atrial Fibrillation with Rapid Ventricular Response (AFib RVR), warning severity, hypotensive (MAP 67)",
+    "rhythm": "Atrial Fibrillation with Rapid Ventricular Response (AFib RVR)",
+    "keyECGEvidence": [
+      "ventricularRateBpm: 150",
+      "regularity: irregularly irregular",
+      "morphology: Narrow QRS, absent P waves, fibrillatory baseline"
+    ],
+    "primaryEtiology": "Sepsis",
+    "mechanism": "Systemic inflammation associated with sepsis can trigger atrial fibrillation, often with a rapid ventricular response, due to autonomic nervous system dysregulation and direct effects on atrial electrophysiology.",
+    "contributingFactors": [
+      "Fever (38.9 C)",
+      "Elevated WBC (18.4 10^3/uL HIGH)",
+      "Elevated Lactate (3.1 mmol/L HIGH)",
+      "Elevated Procalcitonin (6.2 ng/mL HIGH)",
+      "Hypotension (MAP 67) despite norepinephrine",
+      "Chronic Kidney Disease (CKD)",
+      "Advanced Age (79)"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Thyrotoxicosis",
+        "why": "TSH is normal (1.8 mIU/L)."
+      },
+      {
+        "alternative": "Electrolyte abnormality (Hypokalemia/Hypomagnesemia)",
+        "why": "Potassium (3.6 mmol/L) and Magnesium (1.8 mg/dL) are within normal limits."
+      },
+      {
+        "alternative": "Drug toxicity (e.g., Digoxin)",
+        "why": "Patient is not on digoxin. No evidence of digoxin toxicity."
+      },
+      {
+        "alternative": "Acute Myocardial Infarction",
+        "why": "Troponin T is only mildly elevated (0.03 ng/mL), and ECG morphology does not show acute ischemic changes beyond rate-related ST depression. Clinical context points strongly towards sepsis."
+      },
+      {
+        "alternative": "Pulmonary Embolism",
+        "why": "No specific evidence provided (e.g., hypoxia, tachycardia disproportionate to fever, D-dimer). While possible in sepsis, the primary driver appears to be the systemic inflammatory response."
+      }
+    ],
+    "recommendedActions": [
+      "Treat underlying sepsis: Continue antibiotics (Piperacillin-tazobactam), IV fluids, and vasopressors (Norepinephrine) as needed to maintain MAP > 65.",
+      "Rate control: Consider IV beta-blocker (e.g., metoprolol) or calcium channel blocker (e.g., diltiazem) if hemodynamically stable and MAP allows. Given MAP of 67, proceed cautiously or consider amiodarone if beta-blockers/CCBs are contraindicated or ineffective. Note: patient is on amlodipine, a CCB, but this is unlikely to be sufficient for acute rate control in AFib RVR.",
+      "Monitor: Continuous ECG, vital signs, urine output, mental status.",
+      "Consider anticoagulation: Assess CHA2DS2-VASc score and initiate anticoagulation (e.g., heparin) given new-onset AFib, especially in the context of sepsis which increases thromboembolic risk."
+    ],
+    "uncertainty": []
+  },
+  "rawModelResponse": "```json\n{\n  \"episodeSummary\": \"Dorothy E. Chen, 79F, Atrial Fibrillation with Rapid Ventricular Response (AFib RVR), warning severity, hypotensive (MAP 67)\",\n  \"rhythm\": \"Atrial Fibrillation with Rapid Ventricular Response (AFib RVR)\",\n  \"keyECGEvidence\": [\n    \"ventricularRateBpm: 150\",\n    \"regularity: irregularly irregular\",\n    \"morphology: Narrow QRS, absent P waves, fibrillatory baseline\"\n  ],\n  \"primaryEtiology\": \"Sepsis\",\n  \"mechanism\": \"Systemic inflammation associated with sepsis can trigger atrial fibrillation, often with a rapid ventricular response, due to autonomic nervous system dysregulation and direct effects on atrial electrophysiology.\",\n  \"contributingFactors\": [\n    \"Fever (38.9 C)\",\n    \"Elevated WBC (18.4 10^3/uL HIGH)\",\n    \"Elevated Lactate (3.1 mmol/L HIGH)\",\n    \"Elevated Procalcitonin (6.2 ng/mL HIGH)\",\n    \"Hypotension (MAP 67) despite norepinephrine\",\n    \"Chronic Kidney Disease (CKD)\",\n    \"Advanced Age (79)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Thyrotoxicosis\",\n      \"why\": \"TSH is normal (1.8 mIU/L).\"\n    },\n    {\n      \"alternative\": \"Electrolyte abnormality (Hypokalemia/Hypomagnesemia)\",\n      \"why\": \"Potassium (3.6 mmol/L) and Magnesium (1.8 mg/dL) are within normal limits.\"\n    },\n    {\n      \"alternative\": \"Drug toxicity (e.g., Digoxin)\",\n      \"why\": \"Patient is not on digoxin. No evidence of digoxin toxicity.\"\n    },\n    {\n      \"alternative\": \"Acute Myocardial Infarction\",\n      \"why\": \"Troponin T is only mildly elevated (0.03 ng/mL), and ECG morphology does not show acute ischemic changes beyond rate-related ST depression. Clinical context points strongly towards sepsis.\"\n    },\n    {\n      \"alternative\": \"Pulmonary Embolism\",\n      \"why\": \"No specific evidence provided (e.g., hypoxia, tachycardia disproportionate to fever, D-dimer). While possible in sepsis, the primary driver appears to be the systemic inflammatory response.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Treat underlying sepsis: Continue antibiotics (Piperacillin-tazobactam), IV fluids, and vasopressors (Norepinephrine) as needed to maintain MAP > 65.\",\n    \"Rate control: Consider IV beta-blocker (e.g., metoprolol) or calcium channel blocker (e.g., diltiazem) if hemodynamically stable and MAP allows. Given MAP of 67, proceed cautiously or consider amiodarone if beta-blockers/CCBs are contraindicated or ineffective. Note: patient is on amlodipine, a CCB, but this is unlikely to be sufficient for acute rate control in AFib RVR.\",\n    \"Monitor: Continuous ECG, vital signs, urine output, mental status.\",\n    \"Consider anticoagulation: Assess CHA2DS2-VASc score and initiate anticoagulation (e.g., heparin) given new-onset AFib, especially in the context of sepsis which increases thromboembolic risk.\"\n  ],\n  \"uncertainty\": []\n}\n```",
+  "bestEffortParsedResponse": null,
+  "terminalStatus": "OK",
+  "hitMaxNewTokens": false,
+  "maxNewTokens": 2500,
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"Dorothy E. Chen, 79F, Atrial Fibrillation with Rapid Ventricular Response (AFib RVR), warning severity, hypotensive (MAP 67)\",\n  \"rhythm\": \"Atrial Fibrillation with Rapid Ventricular Response (AFib RVR)\",\n  \"keyECGEvidence\": [\n    \"ventricularRateBpm: 150\",\n    \"regularity: irregularly irregular\",\n    \"morphology: Narrow QRS, absent P waves, fibrillatory baseline\"\n  ],\n  \"primaryEtiology\": \"Sepsis\",\n  \"mechanism\": \"Systemic inflammation associated with sepsis can trigger atrial fibrillation, often with a rapid ventricular response, due to autonomic nervous system dysregulation and direct effects on atrial electrophysiology.\",\n  \"contributingFactors\": [\n    \"Fever (38.9 C)\",\n    \"Elevated WBC (18.4 10^3/uL HIGH)\",\n    \"Elevated Lactate (3.1 mmol/L HIGH)\",\n    \"Elevated Procalcitonin (6.2 ng/mL HIGH)\",\n    \"Hypotension (MAP 67) despite norepinephrine\",\n    \"Chronic Kidney Disease (CKD)\",\n    \"Advanced Age (79)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Thyrotoxicosis\",\n      \"why\": \"TSH is normal (1.8 mIU/L).\"\n    },\n    {\n      \"alternative\": \"Electrolyte abnormality (Hypokalemia/Hypomagnesemia)\",\n      \"why\": \"Potassium (3.6 mmol/L) and Magnesium (1.8 mg/dL) are within normal limits.\"\n    },\n    {\n      \"alternative\": \"Drug toxicity (e.g., Digoxin)\",\n      \"why\": \"Patient is not on digoxin. No evidence of digoxin toxicity.\"\n    },\n    {\n      \"alternative\": \"Acute Myocardial Infarction\",\n      \"why\": \"Troponin T is only mildly elevated (0.03 ng/mL), and ECG morphology does not show acute ischemic changes beyond rate-related ST depression. Clinical context points strongly towards sepsis.\"\n    },\n    {\n      \"alternative\": \"Pulmonary Embolism\",\n      \"why\": \"No specific evidence provided (e.g., hypoxia, tachycardia disproportionate to fever, D-dimer). While possible in sepsis, the primary driver appears to be the systemic inflammatory response.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Treat underlying sepsis: Continue antibiotics (Piperacillin-tazobactam), IV fluids, and vasopressors (Norepinephrine) as needed to maintain MAP > 65.\",\n    \"Rate control: Consider IV beta-blocker (e.g., metoprolol) or calcium channel blocker (e.g., diltiazem) if hemodynamically stable and MAP allows. Given MAP of 67, proceed cautiously or consider amiodarone if beta-blockers/CCBs are contraindicated or ineffective. Note: patient is on amlodipine, a CCB, but this is unlikely to be sufficient for acute rate control in AFib RVR.\",\n    \"Monitor: Continuous ECG, vital signs, urine output, mental status.\",\n    \"Consider anticoagulation: Assess CHA2DS2-VASc score and initiate anticoagulation (e.g., heparin) given new-onset AFib, especially in the context of sepsis which increases thromboembolic risk.\"\n  ],\n  \"uncertainty\": []\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1986,
+      "outputTokens": 789,
+      "elapsedSeconds": 86.05285570400065,
+      "peakGpuMemoryGiB": 25.44206953048706,
+      "hitMaxNewTokens": false
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 86.05285570400065,
+  "inputTokens": 1986,
+  "outputTokens": 789,
+  "peakGpuMemoryGiB": 25.44206953048706,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.1",
+  "provider": "lightning-ai-studio",
+  "model": "google/medgemma-27b-text-it",
+  "runNumber": 1,
+  "scenarioId": "CHB-HYPERK-005",
+  "promptFingerprint": "5c30940a7c03f46942cb1916557f3a13e56e6d722b1d95875bc8397c00894c85",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "Walter J. Osei, 70M, Complete Heart Block, critical, hypotensive",
+    "rhythm": "Complete Heart Block (Third-Degree AV Block)",
+    "keyECGEvidence": [
+      "ventricularRateBpm: 34",
+      "atrialRateBpm: 84",
+      "regularity: regular (dissociated)",
+      "morphology: AV dissociation; wide QRS escape; tall peaked symmetric T waves; flattened P waves",
+      "preEventNote: Progressive PR prolongation then AV dissociation; QRS widening over 20 min"
+    ],
+    "primaryEtiology": "Severe Hyperkalemia",
+    "mechanism": "Hyperkalemia causes conduction system block (AV node and His-Purkinje system) and myocardial toxicity, leading to AV dissociation and bradycardia.",
+    "contributingFactors": [
+      "End-stage renal disease",
+      "Missed hemodialysis sessions (2)",
+      "Metabolic acidosis (pH 7.24 LOW)"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Ischemic Heart Disease",
+        "why": "No ST deviation or specific ischemic morphology mentioned; primary driver is severe electrolyte abnormality."
+      },
+      {
+        "alternative": "Medication Toxicity (Digoxin)",
+        "why": "No digoxin level provided; ECG findings (peaked T waves, wide QRS) are classic for hyperkalemia, not digoxin toxicity."
+      },
+      {
+        "alternative": "Intrinsic Conduction System Disease",
+        "why": "Acute onset with progressive PR prolongation and QRS widening in the context of missed dialysis and critical hyperkalemia points strongly to an electrolyte cause."
+      }
+    ],
+    "recommendedActions": [
+      "STOP Spironolactone",
+      "STOP Lisinopril",
+      "Administer Calcium Gluconate 1g IV push (for membrane stabilization)",
+      "Administer Sodium Bicarbonate 100 mEq IV push (for acidosis and intracellular K+ shift)",
+      "Administer Insulin 10 units IV with Dextrose 50g IV (for intracellular K+ shift)",
+      "Prepare for emergent hemodialysis",
+      "Consider transcutaneous pacing if hemodynamically unstable or unresponsive to medical therapy",
+      "Monitor ECG continuously",
+      "Monitor potassium levels frequently"
+    ],
+    "uncertainty": [
+      "Exact timing of last potassium measurement relative to ECG capture.",
+      "Presence of other potential contributing factors not captured in data."
+    ]
+  },
+  "rawModelResponse": "```json\n{\n  \"episodeSummary\": \"Walter J. Osei, 70M, Complete Heart Block, critical, hypotensive\",\n  \"rhythm\": \"Complete Heart Block (Third-Degree AV Block)\",\n  \"keyECGEvidence\": [\n    \"ventricularRateBpm: 34\",\n    \"atrialRateBpm: 84\",\n    \"regularity: regular (dissociated)\",\n    \"morphology: AV dissociation; wide QRS escape; tall peaked symmetric T waves; flattened P waves\",\n    \"preEventNote: Progressive PR prolongation then AV dissociation; QRS widening over 20 min\"\n  ],\n  \"primaryEtiology\": \"Severe Hyperkalemia\",\n  \"mechanism\": \"Hyperkalemia causes conduction system block (AV node and His-Purkinje system) and myocardial toxicity, leading to AV dissociation and bradycardia.\",\n  \"contributingFactors\": [\n    \"End-stage renal disease\",\n    \"Missed hemodialysis sessions (2)\",\n    \"Metabolic acidosis (pH 7.24 LOW)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Ischemic Heart Disease\",\n      \"why\": \"No ST deviation or specific ischemic morphology mentioned; primary driver is severe electrolyte abnormality.\"\n    },\n    {\n      \"alternative\": \"Medication Toxicity (Digoxin)\",\n      \"why\": \"No digoxin level provided; ECG findings (peaked T waves, wide QRS) are classic for hyperkalemia, not digoxin toxicity.\"\n    },\n    {\n      \"alternative\": \"Intrinsic Conduction System Disease\",\n      \"why\": \"Acute onset with progressive PR prolongation and QRS widening in the context of missed dialysis and critical hyperkalemia points strongly to an electrolyte cause.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"STOP Spironolactone\",\n    \"STOP Lisinopril\",\n    \"Administer Calcium Gluconate 1g IV push (for membrane stabilization)\",\n    \"Administer Sodium Bicarbonate 100 mEq IV push (for acidosis and intracellular K+ shift)\",\n    \"Administer Insulin 10 units IV with Dextrose 50g IV (for intracellular K+ shift)\",\n    \"Prepare for emergent hemodialysis\",\n    \"Consider transcutaneous pacing if hemodynamically unstable or unresponsive to medical therapy\",\n    \"Monitor ECG continuously\",\n    \"Monitor potassium levels frequently\"\n  ],\n  \"uncertainty\": [\n    \"Exact timing of last potassium measurement relative to ECG capture.\",\n    \"Presence of other potential contributing factors not captured in data.\"\n  ]\n}\n```",
+  "bestEffortParsedResponse": null,
+  "terminalStatus": "OK",
+  "hitMaxNewTokens": false,
+  "maxNewTokens": 2500,
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"Walter J. Osei, 70M, Complete Heart Block, critical, hypotensive\",\n  \"rhythm\": \"Complete Heart Block (Third-Degree AV Block)\",\n  \"keyECGEvidence\": [\n    \"ventricularRateBpm: 34\",\n    \"atrialRateBpm: 84\",\n    \"regularity: regular (dissociated)\",\n    \"morphology: AV dissociation; wide QRS escape; tall peaked symmetric T waves; flattened P waves\",\n    \"preEventNote: Progressive PR prolongation then AV dissociation; QRS widening over 20 min\"\n  ],\n  \"primaryEtiology\": \"Severe Hyperkalemia\",\n  \"mechanism\": \"Hyperkalemia causes conduction system block (AV node and His-Purkinje system) and myocardial toxicity, leading to AV dissociation and bradycardia.\",\n  \"contributingFactors\": [\n    \"End-stage renal disease\",\n    \"Missed hemodialysis sessions (2)\",\n    \"Metabolic acidosis (pH 7.24 LOW)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Ischemic Heart Disease\",\n      \"why\": \"No ST deviation or specific ischemic morphology mentioned; primary driver is severe electrolyte abnormality.\"\n    },\n    {\n      \"alternative\": \"Medication Toxicity (Digoxin)\",\n      \"why\": \"No digoxin level provided; ECG findings (peaked T waves, wide QRS) are classic for hyperkalemia, not digoxin toxicity.\"\n    },\n    {\n      \"alternative\": \"Intrinsic Conduction System Disease\",\n      \"why\": \"Acute onset with progressive PR prolongation and QRS widening in the context of missed dialysis and critical hyperkalemia points strongly to an electrolyte cause.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"STOP Spironolactone\",\n    \"STOP Lisinopril\",\n    \"Administer Calcium Gluconate 1g IV push (for membrane stabilization)\",\n    \"Administer Sodium Bicarbonate 100 mEq IV push (for acidosis and intracellular K+ shift)\",\n    \"Administer Insulin 10 units IV with Dextrose 50g IV (for intracellular K+ shift)\",\n    \"Prepare for emergent hemodialysis\",\n    \"Consider transcutaneous pacing if hemodynamically unstable or unresponsive to medical therapy\",\n    \"Monitor ECG continuously\",\n    \"Monitor potassium levels frequently\"\n  ],\n  \"uncertainty\": [\n    \"Exact timing of last potassium measurement relative to ECG capture.\",\n    \"Presence of other potential contributing factors not captured in data.\"\n  ]\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1912,
+      "outputTokens": 581,
+      "elapsedSeconds": 63.86373976300001,
+      "peakGpuMemoryGiB": 25.17569589614868,
+      "hitMaxNewTokens": false
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 63.86373976300001,
+  "inputTokens": 1912,
+  "outputTokens": 581,
+  "peakGpuMemoryGiB": 25.17569589614868,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.1",
+  "provider": "lightning-ai-studio",
+  "model": "google/medgemma-27b-it",
+  "runNumber": 1,
+  "scenarioId": "VT-ISCHEMIC-003",
+  "promptFingerprint": "a7562ccbf6b12d0bff83d638b24638a34fe3324dc057a1383d06280b9a2f7757",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "James P. Whitfield, 61M, with decompensated ischemic cardiomyopathy and LVEF 25%, presenting with critical ventricular tachycardia, hemodynamically unstable (SBP 88 mmHg).",
+    "rhythm": "Ventricular Tachycardia (VT)",
+    "keyECGEvidence": [
+      "Ventricular rate 182 bpm",
+      "Wide monomorphic QRS (168 ms)",
+      "AV dissociation",
+      "Occasional capture/fusion beats",
+      "Regular rhythm"
+    ],
+    "primaryEtiology": "Ischemia",
+    "mechanism": "Re-entry circuit in the scarred myocardium due to underlying ischemic cardiomyopathy.",
+    "contributingFactors": [
+      "Decompensated ischemic cardiomyopathy (LVEF 25%)",
+      "Progressive dyspnea and volume overload (suggesting worsening heart failure)",
+      "Prior inferior MI (scar tissue)",
+      "Elevated BNP (1840 pg/mL HIGH) indicating heart failure exacerbation",
+      "Elevated Troponin T (0.09 ng/mL mildly HIGH) suggesting ongoing myocardial injury/demand ischemia"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Electrolyte abnormality (e.g., Hypokalemia, Hypomagnesemia)",
+        "why": "Potassium is normal (4.3 mmol/L), Magnesium is borderline low but not critically so (2.1 mg/dL). While electrolyte abnormalities can cause VT, the patient's history of ischemic cardiomyopathy and evidence of ongoing myocardial injury make ischemia the more likely primary cause."
+      },
+      {
+        "alternative": "Drug toxicity (e.g., Digoxin)",
+        "why": "No digoxin level provided, and no specific ECG features suggestive of digoxin toxicity (e.g., scooped ST segments, prominent T waves). Patient is not on digoxin."
+      },
+      {
+        "alternative": "Catecholaminergic VT (e.g., due to stress, sepsis)",
+        "why": "No evidence of sepsis or acute stressor in the recent events or vitals. The underlying structural heart disease is a more prominent risk factor."
+      },
+      {
+        "alternative": "Torsades de Pointes (TdP)",
+        "why": "The ECG shows monomorphic VT, not the characteristic polymorphic pattern of TdP. The QTc is not available, but the pre-event note mentions a normal QTc (460 ms) prior to this episode, making TdP less likely."
+      }
+    ],
+    "recommendedActions": [
+      "Immediate synchronized cardioversion (due to hemodynamic instability: SBP 88 mmHg)",
+      "Assess and treat underlying ischemia (e.g., consider coronary angiography if not recently done or if ongoing ischemia suspected)",
+      "Administer antiarrhythmic medications (e.g., Amiodarone, Lidocaine) if cardioversion fails or recurs, or as adjunct therapy",
+      "Optimize heart failure management (e.g., adjust diuretics, consider inotropes if needed)",
+      "Check electrolytes (especially K, Mg, Ca) and correct abnormalities",
+      "Consider temporary pacing if hemodynamically unstable after cardioversion or if recurrent VT occurs"
+    ],
+    "uncertainty": []
+  },
+  "rawModelResponse": "```json\n{\n  \"episodeSummary\": \"James P. Whitfield, 61M, with decompensated ischemic cardiomyopathy and LVEF 25%, presenting with critical ventricular tachycardia, hemodynamically unstable (SBP 88 mmHg).\",\n  \"rhythm\": \"Ventricular Tachycardia (VT)\",\n  \"keyECGEvidence\": [\n    \"Ventricular rate 182 bpm\",\n    \"Wide monomorphic QRS (168 ms)\",\n    \"AV dissociation\",\n    \"Occasional capture/fusion beats\",\n    \"Regular rhythm\"\n  ],\n  \"primaryEtiology\": \"Ischemia\",\n  \"mechanism\": \"Re-entry circuit in the scarred myocardium due to underlying ischemic cardiomyopathy.\",\n  \"contributingFactors\": [\n    \"Decompensated ischemic cardiomyopathy (LVEF 25%)\",\n    \"Progressive dyspnea and volume overload (suggesting worsening heart failure)\",\n    \"Prior inferior MI (scar tissue)\",\n    \"Elevated BNP (1840 pg/mL HIGH) indicating heart failure exacerbation\",\n    \"Elevated Troponin T (0.09 ng/mL mildly HIGH) suggesting ongoing myocardial injury/demand ischemia\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Electrolyte abnormality (e.g., Hypokalemia, Hypomagnesemia)\",\n      \"why\": \"Potassium is normal (4.3 mmol/L), Magnesium is borderline low but not critically so (2.1 mg/dL). While electrolyte abnormalities can cause VT, the patient's history of ischemic cardiomyopathy and evidence of ongoing myocardial injury make ischemia the more likely primary cause.\"\n    },\n    {\n      \"alternative\": \"Drug toxicity (e.g., Digoxin)\",\n      \"why\": \"No digoxin level provided, and no specific ECG features suggestive of digoxin toxicity (e.g., scooped ST segments, prominent T waves). Patient is not on digoxin.\"\n    },\n    {\n      \"alternative\": \"Catecholaminergic VT (e.g., due to stress, sepsis)\",\n      \"why\": \"No evidence of sepsis or acute stressor in the recent events or vitals. The underlying structural heart disease is a more prominent risk factor.\"\n    },\n    {\n      \"alternative\": \"Torsades de Pointes (TdP)\",\n      \"why\": \"The ECG shows monomorphic VT, not the characteristic polymorphic pattern of TdP. The QTc is not available, but the pre-event note mentions a normal QTc (460 ms) prior to this episode, making TdP less likely.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Immediate synchronized cardioversion (due to hemodynamic instability: SBP 88 mmHg)\",\n    \"Assess and treat underlying ischemia (e.g., consider coronary angiography if not recently done or if ongoing ischemia suspected)\",\n    \"Administer antiarrhythmic medications (e.g., Amiodarone, Lidocaine) if cardioversion fails or recurs, or as adjunct therapy\",\n    \"Optimize heart failure management (e.g., adjust diuretics, consider inotropes if needed)\",\n    \"Check electrolytes (especially K, Mg, Ca) and correct abnormalities\",\n    \"Consider temporary pacing if hemodynamically unstable after cardioversion or if recurrent VT occurs\"\n  ],\n  \"uncertainty\": []\n}\n```",
+  "bestEffortParsedResponse": null,
+  "terminalStatus": "OK",
+  "hitMaxNewTokens": false,
+  "maxNewTokens": 2500,
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"James P. Whitfield, 61M, with decompensated ischemic cardiomyopathy and LVEF 25%, presenting with critical ventricular tachycardia, hemodynamically unstable (SBP 88 mmHg).\",\n  \"rhythm\": \"Ventricular Tachycardia (VT)\",\n  \"keyECGEvidence\": [\n    \"Ventricular rate 182 bpm\",\n    \"Wide monomorphic QRS (168 ms)\",\n    \"AV dissociation\",\n    \"Occasional capture/fusion beats\",\n    \"Regular rhythm\"\n  ],\n  \"primaryEtiology\": \"Ischemia\",\n  \"mechanism\": \"Re-entry circuit in the scarred myocardium due to underlying ischemic cardiomyopathy.\",\n  \"contributingFactors\": [\n    \"Decompensated ischemic cardiomyopathy (LVEF 25%)\",\n    \"Progressive dyspnea and volume overload (suggesting worsening heart failure)\",\n    \"Prior inferior MI (scar tissue)\",\n    \"Elevated BNP (1840 pg/mL HIGH) indicating heart failure exacerbation\",\n    \"Elevated Troponin T (0.09 ng/mL mildly HIGH) suggesting ongoing myocardial injury/demand ischemia\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Electrolyte abnormality (e.g., Hypokalemia, Hypomagnesemia)\",\n      \"why\": \"Potassium is normal (4.3 mmol/L), Magnesium is borderline low but not critically so (2.1 mg/dL). While electrolyte abnormalities can cause VT, the patient's history of ischemic cardiomyopathy and evidence of ongoing myocardial injury make ischemia the more likely primary cause.\"\n    },\n    {\n      \"alternative\": \"Drug toxicity (e.g., Digoxin)\",\n      \"why\": \"No digoxin level provided, and no specific ECG features suggestive of digoxin toxicity (e.g., scooped ST segments, prominent T waves). Patient is not on digoxin.\"\n    },\n    {\n      \"alternative\": \"Catecholaminergic VT (e.g., due to stress, sepsis)\",\n      \"why\": \"No evidence of sepsis or acute stressor in the recent events or vitals. The underlying structural heart disease is a more prominent risk factor.\"\n    },\n    {\n      \"alternative\": \"Torsades de Pointes (TdP)\",\n      \"why\": \"The ECG shows monomorphic VT, not the characteristic polymorphic pattern of TdP. The QTc is not available, but the pre-event note mentions a normal QTc (460 ms) prior to this episode, making TdP less likely.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Immediate synchronized cardioversion (due to hemodynamic instability: SBP 88 mmHg)\",\n    \"Assess and treat underlying ischemia (e.g., consider coronary angiography if not recently done or if ongoing ischemia suspected)\",\n    \"Administer antiarrhythmic medications (e.g., Amiodarone, Lidocaine) if cardioversion fails or recurs, or as adjunct therapy\",\n    \"Optimize heart failure management (e.g., adjust diuretics, consider inotropes if needed)\",\n    \"Check electrolytes (especially K, Mg, Ca) and correct abnormalities\",\n    \"Consider temporary pacing if hemodynamically unstable after cardioversion or if recurrent VT occurs\"\n  ],\n  \"uncertainty\": []\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1863,
+      "outputTokens": 730,
+      "elapsedSeconds": 79.39799803699952,
+      "peakGpuMemoryGiB": 25.366919994354248,
+      "hitMaxNewTokens": false
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 79.39799803699952,
+  "inputTokens": 1863,
+  "outputTokens": 730,
+  "peakGpuMemoryGiB": 25.366919994354248,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.0",
+  "provider": "lightning-ai-studio",
+  "model": "google/gemma-4-E2B-it",
+  "runNumber": 1,
+  "scenarioId": "CHB-HYPERK-005",
+  "promptFingerprint": "5c30940a7c03f46942cb1916557f3a13e56e6d722b1d95875bc8397c00894c85",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "Patient, Sinus Tachycardia/Atrioventricular Dissociation, critical severity, unstable hemodynamic status due to severe electrolyte derangement and cardiac instability.",
+    "rhythm": "Atrioventricular Dissociation with wide QRS escape rhythm",
+    "keyECGEvidence": [
+      "ventricularRateBpm 34 (Bradycardia/Hypotension)",
+      "regularity regular (dissociated)",
+      "morphology AV dissociation; wide QRS escape; tall peaked symmetric T waves; flattened P waves",
+      "preEventNote Progressive PR prolongation then AV dissociation; QRS widening over 20 min",
+      "clinicalContext recentEvents Peaked T waves and QRS widening on monitor"
+    ],
+    "primaryEtiology": "Severe Hyperkalemia (Potassium 7.4 mmol/L) leading to cardiac instability and conduction disturbance.",
+    "mechanism": "Hyperkalemia causes myocardial membrane instability, leading to conduction abnormalities (PR prolongation, AV dissociation, wide QRS escape) and potentially fatal arrhythmias, which is exacerbated by the patient's underlying cardiac conditions (HF, ESRD).",
+    "contributingFactors": [
+      "Severe Hyperkalemia (Potassium 7.4 mmol/L CRITICAL HIGH)",
+      "Severe Metabolic Acidosis (Bicarbonate 15 mmol/L LOW)",
+      "Acute Kidney Injury/Failure (Creatinine 9.8 mg/dL CRITICAL HIGH)",
+      "Electrolyte imbalance (Calcium 7.6 mg/dL LOW)",
+      "Underlying cardiac disease (Heart failure, ESRD) predisposing to arrhythmias"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Hypovolemia/Hypotension causing bradycardia",
+        "why": "While the BP is hypotensive (78/50), the primary driver of the electrical instability (QRS widening, AV dissociation) is strongly linked to the critical lab values (Hyperkalemia), making the electrolyte imbalance the root cause, not just volume status."
+      },
+      {
+        "alternative": "Ischemic Event causing ST-T changes",
+        "why": "The ECG description points to characteristic hyperkalemic changes (tall peaked T waves, QRS widening) rather than classic ST-elevation/depression patterns typical of acute ischemia, and the pre-event note suggests a progressive conduction issue."
+      }
+    ],
+    "recommendedActions": [
+      "1. Immediate stabilization of cardiac rhythm and potassium: Initiate IV Calcium Gluconate (if no contraindications) to stabilize the myocardium, and prepare for emergent cardiac pacing/defibrillation based on rhythm stability.",
+      "2. Urgent medical management of Hyperkalemia: Initiate emergent treatment for hyperkalemia (e.g., IV insulin/glucose, Kayexalate, or emergent dialysis/cardioversion if refractory).",
+      "3. Address volume status: Initiate IV fluid bolus (e.g., Normal Saline) cautiously, monitoring for fluid overload given the history of HF and ESRD.",
+      "4. Address metabolic derangement: Initiate management for metabolic acidosis (e.g., Bicarbonate replacement if indicated by clinical status).",
+      "5. Review and manage underlying causes: Urgent review of dialysis access status and volume status given the history of missed sessions and ESRD."
+    ],
+    "uncertainty": [
+      "The exact relationship between the QRS widening and the specific degree of hyperkalemia is not quantified, only inferred from the clinical context and ECG morphology.",
+      "The precise timing of the transition from PR prolongation to AV dissociation is not precisely mapped to the current state, only described as a progression."
+    ]
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"Patient, Sinus Tachycardia/Atrioventricular Dissociation, critical severity, unstable hemodynamic status due to severe electrolyte derangement and cardiac instability.\",\n  \"rhythm\": \"Atrioventricular Dissociation with wide QRS escape rhythm\",\n  \"keyECGEvidence\": [\n    \"ventricularRateBpm 34 (Bradycardia/Hypotension)\",\n    \"regularity regular (dissociated)\",\n    \"morphology AV dissociation; wide QRS escape; tall peaked symmetric T waves; flattened P waves\",\n    \"preEventNote Progressive PR prolongation then AV dissociation; QRS widening over 20 min\",\n    \"clinicalContext recentEvents Peaked T waves and QRS widening on monitor\"\n  ],\n  \"primaryEtiology\": \"Severe Hyperkalemia (Potassium 7.4 mmol/L) leading to cardiac instability and conduction disturbance.\",\n  \"mechanism\": \"Hyperkalemia causes myocardial membrane instability, leading to conduction abnormalities (PR prolongation, AV dissociation, wide QRS escape) and potentially fatal arrhythmias, which is exacerbated by the patient's underlying cardiac conditions (HF, ESRD).\",\n  \"contributingFactors\": [\n    \"Severe Hyperkalemia (Potassium 7.4 mmol/L CRITICAL HIGH)\",\n    \"Severe Metabolic Acidosis (Bicarbonate 15 mmol/L LOW)\",\n    \"Acute Kidney Injury/Failure (Creatinine 9.8 mg/dL CRITICAL HIGH)\",\n    \"Electrolyte imbalance (Calcium 7.6 mg/dL LOW)\",\n    \"Underlying cardiac disease (Heart failure, ESRD) predisposing to arrhythmias\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Hypovolemia/Hypotension causing bradycardia\",\n      \"why\": \"While the BP is hypotensive (78/50), the primary driver of the electrical instability (QRS widening, AV dissociation) is strongly linked to the critical lab values (Hyperkalemia), making the electrolyte imbalance the root cause, not just volume status.\"\n    },\n    {\n      \"alternative\": \"Ischemic Event causing ST-T changes\",\n      \"why\": \"The ECG description points to characteristic hyperkalemic changes (tall peaked T waves, QRS widening) rather than classic ST-elevation/depression patterns typical of acute ischemia, and the pre-event note suggests a progressive conduction issue.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"1. Immediate stabilization of cardiac rhythm and potassium: Initiate IV Calcium Gluconate (if no contraindications) to stabilize the myocardium, and prepare for emergent cardiac pacing/defibrillation based on rhythm stability.\",\n    \"2. Urgent medical management of Hyperkalemia: Initiate emergent treatment for hyperkalemia (e.g., IV insulin/glucose, Kayexalate, or emergent dialysis/cardioversion if refractory).\",\n    \"3. Address volume status: Initiate IV fluid bolus (e.g., Normal Saline) cautiously, monitoring for fluid overload given the history of HF and ESRD.\",\n    \"4. Address metabolic derangement: Initiate management for metabolic acidosis (e.g., Bicarbonate replacement if indicated by clinical status).\",\n    \"5. Review and manage underlying causes: Urgent review of dialysis access status and volume status given the history of missed sessions and ESRD.\"\n  ],\n  \"uncertainty\": [\n    \"The exact relationship between the QRS widening and the specific degree of hyperkalemia is not quantified, only inferred from the clinical context and ECG morphology.\",\n    \"The precise timing of the transition from PR prolongation to AV dissociation is not precisely mapped to the current state, only described as a progression.\"\n  ]\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1912,
+      "outputTokens": 808,
+      "elapsedSeconds": 54.481000693000055,
+      "peakGpuMemoryGiB": 6.554766654968262
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 54.481000693000055,
+  "inputTokens": 1912,
+  "outputTokens": 808,
+  "peakGpuMemoryGiB": 6.554766654968262,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

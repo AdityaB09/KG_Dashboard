@@ -1,0 +1,85 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.1",
+  "provider": "lightning-ai-studio",
+  "model": "google/medgemma-27b-text-it",
+  "runNumber": 1,
+  "scenarioId": "PERI-STEMI-012",
+  "promptFingerprint": "3842b2939c7779deeaaafdaaa5d52cbccecd6230b28621a04a879394de2ba2e0",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "Daniel K. Reeves, Sinus Tachycardia, warning, hemodynamically stable",
+    "rhythm": "Sinus Tachycardia",
+    "keyECGEvidence": [
+      "ventricularRate_bpm: 96",
+      "atrialRate_bpm: 96",
+      "regularity: regular",
+      "pWavePresent: true",
+      "stDeviation: Diffuse concave (upward-scooping) ST elevation 1-2 mm in leads I, II, aVL, aVF, V3-V6; PR-segment depression in leads II, III, aVF, V4-V6; PR elevation in aVR; ST depression in aVR only; NO reciprocal ST depression in any other lead; ST/T ratio 0.28 in V6"
+    ],
+    "primaryEtiology": "Acute Pericarditis",
+    "mechanism": "Inflammation of the pericardium leading to diffuse ST elevation and PR depression, causing chest pain and sinus tachycardia.",
+    "contributingFactors": [
+      "Recent Upper respiratory infection 1 week ago",
+      "Sharp pleuritic chest pain, worse supine, improved leaning forward",
+      "Pericardial friction rub heard on auscultation",
+      "Diffuse concave ST elevation",
+      "PR segment depression",
+      "PR segment elevation in aVR",
+      "ST depression in aVR only"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Acute Myocardial Infarction (STEMI)",
+        "why": "ST elevation is diffuse and concave (upward-scooping), not localized to a specific coronary territory. No reciprocal ST depression is present, except for ST depression in aVR. Troponin T is only mildly elevated (0.03 ng/mL), not critically high. Pain radiates to trapezius ridge, not typically arm/jaw."
+      },
+      {
+        "alternative": "Pulmonary Embolism",
+        "why": "While pleuritic chest pain is present, ECG findings are more typical of pericarditis. No S1Q3T3 pattern or right heart strain signs. BNP is normal (45 pg/mL)."
+      },
+      {
+        "alternative": "Electrolyte Imbalance (e.g., Hypokalemia)",
+        "why": "Potassium is normal (4.0 mmol/L)."
+      }
+    ],
+    "recommendedActions": [
+      "Administer NSAID (e.g., Ibuprofen 600mg PO Q6H or Indomethacin 25-50mg PO Q8H) for inflammation and pain",
+      "Administer Colchicine 0.6mg PO BID for inflammation",
+      "Consider high-dose Aspirin (e.g., 650-800mg PO Q6-8H) if NSAIDs contraindicated or ineffective",
+      "Monitor ECG for PR normalization and ST/T wave changes",
+      "Monitor vital signs and cardiac enzymes",
+      "Administer supplemental oxygen if SpO2 drops below 94%",
+      "Administer analgesia (e.g., Morphine) for severe pain, cautiously",
+      "Consult Cardiology",
+      "Rule out underlying causes (e.g., viral, autoimmune)"
+    ],
+    "uncertainty": [
+      "No prior ECG available for comparison.",
+      "Specific viral or autoimmune cause of pericarditis is unknown."
+    ]
+  },
+  "rawModelResponse": "```json\n{\n  \"episodeSummary\": \"Daniel K. Reeves, Sinus Tachycardia, warning, hemodynamically stable\",\n  \"rhythm\": \"Sinus Tachycardia\",\n  \"keyECGEvidence\": [\n    \"ventricularRate_bpm: 96\",\n    \"atrialRate_bpm: 96\",\n    \"regularity: regular\",\n    \"pWavePresent: true\",\n    \"stDeviation: Diffuse concave (upward-scooping) ST elevation 1-2 mm in leads I, II, aVL, aVF, V3-V6; PR-segment depression in leads II, III, aVF, V4-V6; PR elevation in aVR; ST depression in aVR only; NO reciprocal ST depression in any other lead; ST/T ratio 0.28 in V6\"\n  ],\n  \"primaryEtiology\": \"Acute Pericarditis\",\n  \"mechanism\": \"Inflammation of the pericardium leading to diffuse ST elevation and PR depression, causing chest pain and sinus tachycardia.\",\n  \"contributingFactors\": [\n    \"Recent Upper respiratory infection 1 week ago\",\n    \"Sharp pleuritic chest pain, worse supine, improved leaning forward\",\n    \"Pericardial friction rub heard on auscultation\",\n    \"Diffuse concave ST elevation\",\n    \"PR segment depression\",\n    \"PR segment elevation in aVR\",\n    \"ST depression in aVR only\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Acute Myocardial Infarction (STEMI)\",\n      \"why\": \"ST elevation is diffuse and concave (upward-scooping), not localized to a specific coronary territory. No reciprocal ST depression is present, except for ST depression in aVR. Troponin T is only mildly elevated (0.03 ng/mL), not critically high. Pain radiates to trapezius ridge, not typically arm/jaw.\"\n    },\n    {\n      \"alternative\": \"Pulmonary Embolism\",\n      \"why\": \"While pleuritic chest pain is present, ECG findings are more typical of pericarditis. No S1Q3T3 pattern or right heart strain signs. BNP is normal (45 pg/mL).\"\n    },\n    {\n      \"alternative\": \"Electrolyte Imbalance (e.g., Hypokalemia)\",\n      \"why\": \"Potassium is normal (4.0 mmol/L).\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Administer NSAID (e.g., Ibuprofen 600mg PO Q6H or Indomethacin 25-50mg PO Q8H) for inflammation and pain\",\n    \"Administer Colchicine 0.6mg PO BID for inflammation\",\n    \"Consider high-dose Aspirin (e.g., 650-800mg PO Q6-8H) if NSAIDs contraindicated or ineffective\",\n    \"Monitor ECG for PR normalization and ST/T wave changes\",\n    \"Monitor vital signs and cardiac enzymes\",\n    \"Administer supplemental oxygen if SpO2 drops below 94%\",\n    \"Administer analgesia (e.g., Morphine) for severe pain, cautiously\",\n    \"Consult Cardiology\",\n    \"Rule out underlying causes (e.g., viral, autoimmune)\"\n  ],\n  \"uncertainty\": [\n    \"No prior ECG available for comparison.\",\n    \"Specific viral or autoimmune cause of pericarditis is unknown.\"\n  ]\n}\n```",
+  "bestEffortParsedResponse": null,
+  "terminalStatus": "OK",
+  "hitMaxNewTokens": false,
+  "maxNewTokens": 2500,
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"Daniel K. Reeves, Sinus Tachycardia, warning, hemodynamically stable\",\n  \"rhythm\": \"Sinus Tachycardia\",\n  \"keyECGEvidence\": [\n    \"ventricularRate_bpm: 96\",\n    \"atrialRate_bpm: 96\",\n    \"regularity: regular\",\n    \"pWavePresent: true\",\n    \"stDeviation: Diffuse concave (upward-scooping) ST elevation 1-2 mm in leads I, II, aVL, aVF, V3-V6; PR-segment depression in leads II, III, aVF, V4-V6; PR elevation in aVR; ST depression in aVR only; NO reciprocal ST depression in any other lead; ST/T ratio 0.28 in V6\"\n  ],\n  \"primaryEtiology\": \"Acute Pericarditis\",\n  \"mechanism\": \"Inflammation of the pericardium leading to diffuse ST elevation and PR depression, causing chest pain and sinus tachycardia.\",\n  \"contributingFactors\": [\n    \"Recent Upper respiratory infection 1 week ago\",\n    \"Sharp pleuritic chest pain, worse supine, improved leaning forward\",\n    \"Pericardial friction rub heard on auscultation\",\n    \"Diffuse concave ST elevation\",\n    \"PR segment depression\",\n    \"PR segment elevation in aVR\",\n    \"ST depression in aVR only\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Acute Myocardial Infarction (STEMI)\",\n      \"why\": \"ST elevation is diffuse and concave (upward-scooping), not localized to a specific coronary territory. No reciprocal ST depression is present, except for ST depression in aVR. Troponin T is only mildly elevated (0.03 ng/mL), not critically high. Pain radiates to trapezius ridge, not typically arm/jaw.\"\n    },\n    {\n      \"alternative\": \"Pulmonary Embolism\",\n      \"why\": \"While pleuritic chest pain is present, ECG findings are more typical of pericarditis. No S1Q3T3 pattern or right heart strain signs. BNP is normal (45 pg/mL).\"\n    },\n    {\n      \"alternative\": \"Electrolyte Imbalance (e.g., Hypokalemia)\",\n      \"why\": \"Potassium is normal (4.0 mmol/L).\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Administer NSAID (e.g., Ibuprofen 600mg PO Q6H or Indomethacin 25-50mg PO Q8H) for inflammation and pain\",\n    \"Administer Colchicine 0.6mg PO BID for inflammation\",\n    \"Consider high-dose Aspirin (e.g., 650-800mg PO Q6-8H) if NSAIDs contraindicated or ineffective\",\n    \"Monitor ECG for PR normalization and ST/T wave changes\",\n    \"Monitor vital signs and cardiac enzymes\",\n    \"Administer supplemental oxygen if SpO2 drops below 94%\",\n    \"Administer analgesia (e.g., Morphine) for severe pain, cautiously\",\n    \"Consult Cardiology\",\n    \"Rule out underlying causes (e.g., viral, autoimmune)\"\n  ],\n  \"uncertainty\": [\n    \"No prior ECG available for comparison.\",\n    \"Specific viral or autoimmune cause of pericarditis is unknown.\"\n  ]\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1902,
+      "outputTokens": 778,
+      "elapsedSeconds": 86.98489721299939,
+      "peakGpuMemoryGiB": 25.17024517059326,
+      "hitMaxNewTokens": false
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 86.98489721299939,
+  "inputTokens": 1902,
+  "outputTokens": 778,
+  "peakGpuMemoryGiB": 25.17024517059326,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

@@ -1,9 +1,0 @@
-﻿Patch version: 1.0.0
-Applied at: 2026-08-06T11:59:34.5642901-05:00
-Project root: C:\Users\adity\Downloads\588_\7 Waveform
-Files:
-backend/app/slm_widget/assembler.py
-src/components/CriticalInterpretationWidget.jsx
-src/components/SevenLeadWaveformPage.jsx
-src/evaluation/evaluationWidgetAdapter.js
-src/presentation/episodeWidgetFallbacks.js

@@ -1,0 +1,728 @@
+{
+  "patchVersion": "7.2",
+  "description": "Full-stack V7 precomputed Etiology integration with all 10 Oracle SMART patients mapped and clinician-facing technical provenance removed from the SLM widget.",
+  "appliesDirectlyToCurrentProject": true,
+  "requiresV7_1First": false,
+  "files": [
+    {
+      "path": "APPLY_CARDINAL_V7_2_FULLSTACK.ps1",
+      "bytes": 4488,
+      "sha256": "3a665dd726d409f6ab7965a6a8c043e2d60e75a2cb01a7d10549a2137a61bf04"
+    },
+    {
+      "path": "CARDINAL_V7_ENV_PATCH.txt",
+      "bytes": 1391,
+      "sha256": "967aa1a94e37a4715c6831c020ccf1b45eb2eb60fccebab15e933c58f4591381"
+    },
+    {
+      "path": "CARDINAL_V7_INTEGRATION_README.md",
+      "bytes": 3770,
+      "sha256": "6ef47bd4a45ccaada495faef866e3a611522910749eafab7276a98c53cdaa13a"
+    },
+    {
+      "path": "FRONTEND_SLM_WIDGET_CONTRACT_V7_2.json",
+      "bytes": 1522,
+      "sha256": "acecb1be6f1f1939fc041c8221730c1e0452265dae72f1c13a33532f3554fa03"
+    },
+    {
+      "path": "ORACLE_V7_MAPPING.md",
+      "bytes": 2483,
+      "sha256": "cf9d9c612eba60f0ebc0c0058095f838d26d78b84a30739eed865b62cf4b0aeb"
+    },
+    {
+      "path": "SLM_Eval/README_TEST_ENGINEER.md",
+      "bytes": 12285,
+      "sha256": "80718e39a5196e34f6a0b1688cdb67ef988d31e1dc18f6fc02b81dbd532d4c3c"
+    },
+    {
+      "path": "SLM_Eval/answer_key.json",
+      "bytes": 22513,
+      "sha256": "e3215c3a2f9badde23b5b81686c3faea1d89cb44f24d55d9d2b07653e6011cbb"
+    },
+    {
+      "path": "SLM_Eval/episodes/AFIB-RVR-SEPSIS-004.json",
+      "bytes": 210608,
+      "sha256": "8dfc1d0932119b0bed629e9202ef5312755f5b85a7895fa0d313cfce97812223"
+    },
+    {
+      "path": "SLM_Eval/episodes/AMIO-DDI-014.json",
+      "bytes": 211927,
+      "sha256": "41c8711f0df8a11bccbd348961b6d3d206721551486ca6a42036a268ae733428"
+    },
+    {
+      "path": "SLM_Eval/episodes/BRADY-DIGTOX-006.json",
+      "bytes": 210615,
+      "sha256": "fae5b8dab8aa9d7670f783ff84d81b068a984515ec323089822f4b5490952b88"
+    },
+    {
+      "path": "SLM_Eval/episodes/BRASH-013.json",
+      "bytes": 213549,
+      "sha256": "23bc9bf2a80164d517ba79abb4ca2be93dff4d67d7b5814ceefe0b5f2671bd8a"
+    },
+    {
+      "path": "SLM_Eval/episodes/CHB-HYPERK-005.json",
+      "bytes": 212139,
+      "sha256": "7e1be6c3f14afff5c160d84789120e6eb5967a96f03ccf5134c8d6cbd697766d"
+    },
+    {
+      "path": "SLM_Eval/episodes/FLUTTER-IC-011.json",
+      "bytes": 215311,
+      "sha256": "f5852889e53d9e7f182cab47caf15d2b8e671459e352d59ee5fd63f830878a93"
+    },
+    {
+      "path": "SLM_Eval/episodes/NSVT-ECTOPY-008.json",
+      "bytes": 211262,
+      "sha256": "87c56a0029675967b05bafd6d51281d18269684c97cbd9f753037b35e8f0b0f8"
+    },
+    {
+      "path": "SLM_Eval/episodes/PERI-STEMI-012.json",
+      "bytes": 210553,
+      "sha256": "ed63989803bd38a570345aaff685cc5425983473a57265ac591f37ce2ced3b27"
+    },
+    {
+      "path": "SLM_Eval/episodes/SVT-PSVT-007.json",
+      "bytes": 209817,
+      "sha256": "fad81104af714ef5f5a4f3ffaddb16319c3716f02b0da90b07b942015de26d65"
+    },
+    {
+      "path": "SLM_Eval/episodes/TORSADES-LQT-002.json",
+      "bytes": 214482,
+      "sha256": "e250ed106543a3754815622898bbecd45e96f914f1a2aafb4260956639b71ebe"
+    },
+    {
+      "path": "SLM_Eval/episodes/VFIB-STEMI-001.json",
+      "bytes": 215065,
+      "sha256": "f1dec7634eb8aea67dff5216aff4ca23632694390cf341d759d97669ffcfc95c"
+    },
+    {
+      "path": "SLM_Eval/episodes/VT-ISCHEMIC-003.json",
+      "bytes": 216736,
+      "sha256": "f30ae02966ac914c809a14a867069c7516151319648a01ad8a15dd4f61194d07"
+    },
+    {
+      "path": "SLM_Eval/episodes/WCT-DIFF-009.json",
+      "bytes": 215914,
+      "sha256": "a2194a45ae75379a3ec81b3a0db3898fb6ffaa16d27d0b7752737f2740036982"
+    },
+    {
+      "path": "SLM_Eval/episodes/WPW-AFIB-010.json",
+      "bytes": 214583,
+      "sha256": "bc4c3f0cc5a0276c38115c9a27372e413d2d9cb7edb1ef6e14796828042ca1a9"
+    },
+    {
+      "path": "SLM_Eval/index.json",
+      "bytes": 3264,
+      "sha256": "c866e47a8f338e2f525e8eb558405da47c6bc4b49c975d494a41be9f6432cade"
+    },
+    {
+      "path": "SLM_Eval/slm_prompt_template.md",
+      "bytes": 3011,
+      "sha256": "614b620a6f4ad19642d7ef5639ca3f2699f351912747cf00b3c24103dd1069a6"
+    },
+    {
+      "path": "VERIFY_CARDINAL_V7_INTEGRATION.py",
+      "bytes": 6077,
+      "sha256": "893ebfb3a9ec15c90ec5435b770bf0751c99b75017e0189df4286acb4da5ed60"
+    },
+    {
+      "path": "app/config.py",
+      "bytes": 11490,
+      "sha256": "2946941ee17fdf11fd3cfb69510b35965c38161aa56e204453394f356c1f1e61"
+    },
+    {
+      "path": "app/episodes.py",
+      "bytes": 61006,
+      "sha256": "c9f593d537e7210c499361ac68f825bf36be38af94ff316011787efe0d71b175"
+    },
+    {
+      "path": "app/evaluation_demo/mapping.py",
+      "bytes": 5950,
+      "sha256": "2705b2e9ef1a99d54a75c3b2dfed17a88a537c3c42cb1e0e8c780d1421fa7c9e"
+    },
+    {
+      "path": "app/evaluation_demo/patient_scenario_map.json",
+      "bytes": 7984,
+      "sha256": "100a6492557d0331a062f3c358526ee41dd890f77ebcc3a27054f8d7335fe4bb"
+    },
+    {
+      "path": "app/evaluation_demo/service.py",
+      "bytes": 16599,
+      "sha256": "7c34fab7e3ffa7ffa3443c08791cc0d45b72e4cbce5271a5cfbc0505dec4f630"
+    },
+    {
+      "path": "app/evaluation_injection/etiology_v7.py",
+      "bytes": 36861,
+      "sha256": "80d1b464d397704080612694086797f1036f16d59508c754182f439d64a14692"
+    },
+    {
+      "path": "app/evaluation_injection/scenario_catalog.py",
+      "bytes": 7651,
+      "sha256": "06a90586da87471114a0ba6b914b34a04e365bbc3d45e0acfdb751a5773c504f"
+    },
+    {
+      "path": "app/evaluation_injection/service.py",
+      "bytes": 119056,
+      "sha256": "6faf1b0ed4d049962c9b56e41a6918ee90a6f19a8e760cda37d6c13c90f62b63"
+    },
+    {
+      "path": "app/slm_widget/assembler.py",
+      "bytes": 27204,
+      "sha256": "681f566cf9171630243dbaf14071262a90f80864a06cd7bb97def4d755eff394"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/INDEX.json",
+      "bytes": 984,
+      "sha256": "d52ea14cb764dc8f97bcfcf40b696833dfd4b7cd1f73788dd8afb273bad0c886"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-12B-it/AFIB-RVR-SEPSIS-004.json",
+      "bytes": 7918,
+      "sha256": "e76f6f507ecd601bb5eaca22a83a3e0ab049efa3a3c6fea25e33f192f89c68d5"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-12B-it/AMIO-DDI-014.json",
+      "bytes": 8200,
+      "sha256": "4a09ec7b0860cc6826b6fbdf2788c7530e3f9205aca885a05af035c89163bc36"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-12B-it/BRADY-DIGTOX-006.json",
+      "bytes": 8028,
+      "sha256": "b1163c116c64af8cee71b9d8029c47f06249fca14dbb49ce83ee2d0e7815f628"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-12B-it/BRASH-013.json",
+      "bytes": 8267,
+      "sha256": "c3fd62fb66516c26acdb5259760a89730810d49f01a6482e17c828c895170648"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-12B-it/CHB-HYPERK-005.json",
+      "bytes": 8017,
+      "sha256": "d21b98041fb750d8daf996312b37b8c0cc4b53f31c97b027d9f2c2a821d69f19"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-12B-it/FLUTTER-IC-011.json",
+      "bytes": 7802,
+      "sha256": "a02cb522fec077aea0cd41c11941d43f8f7bf19a852d5e452d6e7fedc3b8f057"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-12B-it/MODEL_MANIFEST.json",
+      "bytes": 537,
+      "sha256": "df59b7d5a61a8d755efda14adbef145e483a1bbfedcd30ac6c79ff5f1c73ce80"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-12B-it/NSVT-ECTOPY-008.json",
+      "bytes": 7558,
+      "sha256": "8a06b3ab88f149fa22bd15da2b0b174b07d5ea25cb530a78e146146b72156247"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-12B-it/PERI-STEMI-012.json",
+      "bytes": 8056,
+      "sha256": "479fa74a04e2fc50cc17732f50c3cecc51a0bed4a10e6ee5fe68e648f8c7d6c3"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-12B-it/SVT-PSVT-007.json",
+      "bytes": 7077,
+      "sha256": "0eedb3cb6defa4b9414c1e10f36f73ece123d184fcb20ae6852acf88191a380c"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-12B-it/TORSADES-LQT-002.json",
+      "bytes": 8346,
+      "sha256": "fdab7cad754bdb09eafa097e161becf75a13fc0e0dde92b9d2c11056910824e7"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-12B-it/VFIB-STEMI-001.json",
+      "bytes": 6663,
+      "sha256": "abbe2b92a59ab202f7869e7c0a71ac9c6328a36f58a9c3efd0167fd736aeddae"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-12B-it/VT-ISCHEMIC-003.json",
+      "bytes": 7668,
+      "sha256": "5dfcf61449a0765662b696500136f5bc739b2fb6ba3890b18b9f1d6855338592"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-12B-it/WCT-DIFF-009.json",
+      "bytes": 7189,
+      "sha256": "cc9c6bc22fbf9da04714f350a3f9532742c45cf5287a5cf6984dcec61f0614a0"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-12B-it/WPW-AFIB-010.json",
+      "bytes": 8086,
+      "sha256": "d0c56527308eb26c3587e9dc3a051c700bf691943091fc344713b5f45aae6e8c"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-26B-A4B-it/AFIB-RVR-SEPSIS-004.json",
+      "bytes": 5491,
+      "sha256": "857966521418da70e7e37cc68e6c8ccaf67ca47951d467ef826f550d825d1d0a"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-26B-A4B-it/AMIO-DDI-014.json",
+      "bytes": 4350,
+      "sha256": "3ffe6f1056a3374dcd55eaf380b7de480fc94626ec81ee6c69022ddf374208f7"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-26B-A4B-it/BRADY-DIGTOX-006.json",
+      "bytes": 4315,
+      "sha256": "73c8fe479c24d367610672cba03e8d6aeeddb17d3e748e80374435dbd7fe3413"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-26B-A4B-it/BRASH-013.json",
+      "bytes": 4685,
+      "sha256": "55674290f0bf5659f0604b3d8e86183738c34bc1460b1c54d494987ea3f956dc"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-26B-A4B-it/CHB-HYPERK-005.json",
+      "bytes": 4946,
+      "sha256": "50007c12c68ef703a0e5a6f7061bd087e4d92be301be2fb092a6336e28cbd75b"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-26B-A4B-it/FLUTTER-IC-011.json",
+      "bytes": 4596,
+      "sha256": "3772d666b3ff91332d33365c88e8f4b487a83accb9b4868a277d516b57aefcc4"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-26B-A4B-it/MODEL_MANIFEST.json",
+      "bytes": 541,
+      "sha256": "3f6861a124a356402f2cd9dd8da1e48ed0c64efbefaf5996b134448249408410"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-26B-A4B-it/NSVT-ECTOPY-008.json",
+      "bytes": 4179,
+      "sha256": "b16b0e2f7c70da8defb26caa30240377ee5fb7bab08c90e5972ffeaccd9ba854"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-26B-A4B-it/PERI-STEMI-012.json",
+      "bytes": 7527,
+      "sha256": "480b8aa370e229be6db56655fbee1bb74c3cce914dbe282a4bf7c96375e631bb"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-26B-A4B-it/SVT-PSVT-007.json",
+      "bytes": 4226,
+      "sha256": "8d48be67df3254dd1adb30fafbc7c3f6238069cf5fcb76fcb1ecce8553db6124"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-26B-A4B-it/TORSADES-LQT-002.json",
+      "bytes": 5079,
+      "sha256": "fa515e9591fd25cfcc523fc4765f3da2755f1fbbc6b42ac87d10096d995181a7"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-26B-A4B-it/VFIB-STEMI-001.json",
+      "bytes": 4009,
+      "sha256": "1075991046a1000649e0f5910f6e9086fa499ad7ba9b6af7496c5ad6f3cdce30"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-26B-A4B-it/VT-ISCHEMIC-003.json",
+      "bytes": 7525,
+      "sha256": "f308b0129700d8a762fda208e26ab6d4d65468c617939a716ea2f075889ea85c"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-26B-A4B-it/WCT-DIFF-009.json",
+      "bytes": 6614,
+      "sha256": "64b23803c61f81c5d41655a70b9e520ae82c8d2c099f41661adf033a29f9ffdb"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-26B-A4B-it/WPW-AFIB-010.json",
+      "bytes": 4318,
+      "sha256": "dff0f4b50d15248f3ceabf7cebbff1ff8153d9c7767d1d661babc38dfdf7cb24"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-31B-it/AFIB-RVR-SEPSIS-004.json",
+      "bytes": 4840,
+      "sha256": "71e27f144d3c4047de65c8bb56d17d348ae00a714e11988cba37c77a20394434"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-31B-it/AMIO-DDI-014.json",
+      "bytes": 4624,
+      "sha256": "e735175e161d60eaf8f8f2e606c52612139dd687ea506cf9eb723df5ddebc765"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-31B-it/BRADY-DIGTOX-006.json",
+      "bytes": 4428,
+      "sha256": "8d7b2ab1204d376e333bc8a7183c4cb1b81419a1b52cbbe0dcd4761479d4874b"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-31B-it/BRASH-013.json",
+      "bytes": 5324,
+      "sha256": "e77b00abbaf02e40cf196a80b488dbc9ad88ac97c6705c692378147480207b6d"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-31B-it/CHB-HYPERK-005.json",
+      "bytes": 5317,
+      "sha256": "a6f062240f134f5c9d4516115ad42974bc477927d23c556b26336922549d5246"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-31B-it/FLUTTER-IC-011.json",
+      "bytes": 5098,
+      "sha256": "82c3a83be5f65e0b9168a2217f003b20a0f1c03a9d93009c7e5083f434077215"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-31B-it/MODEL_MANIFEST.json",
+      "bytes": 537,
+      "sha256": "d4abe484eac3a64446181112bd74a2045bd65472dbdd30c0463d79e76dec6c51"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-31B-it/NSVT-ECTOPY-008.json",
+      "bytes": 4492,
+      "sha256": "615ccbb3a0b9815bcda9c1017fa92d3b155a0ddb8a62f8418ae946fcb394a329"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-31B-it/PERI-STEMI-012.json",
+      "bytes": 4800,
+      "sha256": "7a9ac71d0858907d15e5a95430966f2db937565ae03bd75f7d1933a6c1e8bd68"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-31B-it/SVT-PSVT-007.json",
+      "bytes": 4687,
+      "sha256": "9b5fbafab9d7b630d3591b31fb9788369590bd7ee791afe24941caaf881aeaac"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-31B-it/TORSADES-LQT-002.json",
+      "bytes": 4840,
+      "sha256": "6b972b07ccafd7304b4ec7f563406dd4dfb53bae6e6d24e21c3ebbe647eb05ef"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-31B-it/VFIB-STEMI-001.json",
+      "bytes": 4795,
+      "sha256": "3bb9d837a09fc445ec6d910e86daaa9afcc1fb7f0b4c6615eb84bb53688a15be"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-31B-it/VT-ISCHEMIC-003.json",
+      "bytes": 4377,
+      "sha256": "59fe5019f67973afd147550484bef3b7da1e15912b3855e9a9aac6486d0ce2d8"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-31B-it/WCT-DIFF-009.json",
+      "bytes": 4765,
+      "sha256": "6d59ba1016079d3f3c7cff7f37d49be50b18c2366248e2913315668ac32cfe0f"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-31B-it/WPW-AFIB-010.json",
+      "bytes": 4535,
+      "sha256": "204f149ef524bf90ab18cab4b62c2fc9fd3f22cb4a40524feb1d70288a077e50"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E2B-it/AFIB-RVR-SEPSIS-004.json",
+      "bytes": 8412,
+      "sha256": "de83dbf111b35ca3c8eda3e338a1868374b78e8c16600493021d7a918226184d"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E2B-it/AMIO-DDI-014.json",
+      "bytes": 8315,
+      "sha256": "bd6db014931e5a79c4bf2bd1eac5a7dab3053a84d6ec85bfd367fb127f4e5f33"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E2B-it/BRADY-DIGTOX-006.json",
+      "bytes": 6560,
+      "sha256": "1023ab034fcaeb451921e641c816215c5a7fbc2845ea525393dadb1e01c781ed"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E2B-it/BRASH-013.json",
+      "bytes": 7721,
+      "sha256": "72d69eb9ec3db00ef8caa7bbe5aed8811a62325de8c10f09d9fca0e7352df83a"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E2B-it/CHB-HYPERK-005.json",
+      "bytes": 7835,
+      "sha256": "5f260f1cd7b4bdbd2cf88e73d910a6811aa858f36fe4e5c3291e2acd6760e3c8"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E2B-it/FLUTTER-IC-011.json",
+      "bytes": 7607,
+      "sha256": "fcbcded19afee2badd8db4ef569a30cdd135f38fe3a249495401161a91cc907e"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E2B-it/MODEL_MANIFEST.json",
+      "bytes": 537,
+      "sha256": "ab36013cc199530efca56192c1da296ee43ff37f3261faa5bc42e064509fb0f8"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E2B-it/NSVT-ECTOPY-008.json",
+      "bytes": 6830,
+      "sha256": "6a332f7f4aac98f93aa33983480cd94997f3f562844e44c59ee020bb36c3b6a6"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E2B-it/PERI-STEMI-012.json",
+      "bytes": 7355,
+      "sha256": "d6fcb407821b648f556269acc4bb078e732a3a8ef58e06c218af4d4624d39696"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E2B-it/SVT-PSVT-007.json",
+      "bytes": 6326,
+      "sha256": "24ee9e6428ba8e87f4a8a2b434e55bd720110cae62f657631bb4d63dd598f26a"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E2B-it/TORSADES-LQT-002.json",
+      "bytes": 8036,
+      "sha256": "e3cec14ddb7a2a47954ce5189ff667d854f2448f8a7b99069483e5ef867ca0d5"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E2B-it/VFIB-STEMI-001.json",
+      "bytes": 7464,
+      "sha256": "62574c152493297753250e9dbe70fdaf9a698e5c1d274775937fb6bdc6474e5d"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E2B-it/VT-ISCHEMIC-003.json",
+      "bytes": 7624,
+      "sha256": "66d0a17fdcb72594c10041525977ec780b8805b9c25f3118a24a5616cb42b0aa"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E2B-it/WCT-DIFF-009.json",
+      "bytes": 7444,
+      "sha256": "1d6e9f97d11d0efeba70329c387d34910df94bd265d5424496b23c54d18b50a5"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E2B-it/WPW-AFIB-010.json",
+      "bytes": 7867,
+      "sha256": "30247ae60d0c79c4863afdc3266b565b0d2a27ec120a3bce56af47d0b543d40d"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E4B-it/AFIB-RVR-SEPSIS-004.json",
+      "bytes": 5571,
+      "sha256": "24276e1205e49f961e3a239782018c939e887ce076e611e57c6dc6f8d8e4f43e"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E4B-it/AMIO-DDI-014.json",
+      "bytes": 9098,
+      "sha256": "07b282c81c2a9fac5275cee6bfcf51b1a53dbf48cd7ee5463a7d84829047e4be"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E4B-it/BRADY-DIGTOX-006.json",
+      "bytes": 5036,
+      "sha256": "5cf2cf38305ce2961b2a2b16a1afd4a760b8270528b33caa13fce0a39d6592b1"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E4B-it/BRASH-013.json",
+      "bytes": 9070,
+      "sha256": "c74204fd9516c9a3837eadf3002cb8d0644ae70d58892320521999f4db18bb21"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E4B-it/CHB-HYPERK-005.json",
+      "bytes": 5807,
+      "sha256": "ad7ecde689cb5187dcadde9b6374c0ce8d8c4ce731cb3b3800b08efbe57a6ed6"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E4B-it/FLUTTER-IC-011.json",
+      "bytes": 25094,
+      "sha256": "880811f73bed8230bcb4fb4fcf61f6f611cb5ac32b695b63734affb6c4aafb86"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E4B-it/MODEL_MANIFEST.json",
+      "bytes": 515,
+      "sha256": "d980874fc47a13b0cf9d9742e5d22d573b41a8a12e96850a01fdb9f00f9b2873"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E4B-it/NSVT-ECTOPY-008.json",
+      "bytes": 5757,
+      "sha256": "56d2ca20f1e3c0f917659f477a500a23254d964a7bf4c8f676316ff1420a598d"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E4B-it/PERI-STEMI-012.json",
+      "bytes": 8849,
+      "sha256": "f3208f2fcf8a8c4046d89369d066405c532b2d514f63ab21458609d41c500005"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E4B-it/SVT-PSVT-007.json",
+      "bytes": 4549,
+      "sha256": "b2a8713809273eee5483e84d2e868e2f7822919ad876e3718be41c73b944a6a9"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E4B-it/TORSADES-LQT-002.json",
+      "bytes": 6407,
+      "sha256": "44dd09784343d9492f8d1661c7c4a5f2d2ce18a6c26b79b05443e574b5873661"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E4B-it/VFIB-STEMI-001.json",
+      "bytes": 5781,
+      "sha256": "75e99c213a56558a3d9e76b709fc47d6610a25c831ba5493aea38de88153e995"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E4B-it/VT-ISCHEMIC-003.json",
+      "bytes": 5510,
+      "sha256": "462b18f442e8b8010255dd17485e584a32fd2f9019bb0d009b1ae139a9976837"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E4B-it/WCT-DIFF-009.json",
+      "bytes": 5536,
+      "sha256": "b739432925e69b1027a0c56fde84bcaded44937d50740586ad9171ecaac5df4b"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-gemma-4-E4B-it/WPW-AFIB-010.json",
+      "bytes": 5639,
+      "sha256": "81c946e06ac1b0477fe6b331c947182d5c9e0a5d428d15ff4ba4aafa0010f313"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-it/AFIB-RVR-SEPSIS-004.json",
+      "bytes": 9765,
+      "sha256": "dc702893a3d62e2db797961643e05724b7979c005f5dbb558b159e983ed1771a"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-it/AMIO-DDI-014.json",
+      "bytes": 9929,
+      "sha256": "a9a01ce3d5fe81912eb148e1e4f1005e834687d6ee29211ffdd0bce048a801e0"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-it/BRADY-DIGTOX-006.json",
+      "bytes": 8343,
+      "sha256": "cdd607fd94d76036d078bd65927443ea5a952ef672eff5a0734a0224fd692db3"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-it/BRASH-013.json",
+      "bytes": 10975,
+      "sha256": "4ddcf4b184e74da6306a5775df956b8dafa6ef3c6cc63ef01280244942157f5d"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-it/CHB-HYPERK-005.json",
+      "bytes": 8776,
+      "sha256": "695790a453ff424ff56222ba6adef6450371e76fe9e9e27f92a114989853c149"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-it/FLUTTER-IC-011.json",
+      "bytes": 8640,
+      "sha256": "4791a01039f8902ac50403f2659f0adc2d93cec2295b77f6c12bb99652fcadee"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-it/MODEL_MANIFEST.json",
+      "bytes": 538,
+      "sha256": "10e194c9eb7813c5643efe83153e54c61c29974f5cb503f4c1aa877992c087be"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-it/NSVT-ECTOPY-008.json",
+      "bytes": 7921,
+      "sha256": "54f7aa8affa6ea96c429aed1b016989bb0bba7fe7c3cb9b0b9afff796b7f3b81"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-it/PERI-STEMI-012.json",
+      "bytes": 10445,
+      "sha256": "94e91646901fdc8af3d5c72db3f7a4c57aeeca70a10a4be253a66007d82e7f93"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-it/SVT-PSVT-007.json",
+      "bytes": 8624,
+      "sha256": "de14de109f17f04eb6def90c7cbf133603140cd08edb5eb8fec3cc418177bebd"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-it/TORSADES-LQT-002.json",
+      "bytes": 9143,
+      "sha256": "0c3bef96b64795e8ed050d684e253b6f12eccd0c6af80820da9b93a5736888bf"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-it/VFIB-STEMI-001.json",
+      "bytes": 8920,
+      "sha256": "e19a1e5bd91bc157f445a90bc53e9a0f0f9804b5f6649e701bb5d89bfbb88762"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-it/VT-ISCHEMIC-003.json",
+      "bytes": 9876,
+      "sha256": "3cc0b96d3e1637deb5c147099ad115777c8217dcadaa29443dd25d0e1cc8805c"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-it/WCT-DIFF-009.json",
+      "bytes": 7342,
+      "sha256": "f46a5412c1bd52406cfa006cd4b1feee7304dcae40b275239916158a2626ff2c"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-it/WPW-AFIB-010.json",
+      "bytes": 10074,
+      "sha256": "ac5947e6fe6e6c85724e523a300627e3dcfa4c5fc5d3ee451721acd00b3d84b2"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-text-it/AFIB-RVR-SEPSIS-004.json",
+      "bytes": 9066,
+      "sha256": "7b8af735627bdb41a6df6d436b4c2ef0b8f510266a928fe28ca2b8d18aa0a0d7"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-text-it/AMIO-DDI-014.json",
+      "bytes": 9189,
+      "sha256": "bace6f48406732bd02480a791c143dc087b8a72b55ead6ff6cc5f2388d29fcec"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-text-it/BRADY-DIGTOX-006.json",
+      "bytes": 8920,
+      "sha256": "1f88b9e17b7d277919f2f1cdcc2f2d2d1d1d58aab8e35a6be9d10b3c2d730168"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-text-it/BRASH-013.json",
+      "bytes": 8971,
+      "sha256": "4c931ef8121d9c6a85b1da76a52961b512d3e3e24ff1d5a43248e5e8c5bef069"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-text-it/CHB-HYPERK-005.json",
+      "bytes": 8032,
+      "sha256": "97ea1ceb578a4a257bb959093ff19e3c48c60f1dbda74856499c766168c376fd"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-text-it/FLUTTER-IC-011.json",
+      "bytes": 11426,
+      "sha256": "a0b08e31ae99252d4a80cfcd7ad03b01bd96a58e33bb197cd0d28b5cf1148617"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-text-it/MODEL_MANIFEST.json",
+      "bytes": 543,
+      "sha256": "9eb7fa9ceb7f71d843568fe0f4a1d688f6c68d1a313e7fec718d33ce76839d5a"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-text-it/NSVT-ECTOPY-008.json",
+      "bytes": 8715,
+      "sha256": "a39c853ed32009abfce9ef6c7fd031cb4a63799277c4e60e136cb4b464f67294"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-text-it/PERI-STEMI-012.json",
+      "bytes": 9270,
+      "sha256": "0534258a04afec29a68ffe8917420261accff0c68105a846a6975d2ab5deb253"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-text-it/SVT-PSVT-007.json",
+      "bytes": 7669,
+      "sha256": "5be6fedff948a6c32debce241c4168a6a1ee53714dcde9930f1163e94b5b044a"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-text-it/TORSADES-LQT-002.json",
+      "bytes": 8721,
+      "sha256": "7c79545e9c13f12cf254d76a1520c0793a0a88642349bd02c13d246a5b98d362"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-text-it/VFIB-STEMI-001.json",
+      "bytes": 7665,
+      "sha256": "85a7bb96df5a256e4cd0fd2e08c8bfe9f8389256dd388d8a5fe0c3facb651794"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-text-it/VT-ISCHEMIC-003.json",
+      "bytes": 7516,
+      "sha256": "0ed0fc452acd3e5275fb23114f5109c131093022443c76b93ef2575a60276428"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-text-it/WCT-DIFF-009.json",
+      "bytes": 9161,
+      "sha256": "81b30ce825d1259fa39561c8aeb9eb01d60d3e49422e938f667556ce31087ce8"
+    },
+    {
+      "path": "data/etiology_v7_precomputed/google-medgemma-27b-text-it/WPW-AFIB-010.json",
+      "bytes": 9777,
+      "sha256": "d7c4588676982c6d00e4106c89be196bb1ddbcbf9a753a671973713e25ef026e"
+    },
+    {
+      "path": "frontend/components/ClinicalPhysiologyPage.jsx",
+      "bytes": 89897,
+      "sha256": "09942e3e048bbda1c10234c870e65d46bf3c3ed618b9c4a7a4e9e2b4f337a7ba"
+    },
+    {
+      "path": "frontend/components/CloudDemoAnalyticsAdditions.css",
+      "bytes": 9346,
+      "sha256": "af817137805f5a8e9bc76eab7c3f0f7ee3c4dc229f26e60ccd81a0ed15759e9e"
+    },
+    {
+      "path": "frontend/components/CriticalInterpretationWidget.jsx",
+      "bytes": 15849,
+      "sha256": "b162987344af0902fea6d3bf0d3c3b1b5cabc761d0a99cf6fe02fada6fedb2eb"
+    },
+    {
+      "path": "frontend/evaluation/evaluationWidgetAdapter.js",
+      "bytes": 12374,
+      "sha256": "4d49f11242459bf4a9bbc6395362dcf2810a095972ce671d9d60584ee404af53"
+    },
+    {
+      "path": "tests/evaluation_injection/test_etiology_v7_integration.py",
+      "bytes": 3922,
+      "sha256": "df0d7927a0d6152ce3a3209e808d6255ecc2baa9648a88b09f1ff1ca0bc9331c"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "cardinal-etiology-v7-precomputed-index-v1",
+  "profiles": {
+    "google-gemma-4-E2B-it": {
+      "totalScenarios": 14,
+      "contractValid": 14,
+      "invalidScenarios": []
+    },
+    "google-gemma-4-E4B-it": {
+      "totalScenarios": 14,
+      "contractValid": 13,
+      "invalidScenarios": [
+        "FLUTTER-IC-011"
+      ]
+    },
+    "google-gemma-4-12B-it": {
+      "totalScenarios": 14,
+      "contractValid": 14,
+      "invalidScenarios": []
+    },
+    "google-gemma-4-26B-A4B-it": {
+      "totalScenarios": 14,
+      "contractValid": 14,
+      "invalidScenarios": []
+    },
+    "google-gemma-4-31B-it": {
+      "totalScenarios": 14,
+      "contractValid": 14,
+      "invalidScenarios": []
+    },
+    "google-medgemma-27b-it": {
+      "totalScenarios": 14,
+      "contractValid": 14,
+      "invalidScenarios": []
+    },
+    "google-medgemma-27b-text-it": {
+      "totalScenarios": 14,
+      "contractValid": 14,
+      "invalidScenarios": []
+    }
+  }
+}

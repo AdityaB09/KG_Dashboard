@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.0",
+  "provider": "lightning-ai-studio",
+  "model": "google/gemma-4-26B-A4B-it",
+  "runNumber": 1,
+  "scenarioId": "AFIB-RVR-SEPSIS-004",
+  "promptFingerprint": "70fa160800dc533e650af8cfc69c4de70f354dfbfacf3fd3349cd2bac96ea785",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "79F, Atrial Fibrillation with Rapid Ventricular Response (RVR), warning severity, borderline hypotensive/hemodynamically unstable on norepinephrine",
+    "rhythm": "Atrial Fibrillation with Rapid Ventricular Response (RVR)",
+    "keyECGEvidence": [
+      "ventricularRateBpm 150",
+      "regularity: irregularly irregular",
+      "pWavePresent: false",
+      "morphology: Narrow QRS, absent P waves, fibrillatory baseline",
+      "preEventNote: Sinus tachycardia earlier in shift; converted to AFib RVR as fever spiked"
+    ],
+    "primaryEtiology": "Urosepsis",
+    "mechanism": "Systemic inflammatory response and fever-induced sympathetic surge driving supraventricular tachycardia in a patient with underlying physiological stress.",
+    "contributingFactors": [
+      "Fever (38.9 C)",
+      "Sepsis (WBC 18.4 HIGH, Procalcitonin 6.2 HIGH, Lactate 3.1 HIGH)",
+      "Dehydration/Hypovolemia (Creatinine 1.7 HIGH)",
+      "Systemic Inflammation"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Hyperthyroidism",
+        "why": "TSH 1.8 mIU/L is within normal reference range (0.4–4.0)"
+      },
+      {
+        "alternative": "Electrolyte imbalance (Hypokalemia/Hypomagnesemia)",
+        "why": "K 3.6 mmol/L and Mg 1.8 mg/dL are within normal limits"
+      },
+      {
+        "alternative": "Acute Myocardial Infarction",
+        "why": "Troponin T 0.03 is only mildly elevated; clinical picture is more consistent with systemic sepsis/fever"
+      }
+    ],
+    "recommendedActions": [
+      "Aggressive fluid resuscitation with IV crystalloids to address sepsis and hypotension",
+      "Optimize sepsis management (continue Piperacillin-tazobactam, monitor blood cultures)",
+      "Antipyretic administration (e.g., Acetaminophen) to reduce fever-driven sympathetic drive",
+      "Monitor electrolyte-driven rhythm stability (K and Mg)",
+      "Titrate vasopressors (Norepinephrine) based on MAP targets",
+      "Evaluate for rate control (e.g., Beta-blockers or Calcium Channel Blockers) only once patient is hemodynamically stabilized and volume-resuscitated"
+    ],
+    "uncertainty": [
+      "The exact trigger for the conversion from sinus tachycardia to AFib is likely the fever/sepsis, but the underlying susceptibility to arrhythmia is not fully characterized without prior ECGs."
+    ]
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "{\n \"episodeSummary\": \"79F, Atrial Fibrillation with Rapid Ventricular Response (RVR), warning severity, borderline hypotensive/hemodynamically unstable on norepinephrine\",\n \"rhythm\": \"Atrial Fibrillation with Rapid Ventricular Response (RVR)\",\n \"keyECGEvidence\": [\n  \"ventricularRateBpm 150\",\n  \"regularity: irregularly irregular\",\n  \"pWavePresent: false\",\n  \"morphology: Narrow QRS, absent P waves, fibrillatory baseline\",\n  \"preEventNote: Sinus tachycardia earlier in shift; converted to AFib RVR as fever spiked\"\n ],\n \"primaryEtiology\": \"Urosepsis\",\n \"mechanism\": \"Systemic inflammatory response and fever-induced sympathetic surge driving supraventricular tachycardia in a patient with underlying physiological stress.\",\n \"contributingFactors\": [\n  \"Fever (38.9 C)\",\n  \"Sepsis (WBC 18.4 HIGH, Procalcitonin 6.2 HIGH, Lactate 3.1 HIGH)\",\n  \"Dehydration/Hypovolemia (Creatinine 1.7 HIGH)\",\n  \"Systemic Inflammation\"\n ],\n \"rejectedAlternatives\": [\n   {\n    \"alternative\": \"Hyperthyroidism\",\n    \"why\": \"TSH 1.8 mIU/L is within normal reference range (0.4–4.0)\"\n   },\n   {\n    \"alternative\": \"Electrolyte imbalance (Hypokalemia/Hypomagnesemia)\",\n    \"why\": \"K 3.6 mmol/L and Mg 1.8 mg/dL are within normal limits\"\n   },\n   {\n    \"alternative\": \"Acute Myocardial Infarction\",\n    \"why\": \"Troponin T 0.03 is only mildly elevated; clinical picture is more consistent with systemic sepsis/fever\"\n   }\n ],\n \"recommendedActions\": [\n  \"Aggressive fluid resuscitation with IV crystalloids to address sepsis and hypotension\",\n  \"Optimize sepsis management (continue Piperacillin-tazobactam, monitor blood cultures)\",\n  \"Antipyretic administration (e.g., Acetaminophen) to reduce fever-driven sympathetic drive\",\n  \"Monitor electrolyte-driven rhythm stability (K and Mg)\",\n  \"Titrate vasopressors (Norepinephrine) based on MAP targets\",\n  \"Evaluate for rate control (e.g., Beta-blockers or Calcium Channel Blockers) only once patient is hemodynamically stabilized and volume-resuscitated\"\n ],\n \"uncertainty\": [\n  \"The exact trigger for the conversion from sinus tachycardia to AFib is likely the fever/sepsis, but the underlying susceptibility to arrhythmia is not fully characterized without prior ECGs.\"\n ]\n}",
+      "contractErrors": [],
+      "inputTokens": 1990,
+      "outputTokens": 613,
+      "elapsedSeconds": 38.71068400999957,
+      "peakGpuMemoryGiB": 46.06108522415161
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 38.71068400999957,
+  "inputTokens": 1990,
+  "outputTokens": 613,
+  "peakGpuMemoryGiB": 46.06108522415161,
+  "gpuName": "NVIDIA H100 80GB HBM3",
+  "quantization": "4bit"
+}

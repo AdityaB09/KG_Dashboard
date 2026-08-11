@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.1",
+  "provider": "lightning-ai-studio",
+  "model": "google/medgemma-27b-text-it",
+  "runNumber": 1,
+  "scenarioId": "TORSADES-LQT-002",
+  "promptFingerprint": "e097ed9be53b4fdfc0f479c6b2a58b549edf0dd87d78a832c393b3a141bee92b",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "Margaret Sullivan, 74F, Torsades de Pointes, critical, hypotensive",
+    "rhythm": "Torsades de Pointes",
+    "keyECGEvidence": [
+      "ventricularRateBpm: 228",
+      "regularity: irregular",
+      "qrsDurationMs: 150",
+      "morphology: Sinusoidal amplitude modulation with axis twisting",
+      "preEventNote: Baseline ECG 6 min prior: sinus 62, marked QT prolongation QTc 618 ms, prominent U waves"
+    ],
+    "primaryEtiology": "Drug-induced QT prolongation",
+    "mechanism": "Delayed afterdepolarization (EAD) triggered activity due to prolonged repolarization",
+    "contributingFactors": [
+      "Hypokalemia (K 2.9 mmol/L LOW)",
+      "Hypomagnesemia (Mg 1.2 mg/dL LOW)",
+      "Hypocalcemia (Ca 7.9 mg/dL LOW)",
+      "Recent azithromycin use",
+      "Sotalol use (known QT prolonger)",
+      "Possible dehydration/electrolyte loss from gastroenteritis"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Ventricular Tachycardia (polymorphic)",
+        "why": "The specific morphology described ('Sinusoidal amplitude modulation with axis twisting') and the baseline ECG finding of marked QT prolongation strongly point towards Torsades de Pointes rather than other forms of polymorphic VT."
+      },
+      {
+        "alternative": "Atrial Fibrillation with rapid ventricular response",
+        "why": "The ECG morphology is not consistent with AFib; the rhythm is polymorphic and twisting, not irregularly irregular narrow complex tachycardia."
+      },
+      {
+        "alternative": "Sepsis",
+        "why": "While the patient is hypotensive, there is no fever (temperatureC: 36.7) or other clear signs of sepsis in the provided data. The primary driver is the ECG findings and electrolyte abnormalities."
+      }
+    ],
+    "recommendedActions": [
+      "IMMEDIATELY STOP Sotalol",
+      "IMMEDIATELY STOP Azithromycin",
+      "Administer Magnesium Sulfate 2g IV push",
+      "Administer Potassium Chloride 20 mEq IV (monitor closely)",
+      "Administer Calcium Gluconate 1g IV push",
+      "Prepare for synchronized cardioversion if hemodynamically unstable or refractory to magnesium",
+      "Correct dehydration with IV fluids (e.g., Normal Saline)",
+      "Monitor electrolytes frequently",
+      "Consider telemetry monitoring",
+      "Consult cardiology/electrophysiology"
+    ],
+    "uncertainty": [
+      "Exact timing and dose of azithromycin administration.",
+      "Severity of dehydration.",
+      "Presence of other QT-prolonging medications not listed."
+    ]
+  },
+  "rawModelResponse": "```json\n{\n  \"episodeSummary\": \"Margaret Sullivan, 74F, Torsades de Pointes, critical, hypotensive\",\n  \"rhythm\": \"Torsades de Pointes\",\n  \"keyECGEvidence\": [\n    \"ventricularRateBpm: 228\",\n    \"regularity: irregular\",\n    \"qrsDurationMs: 150\",\n    \"morphology: Sinusoidal amplitude modulation with axis twisting\",\n    \"preEventNote: Baseline ECG 6 min prior: sinus 62, marked QT prolongation QTc 618 ms, prominent U waves\"\n  ],\n  \"primaryEtiology\": \"Drug-induced QT prolongation\",\n  \"mechanism\": \"Delayed afterdepolarization (EAD) triggered activity due to prolonged repolarization\",\n  \"contributingFactors\": [\n    \"Hypokalemia (K 2.9 mmol/L LOW)\",\n    \"Hypomagnesemia (Mg 1.2 mg/dL LOW)\",\n    \"Hypocalcemia (Ca 7.9 mg/dL LOW)\",\n    \"Recent azithromycin use\",\n    \"Sotalol use (known QT prolonger)\",\n    \"Possible dehydration/electrolyte loss from gastroenteritis\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Ventricular Tachycardia (polymorphic)\",\n      \"why\": \"The specific morphology described ('Sinusoidal amplitude modulation with axis twisting') and the baseline ECG finding of marked QT prolongation strongly point towards Torsades de Pointes rather than other forms of polymorphic VT.\"\n    },\n    {\n      \"alternative\": \"Atrial Fibrillation with rapid ventricular response\",\n      \"why\": \"The ECG morphology is not consistent with AFib; the rhythm is polymorphic and twisting, not irregularly irregular narrow complex tachycardia.\"\n    },\n    {\n      \"alternative\": \"Sepsis\",\n      \"why\": \"While the patient is hypotensive, there is no fever (temperatureC: 36.7) or other clear signs of sepsis in the provided data. The primary driver is the ECG findings and electrolyte abnormalities.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"IMMEDIATELY STOP Sotalol\",\n    \"IMMEDIATELY STOP Azithromycin\",\n    \"Administer Magnesium Sulfate 2g IV push\",\n    \"Administer Potassium Chloride 20 mEq IV (monitor closely)\",\n    \"Administer Calcium Gluconate 1g IV push\",\n    \"Prepare for synchronized cardioversion if hemodynamically unstable or refractory to magnesium\",\n    \"Correct dehydration with IV fluids (e.g., Normal Saline)\",\n    \"Monitor electrolytes frequently\",\n    \"Consider telemetry monitoring\",\n    \"Consult cardiology/electrophysiology\"\n  ],\n  \"uncertainty\": [\n    \"Exact timing and dose of azithromycin administration.\",\n    \"Severity of dehydration.\",\n    \"Presence of other QT-prolonging medications not listed.\"\n  ]\n}\n```",
+  "bestEffortParsedResponse": null,
+  "terminalStatus": "OK",
+  "hitMaxNewTokens": false,
+  "maxNewTokens": 2500,
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"Margaret Sullivan, 74F, Torsades de Pointes, critical, hypotensive\",\n  \"rhythm\": \"Torsades de Pointes\",\n  \"keyECGEvidence\": [\n    \"ventricularRateBpm: 228\",\n    \"regularity: irregular\",\n    \"qrsDurationMs: 150\",\n    \"morphology: Sinusoidal amplitude modulation with axis twisting\",\n    \"preEventNote: Baseline ECG 6 min prior: sinus 62, marked QT prolongation QTc 618 ms, prominent U waves\"\n  ],\n  \"primaryEtiology\": \"Drug-induced QT prolongation\",\n  \"mechanism\": \"Delayed afterdepolarization (EAD) triggered activity due to prolonged repolarization\",\n  \"contributingFactors\": [\n    \"Hypokalemia (K 2.9 mmol/L LOW)\",\n    \"Hypomagnesemia (Mg 1.2 mg/dL LOW)\",\n    \"Hypocalcemia (Ca 7.9 mg/dL LOW)\",\n    \"Recent azithromycin use\",\n    \"Sotalol use (known QT prolonger)\",\n    \"Possible dehydration/electrolyte loss from gastroenteritis\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Ventricular Tachycardia (polymorphic)\",\n      \"why\": \"The specific morphology described ('Sinusoidal amplitude modulation with axis twisting') and the baseline ECG finding of marked QT prolongation strongly point towards Torsades de Pointes rather than other forms of polymorphic VT.\"\n    },\n    {\n      \"alternative\": \"Atrial Fibrillation with rapid ventricular response\",\n      \"why\": \"The ECG morphology is not consistent with AFib; the rhythm is polymorphic and twisting, not irregularly irregular narrow complex tachycardia.\"\n    },\n    {\n      \"alternative\": \"Sepsis\",\n      \"why\": \"While the patient is hypotensive, there is no fever (temperatureC: 36.7) or other clear signs of sepsis in the provided data. The primary driver is the ECG findings and electrolyte abnormalities.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"IMMEDIATELY STOP Sotalol\",\n    \"IMMEDIATELY STOP Azithromycin\",\n    \"Administer Magnesium Sulfate 2g IV push\",\n    \"Administer Potassium Chloride 20 mEq IV (monitor closely)\",\n    \"Administer Calcium Gluconate 1g IV push\",\n    \"Prepare for synchronized cardioversion if hemodynamically unstable or refractory to magnesium\",\n    \"Correct dehydration with IV fluids (e.g., Normal Saline)\",\n    \"Monitor electrolytes frequently\",\n    \"Consider telemetry monitoring\",\n    \"Consult cardiology/electrophysiology\"\n  ],\n  \"uncertainty\": [\n    \"Exact timing and dose of azithromycin administration.\",\n    \"Severity of dehydration.\",\n    \"Presence of other QT-prolonging medications not listed.\"\n  ]\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1881,
+      "outputTokens": 661,
+      "elapsedSeconds": 72.71516949000033,
+      "peakGpuMemoryGiB": 25.157339572906494,
+      "hitMaxNewTokens": false
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 72.71516949000033,
+  "inputTokens": 1881,
+  "outputTokens": 661,
+  "peakGpuMemoryGiB": 25.157339572906494,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

@@ -1,0 +1,80 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.1",
+  "provider": "lightning-ai-studio",
+  "model": "google/medgemma-27b-text-it",
+  "runNumber": 1,
+  "scenarioId": "WPW-AFIB-010",
+  "promptFingerprint": "94585a4fb77ccf37f1d4094a6ea5af86f6bf99014d9414cb357b3b299982a4bf",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "Marcus J. Okafor, 28M, Atrial Fibrillation with Wolff-Parkinson-White syndrome, critical, hemodynamically compromised",
+    "rhythm": "Atrial Fibrillation with Wolff-Parkinson-White syndrome (AF with WPW)",
+    "keyECGEvidence": [
+      "ventricularRate_bpm: 210",
+      "regularity: irregularly irregular",
+      "qrsDuration_ms: variable 120-200",
+      "pWavePresent: false",
+      "morphology: Beat-to-beat QRS width and morphology variation; delta waves visible in wider beats; narrower beats show less preexcitation; shortest R-R interval ~200 ms; fibrillatory baseline; QRS polarity does not vary along baseline"
+    ],
+    "primaryEtiology": "Wolff-Parkinson-White syndrome (WPW)",
+    "mechanism": "Rapid conduction of atrial fibrillation impulses down an accessory pathway (bundle of Kent) bypassing the AV node, leading to rapid ventricular rates and potential hemodynamic instability.",
+    "contributingFactors": [
+      "Atrial Fibrillation (new onset or paroxysmal)",
+      "Physical exertion (basketball game)"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Ventricular Tachycardia (VT)",
+        "why": "QRS morphology varies but shows features consistent with pre-excitation (delta waves, wide QRS) rather than typical VT morphology. QRS polarity does not vary along baseline, arguing against VT."
+      },
+      {
+        "alternative": "Supraventricular Tachycardia (SVT) with aberrancy",
+        "why": "Irregularly irregular rhythm is characteristic of AF, not typical SVT. QRS duration is excessively wide and variable for aberrancy alone."
+      },
+      {
+        "alternative": "Sinus Tachycardia",
+        "why": "Irregularly irregular rhythm and absence of P waves rule out sinus tachycardia."
+      }
+    ],
+    "recommendedActions": [
+      "IMMEDIATELY prepare for synchronized cardioversion due to hemodynamic compromise (hypotension, near-syncope).",
+      "Administer 150mg Amiodarone IV push over 10 minutes (use cautiously due to potential for AV block if accessory pathway is the primary conduction route, but preferred over calcium channel blockers or adenosine in AF with WPW).",
+      "Administer 100% Oxygen via non-rebreather mask.",
+      "Establish IV access.",
+      "Monitor closely for hemodynamic response and rhythm change.",
+      "WITHHOLD adenosine, verapamil, diltiazem, and digoxin as they can increase conduction through the accessory pathway and worsen the arrhythmia or cause hemodynamic collapse.",
+      "Consider Procainamide 1mg/kg IV over 10 minutes if cardioversion fails or is contraindicated, but be aware of hypotension risk.",
+      "Consult Cardiology urgently."
+    ],
+    "uncertainty": [
+      "No prior ECG available to confirm baseline WPW pattern.",
+      "No information on structural heart disease.",
+      "No information on specific accessory pathway location."
+    ]
+  },
+  "rawModelResponse": "```json\n{\n  \"episodeSummary\": \"Marcus J. Okafor, 28M, Atrial Fibrillation with Wolff-Parkinson-White syndrome, critical, hemodynamically compromised\",\n  \"rhythm\": \"Atrial Fibrillation with Wolff-Parkinson-White syndrome (AF with WPW)\",\n  \"keyECGEvidence\": [\n    \"ventricularRate_bpm: 210\",\n    \"regularity: irregularly irregular\",\n    \"qrsDuration_ms: variable 120-200\",\n    \"pWavePresent: false\",\n    \"morphology: Beat-to-beat QRS width and morphology variation; delta waves visible in wider beats; narrower beats show less preexcitation; shortest R-R interval ~200 ms; fibrillatory baseline; QRS polarity does not vary along baseline\"\n  ],\n  \"primaryEtiology\": \"Wolff-Parkinson-White syndrome (WPW)\",\n  \"mechanism\": \"Rapid conduction of atrial fibrillation impulses down an accessory pathway (bundle of Kent) bypassing the AV node, leading to rapid ventricular rates and potential hemodynamic instability.\",\n  \"contributingFactors\": [\n    \"Atrial Fibrillation (new onset or paroxysmal)\",\n    \"Physical exertion (basketball game)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Ventricular Tachycardia (VT)\",\n      \"why\": \"QRS morphology varies but shows features consistent with pre-excitation (delta waves, wide QRS) rather than typical VT morphology. QRS polarity does not vary along baseline, arguing against VT.\"\n    },\n    {\n      \"alternative\": \"Supraventricular Tachycardia (SVT) with aberrancy\",\n      \"why\": \"Irregularly irregular rhythm is characteristic of AF, not typical SVT. QRS duration is excessively wide and variable for aberrancy alone.\"\n    },\n    {\n      \"alternative\": \"Sinus Tachycardia\",\n      \"why\": \"Irregularly irregular rhythm and absence of P waves rule out sinus tachycardia.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"IMMEDIATELY prepare for synchronized cardioversion due to hemodynamic compromise (hypotension, near-syncope).\",\n    \"Administer 150mg Amiodarone IV push over 10 minutes (use cautiously due to potential for AV block if accessory pathway is the primary conduction route, but preferred over calcium channel blockers or adenosine in AF with WPW).\",\n    \"Administer 100% Oxygen via non-rebreather mask.\",\n    \"Establish IV access.\",\n    \"Monitor closely for hemodynamic response and rhythm change.\",\n    \"WITHHOLD adenosine, verapamil, diltiazem, and digoxin as they can increase conduction through the accessory pathway and worsen the arrhythmia or cause hemodynamic collapse.\",\n    \"Consider Procainamide 1mg/kg IV over 10 minutes if cardioversion fails or is contraindicated, but be aware of hypotension risk.\",\n    \"Consult Cardiology urgently.\"\n  ],\n  \"uncertainty\": [\n    \"No prior ECG available to confirm baseline WPW pattern.\",\n    \"No information on structural heart disease.\",\n    \"No information on specific accessory pathway location.\"\n  ]\n}\n```",
+  "bestEffortParsedResponse": null,
+  "terminalStatus": "OK",
+  "hitMaxNewTokens": false,
+  "maxNewTokens": 2500,
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"Marcus J. Okafor, 28M, Atrial Fibrillation with Wolff-Parkinson-White syndrome, critical, hemodynamically compromised\",\n  \"rhythm\": \"Atrial Fibrillation with Wolff-Parkinson-White syndrome (AF with WPW)\",\n  \"keyECGEvidence\": [\n    \"ventricularRate_bpm: 210\",\n    \"regularity: irregularly irregular\",\n    \"qrsDuration_ms: variable 120-200\",\n    \"pWavePresent: false\",\n    \"morphology: Beat-to-beat QRS width and morphology variation; delta waves visible in wider beats; narrower beats show less preexcitation; shortest R-R interval ~200 ms; fibrillatory baseline; QRS polarity does not vary along baseline\"\n  ],\n  \"primaryEtiology\": \"Wolff-Parkinson-White syndrome (WPW)\",\n  \"mechanism\": \"Rapid conduction of atrial fibrillation impulses down an accessory pathway (bundle of Kent) bypassing the AV node, leading to rapid ventricular rates and potential hemodynamic instability.\",\n  \"contributingFactors\": [\n    \"Atrial Fibrillation (new onset or paroxysmal)\",\n    \"Physical exertion (basketball game)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Ventricular Tachycardia (VT)\",\n      \"why\": \"QRS morphology varies but shows features consistent with pre-excitation (delta waves, wide QRS) rather than typical VT morphology. QRS polarity does not vary along baseline, arguing against VT.\"\n    },\n    {\n      \"alternative\": \"Supraventricular Tachycardia (SVT) with aberrancy\",\n      \"why\": \"Irregularly irregular rhythm is characteristic of AF, not typical SVT. QRS duration is excessively wide and variable for aberrancy alone.\"\n    },\n    {\n      \"alternative\": \"Sinus Tachycardia\",\n      \"why\": \"Irregularly irregular rhythm and absence of P waves rule out sinus tachycardia.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"IMMEDIATELY prepare for synchronized cardioversion due to hemodynamic compromise (hypotension, near-syncope).\",\n    \"Administer 150mg Amiodarone IV push over 10 minutes (use cautiously due to potential for AV block if accessory pathway is the primary conduction route, but preferred over calcium channel blockers or adenosine in AF with WPW).\",\n    \"Administer 100% Oxygen via non-rebreather mask.\",\n    \"Establish IV access.\",\n    \"Monitor closely for hemodynamic response and rhythm change.\",\n    \"WITHHOLD adenosine, verapamil, diltiazem, and digoxin as they can increase conduction through the accessory pathway and worsen the arrhythmia or cause hemodynamic collapse.\",\n    \"Consider Procainamide 1mg/kg IV over 10 minutes if cardioversion fails or is contraindicated, but be aware of hypotension risk.\",\n    \"Consult Cardiology urgently.\"\n  ],\n  \"uncertainty\": [\n    \"No prior ECG available to confirm baseline WPW pattern.\",\n    \"No information on structural heart disease.\",\n    \"No information on specific accessory pathway location.\"\n  ]\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1785,
+      "outputTokens": 712,
+      "elapsedSeconds": 78.47966757499944,
+      "peakGpuMemoryGiB": 25.10182285308838,
+      "hitMaxNewTokens": false
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 78.47966757499944,
+  "inputTokens": 1785,
+  "outputTokens": 712,
+  "peakGpuMemoryGiB": 25.10182285308838,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

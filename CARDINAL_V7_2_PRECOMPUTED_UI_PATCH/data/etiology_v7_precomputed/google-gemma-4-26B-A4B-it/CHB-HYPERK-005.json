@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.0",
+  "provider": "lightning-ai-studio",
+  "model": "google/gemma-4-26B-A4B-it",
+  "runNumber": 1,
+  "scenarioId": "CHB-HYPERK-005",
+  "promptFingerprint": "5c30940a7c03f46942cb1916557f3a13e56e6d722b1d95875bc8397c00894c85",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "70yo M with ESRD, symptomatic bradycardia and hypotension, presenting with third-degree AV block.",
+    "rhythm": "Third-degree (complete) AV block",
+    "keyECGEvidence": [
+      "ventricularRateBpm 34",
+      "atrialRateBpm 84",
+      "regular (dissociated)",
+      "qrsDurationMs 150",
+      "AV dissociation; wide QRS escape; tall peaked symmetric T waves; flattened P waves",
+      "Progressive PR prolongation then AV dissociation; QRS widening over 20 min"
+    ],
+    "primaryEtiology": "Severe Hyperkalemia",
+    "mechanism": "Hyperkalemia causes slowed conduction through the AV node and His-Purkinje system, leading to progressive PR prolongation, QRS widening, and eventually complete AV dissociation and ventricular escape rhythms.",
+    "contributingFactors": [
+      "End-stage renal disease (ESRD) with missed hemodialysis",
+      "Metabolic acidosis (pH 7.24 LOW, bicarbonate 15 mmol/L LOW)",
+      "Hypocalcemia (calcium 7.6 mg/dL LOW)",
+      "Use of Spironolactone 25 mg"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Intrinsic Sinus Node Dysfunction",
+        "why": "The presence of 'tall peaked symmetric T waves' and 'K 7.4 mmol/L CRITICAL HIGH' strongly points to metabolic etiology rather than primary nodal disease."
+      },
+      {
+        "alternative": "Digoxin Toxicity",
+        "why": "While it can cause AV block and wide QRS, there is no mention of digoxin use in the patient's medication list."
+      }
+    ],
+    "recommendedActions": [
+      "Urgent emergent hemodialysis to treat K 7.4 mmol/L CRITICAL HIGH and ESRD",
+      "Administer intravenous Calcium Gluconate (or Calcium Chloride) to stabilize cardiac membranes",
+      "Administer intravenous Insulin with Dextrose (to shift potassium intracellularly)",
+      "Administer Albuterol nebulization (to shift potassium intracellularly)",
+      "STOP Lisinopril and Spironolactone immediately",
+      "Prepare for transcutaneous or permanent pacing if hemodynamics do not stabilize with medical management"
+    ],
+    "uncertainty": []
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "{\n \"episodeSummary\": \"70yo M with ESRD, symptomatic bradycardia and hypotension, presenting with third-degree AV block.\",\n \"rhythm\": \"Third-degree (complete) AV block\",\n \"keyECGEvidence\": [\n  \"ventricularRateBpm 34\",\n  \"atrialRateBpm 84\",\n  \"regular (dissociated)\",\n  \"qrsDurationMs 150\",\n  \"AV dissociation; wide QRS escape; tall peaked symmetric T waves; flattened P waves\",\n  \"Progressive PR prolongation then AV dissociation; QRS widening over 20 min\"\n ],\n \"primaryEtiology\": \"Severe Hyperkalemia\",\n \"mechanism\": \"Hyperkalemia causes slowed conduction through the AV node and His-Purkinje system, leading to progressive PR prolongation, QRS widening, and eventually complete AV dissociation and ventricular escape rhythms.\",\n \"contributingFactors\": [\n  \"End-stage renal disease (ESRD) with missed hemodialysis\",\n  \"Metabolic acidosis (pH 7.24 LOW, bicarbonate 15 mmol/L LOW)\",\n  \"Hypocalcemia (calcium 7.6 mg/dL LOW)\",\n  \"Use of Spironolactone 25 mg\"\n ],\n \"rejectedAlternatives\": [\n   {\n    \"alternative\": \"Intrinsic Sinus Node Dysfunction\",\n    \"why\": \"The presence of 'tall peaked symmetric T waves' and 'K 7.4 mmol/L CRITICAL HIGH' strongly points to metabolic etiology rather than primary nodal disease.\"\n   },\n   {\n    \"alternative\": \"Digoxin Toxicity\",\n    \"why\": \"While it can cause AV block and wide QRS, there is no mention of digoxin use in the patient's medication list.\"\n   }\n ],\n \"recommendedActions\": [\n  \"Urgent emergent hemodialysis to treat K 7.4 mmol/L CRITICAL HIGH and ESRD\",\n  \"Administer intravenous Calcium Gluconate (or Calcium Chloride) to stabilize cardiac membranes\",\n  \"Administer intravenous Insulin with Dextrose (to shift potassium intracellularly)\",\n  \"Administer Albuterol nebulization (to shift potassium intracellularly)\",\n  \"STOP Lisinopril and Spironolactone immediately\",\n  \"Prepare for transcutaneous or permanent pacing if hemodynamics do not stabilize with medical management\"\n ],\n \"uncertainty\": []\n}",
+      "contractErrors": [],
+      "inputTokens": 1916,
+      "outputTokens": 524,
+      "elapsedSeconds": 33.104918291000104,
+      "peakGpuMemoryGiB": 46.01891279220581
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 33.104918291000104,
+  "inputTokens": 1916,
+  "outputTokens": 524,
+  "peakGpuMemoryGiB": 46.01891279220581,
+  "gpuName": "NVIDIA H100 80GB HBM3",
+  "quantization": "4bit"
+}

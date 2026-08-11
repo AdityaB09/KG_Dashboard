@@ -1,0 +1,83 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.1",
+  "provider": "lightning-ai-studio",
+  "model": "google/medgemma-27b-it",
+  "runNumber": 1,
+  "scenarioId": "VFIB-STEMI-001",
+  "promptFingerprint": "60edce97895ddc8ae604e6bed516163b735ee5808d7bd9f6f2806d3ae2b83f44",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "Robert D. Hale, 68M, VFib, critical, pulseless",
+    "rhythm": "Ventricular Fibrillation",
+    "keyECGEvidence": [
+      "chaotic/irregular rhythm",
+      "No organized QRS; coarse fibrillatory waves ~5 Hz",
+      "ventricularRateBpm: null (due to fibrillation)",
+      "pWavePresent: false",
+      "preEventNote: Runs of PVCs then R-on-T preceded onset; 12-lead 8 min prior showed anterior ST elevation"
+    ],
+    "primaryEtiology": "Acute Myocardial Infarction (STEMI)",
+    "mechanism": "Ischemia-induced electrical instability leading to ventricular fibrillation.",
+    "contributingFactors": [
+      "History of coronary artery disease and prior MI",
+      "ST elevation in anterior leads (V2-V4) 8 minutes prior to arrest",
+      "Elevated cardiac biomarkers (Troponin T 1.85 ng/mL CRITICAL HIGH, CK-MB 48 ng/mL HIGH)",
+      "Elevated lactate (4.8 mmol/L HIGH) suggesting tissue hypoperfusion/ischemia",
+      "Acidosis (pH 7.21 LOW)"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Electrolyte abnormality (e.g., hypokalemia, hypomagnesemia)",
+        "why": "Potassium 4.1 mmol/L is within normal limits. Magnesium 2.0 mg/dL is within normal limits."
+      },
+      {
+        "alternative": "Drug toxicity (e.g., digoxin)",
+        "why": "No digoxin level provided, and no mention of digoxin use in home medications or history."
+      },
+      {
+        "alternative": "Hypoxia",
+        "why": "While hypoxia can cause VF, the primary driver here is clearly the acute STEMI based on ECG changes, biomarkers, and clinical context (chest pain)."
+      },
+      {
+        "alternative": "Pulmonary Embolism",
+        "why": "No specific evidence for PE (e.g., tachycardia, hypoxia, specific ECG changes like S1Q3T3, right heart strain)."
+      }
+    ],
+    "recommendedActions": [
+      "Immediate CPR (already in progress per recentEvents)",
+      "Defibrillation (as per ACLS protocol for VFib)",
+      "Administer epinephrine (as per ACLS protocol for VFib)",
+      "Consider antiarrhythmics (e.g., amiodarone, lidocaine) if VFib persists after initial shocks and epinephrine",
+      "Initiate emergent cardiac catheterization for primary PCI (given STEMI)",
+      "Address potential underlying causes: Reperfusion therapy (PCI), manage chest pain (nitroglycerin - already infused), consider beta-blocker (if not contraindicated by hypotension/bradycardia post-ROSC)",
+      "Monitor electrolytes and correct if abnormal (though currently normal)",
+      "Manage acidosis (likely secondary to ischemia/hypoperfusion)"
+    ],
+    "uncertainty": []
+  },
+  "rawModelResponse": "```json\n{\n  \"episodeSummary\": \"Robert D. Hale, 68M, VFib, critical, pulseless\",\n  \"rhythm\": \"Ventricular Fibrillation\",\n  \"keyECGEvidence\": [\n    \"chaotic/irregular rhythm\",\n    \"No organized QRS; coarse fibrillatory waves ~5 Hz\",\n    \"ventricularRateBpm: null (due to fibrillation)\",\n    \"pWavePresent: false\",\n    \"preEventNote: Runs of PVCs then R-on-T preceded onset; 12-lead 8 min prior showed anterior ST elevation\"\n  ],\n  \"primaryEtiology\": \"Acute Myocardial Infarction (STEMI)\",\n  \"mechanism\": \"Ischemia-induced electrical instability leading to ventricular fibrillation.\",\n  \"contributingFactors\": [\n    \"History of coronary artery disease and prior MI\",\n    \"ST elevation in anterior leads (V2-V4) 8 minutes prior to arrest\",\n    \"Elevated cardiac biomarkers (Troponin T 1.85 ng/mL CRITICAL HIGH, CK-MB 48 ng/mL HIGH)\",\n    \"Elevated lactate (4.8 mmol/L HIGH) suggesting tissue hypoperfusion/ischemia\",\n    \"Acidosis (pH 7.21 LOW)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Electrolyte abnormality (e.g., hypokalemia, hypomagnesemia)\",\n      \"why\": \"Potassium 4.1 mmol/L is within normal limits. Magnesium 2.0 mg/dL is within normal limits.\"\n    },\n    {\n      \"alternative\": \"Drug toxicity (e.g., digoxin)\",\n      \"why\": \"No digoxin level provided, and no mention of digoxin use in home medications or history.\"\n    },\n    {\n      \"alternative\": \"Hypoxia\",\n      \"why\": \"While hypoxia can cause VF, the primary driver here is clearly the acute STEMI based on ECG changes, biomarkers, and clinical context (chest pain).\"\n    },\n    {\n      \"alternative\": \"Pulmonary Embolism\",\n      \"why\": \"No specific evidence for PE (e.g., tachycardia, hypoxia, specific ECG changes like S1Q3T3, right heart strain).\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Immediate CPR (already in progress per recentEvents)\",\n    \"Defibrillation (as per ACLS protocol for VFib)\",\n    \"Administer epinephrine (as per ACLS protocol for VFib)\",\n    \"Consider antiarrhythmics (e.g., amiodarone, lidocaine) if VFib persists after initial shocks and epinephrine\",\n    \"Initiate emergent cardiac catheterization for primary PCI (given STEMI)\",\n    \"Address potential underlying causes: Reperfusion therapy (PCI), manage chest pain (nitroglycerin - already infused), consider beta-blocker (if not contraindicated by hypotension/bradycardia post-ROSC)\",\n    \"Monitor electrolytes and correct if abnormal (though currently normal)\",\n    \"Manage acidosis (likely secondary to ischemia/hypoperfusion)\"\n  ],\n  \"uncertainty\": []\n}\n```",
+  "bestEffortParsedResponse": null,
+  "terminalStatus": "OK",
+  "hitMaxNewTokens": false,
+  "maxNewTokens": 2500,
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"Robert D. Hale, 68M, VFib, critical, pulseless\",\n  \"rhythm\": \"Ventricular Fibrillation\",\n  \"keyECGEvidence\": [\n    \"chaotic/irregular rhythm\",\n    \"No organized QRS; coarse fibrillatory waves ~5 Hz\",\n    \"ventricularRateBpm: null (due to fibrillation)\",\n    \"pWavePresent: false\",\n    \"preEventNote: Runs of PVCs then R-on-T preceded onset; 12-lead 8 min prior showed anterior ST elevation\"\n  ],\n  \"primaryEtiology\": \"Acute Myocardial Infarction (STEMI)\",\n  \"mechanism\": \"Ischemia-induced electrical instability leading to ventricular fibrillation.\",\n  \"contributingFactors\": [\n    \"History of coronary artery disease and prior MI\",\n    \"ST elevation in anterior leads (V2-V4) 8 minutes prior to arrest\",\n    \"Elevated cardiac biomarkers (Troponin T 1.85 ng/mL CRITICAL HIGH, CK-MB 48 ng/mL HIGH)\",\n    \"Elevated lactate (4.8 mmol/L HIGH) suggesting tissue hypoperfusion/ischemia\",\n    \"Acidosis (pH 7.21 LOW)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Electrolyte abnormality (e.g., hypokalemia, hypomagnesemia)\",\n      \"why\": \"Potassium 4.1 mmol/L is within normal limits. Magnesium 2.0 mg/dL is within normal limits.\"\n    },\n    {\n      \"alternative\": \"Drug toxicity (e.g., digoxin)\",\n      \"why\": \"No digoxin level provided, and no mention of digoxin use in home medications or history.\"\n    },\n    {\n      \"alternative\": \"Hypoxia\",\n      \"why\": \"While hypoxia can cause VF, the primary driver here is clearly the acute STEMI based on ECG changes, biomarkers, and clinical context (chest pain).\"\n    },\n    {\n      \"alternative\": \"Pulmonary Embolism\",\n      \"why\": \"No specific evidence for PE (e.g., tachycardia, hypoxia, specific ECG changes like S1Q3T3, right heart strain).\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Immediate CPR (already in progress per recentEvents)\",\n    \"Defibrillation (as per ACLS protocol for VFib)\",\n    \"Administer epinephrine (as per ACLS protocol for VFib)\",\n    \"Consider antiarrhythmics (e.g., amiodarone, lidocaine) if VFib persists after initial shocks and epinephrine\",\n    \"Initiate emergent cardiac catheterization for primary PCI (given STEMI)\",\n    \"Address potential underlying causes: Reperfusion therapy (PCI), manage chest pain (nitroglycerin - already infused), consider beta-blocker (if not contraindicated by hypotension/bradycardia post-ROSC)\",\n    \"Monitor electrolytes and correct if abnormal (though currently normal)\",\n    \"Manage acidosis (likely secondary to ischemia/hypoperfusion)\"\n  ],\n  \"uncertainty\": []\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 2011,
+      "outputTokens": 703,
+      "elapsedSeconds": 79.7321370969994,
+      "peakGpuMemoryGiB": 25.457613468170166,
+      "hitMaxNewTokens": false
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 79.7321370969994,
+  "inputTokens": 2011,
+  "outputTokens": 703,
+  "peakGpuMemoryGiB": 25.457613468170166,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

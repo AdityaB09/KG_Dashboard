@@ -1,0 +1,65 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.0",
+  "provider": "lightning-ai-studio",
+  "model": "google/gemma-4-E4B-it",
+  "runNumber": 1,
+  "scenarioId": "CHB-HYPERK-005",
+  "promptFingerprint": "5c30940a7c03f46942cb1916557f3a13e56e6d722b1d95875bc8397c00894c85",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "70M, Sinus Bradycardia/AV Dissociation, Critical/Severe, Hypotensive/Compromised",
+    "rhythm": "Sinus Bradycardia with AV Dissociation",
+    "keyECGEvidence": [
+      "Ventricular Rate: 34 bpm",
+      "ECG morphology: AV dissociation; wide QRS escape",
+      "Pre-event note: Progressive PR prolongation then AV dissociation; QRS widening over 20 min",
+      "Morphology detail: tall peaked symmetric T waves"
+    ],
+    "primaryEtiology": "Severe Hyperkalemia",
+    "mechanism": "Potassium toxicity (K 7.4 mmol/L CRITICAL HIGH) causing myocardial conduction delay and bradyarrhythmia, compounded by uremia.",
+    "contributingFactors": [
+      "Acute Kidney Injury/Chronic Kidney Disease (Creatinine 9.8 mg/dL CRITICAL HIGH)",
+      "Metabolic Acidosis (pH 7.24 LOW)",
+      "Hypocalcemia (Calcium 7.6 mg/dL LOW)"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Hypocalcemia causing bradycardia",
+        "why": "While Calcium is LOW (7.6 mg/dL LOW), the presence of severe hyperkalemia (K 7.4 mmol/L CRITICAL HIGH) and profound metabolic derangement makes hyperkalemia the dominant, most acute driver of the conduction defect."
+      },
+      {
+        "alternative": "Medication toxicity (e.g., Lisinopril)",
+        "why": "The ECG findings (peaked T waves, AV dissociation) are classic for electrolyte derangement, and the lab values provide a direct, overwhelming cause (K 7.4 mmol/L CRITICAL HIGH) that supersedes medication effects as the primary etiology."
+      }
+    ],
+    "recommendedActions": [
+      "STAT STAT STAT: Initiate emergency cardiac management for severe hyperkalemia (e.g., IV Calcium Gluconate 10% 10 mL slow IV push to stabilize myocardium, followed immediately by insulin/glucose or albuterol per protocol).",
+      "STAT: Rapidly consult Nephrology/Dialysis team regarding emergent dialysis initiation.",
+      "STAT: Administer IV fluids cautiously while monitoring BP, given the patient's renal status and hypotension (BP 78/50 mmHg).",
+      "WITHHOLD: Any further non-essential medications until K+ is managed and renal status is stabilized.",
+      "Monitor: Continuous ECG and frequent vital sign checks (every 5 min initially)."
+    ],
+    "uncertainty": [
+      "The exact mechanism of the AV dissociation (e.g., direct potassium effect vs. secondary effect of severe acidosis) cannot be definitively separated from the data, but hyperkalemia is the most actionable primary driver."
+    ]
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"70M, Sinus Bradycardia/AV Dissociation, Critical/Severe, Hypotensive/Compromised\",\n  \"rhythm\": \"Sinus Bradycardia with AV Dissociation\",\n  \"keyECGEvidence\": [\n    \"Ventricular Rate: 34 bpm\",\n    \"ECG morphology: AV dissociation; wide QRS escape\",\n    \"Pre-event note: Progressive PR prolongation then AV dissociation; QRS widening over 20 min\",\n    \"Morphology detail: tall peaked symmetric T waves\"\n  ],\n  \"primaryEtiology\": \"Severe Hyperkalemia\",\n  \"mechanism\": \"Potassium toxicity (K 7.4 mmol/L CRITICAL HIGH) causing myocardial conduction delay and bradyarrhythmia, compounded by uremia.\",\n  \"contributingFactors\": [\n    \"Acute Kidney Injury/Chronic Kidney Disease (Creatinine 9.8 mg/dL CRITICAL HIGH)\",\n    \"Metabolic Acidosis (pH 7.24 LOW)\",\n    \"Hypocalcemia (Calcium 7.6 mg/dL LOW)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Hypocalcemia causing bradycardia\",\n      \"why\": \"While Calcium is LOW (7.6 mg/dL LOW), the presence of severe hyperkalemia (K 7.4 mmol/L CRITICAL HIGH) and profound metabolic derangement makes hyperkalemia the dominant, most acute driver of the conduction defect.\"\n    },\n    {\n      \"alternative\": \"Medication toxicity (e.g., Lisinopril)\",\n      \"why\": \"The ECG findings (peaked T waves, AV dissociation) are classic for electrolyte derangement, and the lab values provide a direct, overwhelming cause (K 7.4 mmol/L CRITICAL HIGH) that supersedes medication effects as the primary etiology.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"STAT STAT STAT: Initiate emergency cardiac management for severe hyperkalemia (e.g., IV Calcium Gluconate 10% 10 mL slow IV push to stabilize myocardium, followed immediately by insulin/glucose or albuterol per protocol).\",\n    \"STAT: Rapidly consult Nephrology/Dialysis team regarding emergent dialysis initiation.\",\n    \"STAT: Administer IV fluids cautiously while monitoring BP, given the patient's renal status and hypotension (BP 78/50 mmHg).\",\n    \"WITHHOLD: Any further non-essential medications until K+ is managed and renal status is stabilized.\",\n    \"Monitor: Continuous ECG and frequent vital sign checks (every 5 min initially).\"\n  ],\n  \"uncertainty\": [\n    \"The exact mechanism of the AV dissociation (e.g., direct potassium effect vs. secondary effect of severe acidosis) cannot be definitively separated from the data, but hyperkalemia is the most actionable primary driver.\"\n  ]\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1912,
+      "outputTokens": 638,
+      "elapsedSeconds": 54.41806528899997,
+      "peakGpuMemoryGiB": 9.039044380187988
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 54.41806528899997,
+  "inputTokens": 1912,
+  "outputTokens": 638,
+  "peakGpuMemoryGiB": 9.039044380187988,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

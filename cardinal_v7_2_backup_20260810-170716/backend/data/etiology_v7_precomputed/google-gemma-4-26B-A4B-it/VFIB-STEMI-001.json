@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.0",
+  "provider": "lightning-ai-studio",
+  "model": "google/gemma-4-26B-A4B-it",
+  "runNumber": 1,
+  "scenarioId": "VFIB-STEMI-001",
+  "promptFingerprint": "60edce97895ddc8ae604e6bed516163b735ee5808d7bd9f6f2806d3ae2b83f44",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "Robert D. Hale, Ventricular Fibrillation, critical, pulseless/hemodynamically unstable",
+    "rhythm": "Ventricular Fibrillation (VF)",
+    "keyECGEvidence": [
+      "No organized QRS",
+      "Coarse fibrillatory waves ~5 Hz",
+      "chaotic/irregular regularity",
+      "ST elevation 4 mm V2–V4 on rhythm strip 90 s pre-arrest",
+      "Runs of PVCs then R-on-T preceded onset"
+    ],
+    "primaryEtiology": "Acute Anterior ST-Elevation Myocardial Infarction (STEMI)",
+    "mechanism": "Ischemic-induced electrical instability leading to R-on-T phenomenon and ventricular fibrillation",
+    "contributingFactors": [
+      "Prior anterior MI (2019, DES to LAD)",
+      "Coronary artery disease",
+      "Metabolic acidosis (pH 7.21 LOW)",
+      "Hyperglycemia (glucose 212 mg/dL HIGH)"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Electrolyte imbalance (Hypokalemia/Hypomagnesemia)",
+        "why": "K 4.1 mmol/L and Mg 2.0 mg/dL are within normal reference ranges."
+      },
+      {
+        "alternative": "Digoxin toxicity",
+        "why": "No digoxin listed in patient medications; no evidence of digitalis-induced arrhythmia."
+      }
+    ],
+    "recommendedActions": [
+      "Perform immediate unsynchronized defibrillation (ACLS protocol)",
+      "Initiate high-quality CPR",
+      "Administer Epinephrine 1mg IV/IO every 3-5 minutes",
+      "Administer Amiodarone 300mg IV/IO (per ACLS VF/pVT algorithm)",
+      "Prepare for emergent cardiac catheterization/revascularization",
+      "STOP Nitroglycerin IV infusion"
+    ],
+    "uncertainty": []
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n \"episodeSummary\": \"Robert D. Hale, Ventricular Fibrillation, critical, pulseless/hemodynamically unstable\",\n \"rhythm\": \"Ventricular Fibrillation (VF)\",\n \"keyECGEvidence\": [\n  \"No organized QRS\",\n  \"Coarse fibrillatory waves ~5 Hz\",\n  \"chaotic/irregular regularity\",\n  \"ST elevation 4 mm V2–V4 on rhythm strip 90 s pre-arrest\",\n  \"Runs of PVCs then R-on-T preceded onset\"\n ],\n \"primaryEtiology\": \"Acute Anterior ST-Elevation Myocardial Infarction (STEMI)\",\n \"mechanism\": \"Ischemic-induced electrical instability leading to R-on-T phenomenon and ventricular fibrillation\",\n \"contributingFactors\": [\n  \"Prior anterior MI (2019, DES to LAD)\",\n  \"Coronary artery disease\",\n  \"Metabolic acidosis (pH 7.21 LOW)\",\n  \"Hyperglycemia (glucose 212 mg/dL HIGH)\"\n ],\n \"rejectedAlternatives\": [\n   {\n    \"alternative\": \"Electrolyte imbalance (Hypokalemia/Hypomagnesemia)\",\n    \"why\": \"K 4.1 mmol/L and Mg 2.0 mg/dL are within normal reference ranges.\"\n   },\n   {\n    \"alternative\": \"Digoxin toxicity\",\n    \"why\": \"No digoxin listed in patient medications; no evidence of digitalis-induced arrhythmia.\"\n   }\n ],\n \"recommendedActions\": [\n  \"Perform immediate unsynchronized defibrillation (ACLS protocol)\",\n  \"Initiate high-quality CPR\",\n  \"Administer Epinephrine 1mg IV/IO every 3-5 minutes\",\n  \"Administer Amiodarone 300mg IV/IO (per ACLS VF/pVT algorithm)\",\n  \"Prepare for emergent cardiac catheterization/revascularization\",\n  \"STOP Nitroglycerin IV infusion\"\n ],\n \"uncertainty\": []\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 2015,
+      "outputTokens": 453,
+      "elapsedSeconds": 37.71213640899987,
+      "peakGpuMemoryGiB": 46.0712833404541
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 37.71213640899987,
+  "inputTokens": 2015,
+  "outputTokens": 453,
+  "peakGpuMemoryGiB": 46.0712833404541,
+  "gpuName": "NVIDIA H100 80GB HBM3",
+  "quantization": "4bit"
+}

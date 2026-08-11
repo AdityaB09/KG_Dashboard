@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.1",
+  "provider": "lightning-ai-studio",
+  "model": "google/medgemma-27b-it",
+  "runNumber": 1,
+  "scenarioId": "NSVT-ECTOPY-008",
+  "promptFingerprint": "0b3b5d79c4b305f91478f6c28197ed4de6c053a2df79594cb9376c2b9ea2365f",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "Thomas B. Nguyen, 55M, post-op day 1, experiencing multifocal PVCs and non-sustained VT, hemodynamically stable.",
+    "rhythm": "Ventricular Ectopy (Multifocal PVCs, Non-sustained VT)",
+    "keyECGEvidence": [
+      "Ventricular rate 78 bpm",
+      "Regularity: occasionally irregular",
+      "QRS duration 94 ms (wide)",
+      "Morphology: Sinus beats with multifocal wide PVCs, couplets, one non-sustained VT run of 4 beats",
+      "Ectopy per 10s: 6",
+      "Pre-event note: Post-op, on thiazide; PVC burden increasing over last hour"
+    ],
+    "primaryEtiology": "Electrolyte Imbalance",
+    "mechanism": "Hypokalemia and Hypomagnesemia increase ventricular automaticity and excitability, leading to premature ventricular contractions (PVCs) and potentially ventricular tachycardia (VT).",
+    "contributingFactors": [
+      "Post-operative state (stress, fluid shifts)",
+      "Hydrochlorothiazide use (diuretic causing potassium and magnesium loss)"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Ischemia",
+        "why": "No significant ST deviation reported. Troponin T is mildly elevated, likely post-operative, not critically high. No chest pain or other signs of ischemia are mentioned."
+      },
+      {
+        "alternative": "Drug Toxicity (e.g., Digoxin)",
+        "why": "Patient is not on digoxin. No signs of digoxin toxicity (e.g., bradycardia, specific ECG changes like scooped ST segments) are present."
+      },
+      {
+        "alternative": "Underlying Structural Heart Disease",
+        "why": "Patient has mild diastolic dysfunction, but no known significant structural heart disease is mentioned. While this could be a factor, the acute change and electrolyte abnormalities point more strongly to an electrolyte etiology."
+      }
+    ],
+    "recommendedActions": [
+      "STOP Hydrochlorothiazide",
+      "Administer IV Potassium Chloride (e.g., 20 mEq in 100 mL NS over 1 hour, monitor ECG and K+ levels)",
+      "Administer IV Magnesium Sulfate (e.g., 2g IV over 10-20 minutes, monitor reflexes and BP)",
+      "Obtain repeat electrolytes (K+, Mg++, Ca++) in 1-2 hours",
+      "Consider cardiology consult if ectopy persists or worsens despite electrolyte correction"
+    ],
+    "uncertainty": []
+  },
+  "rawModelResponse": "```json\n{\n  \"episodeSummary\": \"Thomas B. Nguyen, 55M, post-op day 1, experiencing multifocal PVCs and non-sustained VT, hemodynamically stable.\",\n  \"rhythm\": \"Ventricular Ectopy (Multifocal PVCs, Non-sustained VT)\",\n  \"keyECGEvidence\": [\n    \"Ventricular rate 78 bpm\",\n    \"Regularity: occasionally irregular\",\n    \"QRS duration 94 ms (wide)\",\n    \"Morphology: Sinus beats with multifocal wide PVCs, couplets, one non-sustained VT run of 4 beats\",\n    \"Ectopy per 10s: 6\",\n    \"Pre-event note: Post-op, on thiazide; PVC burden increasing over last hour\"\n  ],\n  \"primaryEtiology\": \"Electrolyte Imbalance\",\n  \"mechanism\": \"Hypokalemia and Hypomagnesemia increase ventricular automaticity and excitability, leading to premature ventricular contractions (PVCs) and potentially ventricular tachycardia (VT).\",\n  \"contributingFactors\": [\n    \"Post-operative state (stress, fluid shifts)\",\n    \"Hydrochlorothiazide use (diuretic causing potassium and magnesium loss)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Ischemia\",\n      \"why\": \"No significant ST deviation reported. Troponin T is mildly elevated, likely post-operative, not critically high. No chest pain or other signs of ischemia are mentioned.\"\n    },\n    {\n      \"alternative\": \"Drug Toxicity (e.g., Digoxin)\",\n      \"why\": \"Patient is not on digoxin. No signs of digoxin toxicity (e.g., bradycardia, specific ECG changes like scooped ST segments) are present.\"\n    },\n    {\n      \"alternative\": \"Underlying Structural Heart Disease\",\n      \"why\": \"Patient has mild diastolic dysfunction, but no known significant structural heart disease is mentioned. While this could be a factor, the acute change and electrolyte abnormalities point more strongly to an electrolyte etiology.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"STOP Hydrochlorothiazide\",\n    \"Administer IV Potassium Chloride (e.g., 20 mEq in 100 mL NS over 1 hour, monitor ECG and K+ levels)\",\n    \"Administer IV Magnesium Sulfate (e.g., 2g IV over 10-20 minutes, monitor reflexes and BP)\",\n    \"Obtain repeat electrolytes (K+, Mg++, Ca++) in 1-2 hours\",\n    \"Consider cardiology consult if ectopy persists or worsens despite electrolyte correction\"\n  ],\n  \"uncertainty\": []\n}\n```",
+  "bestEffortParsedResponse": null,
+  "terminalStatus": "OK",
+  "hitMaxNewTokens": false,
+  "maxNewTokens": 2500,
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"Thomas B. Nguyen, 55M, post-op day 1, experiencing multifocal PVCs and non-sustained VT, hemodynamically stable.\",\n  \"rhythm\": \"Ventricular Ectopy (Multifocal PVCs, Non-sustained VT)\",\n  \"keyECGEvidence\": [\n    \"Ventricular rate 78 bpm\",\n    \"Regularity: occasionally irregular\",\n    \"QRS duration 94 ms (wide)\",\n    \"Morphology: Sinus beats with multifocal wide PVCs, couplets, one non-sustained VT run of 4 beats\",\n    \"Ectopy per 10s: 6\",\n    \"Pre-event note: Post-op, on thiazide; PVC burden increasing over last hour\"\n  ],\n  \"primaryEtiology\": \"Electrolyte Imbalance\",\n  \"mechanism\": \"Hypokalemia and Hypomagnesemia increase ventricular automaticity and excitability, leading to premature ventricular contractions (PVCs) and potentially ventricular tachycardia (VT).\",\n  \"contributingFactors\": [\n    \"Post-operative state (stress, fluid shifts)\",\n    \"Hydrochlorothiazide use (diuretic causing potassium and magnesium loss)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Ischemia\",\n      \"why\": \"No significant ST deviation reported. Troponin T is mildly elevated, likely post-operative, not critically high. No chest pain or other signs of ischemia are mentioned.\"\n    },\n    {\n      \"alternative\": \"Drug Toxicity (e.g., Digoxin)\",\n      \"why\": \"Patient is not on digoxin. No signs of digoxin toxicity (e.g., bradycardia, specific ECG changes like scooped ST segments) are present.\"\n    },\n    {\n      \"alternative\": \"Underlying Structural Heart Disease\",\n      \"why\": \"Patient has mild diastolic dysfunction, but no known significant structural heart disease is mentioned. While this could be a factor, the acute change and electrolyte abnormalities point more strongly to an electrolyte etiology.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"STOP Hydrochlorothiazide\",\n    \"Administer IV Potassium Chloride (e.g., 20 mEq in 100 mL NS over 1 hour, monitor ECG and K+ levels)\",\n    \"Administer IV Magnesium Sulfate (e.g., 2g IV over 10-20 minutes, monitor reflexes and BP)\",\n    \"Obtain repeat electrolytes (K+, Mg++, Ca++) in 1-2 hours\",\n    \"Consider cardiology consult if ectopy persists or worsens despite electrolyte correction\"\n  ],\n  \"uncertainty\": []\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1819,
+      "outputTokens": 598,
+      "elapsedSeconds": 65.02121515700037,
+      "peakGpuMemoryGiB": 25.341553688049316,
+      "hitMaxNewTokens": false
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 65.02121515700037,
+  "inputTokens": 1819,
+  "outputTokens": 598,
+  "peakGpuMemoryGiB": 25.341553688049316,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

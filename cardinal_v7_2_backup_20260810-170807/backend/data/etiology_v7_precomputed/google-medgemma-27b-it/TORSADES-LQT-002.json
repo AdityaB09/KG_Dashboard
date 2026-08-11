@@ -1,0 +1,83 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.1",
+  "provider": "lightning-ai-studio",
+  "model": "google/medgemma-27b-it",
+  "runNumber": 1,
+  "scenarioId": "TORSADES-LQT-002",
+  "promptFingerprint": "e097ed9be53b4fdfc0f479c6b2a58b549edf0dd87d78a832c393b3a141bee92b",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "74F, Polymorphic VT (Torsades de Pointes), critical, hypotensive",
+    "rhythm": "Polymorphic Ventricular Tachycardia (Torsades de Pointes)",
+    "keyECGEvidence": [
+      "ventricularRateBpm: 228",
+      "regularity: irregular",
+      "morphology: Sinusoidal amplitude modulation with axis twisting",
+      "preEventNote: Baseline ECG 6 min prior: sinus 62, marked QT prolongation QTc 618 ms, prominent U waves"
+    ],
+    "primaryEtiology": "Acquired Long QT Syndrome",
+    "mechanism": "Prolonged ventricular repolarization leading to early afterdepolarizations and polymorphic ventricular tachycardia.",
+    "contributingFactors": [
+      "Hypokalemia (K 2.9 mmol/L LOW)",
+      "Hypomagnesemia (Mg 1.2 mg/dL LOW)",
+      "Hypocalcemia (Ca 7.9 mg/dL LOW)",
+      "Sotalol use (known QT prolonging agent)",
+      "Recent gastroenteritis with vomiting/diarrhea (electrolyte loss)",
+      "Possible drug interaction (Azithromycin can prolong QT)"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Ischemic Heart Disease",
+        "why": "No clear evidence of ischemia. Troponin T is only mildly elevated (0.02 ng/mL), likely rate-related, and ECG morphology is characteristic of Torsades, not typical ischemic VT."
+      },
+      {
+        "alternative": "Digoxin Toxicity",
+        "why": "Patient is not on digoxin. ECG findings are not typical for digoxin toxicity (e.g., scooped ST segments, prominent T waves)."
+      },
+      {
+        "alternative": "Primary Electrical Disease (e.g., Brugada)",
+        "why": "No specific ECG features of Brugada syndrome are described. The pre-event ECG shows marked QT prolongation, pointing towards an acquired cause."
+      }
+    ],
+    "recommendedActions": [
+      "STOP Sotalol immediately",
+      "Administer IV Magnesium Sulfate (e.g., 1-2g over 10-20 minutes)",
+      "Administer IV Potassium Chloride (e.g., 10-20 mEq over 10-20 minutes, guided by continuous ECG monitoring)",
+      "Administer IV Calcium Gluconate (e.g., 1-2g over 5-10 minutes) if Torsades persists despite Mg and K correction",
+      "Overdrive pacing (temporary)",
+      "Prepare for cardioversion if hemodynamically unstable and unresponsive to medications/pacing",
+      "Correct underlying electrolyte abnormalities (monitor K, Mg, Ca frequently)",
+      "Discontinue Azithromycin if possible/appropriate",
+      "Address underlying cause of electrolyte loss (gastroenteritis)"
+    ],
+    "uncertainty": [
+      "Specific contribution of Azithromycin to QT prolongation is uncertain but possible.",
+      "Exact timing of electrolyte derangement relative to sotalol initiation/dose change is unknown."
+    ]
+  },
+  "rawModelResponse": "```json\n{\n  \"episodeSummary\": \"74F, Polymorphic VT (Torsades de Pointes), critical, hypotensive\",\n  \"rhythm\": \"Polymorphic Ventricular Tachycardia (Torsades de Pointes)\",\n  \"keyECGEvidence\": [\n    \"ventricularRateBpm: 228\",\n    \"regularity: irregular\",\n    \"morphology: Sinusoidal amplitude modulation with axis twisting\",\n    \"preEventNote: Baseline ECG 6 min prior: sinus 62, marked QT prolongation QTc 618 ms, prominent U waves\"\n  ],\n  \"primaryEtiology\": \"Acquired Long QT Syndrome\",\n  \"mechanism\": \"Prolonged ventricular repolarization leading to early afterdepolarizations and polymorphic ventricular tachycardia.\",\n  \"contributingFactors\": [\n    \"Hypokalemia (K 2.9 mmol/L LOW)\",\n    \"Hypomagnesemia (Mg 1.2 mg/dL LOW)\",\n    \"Hypocalcemia (Ca 7.9 mg/dL LOW)\",\n    \"Sotalol use (known QT prolonging agent)\",\n    \"Recent gastroenteritis with vomiting/diarrhea (electrolyte loss)\",\n    \"Possible drug interaction (Azithromycin can prolong QT)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Ischemic Heart Disease\",\n      \"why\": \"No clear evidence of ischemia. Troponin T is only mildly elevated (0.02 ng/mL), likely rate-related, and ECG morphology is characteristic of Torsades, not typical ischemic VT.\"\n    },\n    {\n      \"alternative\": \"Digoxin Toxicity\",\n      \"why\": \"Patient is not on digoxin. ECG findings are not typical for digoxin toxicity (e.g., scooped ST segments, prominent T waves).\"\n    },\n    {\n      \"alternative\": \"Primary Electrical Disease (e.g., Brugada)\",\n      \"why\": \"No specific ECG features of Brugada syndrome are described. The pre-event ECG shows marked QT prolongation, pointing towards an acquired cause.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"STOP Sotalol immediately\",\n    \"Administer IV Magnesium Sulfate (e.g., 1-2g over 10-20 minutes)\",\n    \"Administer IV Potassium Chloride (e.g., 10-20 mEq over 10-20 minutes, guided by continuous ECG monitoring)\",\n    \"Administer IV Calcium Gluconate (e.g., 1-2g over 5-10 minutes) if Torsades persists despite Mg and K correction\",\n    \"Overdrive pacing (temporary)\",\n    \"Prepare for cardioversion if hemodynamically unstable and unresponsive to medications/pacing\",\n    \"Correct underlying electrolyte abnormalities (monitor K, Mg, Ca frequently)\",\n    \"Discontinue Azithromycin if possible/appropriate\",\n    \"Address underlying cause of electrolyte loss (gastroenteritis)\"\n  ],\n  \"uncertainty\": [\n    \"Specific contribution of Azithromycin to QT prolongation is uncertain but possible.\",\n    \"Exact timing of electrolyte derangement relative to sotalol initiation/dose change is unknown.\"\n  ]\n}\n```",
+  "bestEffortParsedResponse": null,
+  "terminalStatus": "OK",
+  "hitMaxNewTokens": false,
+  "maxNewTokens": 2500,
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"74F, Polymorphic VT (Torsades de Pointes), critical, hypotensive\",\n  \"rhythm\": \"Polymorphic Ventricular Tachycardia (Torsades de Pointes)\",\n  \"keyECGEvidence\": [\n    \"ventricularRateBpm: 228\",\n    \"regularity: irregular\",\n    \"morphology: Sinusoidal amplitude modulation with axis twisting\",\n    \"preEventNote: Baseline ECG 6 min prior: sinus 62, marked QT prolongation QTc 618 ms, prominent U waves\"\n  ],\n  \"primaryEtiology\": \"Acquired Long QT Syndrome\",\n  \"mechanism\": \"Prolonged ventricular repolarization leading to early afterdepolarizations and polymorphic ventricular tachycardia.\",\n  \"contributingFactors\": [\n    \"Hypokalemia (K 2.9 mmol/L LOW)\",\n    \"Hypomagnesemia (Mg 1.2 mg/dL LOW)\",\n    \"Hypocalcemia (Ca 7.9 mg/dL LOW)\",\n    \"Sotalol use (known QT prolonging agent)\",\n    \"Recent gastroenteritis with vomiting/diarrhea (electrolyte loss)\",\n    \"Possible drug interaction (Azithromycin can prolong QT)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Ischemic Heart Disease\",\n      \"why\": \"No clear evidence of ischemia. Troponin T is only mildly elevated (0.02 ng/mL), likely rate-related, and ECG morphology is characteristic of Torsades, not typical ischemic VT.\"\n    },\n    {\n      \"alternative\": \"Digoxin Toxicity\",\n      \"why\": \"Patient is not on digoxin. ECG findings are not typical for digoxin toxicity (e.g., scooped ST segments, prominent T waves).\"\n    },\n    {\n      \"alternative\": \"Primary Electrical Disease (e.g., Brugada)\",\n      \"why\": \"No specific ECG features of Brugada syndrome are described. The pre-event ECG shows marked QT prolongation, pointing towards an acquired cause.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"STOP Sotalol immediately\",\n    \"Administer IV Magnesium Sulfate (e.g., 1-2g over 10-20 minutes)\",\n    \"Administer IV Potassium Chloride (e.g., 10-20 mEq over 10-20 minutes, guided by continuous ECG monitoring)\",\n    \"Administer IV Calcium Gluconate (e.g., 1-2g over 5-10 minutes) if Torsades persists despite Mg and K correction\",\n    \"Overdrive pacing (temporary)\",\n    \"Prepare for cardioversion if hemodynamically unstable and unresponsive to medications/pacing\",\n    \"Correct underlying electrolyte abnormalities (monitor K, Mg, Ca frequently)\",\n    \"Discontinue Azithromycin if possible/appropriate\",\n    \"Address underlying cause of electrolyte loss (gastroenteritis)\"\n  ],\n  \"uncertainty\": [\n    \"Specific contribution of Azithromycin to QT prolongation is uncertain but possible.\",\n    \"Exact timing of electrolyte derangement relative to sotalol initiation/dose change is unknown.\"\n  ]\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1881,
+      "outputTokens": 712,
+      "elapsedSeconds": 77.60932613500063,
+      "peakGpuMemoryGiB": 25.37816095352173,
+      "hitMaxNewTokens": false
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 77.60932613500063,
+  "inputTokens": 1881,
+  "outputTokens": 712,
+  "peakGpuMemoryGiB": 25.37816095352173,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

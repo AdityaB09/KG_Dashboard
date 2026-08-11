@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.1",
+  "provider": "lightning-ai-studio",
+  "model": "google/medgemma-27b-text-it",
+  "runNumber": 1,
+  "scenarioId": "BRASH-013",
+  "promptFingerprint": "f9a4a44237752b01310c2b760b06618b7ae0a1aa9ea4c384dcfdc6ce0d592ffe",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "Helen M. Kowalski, 72F, Junctional Escape Rhythm, critical, hypotensive",
+    "rhythm": "Junctional Escape Rhythm",
+    "keyECGEvidence": [
+      "ventricularRate_bpm: 32",
+      "regularity: regular",
+      "pWavePresent: false",
+      "morphology: Narrow-to-mildly-wide QRS junctional escape",
+      "preEventNote: ECG changes are disproportionately mild relative to potassium level; bradycardia severity exceeds what K+ 6.4 alone would typically produce; atropine 1 mg x2 administered with no heart rate response"
+    ],
+    "primaryEtiology": "Severe Hyperkalemia",
+    "mechanism": "Hyperkalemia-induced conduction block (AV block) leading to escape rhythm",
+    "contributingFactors": [
+      "Acute Kidney Injury (AKI) on Chronic Kidney Disease (CKD)",
+      "Dehydration/Poor Oral Intake"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Intrinsic Sinus Node Dysfunction",
+        "why": "Patient has no prior arrhythmia history. The severe hyperkalemia (K 6.4 mmol/L HIGH) and AKI (Cr 3.2 mg/dL CRITICAL HIGH) are more likely causes of bradycardia and AV block than new-onset intrinsic conduction disease."
+      },
+      {
+        "alternative": "Medication Effect (Atenolol)",
+        "why": "While atenolol can cause bradycardia, the severity (rate 32 bpm) and lack of response to atropine, coupled with the critical hyperkalemia and AKI, point towards a more acute and severe underlying cause. The ECG morphology is also consistent with a junctional escape rather than just sinus bradycardia."
+      },
+      {
+        "alternative": "Hypothyroidism",
+        "why": "No data available to support hypothyroidism. The acute presentation with severe hyperkalemia and AKI is a more direct explanation."
+      }
+    ],
+    "recommendedActions": [
+      "STOP Atenolol",
+      "Administer Calcium Gluconate 1g IV push immediately",
+      "Administer Insulin 10 units IV with 50 mL D50W",
+      "Administer Sodium Bicarbonate 100 mEq IV push (if acidosis is severe, consider continuous infusion)",
+      "Administer Albuterol nebulized (e.g., 2.5 mg in 2.5 mL NS)",
+      "Prepare for emergent hemodialysis",
+      "Consider transcutaneous pacing if hemodynamically unstable and unresponsive to medical management",
+      "Monitor ECG continuously",
+      "Monitor potassium levels frequently"
+    ],
+    "uncertainty": [
+      "Exact cause of AKI (pre-renal vs. intrinsic) is unclear but likely multifactorial.",
+      "No information on baseline renal function beyond CKD stage 3.",
+      "No information on current medications other than home meds and NS bolus."
+    ]
+  },
+  "rawModelResponse": "```json\n{\n  \"episodeSummary\": \"Helen M. Kowalski, 72F, Junctional Escape Rhythm, critical, hypotensive\",\n  \"rhythm\": \"Junctional Escape Rhythm\",\n  \"keyECGEvidence\": [\n    \"ventricularRate_bpm: 32\",\n    \"regularity: regular\",\n    \"pWavePresent: false\",\n    \"morphology: Narrow-to-mildly-wide QRS junctional escape\",\n    \"preEventNote: ECG changes are disproportionately mild relative to potassium level; bradycardia severity exceeds what K+ 6.4 alone would typically produce; atropine 1 mg x2 administered with no heart rate response\"\n  ],\n  \"primaryEtiology\": \"Severe Hyperkalemia\",\n  \"mechanism\": \"Hyperkalemia-induced conduction block (AV block) leading to escape rhythm\",\n  \"contributingFactors\": [\n    \"Acute Kidney Injury (AKI) on Chronic Kidney Disease (CKD)\",\n    \"Dehydration/Poor Oral Intake\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Intrinsic Sinus Node Dysfunction\",\n      \"why\": \"Patient has no prior arrhythmia history. The severe hyperkalemia (K 6.4 mmol/L HIGH) and AKI (Cr 3.2 mg/dL CRITICAL HIGH) are more likely causes of bradycardia and AV block than new-onset intrinsic conduction disease.\"\n    },\n    {\n      \"alternative\": \"Medication Effect (Atenolol)\",\n      \"why\": \"While atenolol can cause bradycardia, the severity (rate 32 bpm) and lack of response to atropine, coupled with the critical hyperkalemia and AKI, point towards a more acute and severe underlying cause. The ECG morphology is also consistent with a junctional escape rather than just sinus bradycardia.\"\n    },\n    {\n      \"alternative\": \"Hypothyroidism\",\n      \"why\": \"No data available to support hypothyroidism. The acute presentation with severe hyperkalemia and AKI is a more direct explanation.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"STOP Atenolol\",\n    \"Administer Calcium Gluconate 1g IV push immediately\",\n    \"Administer Insulin 10 units IV with 50 mL D50W\",\n    \"Administer Sodium Bicarbonate 100 mEq IV push (if acidosis is severe, consider continuous infusion)\",\n    \"Administer Albuterol nebulized (e.g., 2.5 mg in 2.5 mL NS)\",\n    \"Prepare for emergent hemodialysis\",\n    \"Consider transcutaneous pacing if hemodynamically unstable and unresponsive to medical management\",\n    \"Monitor ECG continuously\",\n    \"Monitor potassium levels frequently\"\n  ],\n  \"uncertainty\": [\n    \"Exact cause of AKI (pre-renal vs. intrinsic) is unclear but likely multifactorial.\",\n    \"No information on baseline renal function beyond CKD stage 3.\",\n    \"No information on current medications other than home meds and NS bolus.\"\n  ]\n}\n```",
+  "bestEffortParsedResponse": null,
+  "terminalStatus": "OK",
+  "hitMaxNewTokens": false,
+  "maxNewTokens": 2500,
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"Helen M. Kowalski, 72F, Junctional Escape Rhythm, critical, hypotensive\",\n  \"rhythm\": \"Junctional Escape Rhythm\",\n  \"keyECGEvidence\": [\n    \"ventricularRate_bpm: 32\",\n    \"regularity: regular\",\n    \"pWavePresent: false\",\n    \"morphology: Narrow-to-mildly-wide QRS junctional escape\",\n    \"preEventNote: ECG changes are disproportionately mild relative to potassium level; bradycardia severity exceeds what K+ 6.4 alone would typically produce; atropine 1 mg x2 administered with no heart rate response\"\n  ],\n  \"primaryEtiology\": \"Severe Hyperkalemia\",\n  \"mechanism\": \"Hyperkalemia-induced conduction block (AV block) leading to escape rhythm\",\n  \"contributingFactors\": [\n    \"Acute Kidney Injury (AKI) on Chronic Kidney Disease (CKD)\",\n    \"Dehydration/Poor Oral Intake\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Intrinsic Sinus Node Dysfunction\",\n      \"why\": \"Patient has no prior arrhythmia history. The severe hyperkalemia (K 6.4 mmol/L HIGH) and AKI (Cr 3.2 mg/dL CRITICAL HIGH) are more likely causes of bradycardia and AV block than new-onset intrinsic conduction disease.\"\n    },\n    {\n      \"alternative\": \"Medication Effect (Atenolol)\",\n      \"why\": \"While atenolol can cause bradycardia, the severity (rate 32 bpm) and lack of response to atropine, coupled with the critical hyperkalemia and AKI, point towards a more acute and severe underlying cause. The ECG morphology is also consistent with a junctional escape rather than just sinus bradycardia.\"\n    },\n    {\n      \"alternative\": \"Hypothyroidism\",\n      \"why\": \"No data available to support hypothyroidism. The acute presentation with severe hyperkalemia and AKI is a more direct explanation.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"STOP Atenolol\",\n    \"Administer Calcium Gluconate 1g IV push immediately\",\n    \"Administer Insulin 10 units IV with 50 mL D50W\",\n    \"Administer Sodium Bicarbonate 100 mEq IV push (if acidosis is severe, consider continuous infusion)\",\n    \"Administer Albuterol nebulized (e.g., 2.5 mg in 2.5 mL NS)\",\n    \"Prepare for emergent hemodialysis\",\n    \"Consider transcutaneous pacing if hemodynamically unstable and unresponsive to medical management\",\n    \"Monitor ECG continuously\",\n    \"Monitor potassium levels frequently\"\n  ],\n  \"uncertainty\": [\n    \"Exact cause of AKI (pre-renal vs. intrinsic) is unclear but likely multifactorial.\",\n    \"No information on baseline renal function beyond CKD stage 3.\",\n    \"No information on current medications other than home meds and NS bolus.\"\n  ]\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1965,
+      "outputTokens": 679,
+      "elapsedSeconds": 75.78249906600013,
+      "peakGpuMemoryGiB": 25.213197231292725,
+      "hitMaxNewTokens": false
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 75.78249906600013,
+  "inputTokens": 1965,
+  "outputTokens": 679,
+  "peakGpuMemoryGiB": 25.213197231292725,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

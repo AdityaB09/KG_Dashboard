@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "cardinal-slm-widget-ui-v7.2",
+  "purpose": "Clinician-facing presentation of the Etiology Engine result. Technical model provenance, precomputed/live mode, profile, scenario ID, contract state, run number, token counts, timing, Phase 6 status and generation metadata are intentionally not rendered in the SLM widget.",
+  "backendClinicalInterpretationFields": [
+    "episodeSummary",
+    "rhythm",
+    "keyECGEvidence",
+    "primaryEtiology",
+    "mechanism",
+    "contributingFactors",
+    "rejectedAlternatives",
+    "recommendedActions",
+    "uncertainty"
+  ],
+  "visiblePrimaryFields": [
+    "rhythm",
+    "primaryEtiology",
+    "mechanism"
+  ],
+  "visibleExpandedFields": [
+    "keyECGEvidence",
+    "contributingFactors",
+    "rejectedAlternatives",
+    "recommendedActions",
+    "uncertainty"
+  ],
+  "notRendered": [
+    "episodeSummary",
+    "model/profile name",
+    "scenario ID",
+    "precomputed/live status",
+    "contract validity",
+    "Phase 6 status",
+    "run number",
+    "output tokens",
+    "generation time",
+    "response provenance",
+    "generation record"
+  ],
+  "episodeSummaryPolicy": "Retained in backend response for contract completeness but not rendered because the precomputed V7 scenario summary can contain the synthetic benchmark patient identity, while the page header represents the authenticated Oracle SMART patient.",
+  "technicalMetadataPolicy": "May remain in backend/debug payloads for traceability, but the clinician-facing widget does not display it."
+}

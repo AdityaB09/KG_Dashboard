@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.1",
+  "provider": "lightning-ai-studio",
+  "model": "google/medgemma-27b-text-it",
+  "runNumber": 1,
+  "scenarioId": "VFIB-STEMI-001",
+  "promptFingerprint": "60edce97895ddc8ae604e6bed516163b735ee5808d7bd9f6f2806d3ae2b83f44",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "Robert D. Hale, 68M, Ventricular Fibrillation, critical, pulseless",
+    "rhythm": "Ventricular Fibrillation (VF)",
+    "keyECGEvidence": [
+      "regularity: chaotic/irregular",
+      "morphology: No organized QRS; coarse fibrillatory waves ~5 Hz",
+      "pWavePresent: false",
+      "preEventNote: Runs of PVCs then R-on-T preceded onset; 12-lead 8 min prior showed anterior ST elevation"
+    ],
+    "primaryEtiology": "Acute Myocardial Infarction (STEMI)",
+    "mechanism": "Ischemic substrate leading to electrical instability and ventricular fibrillation",
+    "contributingFactors": [
+      "History of Coronary Artery Disease",
+      "Prior Anterior MI",
+      "Hyperlipidemia",
+      "Type 2 Diabetes",
+      "Elevated Lactate (4.8 mmol/L HIGH)",
+      "Acidosis (pH 7.21 LOW)"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Electrolyte Imbalance (Hypokalemia/Hyperkalemia/Hypomagnesemia)",
+        "why": "Potassium 4.1 mmol/L (normal), Magnesium 2.0 mg/dL (normal)"
+      },
+      {
+        "alternative": "Drug Toxicity (Digoxin)",
+        "why": "No digoxin listed in home medications or infusions; no specific ECG signs of digoxin toxicity"
+      },
+      {
+        "alternative": "Primary Electrical Disorder (e.g., Brugada, Long QT)",
+        "why": "No prior history or specific ECG findings suggestive of these syndromes; acute STEMI is a much more likely cause in this context"
+      }
+    ],
+    "recommendedActions": [
+      "Continue high-quality CPR",
+      "Administer Epinephrine 1 mg IV/IO every 3-5 minutes",
+      "Administer Amiodarone 300 mg IV/IO bolus, then 150 mg IV/IO if needed",
+      "Consider Lidocaine 1-1.5 mg/kg IV/IO if Amiodarone is ineffective or contraindicated",
+      "Administer Sodium Bicarbonate 1 g IV/IO if pH remains < 7.1 after initial resuscitation efforts",
+      "Re-evaluate for reversible causes (H's and T's) after initial shocks/medications",
+      "Prepare for emergent cardiac catheterization if ROSC achieved"
+    ],
+    "uncertainty": [
+      "Exact timing of symptom onset relative to ECG changes",
+      "Presence of other potential contributing factors not captured"
+    ]
+  },
+  "rawModelResponse": "```json\n{\n  \"episodeSummary\": \"Robert D. Hale, 68M, Ventricular Fibrillation, critical, pulseless\",\n  \"rhythm\": \"Ventricular Fibrillation (VF)\",\n  \"keyECGEvidence\": [\n    \"regularity: chaotic/irregular\",\n    \"morphology: No organized QRS; coarse fibrillatory waves ~5 Hz\",\n    \"pWavePresent: false\",\n    \"preEventNote: Runs of PVCs then R-on-T preceded onset; 12-lead 8 min prior showed anterior ST elevation\"\n  ],\n  \"primaryEtiology\": \"Acute Myocardial Infarction (STEMI)\",\n  \"mechanism\": \"Ischemic substrate leading to electrical instability and ventricular fibrillation\",\n  \"contributingFactors\": [\n    \"History of Coronary Artery Disease\",\n    \"Prior Anterior MI\",\n    \"Hyperlipidemia\",\n    \"Type 2 Diabetes\",\n    \"Elevated Lactate (4.8 mmol/L HIGH)\",\n    \"Acidosis (pH 7.21 LOW)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Electrolyte Imbalance (Hypokalemia/Hyperkalemia/Hypomagnesemia)\",\n      \"why\": \"Potassium 4.1 mmol/L (normal), Magnesium 2.0 mg/dL (normal)\"\n    },\n    {\n      \"alternative\": \"Drug Toxicity (Digoxin)\",\n      \"why\": \"No digoxin listed in home medications or infusions; no specific ECG signs of digoxin toxicity\"\n    },\n    {\n      \"alternative\": \"Primary Electrical Disorder (e.g., Brugada, Long QT)\",\n      \"why\": \"No prior history or specific ECG findings suggestive of these syndromes; acute STEMI is a much more likely cause in this context\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Continue high-quality CPR\",\n    \"Administer Epinephrine 1 mg IV/IO every 3-5 minutes\",\n    \"Administer Amiodarone 300 mg IV/IO bolus, then 150 mg IV/IO if needed\",\n    \"Consider Lidocaine 1-1.5 mg/kg IV/IO if Amiodarone is ineffective or contraindicated\",\n    \"Administer Sodium Bicarbonate 1 g IV/IO if pH remains < 7.1 after initial resuscitation efforts\",\n    \"Re-evaluate for reversible causes (H's and T's) after initial shocks/medications\",\n    \"Prepare for emergent cardiac catheterization if ROSC achieved\"\n  ],\n  \"uncertainty\": [\n    \"Exact timing of symptom onset relative to ECG changes\",\n    \"Presence of other potential contributing factors not captured\"\n  ]\n}\n```",
+  "bestEffortParsedResponse": null,
+  "terminalStatus": "OK",
+  "hitMaxNewTokens": false,
+  "maxNewTokens": 2500,
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"Robert D. Hale, 68M, Ventricular Fibrillation, critical, pulseless\",\n  \"rhythm\": \"Ventricular Fibrillation (VF)\",\n  \"keyECGEvidence\": [\n    \"regularity: chaotic/irregular\",\n    \"morphology: No organized QRS; coarse fibrillatory waves ~5 Hz\",\n    \"pWavePresent: false\",\n    \"preEventNote: Runs of PVCs then R-on-T preceded onset; 12-lead 8 min prior showed anterior ST elevation\"\n  ],\n  \"primaryEtiology\": \"Acute Myocardial Infarction (STEMI)\",\n  \"mechanism\": \"Ischemic substrate leading to electrical instability and ventricular fibrillation\",\n  \"contributingFactors\": [\n    \"History of Coronary Artery Disease\",\n    \"Prior Anterior MI\",\n    \"Hyperlipidemia\",\n    \"Type 2 Diabetes\",\n    \"Elevated Lactate (4.8 mmol/L HIGH)\",\n    \"Acidosis (pH 7.21 LOW)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Electrolyte Imbalance (Hypokalemia/Hyperkalemia/Hypomagnesemia)\",\n      \"why\": \"Potassium 4.1 mmol/L (normal), Magnesium 2.0 mg/dL (normal)\"\n    },\n    {\n      \"alternative\": \"Drug Toxicity (Digoxin)\",\n      \"why\": \"No digoxin listed in home medications or infusions; no specific ECG signs of digoxin toxicity\"\n    },\n    {\n      \"alternative\": \"Primary Electrical Disorder (e.g., Brugada, Long QT)\",\n      \"why\": \"No prior history or specific ECG findings suggestive of these syndromes; acute STEMI is a much more likely cause in this context\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Continue high-quality CPR\",\n    \"Administer Epinephrine 1 mg IV/IO every 3-5 minutes\",\n    \"Administer Amiodarone 300 mg IV/IO bolus, then 150 mg IV/IO if needed\",\n    \"Consider Lidocaine 1-1.5 mg/kg IV/IO if Amiodarone is ineffective or contraindicated\",\n    \"Administer Sodium Bicarbonate 1 g IV/IO if pH remains < 7.1 after initial resuscitation efforts\",\n    \"Re-evaluate for reversible causes (H's and T's) after initial shocks/medications\",\n    \"Prepare for emergent cardiac catheterization if ROSC achieved\"\n  ],\n  \"uncertainty\": [\n    \"Exact timing of symptom onset relative to ECG changes\",\n    \"Presence of other potential contributing factors not captured\"\n  ]\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 2011,
+      "outputTokens": 614,
+      "elapsedSeconds": 69.24782105899976,
+      "peakGpuMemoryGiB": 25.237903118133545,
+      "hitMaxNewTokens": false
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 69.24782105899976,
+  "inputTokens": 2011,
+  "outputTokens": 614,
+  "peakGpuMemoryGiB": 25.237903118133545,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

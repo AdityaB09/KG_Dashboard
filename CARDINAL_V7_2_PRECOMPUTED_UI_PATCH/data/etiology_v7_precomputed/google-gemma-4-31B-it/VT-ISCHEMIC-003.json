@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.0",
+  "provider": "lightning-ai-studio",
+  "model": "google/gemma-4-31B-it",
+  "runNumber": 1,
+  "scenarioId": "VT-ISCHEMIC-003",
+  "promptFingerprint": "a7562ccbf6b12d0bff83d638b24638a34fe3324dc057a1383d06280b9a2f7757",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "61yo male with ischemic cardiomyopathy, monomorphic ventricular tachycardia, critical severity, hemodynamically unstable (BP 88/58).",
+    "rhythm": "Monomorphic Ventricular Tachycardia (VT)",
+    "keyECGEvidence": [
+      "ventricularRateBpm 182",
+      "qrsDurationMs 168",
+      "morphology: Wide monomorphic QRS, AV dissociation, occasional capture/fusion beats",
+      "regularity: regular"
+    ],
+    "primaryEtiology": "Ischemic Cardiomyopathy / Myocardial Scar",
+    "mechanism": "Re-entrant circuit utilizing scarred myocardial tissue from prior inferior MI and decompensated ischemic cardiomyopathy (LVEF 25%).",
+    "contributingFactors": [
+      "Decompensated heart failure (BNP 1840 pg/mL HIGH)",
+      "Chronic kidney disease (creatinine 1.9 mg/dL HIGH)",
+      "Myocardial demand ischemia (troponinT 0.09 ng/mL mildly HIGH)"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Torsades de Pointes",
+        "why": "Prior QTc 460 ms is normal; morphology is monomorphic rather than twisting; potassium 4.3 mmol/L and magnesium 2.1 mg/dL are within normal limits."
+      },
+      {
+        "alternative": "Electrolyte-induced VT",
+        "why": "Potassium 4.3 mmol/L and magnesium 2.1 mg/dL are both within reference ranges."
+      },
+      {
+        "alternative": "SVT with aberrancy",
+        "why": "Presence of AV dissociation and capture/fusion beats is pathognomonic for VT."
+      }
+    ],
+    "recommendedActions": [
+      "Immediate synchronized cardioversion (patient is symptomatic/unstable with BP 88/58)",
+      "Initiate Amiodarone bolus for rhythm stabilization",
+      "Assess for acute coronary syndrome (ACS) despite lack of chest pain",
+      "Optimize hemodynamic support to improve coronary perfusion"
+    ],
+    "uncertainty": []
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n \"episodeSummary\": \"61yo male with ischemic cardiomyopathy, monomorphic ventricular tachycardia, critical severity, hemodynamically unstable (BP 88/58).\",\n \"rhythm\": \"Monomorphic Ventricular Tachycardia (VT)\",\n \"keyECGEvidence\": [\n  \"ventricularRateBpm 182\",\n  \"qrsDurationMs 168\",\n  \"morphology: Wide monomorphic QRS, AV dissociation, occasional capture/fusion beats\",\n  \"regularity: regular\"\n ],\n \"primaryEtiology\": \"Ischemic Cardiomyopathy / Myocardial Scar\",\n \"mechanism\": \"Re-entrant circuit utilizing scarred myocardial tissue from prior inferior MI and decompensated ischemic cardiomyopathy (LVEF 25%).\",\n \"contributingFactors\": [\n  \"Decompensated heart failure (BNP 1840 pg/mL HIGH)\",\n  \"Chronic kidney disease (creatinine 1.9 mg/dL HIGH)\",\n  \"Myocardial demand ischemia (troponinT 0.09 ng/mL mildly HIGH)\"\n ],\n \"rejectedAlternatives\": [\n  {\"alternative\": \"Torsades de Pointes\", \"why\": \"Prior QTc 460 ms is normal; morphology is monomorphic rather than twisting; potassium 4.3 mmol/L and magnesium 2.1 mg/dL are within normal limits.\"},\n  {\"alternative\": \"Electrolyte-induced VT\", \"why\": \"Potassium 4.3 mmol/L and magnesium 2.1 mg/dL are both within reference ranges.\"},\n  {\"alternative\": \"SVT with aberrancy\", \"why\": \"Presence of AV dissociation and capture/fusion beats is pathognomonic for VT.\"}\n ],\n \"recommendedActions\": [\n  \"Immediate synchronized cardioversion (patient is symptomatic/unstable with BP 88/58)\",\n  \"Initiate Amiodarone bolus for rhythm stabilization\",\n  \"Assess for acute coronary syndrome (ACS) despite lack of chest pain\",\n  \"Optimize hemodynamic support to improve coronary perfusion\"\n ],\n \"uncertainty\": []\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1867,
+      "outputTokens": 466,
+      "elapsedSeconds": 34.59000387799915,
+      "peakGpuMemoryGiB": 19.105919361114502
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 34.59000387799915,
+  "inputTokens": 1867,
+  "outputTokens": 466,
+  "peakGpuMemoryGiB": 19.105919361114502,
+  "gpuName": "NVIDIA H100 80GB HBM3",
+  "quantization": "4bit"
+}

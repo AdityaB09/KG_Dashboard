@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.0",
+  "provider": "lightning-ai-studio",
+  "model": "google/gemma-4-31B-it",
+  "runNumber": 1,
+  "scenarioId": "AMIO-DDI-014",
+  "promptFingerprint": "77a98a8a32d6250e7713da81837d315c95b8b4b2c88b5b6287285ce5dc072992",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "70yo male, sinus bradycardia, moderate severity, hemodynamically stable but symptomatic",
+    "rhythm": "Sinus Bradycardia",
+    "keyECGEvidence": [
+      "ventricularRate_bpm: 48",
+      "pWavePresent: true",
+      "regularity: regular",
+      "stDeviation: Scooped/sagging ST segments (digoxin effect)",
+      "qtc_ms: 510"
+    ],
+    "primaryEtiology": "Digoxin Toxicity precipitated by Amiodarone-induced drug-drug interaction",
+    "mechanism": "Amiodarone inhibits P-glycoprotein (P-gp), the primary efflux transporter for digoxin, leading to decreased renal and biliary clearance of digoxin and subsequent elevation of serum levels to toxic concentrations.",
+    "contributingFactors": [
+      "Failure to adjust digoxin dose upon initiation of amiodarone loading",
+      "Concurrent amiodarone and simvastatin use (contributing to muscle aches/CK 1200 U/L HIGH via CYP3A4 inhibition)",
+      "Amiodarone-induced potentiation of warfarin (INR 5.8 CRITICAL HIGH)"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Hypokalemia-induced digoxin toxicity",
+        "why": "potassium: 4.0 mmol/L is within normal reference range (3.5-5.1)"
+      },
+      {
+        "alternative": "Acute Myocardial Infarction",
+        "why": "troponinT 0.02 ng/mL is only mildly high and not consistent with acute ischemia; no ST elevation noted"
+      },
+      {
+        "alternative": "Hypothyroidism",
+        "why": "tsh: 2.1 mIU/L is within normal reference range (0.4-4.0)"
+      }
+    ],
+    "recommendedActions": [
+      "STOP Digoxin immediately",
+      "STOP Simvastatin immediately (due to CK 1200 U/L HIGH and amiodarone interaction)",
+      "HOLD Warfarin until INR is corrected",
+      "Administer Digoxin-specific antibody fragments (DigiFab) given digoxinLevel 2.4 ng/mL TOXIC and symptomatic bradycardia",
+      "Monitor potassium and magnesium levels closely"
+    ],
+    "uncertainty": []
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n \"episodeSummary\": \"70yo male, sinus bradycardia, moderate severity, hemodynamically stable but symptomatic\",\n \"rhythm\": \"Sinus Bradycardia\",\n \"keyECGEvidence\": [\n  \"ventricularRate_bpm: 48\",\n  \"pWavePresent: true\",\n  \"regularity: regular\",\n  \"stDeviation: Scooped/sagging ST segments (digoxin effect)\",\n  \"qtc_ms: 510\"\n ],\n \"primaryEtiology\": \"Digoxin Toxicity precipitated by Amiodarone-induced drug-drug interaction\",\n \"mechanism\": \"Amiodarone inhibits P-glycoprotein (P-gp), the primary efflux transporter for digoxin, leading to decreased renal and biliary clearance of digoxin and subsequent elevation of serum levels to toxic concentrations.\",\n \"contributingFactors\": [\n  \"Failure to adjust digoxin dose upon initiation of amiodarone loading\",\n  \"Concurrent amiodarone and simvastatin use (contributing to muscle aches/CK 1200 U/L HIGH via CYP3A4 inhibition)\",\n  \"Amiodarone-induced potentiation of warfarin (INR 5.8 CRITICAL HIGH)\"\n ],\n \"rejectedAlternatives\": [\n  {\"alternative\": \"Hypokalemia-induced digoxin toxicity\", \"why\": \"potassium: 4.0 mmol/L is within normal reference range (3.5-5.1)\"},\n  {\"alternative\": \"Acute Myocardial Infarction\", \"why\": \"troponinT 0.02 ng/mL is only mildly high and not consistent with acute ischemia; no ST elevation noted\"},\n  {\"alternative\": \"Hypothyroidism\", \"why\": \"tsh: 2.1 mIU/L is within normal reference range (0.4-4.0)\"}\n ],\n \"recommendedActions\": [\n  \"STOP Digoxin immediately\",\n  \"STOP Simvastatin immediately (due to CK 1200 U/L HIGH and amiodarone interaction)\",\n  \"HOLD Warfarin until INR is corrected\",\n  \"Administer Digoxin-specific antibody fragments (DigiFab) given digoxinLevel 2.4 ng/mL TOXIC and symptomatic bradycardia\",\n  \"Monitor potassium and magnesium levels closely\"\n ],\n \"uncertainty\": []\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 2115,
+      "outputTokens": 508,
+      "elapsedSeconds": 37.01216893000037,
+      "peakGpuMemoryGiB": 19.347211837768555
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 37.01216893000037,
+  "inputTokens": 2115,
+  "outputTokens": 508,
+  "peakGpuMemoryGiB": 19.347211837768555,
+  "gpuName": "NVIDIA H100 80GB HBM3",
+  "quantization": "4bit"
+}
