@@ -1,0 +1,65 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.0",
+  "provider": "lightning-ai-studio",
+  "model": "google/gemma-4-E4B-it",
+  "runNumber": 1,
+  "scenarioId": "VFIB-STEMI-001",
+  "promptFingerprint": "60edce97895ddc8ae604e6bed516163b735ee5808d7bd9f6f2806d3ae2b83f44",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "Robert D. Hale, Ventricular Fibrillation, Critical, Hemodynamically unstable (No pulse)",
+    "rhythm": "Ventricular Fibrillation (VF)",
+    "keyECGEvidence": [
+      "Morphology: No organized QRS; coarse fibrillatory waves ~5 Hz",
+      "PreEventNote: Runs of PVCs then R-on-T preceded onset; 12-lead 8 min prior showed anterior ST elevation",
+      "ST Deviation: ST elevation 4 mm V2–V4 on rhythm strip 90 s pre-arrest"
+    ],
+    "primaryEtiology": "Acute Myocardial Infarction leading to electrical instability",
+    "mechanism": "Underlying coronary artery disease complicated by acute anterior STEMI (evidenced by 'anterior ST elevation' and 'troponinT 1.85 CRITICAL HIGH') leading to myocardial ischemia and subsequent malignant arrhythmia (VF).",
+    "contributingFactors": [
+      "Severe metabolic derangement: Lactate 4.8 mmol/L HIGH, pH 7.21 LOW",
+      "Evidence of myocardial injury: troponinT 1.85 CRITICAL HIGH",
+      "Preceding arrhythmic instability: Runs of PVCs then R-on-T"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Severe Electrolyte Imbalance (e.g., Hyperkalemia)",
+        "why": "Potassium is within reference range (4.1 mmol/L), and Magnesium is adequate (2.0 mg/dL)."
+      },
+      {
+        "alternative": "Tachyarrhythmia secondary to medication toxicity",
+        "why": "No clear evidence of drug overdose; patient is on standard cardiac medications (Metoprolol, Aspirin, Atorvastatin) and Nitroglycerin infusion."
+      }
+    ],
+    "recommendedActions": [
+      "Initiate immediate ACLS protocol for VF: Deliver high-quality Chest Compressions and Airway Management while preparing defibrillation.",
+      "Administer synchronized cardioversion/defibrillation as per ACLS protocol (if rhythm is deemed shockable VF/pulseless VT).",
+      "Establish definitive airway and initiate mechanical ventilation if VF persists.",
+      "Administer Epinephrine 1 mg IV/IO immediately per ACLS guidelines for VF/pulseless rhythm.",
+      "Obtain immediate cardiac catheterization/reperfusion strategy given STEMI context.",
+      "Address metabolic acidosis: Prepare for bicarbonate infusion if pH remains critically low during resuscitation."
+    ],
+    "uncertainty": [
+      "The exact sequence of events leading to VF (e.g., STEMI vs. pre-existing structural heart disease) cannot be definitively separated without angiography, but the acute STEMI is the strongest driver."
+    ]
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"Robert D. Hale, Ventricular Fibrillation, Critical, Hemodynamically unstable (No pulse)\",\n  \"rhythm\": \"Ventricular Fibrillation (VF)\",\n  \"keyECGEvidence\": [\n    \"Morphology: No organized QRS; coarse fibrillatory waves ~5 Hz\",\n    \"PreEventNote: Runs of PVCs then R-on-T preceded onset; 12-lead 8 min prior showed anterior ST elevation\",\n    \"ST Deviation: ST elevation 4 mm V2–V4 on rhythm strip 90 s pre-arrest\"\n  ],\n  \"primaryEtiology\": \"Acute Myocardial Infarction leading to electrical instability\",\n  \"mechanism\": \"Underlying coronary artery disease complicated by acute anterior STEMI (evidenced by 'anterior ST elevation' and 'troponinT 1.85 CRITICAL HIGH') leading to myocardial ischemia and subsequent malignant arrhythmia (VF).\",\n  \"contributingFactors\": [\n    \"Severe metabolic derangement: Lactate 4.8 mmol/L HIGH, pH 7.21 LOW\",\n    \"Evidence of myocardial injury: troponinT 1.85 CRITICAL HIGH\",\n    \"Preceding arrhythmic instability: Runs of PVCs then R-on-T\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Severe Electrolyte Imbalance (e.g., Hyperkalemia)\",\n      \"why\": \"Potassium is within reference range (4.1 mmol/L), and Magnesium is adequate (2.0 mg/dL).\"\n    },\n    {\n      \"alternative\": \"Tachyarrhythmia secondary to medication toxicity\",\n      \"why\": \"No clear evidence of drug overdose; patient is on standard cardiac medications (Metoprolol, Aspirin, Atorvastatin) and Nitroglycerin infusion.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Initiate immediate ACLS protocol for VF: Deliver high-quality Chest Compressions and Airway Management while preparing defibrillation.\",\n    \"Administer synchronized cardioversion/defibrillation as per ACLS protocol (if rhythm is deemed shockable VF/pulseless VT).\",\n    \"Establish definitive airway and initiate mechanical ventilation if VF persists.\",\n    \"Administer Epinephrine 1 mg IV/IO immediately per ACLS guidelines for VF/pulseless rhythm.\",\n    \"Obtain immediate cardiac catheterization/reperfusion strategy given STEMI context.\",\n    \"Address metabolic acidosis: Prepare for bicarbonate infusion if pH remains critically low during resuscitation.\"\n  ],\n  \"uncertainty\": [\n    \"The exact sequence of events leading to VF (e.g., STEMI vs. pre-existing structural heart disease) cannot be definitively separated without angiography, but the acute STEMI is the strongest driver.\"\n  ]\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 2011,
+      "outputTokens": 625,
+      "elapsedSeconds": 54.39331233500002,
+      "peakGpuMemoryGiB": 9.050187587738037
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 54.39331233500002,
+  "inputTokens": 2011,
+  "outputTokens": 625,
+  "peakGpuMemoryGiB": 9.050187587738037,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

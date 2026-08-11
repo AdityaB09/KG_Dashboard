@@ -1,0 +1,84 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.1",
+  "provider": "lightning-ai-studio",
+  "model": "google/medgemma-27b-text-it",
+  "runNumber": 1,
+  "scenarioId": "NSVT-ECTOPY-008",
+  "promptFingerprint": "0b3b5d79c4b305f91478f6c28197ed4de6c053a2df79594cb9376c2b9ea2365f",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "Thomas B. Nguyen, 55M, Post-op day 1, Sinus rhythm with frequent PVCs/NSVT, warning severity, hemodynamically stable",
+    "rhythm": "Sinus rhythm with frequent Premature Ventricular Contractions (PVCs), couplets, and a brief run of Non-Sustained Ventricular Tachycardia (NSVT)",
+    "keyECGEvidence": [
+      "ventricularRateBpm: 78",
+      "atrialRateBpm: 78",
+      "regularity: occasionally irregular",
+      "qrsDurationMs: 94",
+      "qtcMs: 445",
+      "prMs: 160",
+      "pWavePresent: true",
+      "stDeviationMm: None significant",
+      "morphology: Sinus beats with multifocal wide PVCs, couplets, one non-sustained VT run of 4 beats",
+      "ectopyPer10s: 6",
+      "preEventNote: Post-op, on thiazide; PVC burden increasing over last hour"
+    ],
+    "primaryEtiology": "Electrolyte imbalance (Hypokalemia and Hypomagnesemia)",
+    "mechanism": "Increased ventricular ectopy and potential for malignant arrhythmias due to electrolyte disturbances affecting cardiac myocyte repolarization and automaticity.",
+    "contributingFactors": [
+      "Post-operative stress",
+      "Thiazide diuretic use (Hydrochlorothiazide 25 mg)"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Ischemia",
+        "why": "Troponin T 0.02 ng/mL is only mildly elevated and flagged as 'mild post-op', not indicative of acute ischemia. No significant ST deviation."
+      },
+      {
+        "alternative": "Drug toxicity (e.g., Digoxin)",
+        "why": "Patient is not on digoxin. No other medications listed are known to cause this type of arrhythmia."
+      },
+      {
+        "alternative": "Structural heart disease",
+        "why": "While patient has mild diastolic dysfunction, the acute increase in ectopy and NSVT in the post-op setting with electrolyte abnormalities points away from this as the primary driver."
+      }
+    ],
+    "recommendedActions": [
+      "Administer IV Magnesium Sulfate 2g over 5 minutes",
+      "Administer IV Potassium Chloride 20 mEq over 1 hour (monitor closely)",
+      "Re-evaluate Hydrochlorothiazide use post-discharge",
+      "Monitor ECG continuously",
+      "Monitor serial electrolytes (K, Mg, Ca)",
+      "Consider telemetry if ectopy persists or worsens",
+      "Hold Hydrochlorothiazide until electrolytes are corrected"
+    ],
+    "uncertainty": [
+      "Exact cause of the NSVT run (electrolyte vs. other factors) is uncertain, but electrolyte imbalance is the most likely trigger.",
+      "Long-term implications of the ectopy are unknown."
+    ]
+  },
+  "rawModelResponse": "```json\n{\n  \"episodeSummary\": \"Thomas B. Nguyen, 55M, Post-op day 1, Sinus rhythm with frequent PVCs/NSVT, warning severity, hemodynamically stable\",\n  \"rhythm\": \"Sinus rhythm with frequent Premature Ventricular Contractions (PVCs), couplets, and a brief run of Non-Sustained Ventricular Tachycardia (NSVT)\",\n  \"keyECGEvidence\": [\n    \"ventricularRateBpm: 78\",\n    \"atrialRateBpm: 78\",\n    \"regularity: occasionally irregular\",\n    \"qrsDurationMs: 94\",\n    \"qtcMs: 445\",\n    \"prMs: 160\",\n    \"pWavePresent: true\",\n    \"stDeviationMm: None significant\",\n    \"morphology: Sinus beats with multifocal wide PVCs, couplets, one non-sustained VT run of 4 beats\",\n    \"ectopyPer10s: 6\",\n    \"preEventNote: Post-op, on thiazide; PVC burden increasing over last hour\"\n  ],\n  \"primaryEtiology\": \"Electrolyte imbalance (Hypokalemia and Hypomagnesemia)\",\n  \"mechanism\": \"Increased ventricular ectopy and potential for malignant arrhythmias due to electrolyte disturbances affecting cardiac myocyte repolarization and automaticity.\",\n  \"contributingFactors\": [\n    \"Post-operative stress\",\n    \"Thiazide diuretic use (Hydrochlorothiazide 25 mg)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Ischemia\",\n      \"why\": \"Troponin T 0.02 ng/mL is only mildly elevated and flagged as 'mild post-op', not indicative of acute ischemia. No significant ST deviation.\"\n    },\n    {\n      \"alternative\": \"Drug toxicity (e.g., Digoxin)\",\n      \"why\": \"Patient is not on digoxin. No other medications listed are known to cause this type of arrhythmia.\"\n    },\n    {\n      \"alternative\": \"Structural heart disease\",\n      \"why\": \"While patient has mild diastolic dysfunction, the acute increase in ectopy and NSVT in the post-op setting with electrolyte abnormalities points away from this as the primary driver.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Administer IV Magnesium Sulfate 2g over 5 minutes\",\n    \"Administer IV Potassium Chloride 20 mEq over 1 hour (monitor closely)\",\n    \"Re-evaluate Hydrochlorothiazide use post-discharge\",\n    \"Monitor ECG continuously\",\n    \"Monitor serial electrolytes (K, Mg, Ca)\",\n    \"Consider telemetry if ectopy persists or worsens\",\n    \"Hold Hydrochlorothiazide until electrolytes are corrected\"\n  ],\n  \"uncertainty\": [\n    \"Exact cause of the NSVT run (electrolyte vs. other factors) is uncertain, but electrolyte imbalance is the most likely trigger.\",\n    \"Long-term implications of the ectopy are unknown.\"\n  ]\n}\n```",
+  "bestEffortParsedResponse": null,
+  "terminalStatus": "OK",
+  "hitMaxNewTokens": false,
+  "maxNewTokens": 2500,
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"Thomas B. Nguyen, 55M, Post-op day 1, Sinus rhythm with frequent PVCs/NSVT, warning severity, hemodynamically stable\",\n  \"rhythm\": \"Sinus rhythm with frequent Premature Ventricular Contractions (PVCs), couplets, and a brief run of Non-Sustained Ventricular Tachycardia (NSVT)\",\n  \"keyECGEvidence\": [\n    \"ventricularRateBpm: 78\",\n    \"atrialRateBpm: 78\",\n    \"regularity: occasionally irregular\",\n    \"qrsDurationMs: 94\",\n    \"qtcMs: 445\",\n    \"prMs: 160\",\n    \"pWavePresent: true\",\n    \"stDeviationMm: None significant\",\n    \"morphology: Sinus beats with multifocal wide PVCs, couplets, one non-sustained VT run of 4 beats\",\n    \"ectopyPer10s: 6\",\n    \"preEventNote: Post-op, on thiazide; PVC burden increasing over last hour\"\n  ],\n  \"primaryEtiology\": \"Electrolyte imbalance (Hypokalemia and Hypomagnesemia)\",\n  \"mechanism\": \"Increased ventricular ectopy and potential for malignant arrhythmias due to electrolyte disturbances affecting cardiac myocyte repolarization and automaticity.\",\n  \"contributingFactors\": [\n    \"Post-operative stress\",\n    \"Thiazide diuretic use (Hydrochlorothiazide 25 mg)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Ischemia\",\n      \"why\": \"Troponin T 0.02 ng/mL is only mildly elevated and flagged as 'mild post-op', not indicative of acute ischemia. No significant ST deviation.\"\n    },\n    {\n      \"alternative\": \"Drug toxicity (e.g., Digoxin)\",\n      \"why\": \"Patient is not on digoxin. No other medications listed are known to cause this type of arrhythmia.\"\n    },\n    {\n      \"alternative\": \"Structural heart disease\",\n      \"why\": \"While patient has mild diastolic dysfunction, the acute increase in ectopy and NSVT in the post-op setting with electrolyte abnormalities points away from this as the primary driver.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Administer IV Magnesium Sulfate 2g over 5 minutes\",\n    \"Administer IV Potassium Chloride 20 mEq over 1 hour (monitor closely)\",\n    \"Re-evaluate Hydrochlorothiazide use post-discharge\",\n    \"Monitor ECG continuously\",\n    \"Monitor serial electrolytes (K, Mg, Ca)\",\n    \"Consider telemetry if ectopy persists or worsens\",\n    \"Hold Hydrochlorothiazide until electrolytes are corrected\"\n  ],\n  \"uncertainty\": [\n    \"Exact cause of the NSVT run (electrolyte vs. other factors) is uncertain, but electrolyte imbalance is the most likely trigger.\",\n    \"Long-term implications of the ectopy are unknown.\"\n  ]\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1819,
+      "outputTokens": 682,
+      "elapsedSeconds": 75.1799421099995,
+      "peakGpuMemoryGiB": 25.12032651901245,
+      "hitMaxNewTokens": false
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 75.1799421099995,
+  "inputTokens": 1819,
+  "outputTokens": 682,
+  "peakGpuMemoryGiB": 25.12032651901245,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

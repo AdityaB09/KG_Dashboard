@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.0",
+  "provider": "lightning-ai-studio",
+  "model": "google/gemma-4-26B-A4B-it",
+  "runNumber": 1,
+  "scenarioId": "AMIO-DDI-014",
+  "promptFingerprint": "77a98a8a32d6250e7713da81837d315c95b8b4b2c88b5b6287285ce5dc072992",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "George F. Antonelli, Sinus Bradycardia, Warning, Hemodynamically stable (BP 108/64)",
+    "rhythm": "Sinus Bradycardia",
+    "keyECGEvidence": [
+      "ventricularRate_bpm 48",
+      "Scooped/sagging ST segments (digoxin effect)",
+      "prolonged QTc 510 ms",
+      "U waves present",
+      "Sinus P waves with prolonged PR"
+    ],
+    "primaryEtiology": "Digoxin Toxicity",
+    "mechanism": "Pharmacokinetic interaction where amiodarone inhibited the renal/p-glycoprotein clearance of digoxin, leading to supratherapeutic serum levels (digoxin 2.4 ng/mL TOXIC) and symptomatic bradycardia.",
+    "contributingFactors": [
+      "Amiodarone-induced inhibition of digoxin clearance",
+      "High INR 5.8 (suggesting amiodarone-warfarin interaction)"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Amiodarone-induced bradycardia",
+        "why": "While amiodarone contributes to bradycardia, the presence of 'Scooped/sagging ST segments', 'U waves', and a 'digoxin 2.4 ng/mL TOXIC' level specifically identifies digoxin toxicity as the driver of the current clinical state and nausea."
+      },
+      {
+        "alternative": "Electrolyte imbalance (Hypokalemia)",
+        "why": "K 4.0 mmol/L is within normal limits; U waves are present but potassium is not low."
+      }
+    ],
+    "recommendedActions": [
+      "STOP Digoxin immediately",
+      "Order Digoxin-specific antibody fragments (DigiFab/Digibind) if clinical status worsens or bradycardia persists",
+      "Monitor serum electrolytes (especially K+) and renal function",
+      "Hold Warfarin and monitor INR (due to amiodarone interaction)",
+      "Hold Simvastatin (due to amiodarone interaction/risk of myopathy given CK 1200 U/L HIGH)"
+    ],
+    "uncertainty": []
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "{\n \"episodeSummary\": \"George F. Antonelli, Sinus Bradycardia, Warning, Hemodynamically stable (BP 108/64)\",\n \"rhythm\": \"Sinus Bradycardia\",\n \"keyECGEvidence\": [\n  \"ventricularRate_bpm 48\",\n  \"Scooped/sagging ST segments (digoxin effect)\",\n  \"prolonged QTc 510 ms\",\n  \"U waves present\",\n  \"Sinus P waves with prolonged PR\"\n ],\n \"primaryEtiology\": \"Digoxin Toxicity\",\n \"mechanism\": \"Pharmacokinetic interaction where amiodarone inhibited the renal/p-glycoprotein clearance of digoxin, leading to supratherapeutic serum levels (digoxin 2.4 ng/mL TOXIC) and symptomatic bradycardia.\",\n \"contributingFactors\": [\n  \"Amiodarone-induced inhibition of digoxin clearance\",\n  \"High INR 5.8 (suggesting amiodarone-warfarin interaction)\"\n ],\n \"rejectedAlternatives\": [\n   {\n    \"alternative\": \"Amiodarone-induced bradycardia\",\n    \"why\": \"While amiodarone contributes to bradycardia, the presence of 'Scooped/sagging ST segments', 'U waves', and a 'digoxin 2.4 ng/mL TOXIC' level specifically identifies digoxin toxicity as the driver of the current clinical state and nausea.\"\n   },\n   {\n    \"alternative\": \"Electrolyte imbalance (Hypokalemia)\",\n    \"why\": \"K 4.0 mmol/L is within normal limits; U waves are present but potassium is not low.\"\n   }\n ],\n \"recommendedActions\": [\n  \"STOP Digoxin immediately\",\n  \"Order Digoxin-specific antibody fragments (DigiFab/Digibind) if clinical status worsens or bradycardia persists\",\n  \"Monitor serum electrolytes (especially K+) and renal function\",\n  \"Hold Warfarin and monitor INR (due to amiodarone interaction)\",\n  \"Hold Simvastatin (due to amiodarone interaction/risk of myopathy given CK 1200 U/L HIGH)\"\n ],\n \"uncertainty\": []\n}",
+      "contractErrors": [],
+      "inputTokens": 2115,
+      "outputTokens": 480,
+      "elapsedSeconds": 28.746535395999672,
+      "peakGpuMemoryGiB": 46.11643171310425
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 28.746535395999672,
+  "inputTokens": 2115,
+  "outputTokens": 480,
+  "peakGpuMemoryGiB": 46.11643171310425,
+  "gpuName": "NVIDIA H100 80GB HBM3",
+  "quantization": "4bit"
+}

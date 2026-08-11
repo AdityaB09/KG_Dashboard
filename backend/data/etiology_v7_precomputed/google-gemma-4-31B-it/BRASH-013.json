@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.0",
+  "provider": "lightning-ai-studio",
+  "model": "google/gemma-4-31B-it",
+  "runNumber": 1,
+  "scenarioId": "BRASH-013",
+  "promptFingerprint": "f9a4a44237752b01310c2b760b06618b7ae0a1aa9ea4c384dcfdc6ce0d592ffe",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "72yo female, junctional bradycardia, critical severity, hemodynamically unstable (shock).",
+    "rhythm": "Junctional escape rhythm / Severe bradycardia",
+    "keyECGEvidence": [
+      "ventricularRate_bpm: 32",
+      "pWavePresent: false",
+      "regularity: regular",
+      "qrsDuration_ms: 108",
+      "preEventNote: atropine 1 mg x2 administered with no heart rate response"
+    ],
+    "primaryEtiology": "Acute Kidney Injury (AKI) on CKD leading to severe hyperkalemia",
+    "mechanism": "Elevated extracellular potassium (K 6.4 mmol/L HIGH) depolarizes the resting membrane potential of myocardial cells, reducing the gradient for sodium channel activation and impairing conduction, specifically suppressing the SA node and causing severe bradycardia unresponsive to vagolytic therapy.",
+    "contributingFactors": [
+      "Acute Kidney Injury (Creatinine 3.2 mg/dL CRITICAL HIGH, BUN 68 mg/dL HIGH)",
+      "Lisinopril 20 mg daily (ACE inhibitor contributing to hyperkalemia in renal failure)",
+      "Atenolol 50 mg daily (Beta-blocker potentially blunting heart rate response)",
+      "Decreased oral intake and decreased urine output x2 days"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Purely Beta-blocker toxicity",
+        "why": "While Atenolol is present, the critical lab values (K 6.4, Cr 3.2) provide a more direct and urgent cause for the conduction failure and shock."
+      },
+      {
+        "alternative": "Classic Hyperkalemic Sine Wave",
+        "why": "morphology notes 'no classic sine wave pattern' and 'no significant QRS widening beyond 108 ms', though the potassium level is high enough to cause the bradycardia."
+      }
+    ],
+    "recommendedActions": [
+      "Calcium gluconate or calcium chloride IV immediately to stabilize myocardial membrane",
+      "Insulin (10 units IV) with Dextrose (D50) to shift potassium intracellularly",
+      "Sodium bicarbonate IV (Bicarbonate 18 mmol/L LOW)",
+      "Urgent nephrology consultation for emergent hemodialysis given CRITICAL HIGH creatinine and refractory shock",
+      "STOP Lisinopril and Atenolol immediately",
+      "Prepare for transcutaneous or transvenous pacing if calcium/medical therapy fails to restore MAP"
+    ],
+    "uncertainty": []
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n \"episodeSummary\": \"72yo female, junctional bradycardia, critical severity, hemodynamically unstable (shock).\",\n \"rhythm\": \"Junctional escape rhythm / Severe bradycardia\",\n \"keyECGEvidence\": [\n  \"ventricularRate_bpm: 32\",\n  \"pWavePresent: false\",\n  \"regularity: regular\",\n  \"qrsDuration_ms: 108\",\n  \"preEventNote: atropine 1 mg x2 administered with no heart rate response\"\n ],\n \"primaryEtiology\": \"Acute Kidney Injury (AKI) on CKD leading to severe hyperkalemia\",\n \"mechanism\": \"Elevated extracellular potassium (K 6.4 mmol/L HIGH) depolarizes the resting membrane potential of myocardial cells, reducing the gradient for sodium channel activation and impairing conduction, specifically suppressing the SA node and causing severe bradycardia unresponsive to vagolytic therapy.\",\n \"contributingFactors\": [\n  \"Acute Kidney Injury (Creatinine 3.2 mg/dL CRITICAL HIGH, BUN 68 mg/dL HIGH)\",\n  \"Lisinopril 20 mg daily (ACE inhibitor contributing to hyperkalemia in renal failure)\",\n  \"Atenolol 50 mg daily (Beta-blocker potentially blunting heart rate response)\",\n  \"Decreased oral intake and decreased urine output x2 days\"\n ],\n \"rejectedAlternatives\": [\n  {\"alternative\": \"Purely Beta-blocker toxicity\", \"why\": \"While Atenolol is present, the critical lab values (K 6.4, Cr 3.2) provide a more direct and urgent cause for the conduction failure and shock.\"},\n  {\"alternative\": \"Classic Hyperkalemic Sine Wave\", \"why\": \"morphology notes 'no classic sine wave pattern' and 'no significant QRS widening beyond 108 ms', though the potassium level is high enough to cause the bradycardia.\"}\n ],\n \"recommendedActions\": [\n  \"Calcium gluconate or calcium chloride IV immediately to stabilize myocardial membrane\",\n  \"Insulin (10 units IV) with Dextrose (D50) to shift potassium intracellularly\",\n  \"Sodium bicarbonate IV (Bicarbonate 18 mmol/L LOW)\",\n  \"Urgent nephrology consultation for emergent hemodialysis given CRITICAL HIGH creatinine and refractory shock\",\n  \"STOP Lisinopril and Atenolol immediately\",\n  \"Prepare for transcutaneous or transvenous pacing if calcium/medical therapy fails to restore MAP\"\n ],\n \"uncertainty\": []\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1969,
+      "outputTokens": 559,
+      "elapsedSeconds": 40.12805408800068,
+      "peakGpuMemoryGiB": 19.20769453048706
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 40.12805408800068,
+  "inputTokens": 1969,
+  "outputTokens": 559,
+  "peakGpuMemoryGiB": 19.20769453048706,
+  "gpuName": "NVIDIA H100 80GB HBM3",
+  "quantization": "4bit"
+}

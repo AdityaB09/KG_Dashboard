@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.1",
+  "provider": "lightning-ai-studio",
+  "model": "google/medgemma-27b-it",
+  "runNumber": 1,
+  "scenarioId": "WPW-AFIB-010",
+  "promptFingerprint": "94585a4fb77ccf37f1d4094a6ea5af86f6bf99014d9414cb357b3b299982a4bf",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "Marcus J. Okafor, 28M, presenting with palpitations and near-syncope, is in critical condition with a rapid, irregularly irregular rhythm and hemodynamic compromise (BP 82/48, MAP 59).",
+    "rhythm": "Atrial Fibrillation with Pre-excitation (Wolff-Parkinson-White syndrome)",
+    "keyECGEvidence": [
+      "Ventricular rate 210 bpm",
+      "Irregularly irregular rhythm",
+      "Variable QRS duration (120-200 ms)",
+      "Morphology: Beat-to-beat QRS width and morphology variation; delta waves visible in wider beats; fibrillatory baseline",
+      "P-wave absent"
+    ],
+    "primaryEtiology": "Pre-existing Wolff-Parkinson-White (WPW) syndrome",
+    "mechanism": "Accessory pathway conduction during atrial fibrillation leads to rapid ventricular rates and potential hemodynamic instability.",
+    "contributingFactors": [
+      "Exercise (basketball game) likely triggered the arrhythmia",
+      "Young age (28 years old)"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Supraventricular Tachycardia (SVT) - AVNRT or AVRT without pre-excitation",
+        "why": "The ECG morphology description explicitly mentions 'delta waves visible in wider beats' and 'beat-to-beat QRS width and morphology variation', which are characteristic of pre-excitation (WPW) and not typical AVNRT or AVRT without pre-excitation. The rhythm is also described as irregularly irregular, which is typical for AFib, not usually for AVNRT/AVRT."
+      },
+      {
+        "alternative": "Ventricular Tachycardia (VT)",
+        "why": "The QRS duration is variable but includes narrower complexes with delta waves, inconsistent with the morphology of VT. VT typically has a regular rhythm (though it can be slightly irregular) and a consistent wide QRS morphology."
+      },
+      {
+        "alternative": "Sinus Tachycardia",
+        "why": "The rhythm is irregularly irregular, and the rate is excessively high (210 bpm) for typical sinus tachycardia, especially given the clinical context. The ECG morphology is inconsistent with sinus rhythm."
+      },
+      {
+        "alternative": "Atrial Fibrillation without pre-excitation",
+        "why": "The presence of delta waves and variable QRS morphology strongly indicates pre-excitation via an accessory pathway."
+      }
+    ],
+    "recommendedActions": [
+      "Immediate synchronized cardioversion (due to hemodynamic compromise: BP 82/48, MAP 59, near-syncope)",
+      "Establish IV access",
+      "Administer Adenosine (if cardioversion is delayed or unsuccessful, and patient remains stable enough for trial)",
+      "Consider Procainamide or Ibutilide (if cardioversion/adenosine fails and patient remains stable)",
+      "Continuous ECG monitoring",
+      "Avoid AV nodal blocking agents (e.g., calcium channel blockers, beta-blockers, digoxin, amiodarone) as they can increase conduction down the accessory pathway and worsen the arrhythmia or lead to ventricular fibrillation."
+    ],
+    "uncertainty": []
+  },
+  "rawModelResponse": "```json\n{\n  \"episodeSummary\": \"Marcus J. Okafor, 28M, presenting with palpitations and near-syncope, is in critical condition with a rapid, irregularly irregular rhythm and hemodynamic compromise (BP 82/48, MAP 59).\",\n  \"rhythm\": \"Atrial Fibrillation with Pre-excitation (Wolff-Parkinson-White syndrome)\",\n  \"keyECGEvidence\": [\n    \"Ventricular rate 210 bpm\",\n    \"Irregularly irregular rhythm\",\n    \"Variable QRS duration (120-200 ms)\",\n    \"Morphology: Beat-to-beat QRS width and morphology variation; delta waves visible in wider beats; fibrillatory baseline\",\n    \"P-wave absent\"\n  ],\n  \"primaryEtiology\": \"Pre-existing Wolff-Parkinson-White (WPW) syndrome\",\n  \"mechanism\": \"Accessory pathway conduction during atrial fibrillation leads to rapid ventricular rates and potential hemodynamic instability.\",\n  \"contributingFactors\": [\n    \"Exercise (basketball game) likely triggered the arrhythmia\",\n    \"Young age (28 years old)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Supraventricular Tachycardia (SVT) - AVNRT or AVRT without pre-excitation\",\n      \"why\": \"The ECG morphology description explicitly mentions 'delta waves visible in wider beats' and 'beat-to-beat QRS width and morphology variation', which are characteristic of pre-excitation (WPW) and not typical AVNRT or AVRT without pre-excitation. The rhythm is also described as irregularly irregular, which is typical for AFib, not usually for AVNRT/AVRT.\"\n    },\n    {\n      \"alternative\": \"Ventricular Tachycardia (VT)\",\n      \"why\": \"The QRS duration is variable but includes narrower complexes with delta waves, inconsistent with the morphology of VT. VT typically has a regular rhythm (though it can be slightly irregular) and a consistent wide QRS morphology.\"\n    },\n    {\n      \"alternative\": \"Sinus Tachycardia\",\n      \"why\": \"The rhythm is irregularly irregular, and the rate is excessively high (210 bpm) for typical sinus tachycardia, especially given the clinical context. The ECG morphology is inconsistent with sinus rhythm.\"\n    },\n    {\n      \"alternative\": \"Atrial Fibrillation without pre-excitation\",\n      \"why\": \"The presence of delta waves and variable QRS morphology strongly indicates pre-excitation via an accessory pathway.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Immediate synchronized cardioversion (due to hemodynamic compromise: BP 82/48, MAP 59, near-syncope)\",\n    \"Establish IV access\",\n    \"Administer Adenosine (if cardioversion is delayed or unsuccessful, and patient remains stable enough for trial)\",\n    \"Consider Procainamide or Ibutilide (if cardioversion/adenosine fails and patient remains stable)\",\n    \"Continuous ECG monitoring\",\n    \"Avoid AV nodal blocking agents (e.g., calcium channel blockers, beta-blockers, digoxin, amiodarone) as they can increase conduction down the accessory pathway and worsen the arrhythmia or lead to ventricular fibrillation.\"\n  ],\n  \"uncertainty\": []\n}\n```",
+  "bestEffortParsedResponse": null,
+  "terminalStatus": "OK",
+  "hitMaxNewTokens": false,
+  "maxNewTokens": 2500,
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"Marcus J. Okafor, 28M, presenting with palpitations and near-syncope, is in critical condition with a rapid, irregularly irregular rhythm and hemodynamic compromise (BP 82/48, MAP 59).\",\n  \"rhythm\": \"Atrial Fibrillation with Pre-excitation (Wolff-Parkinson-White syndrome)\",\n  \"keyECGEvidence\": [\n    \"Ventricular rate 210 bpm\",\n    \"Irregularly irregular rhythm\",\n    \"Variable QRS duration (120-200 ms)\",\n    \"Morphology: Beat-to-beat QRS width and morphology variation; delta waves visible in wider beats; fibrillatory baseline\",\n    \"P-wave absent\"\n  ],\n  \"primaryEtiology\": \"Pre-existing Wolff-Parkinson-White (WPW) syndrome\",\n  \"mechanism\": \"Accessory pathway conduction during atrial fibrillation leads to rapid ventricular rates and potential hemodynamic instability.\",\n  \"contributingFactors\": [\n    \"Exercise (basketball game) likely triggered the arrhythmia\",\n    \"Young age (28 years old)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Supraventricular Tachycardia (SVT) - AVNRT or AVRT without pre-excitation\",\n      \"why\": \"The ECG morphology description explicitly mentions 'delta waves visible in wider beats' and 'beat-to-beat QRS width and morphology variation', which are characteristic of pre-excitation (WPW) and not typical AVNRT or AVRT without pre-excitation. The rhythm is also described as irregularly irregular, which is typical for AFib, not usually for AVNRT/AVRT.\"\n    },\n    {\n      \"alternative\": \"Ventricular Tachycardia (VT)\",\n      \"why\": \"The QRS duration is variable but includes narrower complexes with delta waves, inconsistent with the morphology of VT. VT typically has a regular rhythm (though it can be slightly irregular) and a consistent wide QRS morphology.\"\n    },\n    {\n      \"alternative\": \"Sinus Tachycardia\",\n      \"why\": \"The rhythm is irregularly irregular, and the rate is excessively high (210 bpm) for typical sinus tachycardia, especially given the clinical context. The ECG morphology is inconsistent with sinus rhythm.\"\n    },\n    {\n      \"alternative\": \"Atrial Fibrillation without pre-excitation\",\n      \"why\": \"The presence of delta waves and variable QRS morphology strongly indicates pre-excitation via an accessory pathway.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Immediate synchronized cardioversion (due to hemodynamic compromise: BP 82/48, MAP 59, near-syncope)\",\n    \"Establish IV access\",\n    \"Administer Adenosine (if cardioversion is delayed or unsuccessful, and patient remains stable enough for trial)\",\n    \"Consider Procainamide or Ibutilide (if cardioversion/adenosine fails and patient remains stable)\",\n    \"Continuous ECG monitoring\",\n    \"Avoid AV nodal blocking agents (e.g., calcium channel blockers, beta-blockers, digoxin, amiodarone) as they can increase conduction down the accessory pathway and worsen the arrhythmia or lead to ventricular fibrillation.\"\n  ],\n  \"uncertainty\": []\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1785,
+      "outputTokens": 729,
+      "elapsedSeconds": 79.48976573900018,
+      "peakGpuMemoryGiB": 25.319624423980713,
+      "hitMaxNewTokens": false
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 79.48976573900018,
+  "inputTokens": 1785,
+  "outputTokens": 729,
+  "peakGpuMemoryGiB": 25.319624423980713,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

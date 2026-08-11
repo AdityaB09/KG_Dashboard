@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.1",
+  "provider": "lightning-ai-studio",
+  "model": "google/medgemma-27b-it",
+  "runNumber": 1,
+  "scenarioId": "SVT-PSVT-007",
+  "promptFingerprint": "b623a8817caf00b26ec8d4f3895555ff32d72ce473184f0ed94c12f07d8cee56",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "34F, SVT, warning, hemodynamically stable",
+    "rhythm": "Supraventricular Tachycardia (SVT), likely Paroxysmal Supraventricular Tachycardia (PSVT)",
+    "keyECGEvidence": [
+      "ventricularRateBpm 190",
+      "atrialRateBpm 190",
+      "regularity regular",
+      "qrsDurationMs 88",
+      "pWavePresent false",
+      "morphology Narrow QRS, no clear P waves, abrupt onset"
+    ],
+    "primaryEtiology": "Caffeine ingestion",
+    "mechanism": "Increased automaticity or triggered activity in the AV node or atrium leading to a re-entrant circuit, likely AVNRT or AVRT, precipitated by a stimulant.",
+    "contributingFactors": [
+      "History of prior similar episodes self-terminating",
+      "Recent exertion/caffeine intake (clinicalContext.recentEvents)"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Atrial Fibrillation/Flutter",
+        "why": "Rhythm is regular (regularity: regular), not irregularly irregular as expected in AFib/Flutter. Atrial rate matches ventricular rate (190 bpm), suggesting a 1:1 conduction or a re-entrant circuit rather than chaotic atrial activity."
+      },
+      {
+        "alternative": "Ventricular Tachycardia (VT)",
+        "why": "QRS duration is narrow (qrsDurationMs 88), not wide (>120ms) as expected in VT. Morphology is described as narrow QRS."
+      },
+      {
+        "alternative": "Sinus Tachycardia",
+        "why": "P waves are absent (pWavePresent: false). Sinus tachycardia would have visible P waves preceding each QRS complex, although they might be buried at high rates."
+      },
+      {
+        "alternative": "Electrolyte abnormality (e.g., hypokalemia, hypomagnesemia)",
+        "why": "Potassium is normal (K 4.0 mmol/L), Magnesium is normal (Mg 2.0 mg/dL). While electrolyte abnormalities can cause arrhythmias, the labs provided do not support this as the primary cause."
+      },
+      {
+        "alternative": "Thyrotoxicosis",
+        "why": "TSH is normal (TSH 2.2 mIU/L). While hyperthyroidism can cause SVT, the TSH level is within the reference range."
+      }
+    ],
+    "recommendedActions": [
+      "Vagal maneuvers (e.g., Valsalva, carotid sinus massage - if no contraindications)",
+      "Administer IV adenosine 6mg rapid push (if vagal maneuvers fail and patient remains stable)",
+      "Monitor vital signs and ECG continuously",
+      "Consider IV metoprolol or diltiazem if adenosine is ineffective or contraindicated",
+      "Hold caffeine"
+    ],
+    "uncertainty": []
+  },
+  "rawModelResponse": "```json\n{\n  \"episodeSummary\": \"34F, SVT, warning, hemodynamically stable\",\n  \"rhythm\": \"Supraventricular Tachycardia (SVT), likely Paroxysmal Supraventricular Tachycardia (PSVT)\",\n  \"keyECGEvidence\": [\n    \"ventricularRateBpm 190\",\n    \"atrialRateBpm 190\",\n    \"regularity regular\",\n    \"qrsDurationMs 88\",\n    \"pWavePresent false\",\n    \"morphology Narrow QRS, no clear P waves, abrupt onset\"\n  ],\n  \"primaryEtiology\": \"Caffeine ingestion\",\n  \"mechanism\": \"Increased automaticity or triggered activity in the AV node or atrium leading to a re-entrant circuit, likely AVNRT or AVRT, precipitated by a stimulant.\",\n  \"contributingFactors\": [\n    \"History of prior similar episodes self-terminating\",\n    \"Recent exertion/caffeine intake (clinicalContext.recentEvents)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Atrial Fibrillation/Flutter\",\n      \"why\": \"Rhythm is regular (regularity: regular), not irregularly irregular as expected in AFib/Flutter. Atrial rate matches ventricular rate (190 bpm), suggesting a 1:1 conduction or a re-entrant circuit rather than chaotic atrial activity.\"\n    },\n    {\n      \"alternative\": \"Ventricular Tachycardia (VT)\",\n      \"why\": \"QRS duration is narrow (qrsDurationMs 88), not wide (>120ms) as expected in VT. Morphology is described as narrow QRS.\"\n    },\n    {\n      \"alternative\": \"Sinus Tachycardia\",\n      \"why\": \"P waves are absent (pWavePresent: false). Sinus tachycardia would have visible P waves preceding each QRS complex, although they might be buried at high rates.\"\n    },\n    {\n      \"alternative\": \"Electrolyte abnormality (e.g., hypokalemia, hypomagnesemia)\",\n      \"why\": \"Potassium is normal (K 4.0 mmol/L), Magnesium is normal (Mg 2.0 mg/dL). While electrolyte abnormalities can cause arrhythmias, the labs provided do not support this as the primary cause.\"\n    },\n    {\n      \"alternative\": \"Thyrotoxicosis\",\n      \"why\": \"TSH is normal (TSH 2.2 mIU/L). While hyperthyroidism can cause SVT, the TSH level is within the reference range.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Vagal maneuvers (e.g., Valsalva, carotid sinus massage - if no contraindications)\",\n    \"Administer IV adenosine 6mg rapid push (if vagal maneuvers fail and patient remains stable)\",\n    \"Monitor vital signs and ECG continuously\",\n    \"Consider IV metoprolol or diltiazem if adenosine is ineffective or contraindicated\",\n    \"Hold caffeine\"\n  ],\n  \"uncertainty\": []\n}\n```",
+  "bestEffortParsedResponse": null,
+  "terminalStatus": "OK",
+  "hitMaxNewTokens": false,
+  "maxNewTokens": 2500,
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"34F, SVT, warning, hemodynamically stable\",\n  \"rhythm\": \"Supraventricular Tachycardia (SVT), likely Paroxysmal Supraventricular Tachycardia (PSVT)\",\n  \"keyECGEvidence\": [\n    \"ventricularRateBpm 190\",\n    \"atrialRateBpm 190\",\n    \"regularity regular\",\n    \"qrsDurationMs 88\",\n    \"pWavePresent false\",\n    \"morphology Narrow QRS, no clear P waves, abrupt onset\"\n  ],\n  \"primaryEtiology\": \"Caffeine ingestion\",\n  \"mechanism\": \"Increased automaticity or triggered activity in the AV node or atrium leading to a re-entrant circuit, likely AVNRT or AVRT, precipitated by a stimulant.\",\n  \"contributingFactors\": [\n    \"History of prior similar episodes self-terminating\",\n    \"Recent exertion/caffeine intake (clinicalContext.recentEvents)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Atrial Fibrillation/Flutter\",\n      \"why\": \"Rhythm is regular (regularity: regular), not irregularly irregular as expected in AFib/Flutter. Atrial rate matches ventricular rate (190 bpm), suggesting a 1:1 conduction or a re-entrant circuit rather than chaotic atrial activity.\"\n    },\n    {\n      \"alternative\": \"Ventricular Tachycardia (VT)\",\n      \"why\": \"QRS duration is narrow (qrsDurationMs 88), not wide (>120ms) as expected in VT. Morphology is described as narrow QRS.\"\n    },\n    {\n      \"alternative\": \"Sinus Tachycardia\",\n      \"why\": \"P waves are absent (pWavePresent: false). Sinus tachycardia would have visible P waves preceding each QRS complex, although they might be buried at high rates.\"\n    },\n    {\n      \"alternative\": \"Electrolyte abnormality (e.g., hypokalemia, hypomagnesemia)\",\n      \"why\": \"Potassium is normal (K 4.0 mmol/L), Magnesium is normal (Mg 2.0 mg/dL). While electrolyte abnormalities can cause arrhythmias, the labs provided do not support this as the primary cause.\"\n    },\n    {\n      \"alternative\": \"Thyrotoxicosis\",\n      \"why\": \"TSH is normal (TSH 2.2 mIU/L). While hyperthyroidism can cause SVT, the TSH level is within the reference range.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Vagal maneuvers (e.g., Valsalva, carotid sinus massage - if no contraindications)\",\n    \"Administer IV adenosine 6mg rapid push (if vagal maneuvers fail and patient remains stable)\",\n    \"Monitor vital signs and ECG continuously\",\n    \"Consider IV metoprolol or diltiazem if adenosine is ineffective or contraindicated\",\n    \"Hold caffeine\"\n  ],\n  \"uncertainty\": []\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1757,
+      "outputTokens": 682,
+      "elapsedSeconds": 74.17763763000039,
+      "peakGpuMemoryGiB": 25.305246353149414,
+      "hitMaxNewTokens": false
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 74.17763763000039,
+  "inputTokens": 1757,
+  "outputTokens": 682,
+  "peakGpuMemoryGiB": 25.305246353149414,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

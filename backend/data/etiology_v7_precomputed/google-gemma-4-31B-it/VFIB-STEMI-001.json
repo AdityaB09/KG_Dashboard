@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.0",
+  "provider": "lightning-ai-studio",
+  "model": "google/gemma-4-31B-it",
+  "runNumber": 1,
+  "scenarioId": "VFIB-STEMI-001",
+  "promptFingerprint": "60edce97895ddc8ae604e6bed516163b735ee5808d7bd9f6f2806d3ae2b83f44",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "Robert D. Hale, Ventricular Fibrillation, critical, pulseless/hemodynamically unstable",
+    "rhythm": "Ventricular Fibrillation (VF)",
+    "keyECGEvidence": [
+      "morphology: No organized QRS; coarse fibrillatory waves ~5 Hz",
+      "regularity: chaotic/irregular",
+      "pWavePresent: false",
+      "stDeviationMm: ST elevation 4 mm V2–V4 on rhythm strip 90 s pre-arrest",
+      "preEventNote: Runs of PVCs then R-on-T preceded onset; 12-lead 8 min prior showed anterior ST elevation"
+    ],
+    "primaryEtiology": "Acute Anterior ST-Elevation Myocardial Infarction (STEMI)",
+    "mechanism": "Myocardial ischemia leading to electrical instability and R-on-T phenomenon, triggering ventricular fibrillation",
+    "contributingFactors": [
+      "History of coronary artery disease and prior anterior MI",
+      "Troponin T 1.85 CRITICAL HIGH",
+      "CK-MB 48 ng/mL HIGH",
+      "Lactate 4.8 mmol/L HIGH",
+      "pH 7.21 LOW"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Electrolyte Imbalance",
+        "why": "Potassium 4.1 mmol/L and Magnesium 2.0 mg/dL are within normal reference ranges."
+      },
+      {
+        "alternative": "Digoxin Toxicity",
+        "why": "No evidence of digoxin administration in medications or toxic serum levels provided."
+      },
+      {
+        "alternative": "Pulmonary Embolism",
+        "why": "Presence of anterior ST elevation 4 mm V2–V4 and critical troponin elevation strongly points to primary cardiac ischemia over pulmonary etiology."
+      }
+    ],
+    "recommendedActions": [
+      "Immediate unsynchronized defibrillation (Shock)",
+      "Initiate high-quality CPR and airway management per ACLS guidelines",
+      "Administer Epinephrine 1mg IV/IO every 3-5 minutes",
+      "Administer Amiodarone or Lidocaine for refractory VF",
+      "STOP Nitroglycerin IV infusion (due to hypotension/pulseless state)",
+      "Prepare for emergent Percutaneous Coronary Intervention (PCI) upon ROSC"
+    ],
+    "uncertainty": []
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n \"episodeSummary\": \"Robert D. Hale, Ventricular Fibrillation, critical, pulseless/hemodynamically unstable\",\n \"rhythm\": \"Ventricular Fibrillation (VF)\",\n \"keyECGEvidence\": [\n  \"morphology: No organized QRS; coarse fibrillatory waves ~5 Hz\",\n  \"regularity: chaotic/irregular\",\n  \"pWavePresent: false\",\n  \"stDeviationMm: ST elevation 4 mm V2–V4 on rhythm strip 90 s pre-arrest\",\n  \"preEventNote: Runs of PVCs then R-on-T preceded onset; 12-lead 8 min prior showed anterior ST elevation\"\n ],\n \"primaryEtiology\": \"Acute Anterior ST-Elevation Myocardial Infarction (STEMI)\",\n \"mechanism\": \"Myocardial ischemia leading to electrical instability and R-on-T phenomenon, triggering ventricular fibrillation\",\n \"contributingFactors\": [\n  \"History of coronary artery disease and prior anterior MI\",\n  \"Troponin T 1.85 CRITICAL HIGH\",\n  \"CK-MB 48 ng/mL HIGH\",\n  \"Lactate 4.8 mmol/L HIGH\",\n  \"pH 7.21 LOW\"\n ],\n \"rejectedAlternatives\": [\n  {\"alternative\": \"Electrolyte Imbalance\", \"why\": \"Potassium 4.1 mmol/L and Magnesium 2.0 mg/dL are within normal reference ranges.\"},\n  {\"alternative\": \"Digoxin Toxicity\", \"why\": \"No evidence of digoxin administration in medications or toxic serum levels provided.\"},\n  {\"alternative\": \"Pulmonary Embolism\", \"why\": \"Presence of anterior ST elevation 4 mm V2–V4 and critical troponin elevation strongly points to primary cardiac ischemia over pulmonary etiology.\"}\n ],\n \"recommendedActions\": [\n  \"Immediate unsynchronized defibrillation (Shock)\",\n  \"Initiate high-quality CPR and airway management per ACLS guidelines\",\n  \"Administer Epinephrine 1mg IV/IO every 3-5 minutes\",\n  \"Administer Amiodarone or Lidocaine for refractory VF\",\n  \"STOP Nitroglycerin IV infusion (due to hypotension/pulseless state)\",\n  \"Prepare for emergent Percutaneous Coronary Intervention (PCI) upon ROSC\"\n ],\n \"uncertainty\": []\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 2015,
+      "outputTokens": 522,
+      "elapsedSeconds": 38.62370983300025,
+      "peakGpuMemoryGiB": 19.25129747390747
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 38.62370983300025,
+  "inputTokens": 2015,
+  "outputTokens": 522,
+  "peakGpuMemoryGiB": 19.25129747390747,
+  "gpuName": "NVIDIA H100 80GB HBM3",
+  "quantization": "4bit"
+}

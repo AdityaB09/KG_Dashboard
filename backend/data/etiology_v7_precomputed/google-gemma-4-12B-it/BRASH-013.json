@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.1",
+  "provider": "lightning-ai-studio",
+  "model": "google/gemma-4-12B-it",
+  "runNumber": 1,
+  "scenarioId": "BRASH-013",
+  "promptFingerprint": "f9a4a44237752b01310c2b760b06618b7ae0a1aa9ea4c384dcfdc6ce0d592ffe",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "72-year-old female in shock with severe bradycardia (32 bpm) and hypotension (MAP 53 mmHg) secondary to hyperkalemia and acute kidney injury.",
+    "rhythm": "Junctional escape rhythm",
+    "keyECGEvidence": [
+      "ventricularRate_bpm: 32",
+      "regularity: regular",
+      "pWavePresent: false",
+      "morphology: Narrow-to-mildly-wide QRS junctional escape",
+      "preEventNote: 'atropine 1 mg x2 administered with no heart rate response'"
+    ],
+    "primaryEtiology": "Hyperkalemia secondary to Acute Kidney Injury (AKI) and chronic kidney disease.",
+    "mechanism": "Hyperkalemia causes depolarization of the myocardial cell membrane, decreasing the resting membrane potential and slowing conduction, leading to severe bradycardia and potential progression to asystole. The lack of response to atropine suggests a primary conduction system failure or severe metabolic derangement rather than simple vagal tone.",
+    "contributingFactors": [
+      "Potassium 6.4 mmol/L HIGH",
+      "Creatinine 3.2 mg/dL CRITICAL HIGH (Baseline 1.4)",
+      "Lactate 4.2 mmol/L HIGH (indicates tissue hypoperfusion/shock)",
+      "Bicarbonate 18 mmol/L LOW (metabolic acidosis)",
+      "History of CKD Stage 3 and poor oral intake"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Sinus Bradycardia",
+        "why": "pWavePresent: false and lack of response to atropine."
+      },
+      {
+        "alternative": "High-grade AV Block",
+        "why": "While the rhythm is junctional escape, the primary driver is the electrolyte imbalance (K+ 6.4) and renal failure."
+      }
+    ],
+    "recommendedActions": [
+      "Immediate Calcium Gluconate or Calcium Chloride (IV) to stabilize the myocardial membrane.",
+      "Aggressive potassium-lowering therapy (e.g., Insulin/Glucose, Sodium Bicarbonate, or inhaled beta-agonists) as per institutional protocol.",
+      "Continuous ECG monitoring and frequent electrolyte checks.",
+      "Prepare for emergent dialysis given CRITICAL HIGH Creatinine 3.2 and hyperkalemia.",
+      "Maintain aggressive fluid resuscitation (current status: Normal saline bolus initiated) and monitor for volume overload."
+    ],
+    "uncertainty": [
+      "The exact underlying cause of the acute kidney injury (e.g., pre-renal, intrinsic, or post-renal) is not specified but likely related to poor intake and dehydration."
+    ]
+  },
+  "rawModelResponse": "```json\n{\n  \"episodeSummary\": \"72-year-old female in shock with severe bradycardia (32 bpm) and hypotension (MAP 53 mmHg) secondary to hyperkalemia and acute kidney injury.\",\n  \"rhythm\": \"Junctional escape rhythm\",\n  \"keyECGEvidence\": [\n    \"ventricularRate_bpm: 32\",\n    \"regularity: regular\",\n    \"pWavePresent: false\",\n    \"morphology: Narrow-to-mildly-wide QRS junctional escape\",\n    \"preEventNote: 'atropine 1 mg x2 administered with no heart rate response'\"\n  ],\n  \"primaryEtiology\": \"Hyperkalemia secondary to Acute Kidney Injury (AKI) and chronic kidney disease.\",\n  \"mechanism\": \"Hyperkalemia causes depolarization of the myocardial cell membrane, decreasing the resting membrane potential and slowing conduction, leading to severe bradycardia and potential progression to asystole. The lack of response to atropine suggests a primary conduction system failure or severe metabolic derangement rather than simple vagal tone.\",\n  \"contributingFactors\": [\n    \"Potassium 6.4 mmol/L HIGH\",\n    \"Creatinine 3.2 mg/dL CRITICAL HIGH (Baseline 1.4)\",\n    \"Lactate 4.2 mmol/L HIGH (indicates tissue hypoperfusion/shock)\",\n    \"Bicarbonate 18 mmol/L LOW (metabolic acidosis)\",\n    \"History of CKD Stage 3 and poor oral intake\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Sinus Bradycardia\",\n      \"why\": \"pWavePresent: false and lack of response to atropine.\"\n    },\n    {\n      \"alternative\": \"High-grade AV Block\",\n      \"why\": \"While the rhythm is junctional escape, the primary driver is the electrolyte imbalance (K+ 6.4) and renal failure.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Immediate Calcium Gluconate or Calcium Chloride (IV) to stabilize the myocardial membrane.\",\n    \"Aggressive potassium-lowering therapy (e.g., Insulin/Glucose, Sodium Bicarbonate, or inhaled beta-agonists) as per institutional protocol.\",\n    \"Continuous ECG monitoring and frequent electrolyte checks.\",\n    \"Prepare for emergent dialysis given CRITICAL HIGH Creatinine 3.2 and hyperkalemia.\",\n    \"Maintain aggressive fluid resuscitation (current status: Normal saline bolus initiated) and monitor for volume overload.\"\n  ],\n  \"uncertainty\": [\n    \"The exact underlying cause of the acute kidney injury (e.g., pre-renal, intrinsic, or post-renal) is not specified but likely related to poor intake and dehydration.\"\n  ]\n}\n```",
+  "bestEffortParsedResponse": null,
+  "terminalStatus": "OK",
+  "hitMaxNewTokens": false,
+  "maxNewTokens": 2500,
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"72-year-old female in shock with severe bradycardia (32 bpm) and hypotension (MAP 53 mmHg) secondary to hyperkalemia and acute kidney injury.\",\n  \"rhythm\": \"Junctional escape rhythm\",\n  \"keyECGEvidence\": [\n    \"ventricularRate_bpm: 32\",\n    \"regularity: regular\",\n    \"pWavePresent: false\",\n    \"morphology: Narrow-to-mildly-wide QRS junctional escape\",\n    \"preEventNote: 'atropine 1 mg x2 administered with no heart rate response'\"\n  ],\n  \"primaryEtiology\": \"Hyperkalemia secondary to Acute Kidney Injury (AKI) and chronic kidney disease.\",\n  \"mechanism\": \"Hyperkalemia causes depolarization of the myocardial cell membrane, decreasing the resting membrane potential and slowing conduction, leading to severe bradycardia and potential progression to asystole. The lack of response to atropine suggests a primary conduction system failure or severe metabolic derangement rather than simple vagal tone.\",\n  \"contributingFactors\": [\n    \"Potassium 6.4 mmol/L HIGH\",\n    \"Creatinine 3.2 mg/dL CRITICAL HIGH (Baseline 1.4)\",\n    \"Lactate 4.2 mmol/L HIGH (indicates tissue hypoperfusion/shock)\",\n    \"Bicarbonate 18 mmol/L LOW (metabolic acidosis)\",\n    \"History of CKD Stage 3 and poor oral intake\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Sinus Bradycardia\",\n      \"why\": \"pWavePresent: false and lack of response to atropine.\"\n    },\n    {\n      \"alternative\": \"High-grade AV Block\",\n      \"why\": \"While the rhythm is junctional escape, the primary driver is the electrolyte imbalance (K+ 6.4) and renal failure.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"Immediate Calcium Gluconate or Calcium Chloride (IV) to stabilize the myocardial membrane.\",\n    \"Aggressive potassium-lowering therapy (e.g., Insulin/Glucose, Sodium Bicarbonate, or inhaled beta-agonists) as per institutional protocol.\",\n    \"Continuous ECG monitoring and frequent electrolyte checks.\",\n    \"Prepare for emergent dialysis given CRITICAL HIGH Creatinine 3.2 and hyperkalemia.\",\n    \"Maintain aggressive fluid resuscitation (current status: Normal saline bolus initiated) and monitor for volume overload.\"\n  ],\n  \"uncertainty\": [\n    \"The exact underlying cause of the acute kidney injury (e.g., pre-renal, intrinsic, or post-renal) is not specified but likely related to poor intake and dehydration.\"\n  ]\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1969,
+      "outputTokens": 613,
+      "elapsedSeconds": 56.08216930600065,
+      "peakGpuMemoryGiB": 16.946356296539307,
+      "hitMaxNewTokens": false
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 56.08216930600065,
+  "inputTokens": 1969,
+  "outputTokens": 613,
+  "peakGpuMemoryGiB": 16.946356296539307,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.0",
+  "provider": "lightning-ai-studio",
+  "model": "google/gemma-4-E2B-it",
+  "runNumber": 1,
+  "scenarioId": "FLUTTER-IC-011",
+  "promptFingerprint": "04350b8233a9e79a34067635e871b4737ff20170ae96f40a092d3b0efe4fa579",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "Patient experienced a rapid, regular ventricular tachycardia (or supraventricular tachycardia) with borderline hypotension and mild troponin elevation, likely precipitated by drug-induced proarrhythmia.",
+    "rhythm": "Ventricular Tachycardia (or Supraventricular Tachycardia)",
+    "keyECGEvidence": [
+      "Ventricular rate 200 bpm, Atrial rate 200 bpm, regularity regular",
+      "QRS duration 180 ms (wide QRS), morphology Wide bizarre QRS not conforming to typical RBBB or LBBB pattern; 1:1 AV conduction",
+      "preEventNote: flecainide started 2 weeks ago for paroxysmal AF without AV nodal blocker co-prescription; sudden onset during gardening",
+      "ST deviation N/A (obscured by wide QRS)"
+    ],
+    "primaryEtiology": "Drug-induced proarrhythmia (Flecainide)",
+    "mechanism": "Flecainide, a Class IC antiarrhythmic, likely induced a proarrhythmic event (Ventricular Tachycardia) due to the patient's history of paroxysmal AF, leading to hemodynamic compromise (borderline hypotension) and potential myocardial injury (elevated troponin T).",
+    "contributingFactors": [
+      "Patient history of Paroxysmal Atrial Fibrillation (AF)",
+      "Current medication: flecainide 100 mg BID",
+      "Borderline hypotension (Systolic BP 88 mmHg, MAP 65 mmHg)",
+      "Mildly elevated Troponin T (0.02 ng/mL, reference <0.014 ng/mL)"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Paroxysmal Atrial Fibrillation (AF) in transition to Ventricular Response",
+        "why": "The rhythm is currently a rapid, regular, wide-complex tachycardia (VT/SVT), not typical AF. The pre-event note suggests AF is the underlying condition, but the current event is the arrhythmia itself."
+      },
+      {
+        "alternative": "Hypovolemia/Volume Depletion",
+        "why": "While the patient is borderline hypotensive, the primary trigger is electrical/pharmacological, and volume status is not definitively established, though it is a secondary factor."
+      },
+      {
+        "alternative": "Myocardial Ischemia/Infarction",
+        "why": "Troponin T is mildly elevated, suggesting potential injury, but the acute event is electrical. Ischemia is a plausible secondary consequence, but drug-induced proarrhythmia is the most direct cause of the electrical event."
+      }
+    ],
+    "recommendedActions": [
+      "1. Immediate Vagal Maneuver/IV Beta-blocker (e.g., Metoprolol) to attempt rate control and terminate the tachycardia, considering the drug-induced nature.",
+      "2. Continuous cardiac monitoring and assessment of hemodynamic stability (BP, perfusion) every 1 minute.",
+      "3. Draw STAT labs (Troponin T repeat, Electrolytes, Cardiac enzymes) to assess for myocardial injury.",
+      "4. Assess patient's current medication regimen (especially flecainide) and consider holding/reducing the offending agent pending rhythm control.",
+      "5. Ensure IV access is patent and prepare for potential fluid bolus if hypotension persists."
+    ],
+    "uncertainty": [
+      "The exact relationship between the flecainide dose, the patient's underlying AF, and the onset of VT is not definitively proven by this single snapshot.",
+      "The precise cause of the mild troponin elevation (Ischemia vs. Arrhythmia-related injury) cannot be determined without serial monitoring or further clinical context."
+    ]
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"Patient experienced a rapid, regular ventricular tachycardia (or supraventricular tachycardia) with borderline hypotension and mild troponin elevation, likely precipitated by drug-induced proarrhythmia.\",\n  \"rhythm\": \"Ventricular Tachycardia (or Supraventricular Tachycardia)\",\n  \"keyECGEvidence\": [\n    \"Ventricular rate 200 bpm, Atrial rate 200 bpm, regularity regular\",\n    \"QRS duration 180 ms (wide QRS), morphology Wide bizarre QRS not conforming to typical RBBB or LBBB pattern; 1:1 AV conduction\",\n    \"preEventNote: flecainide started 2 weeks ago for paroxysmal AF without AV nodal blocker co-prescription; sudden onset during gardening\",\n    \"ST deviation N/A (obscured by wide QRS)\"\n  ],\n  \"primaryEtiology\": \"Drug-induced proarrhythmia (Flecainide)\",\n  \"mechanism\": \"Flecainide, a Class IC antiarrhythmic, likely induced a proarrhythmic event (Ventricular Tachycardia) due to the patient's history of paroxysmal AF, leading to hemodynamic compromise (borderline hypotension) and potential myocardial injury (elevated troponin T).\",\n  \"contributingFactors\": [\n    \"Patient history of Paroxysmal Atrial Fibrillation (AF)\",\n    \"Current medication: flecainide 100 mg BID\",\n    \"Borderline hypotension (Systolic BP 88 mmHg, MAP 65 mmHg)\",\n    \"Mildly elevated Troponin T (0.02 ng/mL, reference <0.014 ng/mL)\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Paroxysmal Atrial Fibrillation (AF) in transition to Ventricular Response\",\n      \"why\": \"The rhythm is currently a rapid, regular, wide-complex tachycardia (VT/SVT), not typical AF. The pre-event note suggests AF is the underlying condition, but the current event is the arrhythmia itself.\"\n    },\n    {\n      \"alternative\": \"Hypovolemia/Volume Depletion\",\n      \"why\": \"While the patient is borderline hypotensive, the primary trigger is electrical/pharmacological, and volume status is not definitively established, though it is a secondary factor.\"\n    },\n    {\n      \"alternative\": \"Myocardial Ischemia/Infarction\",\n      \"why\": \"Troponin T is mildly elevated, suggesting potential injury, but the acute event is electrical. Ischemia is a plausible secondary consequence, but drug-induced proarrhythmia is the most direct cause of the electrical event.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"1. Immediate Vagal Maneuver/IV Beta-blocker (e.g., Metoprolol) to attempt rate control and terminate the tachycardia, considering the drug-induced nature.\",\n    \"2. Continuous cardiac monitoring and assessment of hemodynamic stability (BP, perfusion) every 1 minute.\",\n    \"3. Draw STAT labs (Troponin T repeat, Electrolytes, Cardiac enzymes) to assess for myocardial injury.\",\n    \"4. Assess patient's current medication regimen (especially flecainide) and consider holding/reducing the offending agent pending rhythm control.\",\n    \"5. Ensure IV access is patent and prepare for potential fluid bolus if hypotension persists.\"\n  ],\n  \"uncertainty\": [\n    \"The exact relationship between the flecainide dose, the patient's underlying AF, and the onset of VT is not definitively proven by this single snapshot.\",\n    \"The precise cause of the mild troponin elevation (Ischemia vs. Arrhythmia-related injury) cannot be determined without serial monitoring or further clinical context.\"\n  ]\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1836,
+      "outputTokens": 834,
+      "elapsedSeconds": 56.18215546200008,
+      "peakGpuMemoryGiB": 6.543969631195068
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 56.18215546200008,
+  "inputTokens": 1836,
+  "outputTokens": 834,
+  "peakGpuMemoryGiB": 6.543969631195068,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

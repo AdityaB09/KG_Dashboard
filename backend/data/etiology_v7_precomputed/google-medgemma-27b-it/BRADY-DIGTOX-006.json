@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.1",
+  "provider": "lightning-ai-studio",
+  "model": "google/medgemma-27b-it",
+  "runNumber": 1,
+  "scenarioId": "BRADY-DIGTOX-006",
+  "promptFingerprint": "1e26d85f99ee9cff189f74100b7f821bbc53fdd930511f24e34f44f776dad813",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "82F, Bradycardia (38 bpm), Regular, Hemodynamically stable but symptomatic",
+    "rhythm": "Sinus Bradycardia (or Junctional Escape Rhythm)",
+    "keyECGEvidence": [
+      "Ventricular rate 38 bpm",
+      "Regular rhythm",
+      "P-wave absent",
+      "Scooped ST segments",
+      "Pre-event note: Known AFib now with slow REGULAR response — suggests AV junctional takeover"
+    ],
+    "primaryEtiology": "Digoxin Toxicity",
+    "mechanism": "Increased vagal tone and direct suppression of AV nodal conduction by digoxin, leading to slowed atrial and ventricular rates, potentially causing AV block or junctional escape rhythm.",
+    "contributingFactors": [
+      "Chronic Kidney Disease (CKD stage 3) - impairs digoxin clearance",
+      "Hypokalemia (K 5.6 mmol/L HIGH) - increases digoxin binding to Na+/K+ ATPase and potentiates toxicity",
+      "Dehydration (recent decreased urine output) - can increase digoxin concentration"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Hypothyroidism",
+        "why": "No data to support this. While it can cause bradycardia, the specific ECG findings (scooped ST segments) and clinical context (digoxin use, symptoms) point strongly towards digoxin toxicity."
+      },
+      {
+        "alternative": "Sick Sinus Syndrome",
+        "why": "While possible, the patient is on digoxin for AFib rate control. The regular rhythm and scooped ST segments are highly suggestive of digoxin effect/toxicity, which can cause bradycardia and AV block."
+      },
+      {
+        "alternative": "Electrolyte abnormality (other than K)",
+        "why": "Magnesium is normal. While severe hyperkalemia can cause bradycardia, the potassium level is only mildly elevated (5.6 mmol/L). The specific ECG changes (scooped ST) are characteristic of digoxin."
+      }
+    ],
+    "recommendedActions": [
+      "STOP Digoxin immediately",
+      "Administer IV calcium gluconate (to antagonize digoxin's effect on the myocardium, especially if ECG changes worsen or arrhythmias develop)",
+      "Administer IV potassium chloride (to correct hypokalemia, which exacerbates digoxin toxicity)",
+      "Consider temporary pacing if bradycardia persists or causes hemodynamic instability",
+      "Monitor ECG continuously",
+      "Check digoxin level again in 24 hours",
+      "Monitor renal function and electrolytes closely"
+    ],
+    "uncertainty": []
+  },
+  "rawModelResponse": "```json\n{\n  \"episodeSummary\": \"82F, Bradycardia (38 bpm), Regular, Hemodynamically stable but symptomatic\",\n  \"rhythm\": \"Sinus Bradycardia (or Junctional Escape Rhythm)\",\n  \"keyECGEvidence\": [\n    \"Ventricular rate 38 bpm\",\n    \"Regular rhythm\",\n    \"P-wave absent\",\n    \"Scooped ST segments\",\n    \"Pre-event note: Known AFib now with slow REGULAR response — suggests AV junctional takeover\"\n  ],\n  \"primaryEtiology\": \"Digoxin Toxicity\",\n  \"mechanism\": \"Increased vagal tone and direct suppression of AV nodal conduction by digoxin, leading to slowed atrial and ventricular rates, potentially causing AV block or junctional escape rhythm.\",\n  \"contributingFactors\": [\n    \"Chronic Kidney Disease (CKD stage 3) - impairs digoxin clearance\",\n    \"Hypokalemia (K 5.6 mmol/L HIGH) - increases digoxin binding to Na+/K+ ATPase and potentiates toxicity\",\n    \"Dehydration (recent decreased urine output) - can increase digoxin concentration\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Hypothyroidism\",\n      \"why\": \"No data to support this. While it can cause bradycardia, the specific ECG findings (scooped ST segments) and clinical context (digoxin use, symptoms) point strongly towards digoxin toxicity.\"\n    },\n    {\n      \"alternative\": \"Sick Sinus Syndrome\",\n      \"why\": \"While possible, the patient is on digoxin for AFib rate control. The regular rhythm and scooped ST segments are highly suggestive of digoxin effect/toxicity, which can cause bradycardia and AV block.\"\n    },\n    {\n      \"alternative\": \"Electrolyte abnormality (other than K)\",\n      \"why\": \"Magnesium is normal. While severe hyperkalemia can cause bradycardia, the potassium level is only mildly elevated (5.6 mmol/L). The specific ECG changes (scooped ST) are characteristic of digoxin.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"STOP Digoxin immediately\",\n    \"Administer IV calcium gluconate (to antagonize digoxin's effect on the myocardium, especially if ECG changes worsen or arrhythmias develop)\",\n    \"Administer IV potassium chloride (to correct hypokalemia, which exacerbates digoxin toxicity)\",\n    \"Consider temporary pacing if bradycardia persists or causes hemodynamic instability\",\n    \"Monitor ECG continuously\",\n    \"Check digoxin level again in 24 hours\",\n    \"Monitor renal function and electrolytes closely\"\n  ],\n  \"uncertainty\": []\n}\n```",
+  "bestEffortParsedResponse": null,
+  "terminalStatus": "OK",
+  "hitMaxNewTokens": false,
+  "maxNewTokens": 2500,
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "```json\n{\n  \"episodeSummary\": \"82F, Bradycardia (38 bpm), Regular, Hemodynamically stable but symptomatic\",\n  \"rhythm\": \"Sinus Bradycardia (or Junctional Escape Rhythm)\",\n  \"keyECGEvidence\": [\n    \"Ventricular rate 38 bpm\",\n    \"Regular rhythm\",\n    \"P-wave absent\",\n    \"Scooped ST segments\",\n    \"Pre-event note: Known AFib now with slow REGULAR response — suggests AV junctional takeover\"\n  ],\n  \"primaryEtiology\": \"Digoxin Toxicity\",\n  \"mechanism\": \"Increased vagal tone and direct suppression of AV nodal conduction by digoxin, leading to slowed atrial and ventricular rates, potentially causing AV block or junctional escape rhythm.\",\n  \"contributingFactors\": [\n    \"Chronic Kidney Disease (CKD stage 3) - impairs digoxin clearance\",\n    \"Hypokalemia (K 5.6 mmol/L HIGH) - increases digoxin binding to Na+/K+ ATPase and potentiates toxicity\",\n    \"Dehydration (recent decreased urine output) - can increase digoxin concentration\"\n  ],\n  \"rejectedAlternatives\": [\n    {\n      \"alternative\": \"Hypothyroidism\",\n      \"why\": \"No data to support this. While it can cause bradycardia, the specific ECG findings (scooped ST segments) and clinical context (digoxin use, symptoms) point strongly towards digoxin toxicity.\"\n    },\n    {\n      \"alternative\": \"Sick Sinus Syndrome\",\n      \"why\": \"While possible, the patient is on digoxin for AFib rate control. The regular rhythm and scooped ST segments are highly suggestive of digoxin effect/toxicity, which can cause bradycardia and AV block.\"\n    },\n    {\n      \"alternative\": \"Electrolyte abnormality (other than K)\",\n      \"why\": \"Magnesium is normal. While severe hyperkalemia can cause bradycardia, the potassium level is only mildly elevated (5.6 mmol/L). The specific ECG changes (scooped ST) are characteristic of digoxin.\"\n    }\n  ],\n  \"recommendedActions\": [\n    \"STOP Digoxin immediately\",\n    \"Administer IV calcium gluconate (to antagonize digoxin's effect on the myocardium, especially if ECG changes worsen or arrhythmias develop)\",\n    \"Administer IV potassium chloride (to correct hypokalemia, which exacerbates digoxin toxicity)\",\n    \"Consider temporary pacing if bradycardia persists or causes hemodynamic instability\",\n    \"Monitor ECG continuously\",\n    \"Check digoxin level again in 24 hours\",\n    \"Monitor renal function and electrolytes closely\"\n  ],\n  \"uncertainty\": []\n}\n```",
+      "contractErrors": [],
+      "inputTokens": 1818,
+      "outputTokens": 577,
+      "elapsedSeconds": 62.8336029940001,
+      "peakGpuMemoryGiB": 25.3410906791687,
+      "hitMaxNewTokens": false
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 62.8336029940001,
+  "inputTokens": 1818,
+  "outputTokens": 577,
+  "peakGpuMemoryGiB": 25.3410906791687,
+  "gpuName": "NVIDIA A100-SXM4-40GB",
+  "quantization": "4bit"
+}

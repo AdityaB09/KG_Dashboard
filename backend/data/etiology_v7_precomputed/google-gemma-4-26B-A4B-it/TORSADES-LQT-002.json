@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "kgen-etiology-model-response-v7.0.0",
+  "provider": "lightning-ai-studio",
+  "model": "google/gemma-4-26B-A4B-it",
+  "runNumber": 1,
+  "scenarioId": "TORSADES-LQT-002",
+  "promptFingerprint": "e097ed9be53b4fdfc0f479c6b2a58b549edf0dd87d78a832c393b3a141bee92b",
+  "generationSucceeded": true,
+  "validContract": true,
+  "modelResponse": {
+    "episodeSummary": "74F, Torsades de Pointes, critical, hypotensive (BP 68/40)",
+    "rhythm": "Torsades de Pointes",
+    "keyECGEvidence": [
+      "Sinusoidal amplitude modulation with axis twisting",
+      "Baseline QTc 618 ms (marked QT prolongation)",
+      "Prominent U waves",
+      "Ventricular rate 228 bpm",
+      "QRS duration 150 ms"
+    ],
+    "primaryEtiology": "Electrolyte-induced Long QT Syndrome (LQT) secondary to gastrointestinal losses and medication-induced prolongation",
+    "mechanism": "Prolonged repolarization (QTc 618 ms) due to hypokalemia (K 2.9 mmol/L LOW), hypomagnesemia (Mg 1.2 mg/dL LOW), and hypocalcemia (Ca 7.9 mg/dL LOW) exacerbated by additive QT-prolonging drugs (Sotalol, Azithromycin, Ondansetron) leading to early afterdepolarizations and polymorphic ventricular tachycardia.",
+    "contributingFactors": [
+      "Hypokalemia (K 2.9 mmol/L LOW) from vomiting/diarrhea",
+      "Hypomagnesemia (Mg 1.2 mg/dL LOW)",
+      "Sotalol use (Class III antiarrhythmic)",
+      "Azithromycin use (QT-prolonging antibiotic)",
+      "Ondansetron use (QT-prolonging antiemetic)",
+      "Dehydration/Gastroenteritis"
+    ],
+    "rejectedAlternatives": [
+      {
+        "alternative": "Ventricular Tachycardia (monomorphic)",
+        "why": "Morphology shows axis twisting/amplitude modulation characteristic of Torsades rather than a fixed axis."
+      },
+      {
+        "alternative": "Ventricular Fibrillation",
+        "why": "The rhythm shows a discernible, albeit twisting, sinusoidal pattern rather than completely disorganized electrical activity."
+      }
+    ],
+    "recommendedActions": [
+      "Administer IV Magnesium Sulfate (e.g., 2g over 1-2 mins) per ACLS/Torsades protocol",
+      "STOP Sotalol immediately",
+      "STOP Azithromycin and Ondansetron immediately",
+      "Aggressive electrolyte replacement (Potassium and Magnesium) to target high-normal levels",
+      "Initiate IV fluid resuscitation for hypotension and dehydration",
+      "Prepare for synchronized cardioversion or defibrillation if patient becomes pulseless or hemodynamically unstable"
+    ],
+    "uncertainty": []
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "rawText": "{\n \"episodeSummary\": \"74F, Torsades de Pointes, critical, hypotensive (BP 68/40)\",\n \"rhythm\": \"Torsades de Pointes\",\n \"keyECGEvidence\": [\n  \"Sinusoidal amplitude modulation with axis twisting\",\n  \"Baseline QTc 618 ms (marked QT prolongation)\",\n  \"Prominent U waves\",\n  \"Ventricular rate 228 bpm\",\n  \"QRS duration 150 ms\"\n ],\n \"primaryEtiology\": \"Electrolyte-induced Long QT Syndrome (LQT) secondary to gastrointestinal losses and medication-induced prolongation\",\n \"mechanism\": \"Prolonged repolarization (QTc 618 ms) due to hypokalemia (K 2.9 mmol/L LOW), hypomagnesemia (Mg 1.2 mg/dL LOW), and hypocalcemia (Ca 7.9 mg/dL LOW) exacerbated by additive QT-prolonging drugs (Sotalol, Azithromycin, Ondansetron) leading to early afterdepolarizations and polymorphic ventricular tachycardia.\",\n \"contributingFactors\": [\n  \"Hypokalemia (K 2.9 mmol/L LOW) from vomiting/diarrhea\",\n  \"Hypomagnesemia (Mg 1.2 mg/dL LOW)\",\n  \"Sotalol use (Class III antiarrhythmic)\",\n  \"Azithromycin use (QT-prolonging antibiotic)\",\n  \"Ondansetron use (QT-prolonging antiemetic)\",\n  \"Dehydration/Gastroenteritis\"\n ],\n \"rejectedAlternatives\": [\n   {\n    \"alternative\": \"Ventricular Tachycardia (monomorphic)\",\n    \"why\": \"Morphology shows axis twisting/amplitude modulation characteristic of Torsades rather than a fixed axis.\"\n   },\n   {\n    \"alternative\": \"Ventricular Fibrillation\",\n    \"why\": \"The rhythm shows a discernible, albeit twisting, sinusoidal pattern rather than completely disorganized electrical activity.\"\n   }\n ],\n \"recommendedActions\": [\n   \"Administer IV Magnesium Sulfate (e.g., 2g over 1-2 mins) per ACLS/Torsades protocol\",\n   \"STOP Sotalol immediately\",\n   \"STOP Azithromycin and Ondansetron immediately\",\n   \"Aggressive electrolyte replacement (Potassium and Magnesium) to target high-normal levels\",\n   \"Initiate IV fluid resuscitation for hypotension and dehydration\",\n   \"Prepare for synchronized cardioversion or defibrillation if patient becomes pulseless or hemodynamically unstable\"\n ],\n \"uncertainty\": []\n}",
+      "contractErrors": [],
+      "inputTokens": 1885,
+      "outputTokens": 580,
+      "elapsedSeconds": 38.008278465999865,
+      "peakGpuMemoryGiB": 46.0033917427063
+    }
+  ],
+  "error": null,
+  "elapsedSeconds": 38.008278465999865,
+  "inputTokens": 1885,
+  "outputTokens": 580,
+  "peakGpuMemoryGiB": 46.0033917427063,
+  "gpuName": "NVIDIA H100 80GB HBM3",
+  "quantization": "4bit"
+}
