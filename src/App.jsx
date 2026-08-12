@@ -510,7 +510,7 @@ useEffect(() => {
     if (
       analyticsNotice?.mode !== "evaluation_injection" ||
       analyticsNotice?.status !== "ready" ||
-      !analyticsNotice?.oracleDemo
+      !(analyticsNotice?.oracleDemo || analyticsNotice?.epicDemo)
     ) {
       return undefined;
     }
@@ -530,10 +530,18 @@ useEffect(() => {
         capture: null,
       });
       setActivePage("physiology");
-      setOracleAutoDemo((previous) => ({
-        ...previous,
-        status: "analytics",
-      }));
+      if (analyticsNotice?.oracleDemo) {
+        setOracleAutoDemo((previous) => ({
+          ...previous,
+          status: "analytics",
+        }));
+      }
+      if (analyticsNotice?.epicDemo) {
+        setEpicAutoDemo((previous) => ({
+          ...previous,
+          status: "analytics",
+        }));
+      }
       setAnalyticsNotice(null);
     }, 1600);
 

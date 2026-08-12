@@ -706,6 +706,29 @@ def make_streaming_response(
                     yield f"data: {json.dumps(heartbeat)}\n\n"
 
             except Exception as error:
+                status_code = None
+                if isinstance(error, httpx.HTTPStatusError):
+                    status_code = error.response.status_code
+
+                if provider == "oracle" and status_code in {401, 403}:
+                    print(
+                        "[KGEN FHIR SSE AUTH TERMINATED]",
+                        {"provider": provider, "status": status_code},
+                        flush=True,
+                    )
+                    payload = json.dumps(
+                        {
+                            "status": "auth_expired",
+                            "provider": provider,
+                            "httpStatus": status_code,
+                            "receivedAt": now_iso(),
+                        },
+                        separators=(",", ":"),
+                    )
+                    yield "event: auth-expired\n"
+                    yield f"data: {payload}\n\n"
+                    break
+
                 error_frame = build_error_frame(provider, error)
                 payload = json.dumps(error_frame, separators=(",", ":"))
 

@@ -29,9 +29,11 @@ import {
 } from "../evaluation/evaluationInjectionApi";
 import {
   startOracleEvaluationDemo,
+  getOracleEvaluationDemoStatus,
 } from "../evaluation/oracleEvaluationDemo";
 import {
   startEpicEvaluationDemo,
+  getEpicEvaluationDemoStatus,
 } from "../evaluation/epicEvaluationDemo";
 import {
   nextStableSpo2State,
@@ -500,6 +502,10 @@ export default function SevenLeadWaveformPage({
     useRef(false);
   const autoEpicStartIssuedRef =
     useRef(false);
+  const autoOracleCompletionNoticeRef =
+    useRef("");
+  const autoEpicCompletionNoticeRef =
+    useRef("");
 
   const [
     injectionControlsOpen,
@@ -699,6 +705,173 @@ export default function SevenLeadWaveformPage({
         onEpicAutoDemoChange?.({status:"error",error:message});
       });
   }, [epicAutoDemo?.enabled,epicAutoDemo?.status,waveformSource,streamStatus,onEpicAutoDemoChange]);
+
+  // SSE remains the fast path, but Cloud Run/browser transitions can miss a
+  // single completion event. Poll the provider-specific status endpoint while
+  // an automatic SMART evaluation is running and emit the same Analytics
+  // notice when COMPLETE is observed. This makes navigation deterministic.
+  useEffect(() => {
+    const state = String(oracleAutoDemo?.status || "").toLowerCase();
+    if (!oracleAutoDemo?.enabled || !["arming", "running"].includes(state)) {
+      return undefined;
+    }
+
+    let cancelled = false;
+    let timerId = null;
+    const sessionId = waveformSessionIdRef.current;
+
+    const poll = async () => {
+      try {
+        const result = await getOracleEvaluationDemoStatus(sessionId);
+        if (cancelled) return;
+
+        setInjectionStatus(result);
+        const resultState = String(result?.state || "").toUpperCase();
+
+        if (resultState === "COMPLETE") {
+          const completionKey = [
+            result?.episodeId || "",
+            result?.incidentId || "",
+            result?.scenarioId || "",
+          ].join("|");
+
+          onOracleAutoDemoChange?.({ status: "complete", result });
+
+          if (
+            completionKey &&
+            autoOracleCompletionNoticeRef.current !== completionKey
+          ) {
+            autoOracleCompletionNoticeRef.current = completionKey;
+            onEvaluationAnalysisComplete?.({
+              mode: "evaluation_injection",
+              status: "ready",
+              title: result?.title || "Evaluation analysis completed",
+              message:
+                result?.message ||
+                "The captured evaluation episode is ready in Analytics.",
+              episodeId: result?.episodeId || null,
+              incidentId: result?.incidentId || null,
+              scenarioId: result?.scenarioId || null,
+              score: result?.score || null,
+              oracleDemo:
+                result?.oracleDemo || {
+                  mode: "oracle_evaluation_auto",
+                  patient: oracleAutoDemo?.patient || null,
+                  scenarioId:
+                    result?.scenarioId ||
+                    oracleAutoDemo?.scenario?.scenarioId ||
+                    null,
+                },
+            });
+          }
+          return;
+        }
+
+        if (["FAILED", "CANCELLED"].includes(resultState)) {
+          const message =
+            result?.error ||
+            result?.message ||
+            "Automatic Oracle evaluation did not complete.";
+          setInjectionError(message);
+          onOracleAutoDemoChange?.({ status: "error", error: message, result });
+          return;
+        }
+      } catch (error) {
+        if (cancelled) return;
+        // A transient status read should not cancel an otherwise healthy run.
+      }
+
+      timerId = window.setTimeout(poll, 700);
+    };
+
+    timerId = window.setTimeout(poll, 450);
+
+    return () => {
+      cancelled = true;
+      if (timerId != null) window.clearTimeout(timerId);
+    };
+  }, [oracleAutoDemo?.enabled, oracleAutoDemo?.status]);
+
+  useEffect(() => {
+    const state = String(epicAutoDemo?.status || "").toLowerCase();
+    if (!epicAutoDemo?.enabled || !["arming", "running"].includes(state)) {
+      return undefined;
+    }
+
+    let cancelled = false;
+    let timerId = null;
+    const sessionId = waveformSessionIdRef.current;
+
+    const poll = async () => {
+      try {
+        const result = await getEpicEvaluationDemoStatus(sessionId);
+        if (cancelled) return;
+
+        setInjectionStatus(result);
+        const resultState = String(result?.state || "").toUpperCase();
+
+        if (resultState === "COMPLETE") {
+          const completionKey = [
+            result?.episodeId || "",
+            result?.incidentId || "",
+            result?.scenarioId || "",
+          ].join("|");
+
+          onEpicAutoDemoChange?.({ status: "complete", result });
+
+          if (
+            completionKey &&
+            autoEpicCompletionNoticeRef.current !== completionKey
+          ) {
+            autoEpicCompletionNoticeRef.current = completionKey;
+            onEvaluationAnalysisComplete?.({
+              mode: "evaluation_injection",
+              status: "ready",
+              title: result?.title || "Evaluation analysis completed",
+              message:
+                result?.message ||
+                "The captured evaluation episode is ready in Analytics.",
+              episodeId: result?.episodeId || null,
+              incidentId: result?.incidentId || null,
+              scenarioId: result?.scenarioId || null,
+              score: result?.score || null,
+              epicDemo:
+                result?.epicDemo || {
+                  mode: "epic_evaluation_auto",
+                  patient: epicAutoDemo?.patient || null,
+                  scenarioId:
+                    result?.scenarioId ||
+                    epicAutoDemo?.scenario?.scenarioId ||
+                    null,
+                },
+            });
+          }
+          return;
+        }
+
+        if (["FAILED", "CANCELLED"].includes(resultState)) {
+          const message =
+            result?.error ||
+            result?.message ||
+            "Automatic Epic evaluation did not complete.";
+          setInjectionError(message);
+          onEpicAutoDemoChange?.({ status: "error", error: message, result });
+          return;
+        }
+      } catch (error) {
+        if (cancelled) return;
+      }
+
+      timerId = window.setTimeout(poll, 700);
+    };
+
+    timerId = window.setTimeout(poll, 450);
+
+    return () => {
+      cancelled = true;
+      if (timerId != null) window.clearTimeout(timerId);
+    };
+  }, [epicAutoDemo?.enabled, epicAutoDemo?.status]);
 
 
   useEffect(() => {

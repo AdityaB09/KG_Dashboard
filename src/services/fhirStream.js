@@ -1,6 +1,32 @@
 const SAME_ORIGIN = typeof window !== "undefined" ? window.location.origin : "http://127.0.0.1:8000";
 const DEFAULT_STREAM_URL = `${SAME_ORIGIN}/api/stream?debug=true`;
 let activeEventSource = null;
+const FHIR_STREAM_CHANNEL = "kgen-fhir-stream-v1";
+const FHIR_STREAM_TAB_ID =
+  typeof crypto !== "undefined" && crypto.randomUUID
+    ? crypto.randomUUID()
+    : `tab-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+const fhirStreamChannel =
+  typeof BroadcastChannel !== "undefined"
+    ? new BroadcastChannel(FHIR_STREAM_CHANNEL)
+    : null;
+
+fhirStreamChannel?.addEventListener("message", (event) => {
+  const message = event?.data || {};
+  if (
+    message.type === "claim" &&
+    message.ownerId &&
+    message.ownerId !== FHIR_STREAM_TAB_ID &&
+    activeEventSource
+  ) {
+    activeEventSource.close();
+    activeEventSource = null;
+    if (DEBUG_SSE) {
+      console.info("[KGEN SSE SUPERSEDED BY NEW TAB]", message.ownerId);
+    }
+  }
+});
 
 const DEBUG_SSE =
   import.meta.env.DEV &&
@@ -57,6 +83,11 @@ if (activeEventSource) {
   let lastOracleHash = null;
 
   activeEventSource = eventSource;
+  fhirStreamChannel?.postMessage({
+    type: "claim",
+    ownerId: FHIR_STREAM_TAB_ID,
+    at: Date.now(),
+  });
 
   function tinyHash(value) {
     const text = JSON.stringify(value ?? {});
@@ -107,6 +138,14 @@ if (DEBUG_SSE) {
   }
 
   eventSource.addEventListener("fhir-frame", handleFrame);
+
+  eventSource.addEventListener("auth-expired", () => {
+    if (activeEventSource === eventSource) {
+      activeEventSource = null;
+    }
+    eventSource.close();
+    onError?.(new Error("Oracle SMART session expired or was superseded."));
+  });
 
 eventSource.addEventListener("heartbeat", (event) => {
   try {
