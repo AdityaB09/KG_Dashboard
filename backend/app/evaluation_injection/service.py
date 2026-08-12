@@ -177,6 +177,19 @@ EVALUATION_INJECTION_EVENT_LOOP_BLEND_SECONDS = (
 )
 
 
+# V7.3.15
+# The live SMART demo presents the event for the full replay duration
+# and then shows five seconds of live API Range post-capture.
+SMART_DEMO_POST_SECONDS = (
+    environment_float(
+        "EVALUATION_SMART_DEMO_POST_SECONDS",
+        5.0,
+        1.0,
+        15.0,
+    )
+)
+
+
 LEGACY_INJECTION_TRANSITION_SECONDS = (
     environment_float(
         "EVALUATION_INJECTION_TRANSITION_SECONDS",
@@ -1281,6 +1294,17 @@ class EvaluationInjectionService:
             target_rate,
         )
 
+        smart_demo_binding = bool(
+            isinstance(oracle_demo, dict)
+            or isinstance(epic_demo, dict)
+        )
+
+        effective_post_seconds = (
+            SMART_DEMO_POST_SECONDS
+            if smart_demo_binding
+            else post_seconds
+        )
+
         session = InjectionSession(
             session_id=session_id,
             scenario=scenario,
@@ -1291,7 +1315,7 @@ class EvaluationInjectionService:
                 pre_seconds
             ),
             post_seconds=(
-                post_seconds
+                effective_post_seconds
             ),
             run_slm=run_slm,
             event_loop_count=(
@@ -2127,16 +2151,43 @@ class EvaluationInjectionService:
             )
 
         elif session.state == "INJECTING":
-            scenario_length = min(
+            # V7.3.15: state timing MUST use the exact prepared waveform
+            # that _inject_batch() is displaying. V7.3.14 accidentally
+            # used the original ~8-second source scenario here, causing
+            # POST_EVENT to begin while the second replay pass was still
+            # supposed to be visible.
+            prepared_event_lengths = [
                 len(
-                    session
-                    .scenario
-                    .waveforms_mv[
-                        lead_id
-                    ]
+                    session.injection_waveforms_mv.get(
+                        lead_id,
+                        [],
+                    )
                 )
-                for lead_id
-                in DISPLAY_LEADS
+                for lead_id in DISPLAY_LEADS
+                if len(
+                    session.injection_waveforms_mv.get(
+                        lead_id,
+                        [],
+                    )
+                ) > 0
+            ]
+
+            scenario_length = max(
+                1,
+                min(prepared_event_lengths)
+                if prepared_event_lengths
+                else min(
+                    len(
+                        session.scenario.waveforms_mv[
+                            lead_id
+                        ]
+                    )
+                    for lead_id in DISPLAY_LEADS
+                )
+                * max(
+                    1,
+                    session.event_loop_count,
+                ),
             )
 
             remaining_event_samples = max(
@@ -2891,7 +2942,7 @@ class EvaluationInjectionService:
             )
 
             # Persisting the capture is the only truly fatal finalization step.
-            # Once the configured pre + replayed event + post capture exists, downstream
+            # Once the configured live replay + post capture exists, downstream
             # enrichment failures must not turn a valid capture into "Evaluation Failed".
             finalization_stage = "persist_episode"
             metadata = await asyncio.to_thread(
@@ -3227,6 +3278,18 @@ class EvaluationInjectionService:
             )
         )
 
+        source_event_samples = max(
+            1,
+            min(
+                len(
+                    session.scenario.waveforms_mv[
+                        lead_id
+                    ]
+                )
+                for lead_id in DISPLAY_LEADS
+            ),
+        )
+
         prepared_event_lengths = [
             len(
                 session.injection_waveforms_mv.get(
@@ -3243,26 +3306,22 @@ class EvaluationInjectionService:
             ) > 0
         ]
 
-        event_samples = (
+        live_event_samples = max(
+            source_event_samples,
             min(prepared_event_lengths)
             if prepared_event_lengths
             else (
-                min(
-                    len(
-                        session.scenario
-                        .waveforms_mv[
-                            lead_id
-                        ]
-                    )
-                    for lead_id
-                    in DISPLAY_LEADS
-                )
+                source_event_samples
                 * max(
                     1,
                     session.event_loop_count,
                 )
-            )
+            ),
         )
+
+        # Analytics intentionally contains ONE source event pass.
+        # The second pass is presentation-only on the Main page.
+        event_samples = source_event_samples
 
         post_samples = int(
             round(
@@ -3271,41 +3330,142 @@ class EvaluationInjectionService:
             )
         )
 
-        expected = (
+        live_expected = (
             pre_samples
-            + event_samples
+            + live_event_samples
             + post_samples
         )
 
-        length = min(
+        available_live_length = min(
             len(
                 session.capture_buffers[
                     lead_id
                 ]
             )
-            for lead_id
-            in DISPLAY_LEADS
+            for lead_id in DISPLAY_LEADS
         )
 
+        available_live_length = min(
+            available_live_length,
+            live_expected,
+        )
+
+        # The raw live buffer is:
+        #   PRE + PASS1 + PASS2 + POST
+        #
+        # The persisted Analytics episode is:
+        #   PRE + PASS1 + POST
+        #
+        # Therefore the display-only replay samples are skipped here,
+        # without changing the live stream/state-machine timing.
+        persisted_leads: list[np.ndarray] = []
+
+        first_event_end = (
+            pre_samples
+            + source_event_samples
+        )
+
+        post_source_start = (
+            pre_samples
+            + live_event_samples
+        )
+
+        for lead_id in DISPLAY_LEADS:
+            source = np.asarray(
+                session.capture_buffers[
+                    lead_id
+                ][
+                    :available_live_length
+                ],
+                dtype=np.float32,
+            )
+
+            pre_and_event = source[
+                :min(
+                    first_event_end,
+                    source.size,
+                )
+            ]
+
+            post_end = min(
+                post_source_start
+                + post_samples,
+                source.size,
+            )
+
+            post = (
+                source[
+                    post_source_start:
+                    post_end
+                ]
+                if post_source_start
+                < source.size
+                else np.asarray(
+                    [],
+                    dtype=np.float32,
+                )
+            )
+
+            persisted_leads.append(
+                np.concatenate(
+                    [
+                        pre_and_event,
+                        post,
+                    ]
+                ).astype(
+                    np.float32,
+                    copy=False,
+                )
+            )
+
         length = min(
-            length,
-            expected,
+            lead.size
+            for lead in persisted_leads
         )
 
         matrix = np.column_stack(
             [
-                np.asarray(
-                    session
-                    .capture_buffers[
-                        lead_id
-                    ][
-                        :length
-                    ],
-                    dtype=np.float32,
-                )
-                for lead_id
-                in DISPLAY_LEADS
+                lead[:length]
+                for lead in persisted_leads
             ]
+        )
+
+        print(
+            "[KGEN EVAL ANALYTICS CAPTURE COMPOSITION]",
+            {
+                "sessionId": session.session_id,
+                "scenarioId": session.scenario.scenario_id,
+                "preSeconds": round(
+                    pre_samples / rate,
+                    3,
+                ),
+                "sourceEventSeconds": round(
+                    source_event_samples / rate,
+                    3,
+                ),
+                "liveDisplayedEventSeconds": round(
+                    live_event_samples / rate,
+                    3,
+                ),
+                "displayReplaySecondsOmittedFromAnalytics": round(
+                    max(
+                        0,
+                        live_event_samples
+                        - source_event_samples,
+                    ) / rate,
+                    3,
+                ),
+                "postSeconds": round(
+                    post_samples / rate,
+                    3,
+                ),
+                "persistedAnalyticsSeconds": round(
+                    length / rate,
+                    3,
+                ),
+                "replayIncludedInAnalytics": False,
+            },
+            flush=True,
         )
 
         timestamp = datetime.now(
@@ -3709,11 +3869,19 @@ class EvaluationInjectionService:
                     event_samples / rate,
                     3,
                 ),
+                "liveDisplayedEventDurationSeconds": round(
+                    live_event_samples / rate,
+                    3,
+                ),
+                "replayIncludedInPersistedCapture": False,
+                "persistedCaptureComposition": (
+                    "pre + first source event pass + post"
+                ),
                 "loopBlendSeconds": (
                     EVALUATION_INJECTION_EVENT_LOOP_BLEND_SECONDS
                 ),
                 "reason": (
-                    "evaluation_demo_extended_event_view"
+                    "evaluation_demo_extended_live_view"
                     if session.event_loop_count > 1
                     else "not_replayed"
                 ),
