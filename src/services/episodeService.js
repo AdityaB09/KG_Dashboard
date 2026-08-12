@@ -1,12 +1,7 @@
-const SAME_ORIGIN =
-  typeof window !== "undefined"
-    ? window.location.origin
-    : "http://127.0.0.1:8000";
-
 const API_BASE = (
   import.meta.env.VITE_API_BASE_URL ||
   import.meta.env.VITE_BACKEND_URL ||
-  SAME_ORIGIN
+  "http://127.0.0.1:8000"
 ).replace(/\/$/, "");
 
 async function requestJson(
@@ -160,18 +155,7 @@ export async function analyzeIncident(
   );
 }
 
-export function connectEpisodeEvents({
-  onEvent,
-  onError,
-}) {
-  const eventSource = new EventSource(
-    `${API_BASE}/api/episodes/events`,
-    {
-      withCredentials: true,
-    }
-  );
-
-  const eventNames = [
+const EPISODE_EVENT_NAMES = [
   "episode.detected",
   "episode.captured",
   "episode.analysis_ready",
@@ -191,49 +175,85 @@ export function connectEpisodeEvents({
   "evaluation.injection.cancelled",
 ];
 
-  const handlers = eventNames.map(
-    (eventName) => {
-      const handler = (event) => {
-        try {
-          onEvent?.(
-            JSON.parse(event.data)
-          );
-        } catch (error) {
-          onError?.(error);
-        }
-      };
+// App.jsx, SevenLeadWaveformPage and ClinicalPhysiologyPage all subscribe to
+// episode events. Opening one EventSource per component consumes multiple
+// Cloud Run concurrent-request slots because SSE requests remain open. Keep
+// exactly one transport per browser bundle and multicast events to subscribers.
+let episodeEventSource = null;
+const episodeEventSubscribers = new Set();
+const episodeEventHandlers = new Map();
 
-      eventSource.addEventListener(
-        eventName,
-        handler
-      );
+function ensureEpisodeEventSource() {
+  if (episodeEventSource) return episodeEventSource;
 
-      return [
-        eventName,
-        handler,
-      ];
-    }
+  const source = new EventSource(
+    `${API_BASE}/api/episodes/events`,
+    { withCredentials: true }
   );
 
-  eventSource.onerror = (error) => {
-    onError?.(error);
+  EPISODE_EVENT_NAMES.forEach((eventName) => {
+    const handler = (event) => {
+      let payload;
+      try {
+        payload = JSON.parse(event.data);
+      } catch (error) {
+        episodeEventSubscribers.forEach((subscriber) => {
+          subscriber.onError?.(error);
+        });
+        return;
+      }
+
+      episodeEventSubscribers.forEach((subscriber) => {
+        subscriber.onEvent?.(payload);
+      });
+    };
+
+    episodeEventHandlers.set(eventName, handler);
+    source.addEventListener(eventName, handler);
+  });
+
+  source.onerror = (error) => {
+    episodeEventSubscribers.forEach((subscriber) => {
+      subscriber.onError?.(error);
+    });
   };
 
-  return () => {
-    handlers.forEach(
-      ([
-        eventName,
-        handler,
-      ]) => {
-        eventSource
-          .removeEventListener(
-            eventName,
-            handler
-          );
-      }
-    );
+  episodeEventSource = source;
 
-    eventSource.close();
+  if (import.meta.env.DEV) {
+    console.info("[KGEN EPISODE SSE] shared connection opened");
+  }
+
+  return source;
+}
+
+function closeEpisodeEventSourceIfUnused() {
+  if (episodeEventSubscribers.size > 0 || !episodeEventSource) return;
+
+  episodeEventHandlers.forEach((handler, eventName) => {
+    episodeEventSource.removeEventListener(eventName, handler);
+  });
+  episodeEventHandlers.clear();
+
+  episodeEventSource.close();
+  episodeEventSource = null;
+
+  if (import.meta.env.DEV) {
+    console.info("[KGEN EPISODE SSE] shared connection closed");
+  }
+}
+
+export function connectEpisodeEvents({
+  onEvent,
+  onError,
+}) {
+  const subscriber = { onEvent, onError };
+  episodeEventSubscribers.add(subscriber);
+  ensureEpisodeEventSource();
+
+  return () => {
+    episodeEventSubscribers.delete(subscriber);
+    closeEpisodeEventSourceIfUnused();
   };
 }
 

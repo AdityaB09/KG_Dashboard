@@ -456,13 +456,24 @@ export default function SevenLeadWaveformPage({
   epicAutoDemo,
   onEpicAutoDemoChange,
 }) {
-  // Automatic SMART evaluation must never briefly open the legacy INCART
-  // stream before switching to API Range. On Cloud Run that race can leave
-  // both long-lived SSE requests alive for the same waveform session and the
-  // evaluation service will see its base source change mid-capture.
-  const autoEvaluationEnabled = Boolean(
-    oracleAutoDemo?.enabled || epicAutoDemo?.enabled
-  );
+  // Treat the URL mode as authoritative from the very first React render.
+  // oracleAutoDemo/epicAutoDemo are populated asynchronously after bootstrap;
+  // relying only on those props briefly opened INCART before API Range.
+  // On a single-instance Cloud Run service, repeated SMART launches could
+  // accumulate long-lived SSE requests and exhaust request concurrency.
+  const browserSmartAutoMode = useMemo(() => {
+    if (typeof window === "undefined") return false;
+
+    const mode = new URLSearchParams(window.location.search).get("mode");
+    return (
+      mode === "oracle-evaluation-auto" ||
+      mode === "epic-evaluation-auto"
+    );
+  }, []);
+
+  const autoEvaluationEnabled =
+    browserSmartAutoMode ||
+    Boolean(oracleAutoDemo?.enabled || epicAutoDemo?.enabled);
 
   const initialWaveformSource = autoEvaluationEnabled
     ? API_RANGE_EPISODE_SOURCE

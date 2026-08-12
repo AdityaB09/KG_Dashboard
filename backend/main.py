@@ -605,6 +605,18 @@ def make_streaming_response(
         last_oracle_hash = None
 
         while True:
+            # Cloud Run counts every open SSE request against instance
+            # concurrency. Stop this generator as soon as the browser that
+            # created it is gone; otherwise sequential SMART launches leave
+            # stale Oracle polling requests alive until the service timeout.
+            if await request.is_disconnected():
+                print(
+                    "[KGEN FHIR SSE DISCONNECTED]",
+                    {"provider": provider},
+                    flush=True,
+                )
+                break
+
             try:
                 token_state = get_token_for_request(request) if provider == "oracle" else None
 
@@ -664,6 +676,14 @@ def make_streaming_response(
                     f"oracleHash={oracle_hash}",
                     f"oracleChanged={oracle_changed}",
                 )
+
+                if await request.is_disconnected():
+                    print(
+                        "[KGEN FHIR SSE DISCONNECTED]",
+                        {"provider": provider},
+                        flush=True,
+                    )
+                    break
 
                 payload = json.dumps(frame, separators=(",", ":"))
 
