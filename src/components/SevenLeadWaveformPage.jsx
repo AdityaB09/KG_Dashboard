@@ -158,11 +158,22 @@ const AUTO_HEADROOM = 0.80;
 const AUTO_TARGET_PEAK_FILL = 0.68;
 const AUTO_GAIN_BOOTSTRAP = 0.75;
 const AUTO_GAIN_MIN_CALIBRATION_SECONDS = 0.75;
-const AUTO_GAIN_ZOOM_IN_DEADBAND_RATIO = 1.20;
-const AUTO_GAIN_TARGET_STABILITY_MS = 1200;
-const AUTO_GAIN_POST_SAFETY_HOLD_MS = 1800;
-const AUTO_GAIN_ZOOM_IN_TAU_MS = 2800;
-const AUTO_GAIN_MAX_ZOOM_IN_PER_SECOND = 0.22;
+const AUTO_GAIN_ZOOM_IN_DEADBAND_RATIO = 1.12;
+const AUTO_GAIN_TARGET_STABILITY_MS = 700;
+const AUTO_GAIN_POST_SAFETY_HOLD_MS = 650;
+const AUTO_GAIN_ZOOM_IN_TAU_MS = 2200;
+const AUTO_GAIN_MAX_ZOOM_IN_PER_SECOND = 0.35;
+
+// V7.3.16: when a lead is clearly under-filled because a previous large
+// transient forced its gain down, recover faster once that transient has
+// actually left the visible window. This is still per-lead and never bypasses
+// the hard visible-peak safety ceiling.
+const AUTO_GAIN_FAST_RECOVERY_FILL_THRESHOLD = 0.34;
+const AUTO_GAIN_FAST_RECOVERY_TARGET_RATIO = 1.45;
+const AUTO_GAIN_FAST_RECOVERY_STABILITY_MS = 450;
+const AUTO_GAIN_FAST_RECOVERY_TAU_MS = 850;
+const AUTO_GAIN_FAST_RECOVERY_MAX_ZOOM_IN_PER_SECOND = 0.90;
+
 const AUTO_GAIN_SAFETY_PAD = 0.985;
 
 const MIN_PX_PER_MM = 3.2;
@@ -568,6 +579,13 @@ function chooseLeadAutoGain({
     );
   }
 
+  const currentRepresentativeFill = getPeakFillRatio({
+    absMv: representativeAbsMv,
+    gainMmPerMv: current,
+    rowHeightPx,
+    pxPerMm,
+  });
+
   // Once safe, do not "breathe" the gain for small target changes. A stable
   // waveform should look stable even while the 6 s rolling window advances.
   if (
@@ -585,6 +603,24 @@ function chooseLeadAutoGain({
   ) {
     return current;
   }
+
+  // V7.3.16 adaptive recovery:
+  // If the current morphology occupies less than about one-third of the
+  // available half-height AND the mathematically safe target is much larger,
+  // the lead is usually "stuck small" because an older large peak recently
+  // forced a safety zoom-out. Once that old peak has left the visible window,
+  // hardSafeGain rises automatically. We then allow this lead alone to recover
+  // faster. Normal well-filled leads continue to use the slower anti-breathing
+  // path.
+  const fastRecovery =
+    currentRepresentativeFill <
+      AUTO_GAIN_FAST_RECOVERY_FILL_THRESHOLD &&
+    targetGain >
+      current * AUTO_GAIN_FAST_RECOVERY_TARGET_RATIO;
+
+  const requiredTargetStabilityMs = fastRecovery
+    ? AUTO_GAIN_FAST_RECOVERY_STABILITY_MS
+    : AUTO_GAIN_TARGET_STABILITY_MS;
 
   // Require the higher-gain target to remain similar for a while before
   // zooming in. This prevents recurring QRS peaks entering/leaving the window
@@ -607,7 +643,7 @@ function chooseLeadAutoGain({
   if (
     timestamp -
       Number(state.candidateSince || timestamp) <
-    AUTO_GAIN_TARGET_STABILITY_MS
+    requiredTargetStabilityMs
   ) {
     return current;
   }
@@ -620,8 +656,18 @@ function chooseLeadAutoGain({
   state.lastUpdatedAt = timestamp;
 
   // Time-based easing makes behavior independent of browser/render frequency.
+  // A clearly under-filled lead is allowed to recover faster after its previous
+  // large peak has left the visible window; all other leads remain conservative.
+  const zoomInTauMs = fastRecovery
+    ? AUTO_GAIN_FAST_RECOVERY_TAU_MS
+    : AUTO_GAIN_ZOOM_IN_TAU_MS;
+
+  const maxZoomInPerSecond = fastRecovery
+    ? AUTO_GAIN_FAST_RECOVERY_MAX_ZOOM_IN_PER_SECOND
+    : AUTO_GAIN_MAX_ZOOM_IN_PER_SECOND;
+
   const alpha =
-    1 - Math.exp(-dtMs / AUTO_GAIN_ZOOM_IN_TAU_MS);
+    1 - Math.exp(-dtMs / zoomInTauMs);
 
   const eased =
     current + (targetGain - current) * alpha;
@@ -631,7 +677,7 @@ function chooseLeadAutoGain({
   const maxRateGain =
     current *
     Math.exp(
-      AUTO_GAIN_MAX_ZOOM_IN_PER_SECOND *
+      maxZoomInPerSecond *
         (dtMs / 1000)
     );
 
