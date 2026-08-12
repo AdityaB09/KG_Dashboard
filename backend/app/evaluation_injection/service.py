@@ -133,6 +133,50 @@ def environment_float(
     )
 
 
+def environment_int(
+    name: str,
+    default: int,
+    minimum: int,
+    maximum: int,
+) -> int:
+    try:
+        value = int(
+            os.getenv(
+                name,
+                str(default),
+            )
+        )
+    except (
+        TypeError,
+        ValueError,
+    ):
+        value = default
+
+    return max(
+        minimum,
+        min(maximum, value),
+    )
+
+
+EVALUATION_INJECTION_EVENT_LOOPS = (
+    environment_int(
+        "EVALUATION_INJECTION_EVENT_LOOPS",
+        2,
+        1,
+        4,
+    )
+)
+
+EVALUATION_INJECTION_EVENT_LOOP_BLEND_SECONDS = (
+    environment_float(
+        "EVALUATION_INJECTION_EVENT_LOOP_BLEND_SECONDS",
+        0.10,
+        0.02,
+        0.25,
+    )
+)
+
+
 LEGACY_INJECTION_TRANSITION_SECONDS = (
     environment_float(
         "EVALUATION_INJECTION_TRANSITION_SECONDS",
@@ -229,6 +273,78 @@ def cubic_decay_correction(
         h00 * value_delta
         + h10 * slope_delta * max(int(span_samples), 1)
     )
+
+
+def build_replayed_event_waveform(
+    values: np.ndarray,
+    *,
+    repeat_count: int,
+    sample_rate: int,
+) -> np.ndarray:
+    """Repeat the calibrated scenario while smoothing only the loop seam."""
+    waveform = np.asarray(
+        values,
+        dtype=np.float32,
+    )
+
+    repeats = max(1, int(repeat_count))
+    if repeats == 1 or waveform.size < 3:
+        return waveform.copy()
+
+    output = np.tile(
+        waveform,
+        repeats,
+    ).astype(np.float32)
+
+    seam_samples = max(
+        1,
+        min(
+            int(
+                round(
+                    max(1, int(sample_rate))
+                    * EVALUATION_INJECTION_EVENT_LOOP_BLEND_SECONDS
+                )
+            ),
+            max(1, waveform.size // 8),
+        ),
+    )
+
+    source_start_value = float(waveform[0])
+    source_start_slope = (
+        float(waveform[1] - waveform[0])
+        if waveform.size >= 2
+        else 0.0
+    )
+
+    for repeat_index in range(1, repeats):
+        boundary = repeat_index * waveform.size
+        previous_value = float(output[boundary - 1])
+        previous_slope = (
+            float(output[boundary - 1] - output[boundary - 2])
+            if boundary >= 2
+            else 0.0
+        )
+        value_delta = previous_value - source_start_value
+        slope_delta = previous_slope - source_start_slope
+
+        usable = min(
+            seam_samples,
+            output.size - boundary,
+            waveform.size,
+        )
+        for offset in range(usable):
+            progress = offset / max(seam_samples, 1)
+            output[boundary + offset] = (
+                float(waveform[offset])
+                + cubic_decay_correction(
+                    progress,
+                    value_delta,
+                    slope_delta,
+                    seam_samples,
+                )
+            )
+
+    return output
 
 
 def transition_sample_count(
@@ -361,6 +477,9 @@ class InjectionSession:
     pre_seconds: float
     post_seconds: float
     run_slm: bool
+    event_loop_count: int = (
+        EVALUATION_INJECTION_EVENT_LOOPS
+    )
     state: str = "ARMED"
     armed_at: str = field(
         default_factory=now_iso
@@ -495,7 +614,7 @@ class InjectionSession:
             * self.baseline_seconds
         )
 
-        scenario_total = max(
+        source_scenario_total = max(
             1,
             min(
                 len(
@@ -506,6 +625,32 @@ class InjectionSession:
                 )
                 for lead_id
                 in DISPLAY_LEADS
+            ),
+        )
+
+        prepared_lengths = [
+            len(
+                self.injection_waveforms_mv.get(
+                    lead_id,
+                    [],
+                )
+            )
+            for lead_id in DISPLAY_LEADS
+            if len(
+                self.injection_waveforms_mv.get(
+                    lead_id,
+                    [],
+                )
+            ) > 0
+        ]
+
+        scenario_total = max(
+            1,
+            min(prepared_lengths)
+            if prepared_lengths
+            else (
+                source_scenario_total
+                * max(1, self.event_loop_count)
             ),
         )
 
@@ -575,9 +720,23 @@ class InjectionSession:
             "preSeconds": (
                 self.pre_seconds
             ),
-            "eventSeconds": (
-                self.scenario
-                .duration_seconds
+            "eventSeconds": round(
+                scenario_total / rate,
+                3,
+            ),
+            "sourceEventSeconds": round(
+                source_scenario_total / rate,
+                3,
+            ),
+            "eventLoopCount": max(
+                1,
+                self.event_loop_count,
+            ),
+            "eventReplayUsed": (
+                self.event_loop_count > 1
+            ),
+            "eventLoopBlendSeconds": (
+                EVALUATION_INJECTION_EVENT_LOOP_BLEND_SECONDS
             ),
             "postSeconds": (
                 self.post_seconds
@@ -1135,6 +1294,9 @@ class EvaluationInjectionService:
                 post_seconds
             ),
             run_slm=run_slm,
+            event_loop_count=(
+                EVALUATION_INJECTION_EVENT_LOOPS
+            ),
             oracle_demo=(
                 dict(oracle_demo)
                 if isinstance(oracle_demo, dict)
@@ -1545,15 +1707,21 @@ class EvaluationInjectionService:
         ):
             return
 
-        event_samples = min(
-            len(
-                session.scenario
-                .waveforms_mv[
-                    lead_id
-                ]
+        event_samples = (
+            min(
+                len(
+                    session.scenario
+                    .waveforms_mv[
+                        lead_id
+                    ]
+                )
+                for lead_id
+                in DISPLAY_LEADS
             )
-            for lead_id
-            in DISPLAY_LEADS
+            * max(
+                1,
+                session.event_loop_count,
+            )
         )
 
         active_rate = max(
@@ -1748,9 +1916,17 @@ class EvaluationInjectionService:
                 else 0.0
             )
 
+            replayed = build_replayed_event_waveform(
+                calibrated,
+                repeat_count=(
+                    session.event_loop_count
+                ),
+                sample_rate=sample_rate,
+            )
+
             session.injection_waveforms_mv[
                 lead_id
-            ] = calibrated
+            ] = replayed
             session.injection_display_centers_mv[
                 lead_id
             ] = base_center
@@ -1773,6 +1949,12 @@ class EvaluationInjectionService:
                 "targetScaleMv": round(target_scale, 6),
                 "entryAnchorMv": round(entry_value, 6),
                 "entrySlopeMvPerSample": round(entry_slope, 6),
+                "sourceEventSamples": int(calibrated.size),
+                "replayedEventSamples": int(replayed.size),
+                "eventLoopCount": int(session.event_loop_count),
+                "eventLoopBlendSeconds": (
+                    EVALUATION_INJECTION_EVENT_LOOP_BLEND_SECONDS
+                ),
             }
 
         print(
@@ -1790,6 +1972,12 @@ class EvaluationInjectionService:
                 ),
                 "transitionSeconds": (
                     INJECTION_TRANSITION_SECONDS
+                ),
+                "eventLoopCount": (
+                    session.event_loop_count
+                ),
+                "eventLoopBlendSeconds": (
+                    EVALUATION_INJECTION_EVENT_LOOP_BLEND_SECONDS
                 ),
                 "leads": (
                     session
@@ -2151,6 +2339,27 @@ class EvaluationInjectionService:
         print(
             "[KGEN EVAL INJECTION START]",
             session.public_status(),
+        )
+
+        print(
+            "[KGEN EVAL EVENT REPLAY]",
+            {
+                "sessionId": session.session_id,
+                "scenarioId": session.scenario.scenario_id,
+                "repeatCount": session.event_loop_count,
+                "sourceEventSeconds": round(
+                    session.scenario.duration_seconds,
+                    3,
+                ),
+                "capturedEventSeconds": session.public_status().get(
+                    "eventSeconds"
+                ),
+                "loopBlendSeconds": (
+                    EVALUATION_INJECTION_EVENT_LOOP_BLEND_SECONDS
+                ),
+                "freezeUsed": False,
+            },
+            flush=True,
         )
 
     def _frame_arrays(
@@ -2682,8 +2891,8 @@ class EvaluationInjectionService:
             )
 
             # Persisting the capture is the only truly fatal finalization step.
-            # Once the 20-second capture exists, downstream enrichment failures
-            # must not turn a valid captured episode into "Evaluation Failed".
+            # Once the configured pre + replayed event + post capture exists, downstream
+            # enrichment failures must not turn a valid capture into "Evaluation Failed".
             finalization_stage = "persist_episode"
             metadata = await asyncio.to_thread(
                 self._persist_episode,
@@ -3018,15 +3227,41 @@ class EvaluationInjectionService:
             )
         )
 
-        event_samples = min(
+        prepared_event_lengths = [
             len(
-                session.scenario
-                .waveforms_mv[
-                    lead_id
-                ]
+                session.injection_waveforms_mv.get(
+                    lead_id,
+                    [],
+                )
             )
-            for lead_id
-            in DISPLAY_LEADS
+            for lead_id in DISPLAY_LEADS
+            if len(
+                session.injection_waveforms_mv.get(
+                    lead_id,
+                    [],
+                )
+            ) > 0
+        ]
+
+        event_samples = (
+            min(prepared_event_lengths)
+            if prepared_event_lengths
+            else (
+                min(
+                    len(
+                        session.scenario
+                        .waveforms_mv[
+                            lead_id
+                        ]
+                    )
+                    for lead_id
+                    in DISPLAY_LEADS
+                )
+                * max(
+                    1,
+                    session.event_loop_count,
+                )
+            )
         )
 
         post_samples = int(
@@ -3454,6 +3689,35 @@ class EvaluationInjectionService:
                 session.scenario
                 .scenario_id
             ),
+            "eventReplay": {
+                "enabled": (
+                    session.event_loop_count > 1
+                ),
+                "repeatCount": int(
+                    session.event_loop_count
+                ),
+                "sourceEpisodeDurationSeconds": round(
+                    min(
+                        len(
+                            session.scenario.waveforms_mv[lead_id]
+                        )
+                        for lead_id in DISPLAY_LEADS
+                    ) / rate,
+                    3,
+                ),
+                "capturedEventDurationSeconds": round(
+                    event_samples / rate,
+                    3,
+                ),
+                "loopBlendSeconds": (
+                    EVALUATION_INJECTION_EVENT_LOOP_BLEND_SECONDS
+                ),
+                "reason": (
+                    "evaluation_demo_extended_event_view"
+                    if session.event_loop_count > 1
+                    else "not_replayed"
+                ),
+            },
             "patientId": stored_patient_id,
             "patient": stored_patient,
             "oracleDemo": (
@@ -3527,6 +3791,12 @@ class EvaluationInjectionService:
                 "crossfadeSignalSummationUsed": False,
                 "displayMatchesPersistedMv": True,
                 "scenarioPhysicalAmplitudeCalibrated": True,
+                "eventReplayCount": int(
+                    session.event_loop_count
+                ),
+                "eventLoopBlendSeconds": (
+                    EVALUATION_INJECTION_EVENT_LOOP_BLEND_SECONDS
+                ),
                 "leadCalibration": (
                     session
                     .injection_calibration

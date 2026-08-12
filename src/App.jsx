@@ -26,8 +26,20 @@ import {
 } from "./evaluation/epicEvaluationDemo";
 import "./index.css";
 
-const SMART_ANALYTICS_NOTICE_DELAY_AFTER_POST_MS = 7000;
-const SMART_ANALYTICS_NOTICE_VISIBLE_MS = 2000;
+const SMART_ANALYTICS_NOTICE_DELAY_AFTER_POST_MS = Math.max(
+  0,
+  Number(
+    import.meta.env
+      .VITE_SMART_ANALYTICS_NOTICE_DELAY_AFTER_POST_MS
+  ) || 3000
+);
+const SMART_ANALYTICS_NOTICE_VISIBLE_MS = Math.max(
+  800,
+  Number(
+    import.meta.env
+      .VITE_SMART_ANALYTICS_NOTICE_VISIBLE_MS
+  ) || 2000
+);
 
 import { createInitialTelemetry, nextTelemetryFrame } from "./services/telemetryService";
 import { formatCurrentTime, getVitalAlerts } from "./utils/clinicalEvents";
@@ -235,8 +247,8 @@ const queueSmartAnalyticsNotice = useCallback((notice) => {
 
   // evaluation.injection.captured is emitted immediately after the 6-second
   // post-capture window has been persisted. The ready notification is held
-  // until seven seconds after that moment. If the captured SSE event was
-  // missed, fall back to seven seconds from COMPLETE/status recovery.
+  // until three seconds after that moment by default. If the captured SSE event was
+  // missed, fall back to the same delay from COMPLETE/status recovery.
   const postCaptureAt =
     postCaptureCompletedAtRef.current > 0
       ? postCaptureCompletedAtRef.current

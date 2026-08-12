@@ -2560,7 +2560,9 @@ const completedInjectionEpisodeId =
                 ).toFixed(1)}s`
               : injectionStatus.state ===
                 "INJECTING"
-              ? `Injecting ${injectionStatus.scenarioDisplay || "evaluation waveform"}`
+              ? `Injecting ${injectionStatus.scenarioDisplay || "evaluation waveform"} • ${Number(
+                  injectionStatus.remainingSeconds || 0
+                ).toFixed(1)}s`
               : injectionStatus.state ===
                 "POST_EVENT"
               ? `Post capture • ${Number(
