@@ -104,16 +104,15 @@ const ECG_GAIN_OPTIONS = [
 
 // V7.3.9 display-only autoscale tuning.
 // Keep morphology/data untouched; only the visual mV-to-pixel gain changes.
-const AUTO_GAIN_MIN = 0.10;
+const AUTO_GAIN_MIN = 0.02;
 const AUTO_GAIN_MAX = 40;
 
 // V7.3.11: each ECG lead keeps its own calibrated display gain.
 // Every visible point in that specific lead participates in the safety cap,
 // so the lead can use the largest gain that still contains its hardest peak.
 // Morphology/data are never modified; this is display-only scaling.
-const AUTO_GAIN_ZOOM_IN_ALPHA = 0.08;
-const AUTO_GAIN_ROUNDING = 20; // 0.05 mm/mV increments.
-const AUTO_TARGET_PEAK_FILL = 0.74;
+// Internal gain is continuous; the UI label may round it for readability.
+const AUTO_GAIN_ROUNDING = 100; // 0.01 mm/mV increments.
 
 
 const WAVEFORM_SOURCES = [
@@ -150,10 +149,21 @@ const WAVEFORM_SOURCES = [
 ];
 const ECG_ZERO_MV = 0;
 
-const AUTO_HEADROOM = 0.92;
-const AUTO_TARGET_P2P_FILL = 0.68;
-const AUTO_KEEP_MIN_P2P_FILL = 0.52;
-const AUTO_KEEP_MAX_P2P_FILL = 0.80;
+// V7.3.12 display-only autoscale policy.
+// Each lead stays independent. The controller has two jobs:
+// 1) a synchronous hard ceiling keeps every *currently visible* point inside
+//    the real rendered canvas with margin; 2) hysteresis prevents gain hunting
+//    when a stable API Range waveform scrolls through the window.
+const AUTO_HEADROOM = 0.80;
+const AUTO_TARGET_PEAK_FILL = 0.68;
+const AUTO_GAIN_BOOTSTRAP = 0.75;
+const AUTO_GAIN_MIN_CALIBRATION_SECONDS = 0.75;
+const AUTO_GAIN_ZOOM_IN_DEADBAND_RATIO = 1.20;
+const AUTO_GAIN_TARGET_STABILITY_MS = 1200;
+const AUTO_GAIN_POST_SAFETY_HOLD_MS = 1800;
+const AUTO_GAIN_ZOOM_IN_TAU_MS = 2800;
+const AUTO_GAIN_MAX_ZOOM_IN_PER_SECOND = 0.22;
+const AUTO_GAIN_SAFETY_PAD = 0.985;
 
 const MIN_PX_PER_MM = 3.2;
 const MAX_PX_PER_MM = 9.0;
@@ -401,38 +411,87 @@ function getClosestGain(allowedGains, idealGain) {
   }, allowedGains[0]);
 }
 
+function floorSafeGain(value) {
+  const finite = Number(value);
+  if (!Number.isFinite(finite)) return AUTO_GAIN_MIN;
+
+  return Math.max(
+    AUTO_GAIN_MIN,
+    Math.floor(
+      clamp(finite, AUTO_GAIN_MIN, AUTO_GAIN_MAX) *
+        AUTO_GAIN_ROUNDING
+    ) / AUTO_GAIN_ROUNDING
+  );
+}
+
+function getHardSafeGain({
+  samples,
+  rowHeightPx,
+  pxPerMm,
+}) {
+  const halfRowMm = getHalfRowMm(rowHeightPx, pxPerMm);
+  const amplitude = getLeadAmplitude(samples);
+  const hardAbsMv = amplitude.hardAbsMv;
+
+  if (
+    !halfRowMm ||
+    !Number.isFinite(hardAbsMv) ||
+    hardAbsMv < 0.005
+  ) {
+    return {
+      hardSafeGain: AUTO_GAIN_MAX,
+      amplitude,
+    };
+  }
+
+  return {
+    hardSafeGain: clamp(
+      (
+        AUTO_HEADROOM *
+        AUTO_GAIN_SAFETY_PAD *
+        halfRowMm
+      ) / hardAbsMv,
+      AUTO_GAIN_MIN,
+      AUTO_GAIN_MAX
+    ),
+    amplitude,
+  };
+}
+
 function chooseLeadAutoGain({
   samples,
   currentGain,
   rowHeightPx,
   pxPerMm,
+  sampleRate,
+  nowMs,
+  controller,
 }) {
-  const halfRowMm = getHalfRowMm(rowHeightPx, pxPerMm);
   const current = clamp(
-    Number(currentGain) || DEFAULT_GAIN_MM_PER_MV,
+    Number(currentGain) || AUTO_GAIN_BOOTSTRAP,
     AUTO_GAIN_MIN,
     AUTO_GAIN_MAX
   );
 
-  if (!halfRowMm) return current;
+  if (!rowHeightPx || !pxPerMm) {
+    return current;
+  }
 
-  const amplitude = getLeadAmplitude(samples);
+  const {
+    hardSafeGain,
+    amplitude,
+  } = getHardSafeGain({
+    samples,
+    rowHeightPx,
+    pxPerMm,
+  });
+
   const hardAbsMv = amplitude.hardAbsMv;
 
   if (!Number.isFinite(hardAbsMv) || hardAbsMv < 0.005) {
     return current;
   }
 
-  // Hard safety ceiling: the single largest visible sample in THIS lead must
-  // remain inside the tile. This is what guarantees no peak clipping.
-  const hardSafeGain = clamp(
-    (AUTO_HEADROOM * halfRowMm) / hardAbsMv,
-    AUTO_GAIN_MIN,
-    AUTO_GAIN_MAX
-  );
-
-  // Preferred gain: fill most of this lead's tile using robust morphology,
-  // while still respecting the hard visible-extrema ceiling above.
   const representativeAbsMv = Math.max(
     amplitude.displayAbsMv,
     amplitude.robustAbsMv,
@@ -440,31 +499,150 @@ function chooseLeadAutoGain({
     0.01
   );
 
+  const halfRowMm = getHalfRowMm(rowHeightPx, pxPerMm);
+
   const preferredGain = clamp(
-    (AUTO_TARGET_PEAK_FILL * halfRowMm) / representativeAbsMv,
+    (AUTO_TARGET_PEAK_FILL * halfRowMm) /
+      representativeAbsMv,
     AUTO_GAIN_MIN,
     AUTO_GAIN_MAX
   );
 
-  const targetGain = Math.min(preferredGain, hardSafeGain);
-
-  // If a larger peak enters the visible frame, zoom out immediately to the
-  // safe gain so that peak is contained. When the lead becomes smaller, zoom
-  // back in slowly to avoid gain hunting/flicker.
-  let next =
-    targetGain < current
-      ? targetGain
-      : current + (targetGain - current) * AUTO_GAIN_ZOOM_IN_ALPHA;
-
-  next = Math.min(next, hardSafeGain);
-  next = clamp(next, AUTO_GAIN_MIN, AUTO_GAIN_MAX);
-
-  // Round DOWN only. Rounding upward could move a safe gain just beyond the
-  // hard ceiling and reintroduce clipping.
-  return Math.max(
-    AUTO_GAIN_MIN,
-    Math.floor(next * AUTO_GAIN_ROUNDING) / AUTO_GAIN_ROUNDING
+  const targetGain = Math.min(
+    preferredGain,
+    hardSafeGain
   );
+
+  const state = controller || {};
+  const timestamp = Number.isFinite(nowMs)
+    ? nowMs
+    : performance.now();
+
+  const requiredCalibrationSamples = Math.max(
+    1,
+    Math.round(
+      (Number(sampleRate) || 220) *
+        AUTO_GAIN_MIN_CALIBRATION_SECONDS
+    )
+  );
+
+  // Start low and stable while the rolling window is filling. Once enough
+  // actual samples exist, make one initial calibration instead of repeatedly
+  // chasing every new peak during the first second of API Range playback.
+  if (!state.initialized) {
+    if (samples.length < requiredCalibrationSamples) {
+      return Math.min(
+        current,
+        AUTO_GAIN_BOOTSTRAP,
+        hardSafeGain
+      );
+    }
+
+    state.initialized = true;
+    state.lastUpdatedAt = timestamp;
+    state.holdUntil =
+      timestamp + AUTO_GAIN_POST_SAFETY_HOLD_MS;
+    state.candidateGain = null;
+    state.candidateSince = null;
+
+    return floorSafeGain(
+      Math.min(
+        targetGain,
+        hardSafeGain * AUTO_GAIN_SAFETY_PAD
+      )
+    );
+  }
+
+  // Absolute safety has priority over smoothness. If a new visible point would
+  // exceed the real canvas, lower THIS lead's gain immediately. This is the
+  // only intentionally immediate autoscale transition.
+  if (current > hardSafeGain) {
+    state.lastUpdatedAt = timestamp;
+    state.holdUntil =
+      timestamp + AUTO_GAIN_POST_SAFETY_HOLD_MS;
+    state.candidateGain = null;
+    state.candidateSince = null;
+
+    return floorSafeGain(
+      hardSafeGain * AUTO_GAIN_SAFETY_PAD
+    );
+  }
+
+  // Once safe, do not "breathe" the gain for small target changes. A stable
+  // waveform should look stable even while the 6 s rolling window advances.
+  if (
+    targetGain <=
+    current * AUTO_GAIN_ZOOM_IN_DEADBAND_RATIO
+  ) {
+    state.candidateGain = null;
+    state.candidateSince = null;
+    state.lastUpdatedAt = timestamp;
+    return current;
+  }
+
+  if (
+    Number(state.holdUntil) > timestamp
+  ) {
+    return current;
+  }
+
+  // Require the higher-gain target to remain similar for a while before
+  // zooming in. This prevents recurring QRS peaks entering/leaving the window
+  // from repeatedly changing gain.
+  const previousCandidate = Number(state.candidateGain);
+  const candidateChanged =
+    !Number.isFinite(previousCandidate) ||
+    Math.abs(
+      targetGain - previousCandidate
+    ) /
+      Math.max(previousCandidate, 0.01) >
+      0.10;
+
+  if (candidateChanged) {
+    state.candidateGain = targetGain;
+    state.candidateSince = timestamp;
+    return current;
+  }
+
+  if (
+    timestamp -
+      Number(state.candidateSince || timestamp) <
+    AUTO_GAIN_TARGET_STABILITY_MS
+  ) {
+    return current;
+  }
+
+  const previousUpdate = Number(state.lastUpdatedAt);
+  const dtMs = Number.isFinite(previousUpdate)
+    ? clamp(timestamp - previousUpdate, 16, 500)
+    : 50;
+
+  state.lastUpdatedAt = timestamp;
+
+  // Time-based easing makes behavior independent of browser/render frequency.
+  const alpha =
+    1 - Math.exp(-dtMs / AUTO_GAIN_ZOOM_IN_TAU_MS);
+
+  const eased =
+    current + (targetGain - current) * alpha;
+
+  // Additional rate limiter: even after the target is accepted, a lead cannot
+  // suddenly zoom in because the browser happened to pause between renders.
+  const maxRateGain =
+    current *
+    Math.exp(
+      AUTO_GAIN_MAX_ZOOM_IN_PER_SECOND *
+        (dtMs / 1000)
+    );
+
+  const next = Math.min(
+    eased,
+    maxRateGain,
+    targetGain,
+    hardSafeGain * AUTO_GAIN_SAFETY_PAD
+  );
+
+  return floorSafeGain(next);
 }
 
 function getDisplayScale({ samples, gainMmPerMv, rowHeightPx, pxPerMm }) {
@@ -643,7 +821,27 @@ export default function SevenLeadWaveformPage({
  
 
   const [leadAutoGains, setLeadAutoGains] = useState(() =>
-    Object.fromEntries(LEADS.map((lead) => [lead.id, DEFAULT_GAIN_MM_PER_MV]))
+    Object.fromEntries(LEADS.map((lead) => [lead.id, AUTO_GAIN_BOOTSTRAP]))
+  );
+
+  // Actual rendered canvas geometry, measured per lead. The previous autoscale
+  // estimated tile height from the outer grid; overlays/padding made that
+  // estimate too optimistic and allowed peaks to hit the WebGL clamp.
+  const [leadViewportMetrics, setLeadViewportMetrics] = useState({});
+
+  const leadGainControllerRef = useRef(
+    Object.fromEntries(
+      LEADS.map((lead) => [
+        lead.id,
+        {
+          initialized: false,
+          holdUntil: 0,
+          candidateGain: null,
+          candidateSince: null,
+          lastUpdatedAt: 0,
+        },
+      ])
+    )
   );
 
   const [gridSize, setGridSize] = useState({
@@ -652,6 +850,43 @@ export default function SevenLeadWaveformPage({
   });
 
   const gridRef = useRef(null);
+
+  function updateLeadViewportMetrics(
+    leadId,
+    metrics
+  ) {
+    const widthPx = Number(metrics?.widthPx);
+    const heightPx = Number(metrics?.heightPx);
+
+    if (
+      !Number.isFinite(widthPx) ||
+      !Number.isFinite(heightPx) ||
+      widthPx <= 0 ||
+      heightPx <= 0
+    ) {
+      return;
+    }
+
+    setLeadViewportMetrics((previous) => {
+      const prior = previous[leadId];
+
+      if (
+        prior &&
+        Math.abs(prior.widthPx - widthPx) < 0.5 &&
+        Math.abs(prior.heightPx - heightPx) < 0.5
+      ) {
+        return previous;
+      }
+
+      return {
+        ...previous,
+        [leadId]: {
+          widthPx,
+          heightPx,
+        },
+      };
+    });
+  }
 
   useEffect(() => {
     if (!oracleAutoDemo?.enabled) {
@@ -1138,10 +1373,23 @@ export default function SevenLeadWaveformPage({
       Object.fromEntries(
         LEADS.map((lead) => [
           lead.id,
-          DEFAULT_GAIN_MM_PER_MV,
+          AUTO_GAIN_BOOTSTRAP,
         ])
       )
     );
+    leadGainControllerRef.current =
+      Object.fromEntries(
+        LEADS.map((lead) => [
+          lead.id,
+          {
+            initialized: false,
+            holdUntil: 0,
+            candidateGain: null,
+            candidateSince: null,
+            lastUpdatedAt: 0,
+          },
+        ])
+      );
 
     setWaveformSource(nextSource);
   }
@@ -1642,10 +1890,23 @@ useEffect(() => {
     Object.fromEntries(
       LEADS.map((lead) => [
         lead.id,
-        DEFAULT_GAIN_MM_PER_MV,
+        AUTO_GAIN_BOOTSTRAP,
       ])
     )
   );
+  leadGainControllerRef.current =
+    Object.fromEntries(
+      LEADS.map((lead) => [
+        lead.id,
+        {
+          initialized: false,
+          holdUntil: 0,
+          candidateGain: null,
+          candidateSince: null,
+          lastUpdatedAt: 0,
+        },
+      ])
+    );
 
   const disconnectWaveforms = connectWaveformStream({
     source: streamSource,
@@ -1818,74 +2079,148 @@ const rowHeightPx = Math.max(1, tileHeightPx);
   useEffect(() => {
     if (!rowHeightPx || !pxPerMm) return;
 
+    const nowMs =
+      typeof performance !== "undefined"
+        ? performance.now()
+        : Date.now();
+
     setLeadAutoGains((previousGains) => {
       let changed = false;
       const nextGains = { ...previousGains };
 
       for (const lead of LEADS) {
+        const viewport =
+          leadViewportMetrics[lead.id] || {};
+
+        const actualRowHeightPx =
+          Number(viewport.heightPx) || rowHeightPx;
+
+        const actualPxPerMm =
+          Number(viewport.widthPx) > 0
+            ? clamp(
+                Number(viewport.widthPx) /
+                  paperWidthMm,
+                MIN_PX_PER_MM,
+                MAX_PX_PER_MM
+              )
+            : pxPerMm;
+
         const currentGain =
-          Number(previousGains[lead.id]) || DEFAULT_GAIN_MM_PER_MV;
+          Number(previousGains[lead.id]) ||
+          AUTO_GAIN_BOOTSTRAP;
+
+        const controller =
+          leadGainControllerRef.current[lead.id] ||
+          (leadGainControllerRef.current[lead.id] = {
+            initialized: false,
+            holdUntil: 0,
+            candidateGain: null,
+            candidateSince: null,
+            lastUpdatedAt: 0,
+          });
 
         const nextGain = chooseLeadAutoGain({
           samples: leadWindows[lead.id] || [],
           currentGain,
-          rowHeightPx,
-          pxPerMm,
+          rowHeightPx: actualRowHeightPx,
+          pxPerMm: actualPxPerMm,
+          sampleRate,
+          nowMs,
+          controller,
         });
 
         nextGains[lead.id] = nextGain;
 
-        if (Math.abs(nextGain - currentGain) >= 0.001) {
+        if (Math.abs(nextGain - currentGain) >= 0.0001) {
           changed = true;
         }
       }
 
       return changed ? nextGains : previousGains;
     });
-  }, [leadWindows, rowHeightPx, pxPerMm]);
+  }, [
+    leadWindows,
+    leadViewportMetrics,
+    rowHeightPx,
+    pxPerMm,
+    paperWidthMm,
+    sampleRate,
+  ]);
 
 
   const leadTiles = useMemo(() => {
     return LEADS.map((lead) => {
       const samples = leadWindows[lead.id] || [];
-      const stats = getLeadStats(samples, waveFrame.latestMv?.[lead.id]);
+      const stats = getLeadStats(
+        samples,
+        waveFrame.latestMv?.[lead.id]
+      );
 
-      // const leadGainMode = leadGainModes[lead.id] || DEFAULT_GAIN_MODE;
-      // const autoGain = leadAutoGains[lead.id] || DEFAULT_GAIN_MM_PER_MV;
+      const viewport =
+        leadViewportMetrics[lead.id] || {};
 
-      // const effectiveGain =
-      //   leadGainMode === "auto"
-      //     ? autoGain
-      //     : Number(leadGainMode) || DEFAULT_GAIN_MM_PER_MV;
+      const actualRowHeightPx =
+        Number(viewport.heightPx) || rowHeightPx;
 
-      const autoGain = leadAutoGains[lead.id] || DEFAULT_GAIN_MM_PER_MV;
-const effectiveGain = autoGain;
+      const actualPxPerMm =
+        Number(viewport.widthPx) > 0
+          ? clamp(
+              Number(viewport.widthPx) /
+                paperWidthMm,
+              MIN_PX_PER_MM,
+              MAX_PX_PER_MM
+            )
+          : pxPerMm;
+
+      const autoGain =
+        Number(leadAutoGains[lead.id]) ||
+        AUTO_GAIN_BOOTSTRAP;
+
+      // Render-time safety ceiling. React effects run after paint, so relying
+      // only on the autoscale effect can expose one or more clipped frames
+      // during an abrupt API Range -> episode transition. Recompute the hard
+      // ceiling synchronously from the exact visible samples and exact canvas
+      // geometry before drawing.
+      const { hardSafeGain } =
+        getHardSafeGain({
+          samples,
+          rowHeightPx: actualRowHeightPx,
+          pxPerMm: actualPxPerMm,
+        });
+
+      const effectiveGain =
+        floorSafeGain(
+          Math.min(
+            autoGain,
+            hardSafeGain * AUTO_GAIN_SAFETY_PAD
+          )
+        );
 
       const scale = getDisplayScale({
         samples,
         gainMmPerMv: effectiveGain,
-        rowHeightPx,
-        pxPerMm,
+        rowHeightPx: actualRowHeightPx,
+        pxPerMm: actualPxPerMm,
       });
 
       return {
         ...lead,
         latest: stats.latest,
         p2p: stats.p2p,
-        // gainMode: leadGainMode,
-        // gainMmPerMv: effectiveGain,
         gainMode: DEFAULT_GAIN_MODE,
-gainMmPerMv: effectiveGain,
+        gainMmPerMv: effectiveGain,
         scale,
+        displayPxPerMm: actualPxPerMm,
       };
     });
   }, [
     leadWindows,
     waveFrame.latestMv,
-    // leadGainModes,
     leadAutoGains,
+    leadViewportMetrics,
     rowHeightPx,
     pxPerMm,
+    paperWidthMm,
   ]);
 
 // const gainSummary = useMemo(() => {
@@ -2330,9 +2665,12 @@ const completedInjectionEpisodeId =
   <WaveformTile
     key={`${waveformSource}-${lead.id}`}
     lead={lead}
-    samples={waveFrame.leadsMv?.[lead.id] || []}
+    samples={leadWindows[lead.id] || []}
     visiblePoints={visiblePoints}
-    pxPerMm={pxPerMm}
+    pxPerMm={lead.displayPxPerMm || pxPerMm}
+    onViewportMetrics={(metrics) =>
+      updateLeadViewportMetrics(lead.id, metrics)
+    }
   />
 ))}
 
@@ -2428,6 +2766,7 @@ function WaveformTile({
   samples,
   visiblePoints,
   pxPerMm,
+  onViewportMetrics,
 }) {
   const { scale } = lead;
 
@@ -2450,6 +2789,7 @@ function WaveformTile({
           voltageScaleMmPerMv={lead.gainMmPerMv}
           centerMv={0}
           rightAlignWindow
+          onViewportMetrics={onViewportMetrics}
         />
       </div>
 

@@ -136,6 +136,7 @@ export default function WebGLWaveformCanvas({
   voltageScaleMmPerMv = 10,
   centerMv = 0,
   rightAlignWindow = false,
+  onViewportMetrics,
 }) {
   const canvasRef = useRef(null);
   const glRef = useRef(null);
@@ -145,6 +146,11 @@ export default function WebGLWaveformCanvas({
 
   const colorLocationRef = useRef(null);
   const cssHeightRef = useRef(1);
+  const onViewportMetricsRef = useRef(onViewportMetrics);
+  const lastViewportMetricsRef = useRef({
+    widthPx: 0,
+    heightPx: 0,
+  });
 
   const bufferRef = useRef(new Float32Array(points));
   const verticesRef = useRef(new Float32Array(points * 2));
@@ -172,6 +178,10 @@ export default function WebGLWaveformCanvas({
       max: Math.max(...values),
     };
   }, [values]);
+
+  useEffect(() => {
+    onViewportMetricsRef.current = onViewportMetrics;
+  }, [onViewportMetrics]);
 
   useEffect(() => {
     propsRef.current = {
@@ -243,12 +253,35 @@ export default function WebGLWaveformCanvas({
         const dpr = window.devicePixelRatio || 1;
         const rect = canvas.getBoundingClientRect();
 
-        cssHeightRef.current = Math.max(1, rect.height);
+        const widthPx = Math.max(1, rect.width);
+        const heightPx = Math.max(1, rect.height);
 
-        canvas.width = Math.max(1, Math.floor(rect.width * dpr));
-        canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+        cssHeightRef.current = heightPx;
+
+        canvas.width = Math.max(1, Math.floor(widthPx * dpr));
+        canvas.height = Math.max(1, Math.floor(heightPx * dpr));
 
         gl.viewport(0, 0, canvas.width, canvas.height);
+
+        // Report the geometry that WebGL *actually* uses. The parent uses this
+        // to calculate the hard no-clipping ceiling for each lead. Estimating
+        // height from the outer CSS grid was the main reason large peaks could
+        // still hit the clamp even when the autoscaler thought they were safe.
+        const previous = lastViewportMetricsRef.current;
+        if (
+          Math.abs(previous.widthPx - widthPx) >= 0.5 ||
+          Math.abs(previous.heightPx - heightPx) >= 0.5
+        ) {
+          lastViewportMetricsRef.current = {
+            widthPx,
+            heightPx,
+          };
+
+          onViewportMetricsRef.current?.({
+            widthPx,
+            heightPx,
+          });
+        }
       }
 
       resizeCanvas();

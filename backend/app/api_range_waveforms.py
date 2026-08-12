@@ -57,6 +57,8 @@ class ApiRangeBuffer:
     spo_values: np.ndarray
     temperature_values: np.ndarray
     estimated_hr: int
+    loop_seam_offset_samples: int = 0
+    loop_phase_aligned: bool = False
 
     @property
     def total_samples(self) -> int:
@@ -279,6 +281,70 @@ def normalize_ppg(
         -1,
         1,
     ).astype(np.float32)
+
+
+# V7_3_12_PHASE_ALIGNED_LOOP
+def choose_replay_seam(
+    signals_mv: np.ndarray,
+    sample_rate: int,
+) -> int:
+    """Choose a quiet low-slope place for the replay boundary.
+
+    API Range currently provides a short snapshot that is replayed during a
+    longer evaluation. Looping at an arbitrary first/last sample can create a
+    visible step or split a QRS complex. We rotate the cached replay buffer so
+    the wrap occurs near baseline and low slope, then the existing short
+    crossfade handles the remaining tiny mismatch.
+
+    This does not rescale ECG values and does not touch the synthetic episode.
+    """
+    array = np.asarray(signals_mv, dtype=np.float32)
+    if array.ndim != 2 or array.shape[0] < 32:
+        return 0
+
+    lead_index = 1 if array.shape[1] > 1 else 0
+    lead = array[:, lead_index]
+    finite = np.isfinite(lead)
+    if finite.sum() < 32:
+        return 0
+
+    clean = lead.copy()
+    center = float(np.nanmedian(clean))
+    clean[~np.isfinite(clean)] = center
+
+    amplitude = np.abs(clean - center)
+    slope = np.abs(np.gradient(clean))
+
+    amp_scale = float(np.nanpercentile(amplitude, 90))
+    slope_scale = float(np.nanpercentile(slope, 90))
+    if not np.isfinite(amp_scale) or amp_scale <= 1e-6:
+        amp_scale = 1.0
+    if not np.isfinite(slope_scale) or slope_scale <= 1e-6:
+        slope_scale = 1.0
+
+    score = amplitude / amp_scale + 1.35 * slope / slope_scale
+
+    # Keep the seam away from the outermost samples so the selected point has
+    # enough context on both sides.
+    guard = int(max(8, round(max(sample_rate, 1) * 0.30)))
+    if score.size <= guard * 2 + 4:
+        return 0
+
+    score[:guard] = np.inf
+    score[-guard:] = np.inf
+
+    seam = int(np.argmin(score))
+    return seam if np.isfinite(score[seam]) else 0
+
+
+def rotate_replay_series(values: np.ndarray, seam: int) -> np.ndarray:
+    array = np.asarray(values)
+    if array.ndim < 1 or array.shape[0] == 0 or seam <= 0:
+        return array.copy()
+    seam = int(seam) % array.shape[0]
+    if seam == 0:
+        return array.copy()
+    return np.roll(array, -seam, axis=0)
 
 
 def loop_safe_crossfade(
@@ -591,6 +657,28 @@ async def load_api_range_buffer(
         )
     )
 
+    # Put the circular replay boundary at a quiet point before applying the
+    # short seam blend. This is much less visually disruptive than blending an
+    # arbitrary QRS-containing first/last boundary.
+    loop_seam_offset_samples = choose_replay_seam(
+        signals_mv,
+        sample_rate,
+    )
+    if loop_seam_offset_samples > 0:
+        signals_mv = rotate_replay_series(
+            signals_mv, loop_seam_offset_samples
+        )
+        ppg_signal = rotate_replay_series(
+            ppg_signal, loop_seam_offset_samples
+        )
+        spo_values = rotate_replay_series(
+            spo_values, loop_seam_offset_samples
+        )
+        temperature_values = rotate_replay_series(
+            temperature_values, loop_seam_offset_samples
+        )
+        normalized_signals = normalize_for_webgl(signals_mv)
+
     loop_blend_samples = int(
         round(sample_rate * API_RANGE_LOOP_BLEND_SECONDS)
     )
@@ -634,6 +722,30 @@ async def load_api_range_buffer(
         )
     )
 
+    try:
+        p01 = np.nanpercentile(signals_mv, 1, axis=0)
+        p99 = np.nanpercentile(signals_mv, 99, axis=0)
+        p2p99 = p99 - p01
+        print(
+            "[KGEN API RANGE ECG SCALE DIAGNOSTIC]",
+            {
+                "ecgValueToMv": float(settings.API_RANGE_ECG_VALUE_TO_MV),
+                "p01P99MvByLead": {
+                    lead_id: round(float(p2p99[index]), 3)
+                    for index, lead_id in enumerate(API_LEADS.values())
+                },
+                "maxP01P99Mv": round(float(np.nanmax(p2p99)), 3),
+                "note": (
+                    "Verify API_RANGE_ECG_VALUE_TO_MV if these values are "
+                    "unexpectedly large; this patch never silently rescales "
+                    "physical ECG data."
+                ),
+            },
+            flush=True,
+        )
+    except Exception:
+        pass
+
     return ApiRangeBuffer(
         sample_rate=sample_rate,
         source_sample_rate=(
@@ -649,6 +761,8 @@ async def load_api_range_buffer(
             temperature_values
         ),
         estimated_hr=estimated_hr,
+        loop_seam_offset_samples=loop_seam_offset_samples,
+        loop_phase_aligned=loop_seam_offset_samples > 0,
     )
 
 
@@ -776,6 +890,9 @@ async def build_api_range_frame(
         ),
         "loopSmoothed": API_RANGE_LOOP_BLEND_SECONDS > 0,
         "loopBlendSeconds": round(API_RANGE_LOOP_BLEND_SECONDS, 3),
+        "loopPhaseAligned": bool(buffer.loop_phase_aligned),
+        "loopSeamOffsetSamples": int(buffer.loop_seam_offset_samples),
+        "ecgValueToMv": float(settings.API_RANGE_ECG_VALUE_TO_MV),
         "xAxis": {
             "type": "time",
             "unit": "seconds",
