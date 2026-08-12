@@ -66,6 +66,32 @@ export function resetWaveformSessionId() {
 }
 
 
+
+// Only one waveform EventSource may own the browser session at a time.
+// React remounts/source transitions can otherwise leave overlapping SSE
+// requests alive briefly; on Cloud Run that can exhaust concurrency and, more
+// importantly, feed two different sources into one evaluation session.
+let activeWaveformConnection = null;
+
+function closeActiveWaveformConnection(reason = "replace") {
+  const active = activeWaveformConnection;
+  if (!active) return;
+
+  activeWaveformConnection = null;
+
+  console.info("[KGEN WAVEFORM SSE] closing active connection", {
+    reason,
+    source: active.source,
+    sessionId: active.sessionId,
+  });
+
+  try {
+    active.eventSource.close();
+  } catch {
+    // Closing an already-closed EventSource is harmless.
+  }
+}
+
 export function connectWaveformStream({
   source = "physionet",
   sessionId =
@@ -100,6 +126,11 @@ export function connectWaveformStream({
     }
   );
 
+  // Replace any prior waveform transport before opening this one. This is
+  // intentionally global to the browser bundle because one bedside page uses
+  // one waveform session at a time.
+  closeActiveWaveformConnection("new-connection");
+
   const eventSource =
     new EventSource(
       url.toString(),
@@ -107,6 +138,14 @@ export function connectWaveformStream({
         withCredentials: true,
       }
     );
+
+  const connectionToken = Symbol("waveform-connection");
+  activeWaveformConnection = {
+    token: connectionToken,
+    eventSource,
+    source,
+    sessionId,
+  };
 
   eventSource.addEventListener(
     "waveform-frame",
@@ -152,6 +191,18 @@ export function connectWaveformStream({
       }
     );
 
-    eventSource.close();
+    // A cleanup from an older React effect must never close the newer
+    // replacement connection.
+    if (
+      activeWaveformConnection?.token === connectionToken
+    ) {
+      activeWaveformConnection = null;
+    }
+
+    try {
+      eventSource.close();
+    } catch {
+      // No-op.
+    }
   };
 }

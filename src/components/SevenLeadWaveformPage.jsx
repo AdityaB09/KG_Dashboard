@@ -456,13 +456,25 @@ export default function SevenLeadWaveformPage({
   epicAutoDemo,
   onEpicAutoDemoChange,
 }) {
+  // Automatic SMART evaluation must never briefly open the legacy INCART
+  // stream before switching to API Range. On Cloud Run that race can leave
+  // both long-lived SSE requests alive for the same waveform session and the
+  // evaluation service will see its base source change mid-capture.
+  const autoEvaluationEnabled = Boolean(
+    oracleAutoDemo?.enabled || epicAutoDemo?.enabled
+  );
+
+  const initialWaveformSource = autoEvaluationEnabled
+    ? API_RANGE_EPISODE_SOURCE
+    : "incart";
+
   const [waveFrame, setWaveFrame] = useState(() =>
-  createEmptyFrame("incart")
-);
+    createEmptyFrame(backendWaveformSource(initialWaveformSource))
+  );
   const [leadWindows, setLeadWindows] = useState(EMPTY_LEADS);
   const [streamStatus, setStreamStatus] = useState("connecting");
   const [waveformSource, setWaveformSource] =
-  useState("incart");
+    useState(initialWaveformSource);
   const [
   sourceBeforeEvaluation,
   setSourceBeforeEvaluation,
@@ -1358,11 +1370,22 @@ useEffect(() => {
   let active = true;
 
   if (
-  waveformSource ===
-  "evaluation"
-) {
-  return undefined;
-}
+    waveformSource === "evaluation"
+  ) {
+    return undefined;
+  }
+
+  // In Oracle/Epic automatic evaluation mode the only legal bedside stream
+  // is API Range + Episode. If state is still transitioning, wait instead of
+  // opening INCART/PhysioNet for a few milliseconds. This removes the source
+  // race visible on Cloud Run.
+  if (
+    autoEvaluationEnabled &&
+    waveformSource !== API_RANGE_EPISODE_SOURCE
+  ) {
+    setStreamStatus("connecting");
+    return undefined;
+  }
 
   const streamSource =
     backendWaveformSource(
@@ -1432,7 +1455,11 @@ useEffect(() => {
     active = false;
     disconnectWaveforms?.();
   };
-}, [patient?.id, waveformSource]);
+}, [
+  patient?.id,
+  waveformSource,
+  autoEvaluationEnabled,
+]);
 
 
 useEffect(() => {

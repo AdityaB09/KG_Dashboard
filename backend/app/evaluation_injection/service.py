@@ -1276,6 +1276,33 @@ class EvaluationInjectionService:
             }:
                 return frame
 
+            # Oracle/Epic automatic evaluation is explicitly API Range +
+            # synthetic episode + API Range. A stale legacy INCART SSE request
+            # must not be allowed to claim or change the base source for the
+            # same waveform session. Ignore it rather than failing the capture.
+            if (
+                (session.oracle_demo or session.epic_demo)
+                and not is_api_range_source(frame_source)
+            ):
+                print(
+                    "[KGEN EVAL IGNORE NON-API-RANGE SOURCE]",
+                    {
+                        "sessionId": session_id,
+                        "scenarioId": session.scenario.scenario_id,
+                        "ignoredSource": frame_source,
+                        "requiredSource": "api-range",
+                        "state": session.state,
+                    },
+                    flush=True,
+                )
+
+                output = dict(frame)
+                output["evaluationInjection"] = {
+                    **session.public_status(),
+                    "suppressNormalEpisodeObserver": True,
+                }
+                return output
+
             if session.state == "ANALYZING":
                 output = dict(frame)
 
