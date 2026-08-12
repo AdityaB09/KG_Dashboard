@@ -94,6 +94,16 @@ const ECG_GAIN_OPTIONS = [
   40,
 ];
 
+// V7.3.9 display-only autoscale tuning.
+// Keep morphology/data untouched; only the visual mV-to-pixel gain changes.
+const AUTO_GAIN_MIN = 0.25;
+const AUTO_GAIN_MAX = 40;
+const AUTO_GAIN_LOOKBACK_SECONDS = 1.35;
+const AUTO_GAIN_ZOOM_OUT_ALPHA = 0.52;
+const AUTO_GAIN_ZOOM_IN_ALPHA = 0.14;
+const AUTO_GAIN_ROUNDING = 20; // 0.05 mm/mV increments for smooth labels.
+
+
 const WAVEFORM_SOURCES = [
   {
     id: "physionet",
@@ -128,10 +138,10 @@ const WAVEFORM_SOURCES = [
 ];
 const ECG_ZERO_MV = 0;
 
-const AUTO_HEADROOM = 0.9;
-const AUTO_TARGET_P2P_FILL = 0.46;
-const AUTO_KEEP_MIN_P2P_FILL = 0.34;
-const AUTO_KEEP_MAX_P2P_FILL = 0.64;
+const AUTO_HEADROOM = 0.92;
+const AUTO_TARGET_P2P_FILL = 0.68;
+const AUTO_KEEP_MIN_P2P_FILL = 0.52;
+const AUTO_KEEP_MAX_P2P_FILL = 0.80;
 
 const MIN_PX_PER_MM = 3.2;
 const MAX_PX_PER_MM = 9.0;
@@ -225,6 +235,13 @@ function formatMvValue(value) {
   return numericValue.toFixed(3);
 }
 
+function formatGainValue(value) {
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue)) return "--";
+  if (numericValue >= 10) return numericValue.toFixed(1);
+  return numericValue.toFixed(2);
+}
+
 function getLeadStats(samples = [], latestFallback) {
   const values = samples.map(Number).filter(Number.isFinite);
 
@@ -280,26 +297,37 @@ function getLeadAmplitude(samples = []) {
       robustP2pMv: 0,
       displayP2pMv: 0,
       robustAbsMv: 0,
+      displayAbsMv: 0,
       hardAbsMv: 0,
+      centerMv: 0,
     };
   }
 
   const minMv = Math.min(...values);
   const maxMv = Math.max(...values);
   const p2pMv = maxMv - minMv;
+  const centerMv = median(values);
 
-  const p05 = percentile(values, 5);
-  const p95 = percentile(values, 95);
-  const robustP2pMv = Math.max(0, p95 - p05);
+  // Use the central 96% of the visible ECG for visual gain. This keeps one
+  // transition spike from shrinking the next several seconds of waveform.
+  const p02 = percentile(values, 2);
+  const p98 = percentile(values, 98);
+  const robustP2pMv = Math.max(0, p98 - p02);
 
+  const centeredAbs = values.map((value) => Math.abs(value - centerMv));
   const absFromZero = values.map((value) => Math.abs(value - ECG_ZERO_MV));
 
-  /*
-    displayP2pMv is used only for gain choice.
-    It avoids one noisy sample dominating the visual gain decision,
-    but it still respects the real peak-to-peak signal.
-  */
-  const displayP2pMv = Math.max(robustP2pMv, p2pMv * 0.65);
+  const robustAbsMv = percentile(centeredAbs, 98);
+  const displayAbsMv = percentile(absFromZero, 99);
+
+  // Do not let a single hard outlier dominate the gain. True recurring QRS
+  // complexes still influence p02/p98 and the 98th/99th-percentile guards.
+  const displayP2pMv = Math.max(
+    robustP2pMv,
+    robustAbsMv * 2,
+    p2pMv * 0.12,
+    0.01
+  );
 
   return {
     minMv,
@@ -307,8 +335,10 @@ function getLeadAmplitude(samples = []) {
     p2pMv,
     robustP2pMv,
     displayP2pMv,
-    robustAbsMv: percentile(absFromZero, 95),
+    robustAbsMv,
+    displayAbsMv,
     hardAbsMv: Math.max(...absFromZero),
+    centerMv,
   };
 }
 
@@ -366,26 +396,17 @@ function chooseAutoGain({ samples, currentGain, rowHeightPx, pxPerMm }) {
 
   const amplitude = getLeadAmplitude(values);
   const rowHeightMm = rowHeightPx / pxPerMm;
-  const current = currentGain || DEFAULT_GAIN_MM_PER_MV;
-
-  if (!rowHeightMm || amplitude.hardAbsMv < 0.005) {
-    return ECG_GAIN_OPTIONS[ECG_GAIN_OPTIONS.length - 1];
-  }
-
-  const viableGains = ECG_GAIN_OPTIONS.filter((gain) =>
-    peakFitsAtGain({
-      hardAbsMv: amplitude.hardAbsMv,
-      gainMmPerMv: gain,
-      rowHeightPx,
-      pxPerMm,
-    })
+  const halfRowMm = rowHeightMm / 2;
+  const current = clamp(
+    Number(currentGain) || DEFAULT_GAIN_MM_PER_MV,
+    AUTO_GAIN_MIN,
+    AUTO_GAIN_MAX
   );
 
-  if (!viableGains.length) {
-    return ECG_GAIN_OPTIONS[0];
+  if (!rowHeightMm || amplitude.displayP2pMv < 0.005) {
+    return AUTO_GAIN_MAX;
   }
 
-  const currentStillFits = viableGains.includes(current);
   const currentP2pFill = getP2pFillRatio({
     p2pMv: amplitude.displayP2pMv,
     gainMmPerMv: current,
@@ -393,24 +414,57 @@ function chooseAutoGain({ samples, currentGain, rowHeightPx, pxPerMm }) {
     pxPerMm,
   });
 
-  /*
-    Hysteresis:
-    Keep the current gain if it is safe and already visually acceptable.
-    This prevents rapid gain flicker.
-  */
+  // The 99th percentile from zero protects normal recurrent peaks and DC
+  // offset while deliberately ignoring isolated transition artifacts.
+  const peakGuardMv = Math.max(
+    amplitude.displayAbsMv,
+    amplitude.robustAbsMv * 1.25,
+    0.01
+  );
+  const currentPeakFill =
+    halfRowMm > 0 ? (peakGuardMv * current) / halfRowMm : 0;
+
+  let target = clamp(
+    (AUTO_TARGET_P2P_FILL * rowHeightMm) /
+      Math.max(amplitude.displayP2pMv, 0.01),
+    AUTO_GAIN_MIN,
+    AUTO_GAIN_MAX
+  );
+
+  const safePeakGain = clamp(
+    (AUTO_HEADROOM * halfRowMm) / peakGuardMv,
+    AUTO_GAIN_MIN,
+    AUTO_GAIN_MAX
+  );
+  target = Math.min(target, safePeakGain);
+
+  // Hysteresis avoids gain hunting while a morphology is stable.
   if (
-    currentStillFits &&
+    currentPeakFill <= AUTO_HEADROOM &&
     currentP2pFill >= AUTO_KEEP_MIN_P2P_FILL &&
     currentP2pFill <= AUTO_KEEP_MAX_P2P_FILL
   ) {
-    return current;
+    target = current;
   }
 
-  const idealGain =
-    (AUTO_TARGET_P2P_FILL * rowHeightMm) /
-    Math.max(amplitude.displayP2pMv, 0.01);
+  // Zoom out faster when a larger morphology arrives; zoom in more slowly
+  // after the signal gets smaller. The result is a smooth, monitor-like
+  // transition instead of jumping between 0.5 / 1 / 2.5 / 5 etc.
+  const alpha =
+    target < current
+      ? AUTO_GAIN_ZOOM_OUT_ALPHA
+      : AUTO_GAIN_ZOOM_IN_ALPHA;
 
-  return getClosestGain(viableGains, idealGain);
+  let next = current + (target - current) * alpha;
+
+  // If the current view is genuinely overfilled, prioritize safety but still
+  // avoid a one-frame discontinuity.
+  if (currentPeakFill > 1.08 && target < current) {
+    next = Math.min(next, current * 0.68);
+  }
+
+  next = clamp(next, AUTO_GAIN_MIN, AUTO_GAIN_MAX);
+  return Math.round(next * AUTO_GAIN_ROUNDING) / AUTO_GAIN_ROUNDING;
 }
 
 function getDisplayScale({ samples, gainMmPerMv, rowHeightPx, pxPerMm }) {
@@ -1770,8 +1824,15 @@ const rowHeightPx = Math.max(1, tileHeightPx);
       let changed = false;
 
       for (const lead of LEADS) {
+        const allSamples = leadWindows[lead.id] || [];
+        const gainLookbackPoints = Math.max(
+          48,
+          Math.round(sampleRate * AUTO_GAIN_LOOKBACK_SECONDS)
+        );
+        const gainSamples = allSamples.slice(-gainLookbackPoints);
+
         const nextGain = chooseAutoGain({
-          samples: leadWindows[lead.id] || [],
+          samples: gainSamples,
           currentGain: previousGains[lead.id] || DEFAULT_GAIN_MM_PER_MV,
           rowHeightPx,
           pxPerMm,
@@ -1785,7 +1846,7 @@ const rowHeightPx = Math.max(1, tileHeightPx);
 
       return changed ? nextGains : previousGains;
     });
-  }, [leadWindows, rowHeightPx, pxPerMm]);
+  }, [leadWindows, rowHeightPx, pxPerMm, sampleRate]);
 
   const leadTiles = useMemo(() => {
     return LEADS.map((lead) => {
@@ -2396,7 +2457,7 @@ function WaveformTile({
 
       <div className="wave7-tile-top">
         <strong>{lead.label}</strong>
-        <span>Auto {lead.gainMmPerMv}</span>
+        <span>Auto {formatGainValue(lead.gainMmPerMv)}</span>
       </div>
 
       <div className="wave7-tile-bottom">

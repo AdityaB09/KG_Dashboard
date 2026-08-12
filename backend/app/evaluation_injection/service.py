@@ -2668,6 +2668,8 @@ class EvaluationInjectionService:
         self,
         session_id: str,
     ) -> None:
+        finalization_stage = "load_session"
+
         try:
             with self._lock:
                 session = self._sessions[
@@ -2679,6 +2681,10 @@ class EvaluationInjectionService:
                 session.public_status(),
             )
 
+            # Persisting the capture is the only truly fatal finalization step.
+            # Once the 20-second capture exists, downstream enrichment failures
+            # must not turn a valid captured episode into "Evaluation Failed".
+            finalization_stage = "persist_episode"
             metadata = await asyncio.to_thread(
                 self._persist_episode,
                 session,
@@ -2706,21 +2712,73 @@ class EvaluationInjectionService:
                 }
             )
 
-            episode_analysis = (
-                await asyncio.to_thread(
-                    episode_analyzer.analyze,
-                    session.episode_id,
-                    force=True,
-                )
-            )
+            analysis_warnings: list[dict[str, str]] = []
 
-            incident_analysis = (
-                await asyncio.to_thread(
-                    incident_analyzer.analyze,
-                    session.incident_id,
-                    force=True,
+            finalization_stage = "episode_analysis"
+            try:
+                episode_analysis = (
+                    await asyncio.to_thread(
+                        episode_analyzer.analyze,
+                        session.episode_id,
+                        force=True,
+                    )
                 )
-            )
+            except Exception as error:
+                episode_analysis = {
+                    "status": "unavailable",
+                    "error": str(error),
+                }
+                analysis_warnings.append(
+                    {
+                        "stage": finalization_stage,
+                        "errorType": type(error).__name__,
+                        "message": str(error),
+                    }
+                )
+                print(
+                    "[KGEN EVAL NONFATAL ANALYSIS ERROR]",
+                    {
+                        "stage": finalization_stage,
+                        "sessionId": session_id,
+                        "scenarioId": session.scenario.scenario_id,
+                        "errorType": type(error).__name__,
+                        "message": str(error),
+                    },
+                    flush=True,
+                )
+
+            finalization_stage = "incident_analysis"
+            try:
+                incident_analysis = (
+                    await asyncio.to_thread(
+                        incident_analyzer.analyze,
+                        session.incident_id,
+                        force=True,
+                    )
+                )
+            except Exception as error:
+                incident_analysis = {
+                    "status": "unavailable",
+                    "error": str(error),
+                }
+                analysis_warnings.append(
+                    {
+                        "stage": finalization_stage,
+                        "errorType": type(error).__name__,
+                        "message": str(error),
+                    }
+                )
+                print(
+                    "[KGEN EVAL NONFATAL ANALYSIS ERROR]",
+                    {
+                        "stage": finalization_stage,
+                        "sessionId": session_id,
+                        "scenarioId": session.scenario.scenario_id,
+                        "errorType": type(error).__name__,
+                        "message": str(error),
+                    },
+                    flush=True,
+                )
 
             episode_dir = (
                 Path(settings.EPISODE_STORAGE_PATH)
@@ -2729,64 +2787,137 @@ class EvaluationInjectionService:
 
             # V7 evaluation path: the SLM receives the sanitized SLM_Eval episode
             # directly. No Phase 6/Phase 7 deterministic output is generated or
-            # supplied to the model. Oracle SMART remains routing/authentication
-            # only; API Range pre/post capture remains in the persisted episode.
-            etiology_result = await run_etiology_v7(
-                scenario_id=session.scenario.scenario_id,
-                episode_id=session.episode_id,
-                incident_id=session.incident_id,
-                episode_dir=episode_dir,
-                run_slm=session.run_slm,
-            )
+            # supplied to the model. Oracle/Epic SMART remains routing/auth only.
+            finalization_stage = "etiology_v7"
+            try:
+                etiology_result = await run_etiology_v7(
+                    scenario_id=session.scenario.scenario_id,
+                    episode_id=session.episode_id,
+                    incident_id=session.incident_id,
+                    episode_dir=episode_dir,
+                    run_slm=session.run_slm,
+                )
+            except Exception as error:
+                # The waveform episode/incident is already valid and persisted.
+                # Surface model/response unavailability in Analytics instead of
+                # incorrectly labelling the complete capture as a failed run.
+                etiology_result = {
+                    "status": "unavailable",
+                    "source": "etiology_v7",
+                    "responseFile": None,
+                    "model": None,
+                    "validation": {},
+                    "diagnosticEvent": {},
+                    "score": {
+                        "schemaVersion": "etiology-v7-runtime-status-v1",
+                        "total": None,
+                        "safetyPass": None,
+                        "overallPass": None,
+                        "validContract": False,
+                    },
+                }
+                analysis_warnings.append(
+                    {
+                        "stage": finalization_stage,
+                        "errorType": type(error).__name__,
+                        "message": str(error),
+                    }
+                )
+                print(
+                    "[KGEN EVAL NONFATAL ETIOLOGY ERROR]",
+                    {
+                        "stage": finalization_stage,
+                        "sessionId": session_id,
+                        "scenarioId": session.scenario.scenario_id,
+                        "errorType": type(error).__name__,
+                        "message": str(error),
+                    },
+                    flush=True,
+                )
 
-            score = etiology_result["score"]
+            score = (
+                etiology_result.get("score")
+                if isinstance(etiology_result, dict)
+                else None
+            ) or {
+                "schemaVersion": "etiology-v7-runtime-status-v1",
+                "total": None,
+                "safetyPass": None,
+                "overallPass": None,
+                "validContract": False,
+            }
             session.score = score
 
-            metadata_path = episode_dir / "metadata.json"
-            current_metadata = json.loads(
-                metadata_path.read_text(encoding="utf-8")
-            )
-            current_metadata["analysisStatus"] = episode_analysis.get(
-                "status",
-                "ready",
-            )
-            current_metadata["evaluationScore"] = score
-            current_metadata["etiologyState"] = etiology_result.get("status")
-            current_metadata["evaluationModel"] = etiology_result.get("model")
-            current_metadata["cardinalEvaluation"] = {
-                "status": etiology_result.get("status"),
-                "source": etiology_result.get("source"),
-                "responseFile": etiology_result.get("responseFile"),
-                "model": etiology_result.get("model"),
-                "score": score.get("total") if isinstance(score, dict) else None,
-                "safetyPass": (
-                    score.get("safetyPass") if isinstance(score, dict) else None
-                ),
-                "overallPass": (
-                    score.get("overallPass") if isinstance(score, dict) else None
-                ),
-                "validation": etiology_result.get("validation") or {},
-                "diagnosticEvent": etiology_result.get("diagnosticEvent") or {},
-                "pipeline": "etiology_v7",
-                "phase6Used": False,
-                "phase7OrchestratorUsed": False,
-                "oracleFhirContextUsed": False,
-            }
-            current_metadata["diagnosticEvent"] = (
-                etiology_result.get("diagnosticEvent") or {}
-            )
-            atomic_json(metadata_path, current_metadata)
+            finalization_stage = "metadata_update"
+            try:
+                metadata_path = episode_dir / "metadata.json"
+                current_metadata = json.loads(
+                    metadata_path.read_text(encoding="utf-8")
+                )
+                current_metadata["analysisStatus"] = episode_analysis.get(
+                    "status",
+                    "ready",
+                )
+                current_metadata["evaluationScore"] = score
+                current_metadata["etiologyState"] = etiology_result.get("status")
+                current_metadata["evaluationModel"] = etiology_result.get("model")
+                current_metadata["analysisWarnings"] = analysis_warnings
+                current_metadata["cardinalEvaluation"] = {
+                    "status": etiology_result.get("status"),
+                    "source": etiology_result.get("source"),
+                    "responseFile": etiology_result.get("responseFile"),
+                    "model": etiology_result.get("model"),
+                    "score": score.get("total") if isinstance(score, dict) else None,
+                    "safetyPass": (
+                        score.get("safetyPass") if isinstance(score, dict) else None
+                    ),
+                    "overallPass": (
+                        score.get("overallPass") if isinstance(score, dict) else None
+                    ),
+                    "validation": etiology_result.get("validation") or {},
+                    "diagnosticEvent": etiology_result.get("diagnosticEvent") or {},
+                    "pipeline": "etiology_v7",
+                    "phase6Used": False,
+                    "phase7OrchestratorUsed": False,
+                    "oracleFhirContextUsed": False,
+                    "epicFhirContextUsed": False,
+                }
+                current_metadata["diagnosticEvent"] = (
+                    etiology_result.get("diagnosticEvent") or {}
+                )
+                atomic_json(metadata_path, current_metadata)
+            except Exception as error:
+                analysis_warnings.append(
+                    {
+                        "stage": finalization_stage,
+                        "errorType": type(error).__name__,
+                        "message": str(error),
+                    }
+                )
+                print(
+                    "[KGEN EVAL NONFATAL METADATA ERROR]",
+                    {
+                        "stage": finalization_stage,
+                        "sessionId": session_id,
+                        "scenarioId": session.scenario.scenario_id,
+                        "errorType": type(error).__name__,
+                        "message": str(error),
+                    },
+                    flush=True,
+                )
 
             session.analysis_result = {
                 "episodeStatus": episode_analysis.get("status"),
                 "incidentStatus": incident_analysis.get("status"),
                 "etiologyState": etiology_result.get("status"),
                 "cardinalStatus": etiology_result.get("status"),
+                "analysisWarnings": analysis_warnings,
                 "phase6Used": False,
                 "phase7OrchestratorUsed": False,
             }
 
             session.state = "COMPLETE"
+            session.error = None
             session.updated_at = now_iso()
 
             event = {
@@ -2805,6 +2936,7 @@ class EvaluationInjectionService:
                 ),
                 **session.public_status(),
                 "score": score,
+                "analysisWarnings": analysis_warnings,
             }
 
             self.publish(event)
@@ -2822,7 +2954,9 @@ class EvaluationInjectionService:
 
                 if session is not None:
                     session.state = "FAILED"
-                    session.error = str(error)
+                    session.error = (
+                        f"{finalization_stage}: {error}"
+                    )
                     session.updated_at = (
                         now_iso()
                     )
@@ -2836,26 +2970,32 @@ class EvaluationInjectionService:
                         "sessionId": session_id,
                     }
 
-            self.publish(
-                {
-                    "type": (
-                        "evaluation.injection.failed"
-                    ),
-                    "mode": (
-                        "evaluation_injection"
-                    ),
-                    "errorType": (
-                        type(error).__name__
-                    ),
-                    "message": str(error),
-                    **status,
-                }
-            )
+            failure_event = {
+                "type": (
+                    "evaluation.injection.failed"
+                ),
+                "mode": (
+                    "evaluation_injection"
+                ),
+                "failureStage": finalization_stage,
+                "errorType": (
+                    type(error).__name__
+                ),
+                "message": str(error),
+                **status,
+            }
+
+            self.publish(failure_event)
 
             print(
                 "[KGEN EVAL INJECTION ERROR]",
-                type(error).__name__,
-                str(error),
+                {
+                    "stage": finalization_stage,
+                    "errorType": type(error).__name__,
+                    "message": str(error),
+                    "sessionId": session_id,
+                },
+                flush=True,
             )
 
             import traceback

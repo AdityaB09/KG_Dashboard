@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { patients as mockPatients, medications as mockMedications, labs as mockLabs, documents as mockDocuments, recentSearches } from "./data/mockData";
 import { fetchFirelyPatientClinicalData, fetchFirelyPatients, testFirelyConnection } from "./services/fhirService";
 
@@ -25,6 +25,9 @@ import {
   getEpicEvaluationBootstrap,
 } from "./evaluation/epicEvaluationDemo";
 import "./index.css";
+
+const SMART_ANALYTICS_NOTICE_DELAY_AFTER_POST_MS = 7000;
+const SMART_ANALYTICS_NOTICE_VISIBLE_MS = 2000;
 
 import { createInitialTelemetry, nextTelemetryFrame } from "./services/telemetryService";
 import { formatCurrentTime, getVitalAlerts } from "./utils/clinicalEvents";
@@ -196,6 +199,71 @@ const [
   setAnalyticsNotice,
 ] = useState(null);
 
+const postCaptureCompletedAtRef = useRef(0);
+const pendingSmartAnalyticsTimerRef = useRef(null);
+const pendingSmartAnalyticsKeyRef = useRef("");
+
+const clearPendingSmartAnalyticsNotice = useCallback(() => {
+  if (pendingSmartAnalyticsTimerRef.current != null) {
+    window.clearTimeout(pendingSmartAnalyticsTimerRef.current);
+    pendingSmartAnalyticsTimerRef.current = null;
+  }
+  pendingSmartAnalyticsKeyRef.current = "";
+}, []);
+
+const queueSmartAnalyticsNotice = useCallback((notice) => {
+  if (!notice) return;
+
+  const noticeKey = [
+    notice?.episodeId || "",
+    notice?.incidentId || "",
+    notice?.scenarioId || "",
+  ].join("|");
+
+  if (
+    noticeKey &&
+    pendingSmartAnalyticsKeyRef.current === noticeKey
+  ) {
+    return;
+  }
+
+  if (pendingSmartAnalyticsTimerRef.current != null) {
+    window.clearTimeout(pendingSmartAnalyticsTimerRef.current);
+  }
+
+  pendingSmartAnalyticsKeyRef.current = noticeKey;
+
+  // evaluation.injection.captured is emitted immediately after the 6-second
+  // post-capture window has been persisted. The ready notification is held
+  // until seven seconds after that moment. If the captured SSE event was
+  // missed, fall back to seven seconds from COMPLETE/status recovery.
+  const postCaptureAt =
+    postCaptureCompletedAtRef.current > 0
+      ? postCaptureCompletedAtRef.current
+      : Date.now();
+
+  const elapsedSincePostCapture = Math.max(
+    0,
+    Date.now() - postCaptureAt
+  );
+
+  const delayMs = Math.max(
+    0,
+    SMART_ANALYTICS_NOTICE_DELAY_AFTER_POST_MS -
+      elapsedSincePostCapture
+  );
+
+  pendingSmartAnalyticsTimerRef.current =
+    window.setTimeout(() => {
+      pendingSmartAnalyticsTimerRef.current = null;
+      setAnalyticsNotice(notice);
+    }, delayMs);
+}, []);
+
+useEffect(() => {
+  return () => clearPendingSmartAnalyticsNotice();
+}, [clearPendingSmartAnalyticsNotice]);
+
 const evaluationInjectionActiveRef =
   useRef(false);
 
@@ -301,6 +369,18 @@ useEffect(() => {
           evaluationInjectionActiveRef.current =
             true;
 
+          if (eventType === "evaluation.injection.armed") {
+            postCaptureCompletedAtRef.current = 0;
+            clearPendingSmartAnalyticsNotice();
+          }
+
+          // This event is emitted after the configured post-capture samples
+          // have been persisted, so it is the timing anchor for the 7-second
+          // analytics-ready delay.
+          if (eventType === "evaluation.injection.captured") {
+            postCaptureCompletedAtRef.current = Date.now();
+          }
+
           if (event.incidentId) {
             evaluationInjectionIncidentRef.current =
               event.incidentId;
@@ -326,7 +406,7 @@ useEffect(() => {
             event.incidentId || null
           );
 
-          setAnalyticsNotice({
+          queueSmartAnalyticsNotice({
             mode:
               "evaluation_injection",
             status: "ready",
@@ -399,6 +479,9 @@ useEffect(() => {
 
           evaluationInjectionIncidentRef.current =
             null;
+
+          postCaptureCompletedAtRef.current = 0;
+          clearPendingSmartAnalyticsNotice();
 
           return;
         }
@@ -505,7 +588,10 @@ useEffect(() => {
     });
 
   return disconnect;
-}, []);
+}, [
+  clearPendingSmartAnalyticsNotice,
+  queueSmartAnalyticsNotice,
+]);
   useEffect(() => {
     if (
       analyticsNotice?.mode !== "evaluation_injection" ||
@@ -543,7 +629,7 @@ useEffect(() => {
         }));
       }
       setAnalyticsNotice(null);
-    }, 1600);
+    }, SMART_ANALYTICS_NOTICE_VISIBLE_MS);
 
     return () => window.clearTimeout(timer);
   }, [analyticsNotice]);
@@ -818,7 +904,7 @@ function renderMainPage() {
     notice
   );
 
-  setAnalyticsNotice(notice);
+  queueSmartAnalyticsNotice(notice);
 }}
 
       onEvaluationChange={
