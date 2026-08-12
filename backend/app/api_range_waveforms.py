@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import os
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any
@@ -32,6 +33,18 @@ LEAD_NAMES = {
     "avl": "aVL",
     "avf": "aVF",
 }
+
+# V7_3_10_LOOP_SAFE
+# API Range is currently a short snapshot that is replayed during the longer
+# 20-second evaluation capture. Crossfade only the loop seam so repeated
+# playback does not create an artificial vertical jump every ~6 seconds.
+try:
+    API_RANGE_LOOP_BLEND_SECONDS = max(
+        0.0,
+        min(0.30, float(os.getenv("API_RANGE_LOOP_BLEND_SECONDS", "0.12"))),
+    )
+except (TypeError, ValueError):
+    API_RANGE_LOOP_BLEND_SECONDS = 0.12
 
 
 @dataclass
@@ -266,6 +279,49 @@ def normalize_ppg(
         -1,
         1,
     ).astype(np.float32)
+
+
+def loop_safe_crossfade(
+    values: np.ndarray,
+    blend_samples: int,
+) -> np.ndarray:
+    """Create a replay-safe circular buffer with a short seam crossfade.
+
+    The first/last overlap is collapsed into one blended segment. The resulting
+    buffer is slightly shorter, but the end now wraps into the beginning through
+    samples that were adjacent in the original recording. This is display/source
+    stabilization only; it does not change the synthetic episode waveform.
+    """
+    array = np.asarray(values)
+    if array.ndim < 1 or array.shape[0] < 8:
+        return array.copy()
+
+    blend = int(max(0, blend_samples))
+    blend = min(blend, max(0, array.shape[0] // 6))
+    if blend < 2 or array.shape[0] <= blend * 2 + 2:
+        return array.copy()
+
+    head = array[:blend]
+    middle = array[blend:-blend]
+    tail = array[-blend:]
+
+    t = np.linspace(0.0, 1.0, blend, dtype=np.float32)
+    weight = t * t * (3.0 - 2.0 * t)
+    while weight.ndim < array.ndim:
+        weight = weight[..., None]
+
+    head_finite = np.isfinite(head)
+    tail_finite = np.isfinite(tail)
+    both = head_finite & tail_finite
+
+    mixed = tail * (1.0 - weight) + head * weight
+    seam = np.where(
+        both,
+        mixed,
+        np.where(tail_finite, tail, head),
+    )
+
+    return np.concatenate([middle, seam], axis=0).astype(array.dtype, copy=False)
 
 
 def circular_slice(
@@ -535,6 +591,19 @@ async def load_api_range_buffer(
         )
     )
 
+    loop_blend_samples = int(
+        round(sample_rate * API_RANGE_LOOP_BLEND_SECONDS)
+    )
+    if loop_blend_samples >= 2:
+        signals_mv = loop_safe_crossfade(signals_mv, loop_blend_samples)
+        ppg_signal = loop_safe_crossfade(ppg_signal, loop_blend_samples)
+        spo_values = loop_safe_crossfade(spo_values, loop_blend_samples)
+        temperature_values = loop_safe_crossfade(
+            temperature_values, loop_blend_samples
+        )
+        # Recompute normalized display data from the seam-smoothed physical ECG.
+        normalized_signals = normalize_for_webgl(signals_mv)
+
     source_times = (
         lead_series["leadI"][0]
     )
@@ -705,6 +774,8 @@ async def build_api_range_frame(
         "bufferSamples": (
             buffer.total_samples
         ),
+        "loopSmoothed": API_RANGE_LOOP_BLEND_SECONDS > 0,
+        "loopBlendSeconds": round(API_RANGE_LOOP_BLEND_SECONDS, 3),
         "xAxis": {
             "type": "time",
             "unit": "seconds",

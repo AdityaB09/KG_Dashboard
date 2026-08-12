@@ -41,7 +41,15 @@ import {
 } from "../presentation/episodeWidgetFallbacks";
 
 const ECG_PAPER_SPEED_MM_PER_SEC = 25;
-const DEFAULT_VISIBLE_SECONDS = 3;
+const DEFAULT_VISIBLE_SECONDS = 6;
+const DISPLAY_VISIBLE_SECONDS = Math.max(
+  3,
+  Math.min(
+    8,
+    Number(import.meta.env.VITE_WAVEFORM_VISIBLE_SECONDS) ||
+      DEFAULT_VISIBLE_SECONDS
+  )
+);
 const DEFAULT_GAIN_MM_PER_MV = 10;
 const DEFAULT_GAIN_MODE = "auto";
 const EVALUATION_ENABLED =
@@ -77,11 +85,11 @@ function backendWaveformSource(
   );
 }
 /*
-  Calibrated display gain ladder.
+  Per-lead calibrated display gain.
 
   This does not alter ECG data or morphology.
-  It only changes how many millimeters represent 1 mV.
-  The active gain is always shown as Auto 2.5 / 5 / 10 / 20 / 40.
+  Each lead independently selects the largest stable visual gain that keeps
+  every visible peak inside its own tile.
 */
 const ECG_GAIN_OPTIONS = [
   0.25,
@@ -96,12 +104,16 @@ const ECG_GAIN_OPTIONS = [
 
 // V7.3.9 display-only autoscale tuning.
 // Keep morphology/data untouched; only the visual mV-to-pixel gain changes.
-const AUTO_GAIN_MIN = 0.25;
+const AUTO_GAIN_MIN = 0.10;
 const AUTO_GAIN_MAX = 40;
-const AUTO_GAIN_LOOKBACK_SECONDS = 1.35;
-const AUTO_GAIN_ZOOM_OUT_ALPHA = 0.52;
-const AUTO_GAIN_ZOOM_IN_ALPHA = 0.14;
-const AUTO_GAIN_ROUNDING = 20; // 0.05 mm/mV increments for smooth labels.
+
+// V7.3.11: each ECG lead keeps its own calibrated display gain.
+// Every visible point in that specific lead participates in the safety cap,
+// so the lead can use the largest gain that still contains its hardest peak.
+// Morphology/data are never modified; this is display-only scaling.
+const AUTO_GAIN_ZOOM_IN_ALPHA = 0.08;
+const AUTO_GAIN_ROUNDING = 20; // 0.05 mm/mV increments.
+const AUTO_TARGET_PEAK_FILL = 0.74;
 
 
 const WAVEFORM_SOURCES = [
@@ -269,8 +281,10 @@ function getLeadStats(samples = [], latestFallback) {
 
 function appendLeadWindows(prev, frame) {
   const sampleRate = frame.sampleRate || 220;
-  const visibleSeconds =
-    Number(frame.xAxis?.secondsVisible) || DEFAULT_VISIBLE_SECONDS;
+  // Display history is decoupled from the backend capture contract.
+  // This changes only what is visible on screen, not the 8 s episode, detector,
+  // persisted evidence, or 6 s post-capture window.
+  const visibleSeconds = DISPLAY_VISIBLE_SECONDS;
 
   const maxPoints = Math.round(sampleRate * visibleSeconds);
   const next = {};
@@ -387,84 +401,70 @@ function getClosestGain(allowedGains, idealGain) {
   }, allowedGains[0]);
 }
 
-function chooseAutoGain({ samples, currentGain, rowHeightPx, pxPerMm }) {
-  const values = samples.map(Number).filter(Number.isFinite);
-
-  if (!values.length || !rowHeightPx || !pxPerMm) {
-    return currentGain || DEFAULT_GAIN_MM_PER_MV;
-  }
-
-  const amplitude = getLeadAmplitude(values);
-  const rowHeightMm = rowHeightPx / pxPerMm;
-  const halfRowMm = rowHeightMm / 2;
+function chooseLeadAutoGain({
+  samples,
+  currentGain,
+  rowHeightPx,
+  pxPerMm,
+}) {
+  const halfRowMm = getHalfRowMm(rowHeightPx, pxPerMm);
   const current = clamp(
     Number(currentGain) || DEFAULT_GAIN_MM_PER_MV,
     AUTO_GAIN_MIN,
     AUTO_GAIN_MAX
   );
 
-  if (!rowHeightMm || amplitude.displayP2pMv < 0.005) {
-    return AUTO_GAIN_MAX;
+  if (!halfRowMm) return current;
+
+  const amplitude = getLeadAmplitude(samples);
+  const hardAbsMv = amplitude.hardAbsMv;
+
+  if (!Number.isFinite(hardAbsMv) || hardAbsMv < 0.005) {
+    return current;
   }
 
-  const currentP2pFill = getP2pFillRatio({
-    p2pMv: amplitude.displayP2pMv,
-    gainMmPerMv: current,
-    rowHeightPx,
-    pxPerMm,
-  });
+  // Hard safety ceiling: the single largest visible sample in THIS lead must
+  // remain inside the tile. This is what guarantees no peak clipping.
+  const hardSafeGain = clamp(
+    (AUTO_HEADROOM * halfRowMm) / hardAbsMv,
+    AUTO_GAIN_MIN,
+    AUTO_GAIN_MAX
+  );
 
-  // The 99th percentile from zero protects normal recurrent peaks and DC
-  // offset while deliberately ignoring isolated transition artifacts.
-  const peakGuardMv = Math.max(
+  // Preferred gain: fill most of this lead's tile using robust morphology,
+  // while still respecting the hard visible-extrema ceiling above.
+  const representativeAbsMv = Math.max(
     amplitude.displayAbsMv,
-    amplitude.robustAbsMv * 1.25,
+    amplitude.robustAbsMv,
+    amplitude.displayP2pMv / 2,
     0.01
   );
-  const currentPeakFill =
-    halfRowMm > 0 ? (peakGuardMv * current) / halfRowMm : 0;
 
-  let target = clamp(
-    (AUTO_TARGET_P2P_FILL * rowHeightMm) /
-      Math.max(amplitude.displayP2pMv, 0.01),
+  const preferredGain = clamp(
+    (AUTO_TARGET_PEAK_FILL * halfRowMm) / representativeAbsMv,
     AUTO_GAIN_MIN,
     AUTO_GAIN_MAX
   );
 
-  const safePeakGain = clamp(
-    (AUTO_HEADROOM * halfRowMm) / peakGuardMv,
-    AUTO_GAIN_MIN,
-    AUTO_GAIN_MAX
-  );
-  target = Math.min(target, safePeakGain);
+  const targetGain = Math.min(preferredGain, hardSafeGain);
 
-  // Hysteresis avoids gain hunting while a morphology is stable.
-  if (
-    currentPeakFill <= AUTO_HEADROOM &&
-    currentP2pFill >= AUTO_KEEP_MIN_P2P_FILL &&
-    currentP2pFill <= AUTO_KEEP_MAX_P2P_FILL
-  ) {
-    target = current;
-  }
+  // If a larger peak enters the visible frame, zoom out immediately to the
+  // safe gain so that peak is contained. When the lead becomes smaller, zoom
+  // back in slowly to avoid gain hunting/flicker.
+  let next =
+    targetGain < current
+      ? targetGain
+      : current + (targetGain - current) * AUTO_GAIN_ZOOM_IN_ALPHA;
 
-  // Zoom out faster when a larger morphology arrives; zoom in more slowly
-  // after the signal gets smaller. The result is a smooth, monitor-like
-  // transition instead of jumping between 0.5 / 1 / 2.5 / 5 etc.
-  const alpha =
-    target < current
-      ? AUTO_GAIN_ZOOM_OUT_ALPHA
-      : AUTO_GAIN_ZOOM_IN_ALPHA;
-
-  let next = current + (target - current) * alpha;
-
-  // If the current view is genuinely overfilled, prioritize safety but still
-  // avoid a one-frame discontinuity.
-  if (currentPeakFill > 1.08 && target < current) {
-    next = Math.min(next, current * 0.68);
-  }
-
+  next = Math.min(next, hardSafeGain);
   next = clamp(next, AUTO_GAIN_MIN, AUTO_GAIN_MAX);
-  return Math.round(next * AUTO_GAIN_ROUNDING) / AUTO_GAIN_ROUNDING;
+
+  // Round DOWN only. Rounding upward could move a safe gain just beyond the
+  // hard ceiling and reintroduce clipping.
+  return Math.max(
+    AUTO_GAIN_MIN,
+    Math.floor(next * AUTO_GAIN_ROUNDING) / AUTO_GAIN_ROUNDING
+  );
 }
 
 function getDisplayScale({ samples, gainMmPerMv, rowHeightPx, pxPerMm }) {
@@ -1791,8 +1791,7 @@ useEffect(() => {
     return () => observer.disconnect();
   }, []);
 
-const visibleSeconds =
-  Number(waveFrame.xAxis?.secondsVisible) || DEFAULT_VISIBLE_SECONDS;
+const visibleSeconds = DISPLAY_VISIBLE_SECONDS;
 
 const sampleRate = waveFrame.sampleRate || 220;
 const visiblePoints = Math.round(sampleRate * visibleSeconds);
@@ -1820,33 +1819,31 @@ const rowHeightPx = Math.max(1, tileHeightPx);
     if (!rowHeightPx || !pxPerMm) return;
 
     setLeadAutoGains((previousGains) => {
-      const nextGains = { ...previousGains };
       let changed = false;
+      const nextGains = { ...previousGains };
 
       for (const lead of LEADS) {
-        const allSamples = leadWindows[lead.id] || [];
-        const gainLookbackPoints = Math.max(
-          48,
-          Math.round(sampleRate * AUTO_GAIN_LOOKBACK_SECONDS)
-        );
-        const gainSamples = allSamples.slice(-gainLookbackPoints);
+        const currentGain =
+          Number(previousGains[lead.id]) || DEFAULT_GAIN_MM_PER_MV;
 
-        const nextGain = chooseAutoGain({
-          samples: gainSamples,
-          currentGain: previousGains[lead.id] || DEFAULT_GAIN_MM_PER_MV,
+        const nextGain = chooseLeadAutoGain({
+          samples: leadWindows[lead.id] || [],
+          currentGain,
           rowHeightPx,
           pxPerMm,
         });
 
-        if (nextGains[lead.id] !== nextGain) {
-          nextGains[lead.id] = nextGain;
+        nextGains[lead.id] = nextGain;
+
+        if (Math.abs(nextGain - currentGain) >= 0.001) {
           changed = true;
         }
       }
 
       return changed ? nextGains : previousGains;
     });
-  }, [leadWindows, rowHeightPx, pxPerMm, sampleRate]);
+  }, [leadWindows, rowHeightPx, pxPerMm]);
+
 
   const leadTiles = useMemo(() => {
     return LEADS.map((lead) => {
@@ -2445,13 +2442,14 @@ function WaveformTile({
         <div className="wave7-zero-line" />
 
         <WebGLWaveformCanvas
-          samples={samples}
+          values={samples}
           points={visiblePoints}
           color={lead.color}
           mode="millivolts"
           pxPerMm={pxPerMm}
           voltageScaleMmPerMv={lead.gainMmPerMv}
           centerMv={0}
+          rightAlignWindow
         />
       </div>
 

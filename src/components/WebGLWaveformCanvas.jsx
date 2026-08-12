@@ -135,6 +135,7 @@ export default function WebGLWaveformCanvas({
   pxPerMm = 4,
   voltageScaleMmPerMv = 10,
   centerMv = 0,
+  rightAlignWindow = false,
 }) {
   const canvasRef = useRef(null);
   const glRef = useRef(null);
@@ -148,6 +149,7 @@ export default function WebGLWaveformCanvas({
   const bufferRef = useRef(new Float32Array(points));
   const verticesRef = useRef(new Float32Array(points * 2));
   const writeIndexRef = useRef(0);
+  const validCountRef = useRef(0);
 
   const propsRef = useRef({
     mode,
@@ -155,6 +157,7 @@ export default function WebGLWaveformCanvas({
     pxPerMm,
     voltageScaleMmPerMv,
     centerMv,
+    rightAlignWindow,
     min: -1,
     max: 1,
   });
@@ -177,15 +180,25 @@ export default function WebGLWaveformCanvas({
       pxPerMm,
       voltageScaleMmPerMv,
       centerMv,
+      rightAlignWindow,
       min: valueRange.min,
       max: valueRange.max,
     };
-  }, [mode, color, pxPerMm, voltageScaleMmPerMv, centerMv, valueRange]);
+  }, [
+    mode,
+    color,
+    pxPerMm,
+    voltageScaleMmPerMv,
+    centerMv,
+    rightAlignWindow,
+    valueRange,
+  ]);
 
   useEffect(() => {
     bufferRef.current = new Float32Array(points);
     verticesRef.current = new Float32Array(points * 2);
     writeIndexRef.current = 0;
+    validCountRef.current = 0;
   }, [points]);
 
   useEffect(() => {
@@ -258,9 +271,22 @@ export default function WebGLWaveformCanvas({
         const writeIndex = writeIndexRef.current;
         const currentProps = propsRef.current;
 
-        for (let i = 0; i < points; i += 1) {
-          const x = points <= 1 ? 0 : -1 + (2 * i) / (points - 1);
-          const sourceIndex = (writeIndex + i) % points;
+        const useWindowValues = Boolean(currentProps.rightAlignWindow);
+        const drawCount = useWindowValues
+          ? Math.min(validCountRef.current, points)
+          : points;
+
+        for (let i = 0; i < drawCount; i += 1) {
+          const displayIndex = useWindowValues
+            ? points - drawCount + i
+            : i;
+          const x =
+            points <= 1
+              ? 0
+              : -1 + (2 * displayIndex) / (points - 1);
+          const sourceIndex = useWindowValues
+            ? i
+            : (writeIndex + i) % points;
           const rawValue = signalBuffer[sourceIndex];
 
           const y = mapToClipY({
@@ -286,7 +312,9 @@ export default function WebGLWaveformCanvas({
         activeGl.clear(activeGl.COLOR_BUFFER_BIT);
 
         activeGl.uniform4fv(activeColorLocation, getColor(currentProps.color));
-        activeGl.drawArrays(activeGl.LINE_STRIP, 0, points);
+        if (drawCount >= 2) {
+          activeGl.drawArrays(activeGl.LINE_STRIP, 0, drawCount);
+        }
 
         animationRef.current = requestAnimationFrame(draw);
       }
@@ -312,16 +340,37 @@ export default function WebGLWaveformCanvas({
   }, [points]);
 
   useEffect(() => {
-    if (!values?.length) return;
+    if (!values?.length) {
+      validCountRef.current = 0;
+      return;
+    }
 
     const signalBuffer = bufferRef.current;
+
+    if (rightAlignWindow) {
+      // SevenLeadWaveformPage supplies the complete rolling history here. Do
+      // not append it as if it were a new batch; that duplicates old samples
+      // on every React render and makes the trace look unstable. Keep only the
+      // latest `points` values in strict chronological order instead.
+      const count = Math.min(values.length, signalBuffer.length);
+      const start = Math.max(0, values.length - count);
+
+      for (let i = 0; i < count; i += 1) {
+        signalBuffer[i] = Number(values[start + i]) || 0;
+      }
+
+      validCountRef.current = count;
+      writeIndexRef.current = 0;
+      return;
+    }
 
     for (let i = 0; i < signalBuffer.length; i += 1) {
       signalBuffer[i] = interpolateArrayValue(values, i, signalBuffer.length);
     }
 
+    validCountRef.current = signalBuffer.length;
     writeIndexRef.current = 0;
-  }, [values]);
+  }, [values, rightAlignWindow]);
 
   useEffect(() => {
     if (!samples?.length) return;
@@ -329,9 +378,14 @@ export default function WebGLWaveformCanvas({
     const signalBuffer = bufferRef.current;
 
     for (const sample of samples) {
-  signalBuffer[writeIndexRef.current] = Number(sample) || 0;
-  writeIndexRef.current = (writeIndexRef.current + 1) % signalBuffer.length;
-}
+      signalBuffer[writeIndexRef.current] = Number(sample) || 0;
+      writeIndexRef.current =
+        (writeIndexRef.current + 1) % signalBuffer.length;
+      validCountRef.current = Math.min(
+        signalBuffer.length,
+        validCountRef.current + 1
+      );
+    }
   }, [samples]);
 
   if (!webglSupported) {
