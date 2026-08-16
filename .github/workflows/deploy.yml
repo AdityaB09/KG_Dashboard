@@ -1,0 +1,138 @@
+name: CARDINAL Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+
+concurrency:
+  group: cardinal-production-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+  PROJECT_NUMBER: ${{ vars.GCP_PROJECT_NUMBER }}
+  REGION: ${{ vars.GCP_REGION }}
+  WIF_PROVIDER: ${{ vars.GCP_WIF_PROVIDER }}
+  ARTIFACT_REPO: cardinal-app
+  DEPLOY_SA: github-cardinal-deployer@${{ vars.GCP_PROJECT_ID }}.iam.gserviceaccount.com
+  TF_STATE_BUCKET: ${{ vars.GCP_PROJECT_ID }}-cardinal-tfstate-${{ vars.GCP_PROJECT_NUMBER }}
+  FRONTEND_URL: https://kg-dashboard-frontend-${{ vars.GCP_PROJECT_NUMBER }}.${{ vars.GCP_REGION }}.run.app
+  BACKEND_URL: https://kg-dashboard-backend-${{ vars.GCP_PROJECT_NUMBER }}.${{ vars.GCP_REGION }}.run.app
+  MODEL_BUCKET: ${{ vars.GCP_PROJECT_ID }}-${{ vars.GCP_REGION }}-gemma4-models
+  BACKEND_RUNTIME_SA: cardinal-backend-runtime@${{ vars.GCP_PROJECT_ID }}.iam.gserviceaccount.com
+  MODEL_RUNTIME_SA: cardinal-gemma-runtime@${{ vars.GCP_PROJECT_ID }}.iam.gserviceaccount.com
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run lint
+      - name: Build frontend
+        env:
+          VITE_BACKEND_URL: ${{ env.BACKEND_URL }}
+          VITE_API_BASE_URL: ${{ env.BACKEND_URL }}
+        run: npm run build
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+          cache-dependency-path: backend/requirements.txt
+      - run: pip install -r backend/requirements.txt
+      - run: python -m compileall -q backend/app backend/main.py
+      - run: python backend/scripts/verify_terraform_cicd_v2.py --project-root .
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: '1.14.6'
+      - run: terraform fmt -check -recursive infra
+      - run: terraform -chdir=infra/bootstrap init -backend=false
+      - run: terraform -chdir=infra/bootstrap validate
+      - run: terraform -chdir=infra/app init -backend=false
+      - run: terraform -chdir=infra/app validate
+
+  deploy:
+    needs: verify
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v7
+      - name: Validate required repository variables
+        run: |
+          test -n "$PROJECT_ID" || (echo 'Missing GCP_PROJECT_ID repository variable' && exit 1)
+          test -n "$PROJECT_NUMBER" || (echo 'Missing GCP_PROJECT_NUMBER repository variable' && exit 1)
+          test -n "$REGION" || (echo 'Missing GCP_REGION repository variable' && exit 1)
+          test -n "$WIF_PROVIDER" || (echo 'Missing GCP_WIF_PROVIDER repository variable' && exit 1)
+      - uses: google-github-actions/auth@v3
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+          workload_identity_provider: ${{ env.WIF_PROVIDER }}
+          service_account: ${{ env.DEPLOY_SA }}
+      - uses: google-github-actions/setup-gcloud@v3
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: '1.14.6'
+          terraform_wrapper: false
+      - name: Configure Artifact Registry Docker auth
+        run: gcloud auth configure-docker "$REGION-docker.pkg.dev" --quiet
+      - name: Build and push backend
+        run: |
+          BACKEND_IMAGE="$REGION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REPO/kg-dashboard-backend:${{ github.sha }}"
+          docker build -f Dockerfile.backend -t "$BACKEND_IMAGE" .
+          docker push "$BACKEND_IMAGE"
+          echo "BACKEND_IMAGE=$BACKEND_IMAGE" >> "$GITHUB_ENV"
+      - name: Build and push frontend
+        run: |
+          FRONTEND_IMAGE="$REGION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REPO/kg-dashboard-frontend:${{ github.sha }}"
+          docker build -f Dockerfile.frontend \
+            --build-arg "VITE_BACKEND_URL=$BACKEND_URL" \
+            --build-arg "VITE_API_BASE_URL=$BACKEND_URL" \
+            --build-arg "VITE_FHIR_STREAM_URL=$BACKEND_URL/api/stream?debug=true" \
+            --build-arg "VITE_WAVEFORM_STREAM_URL=$BACKEND_URL/api/waveforms/stream?sample_rate=220&batch_ms=50" \
+            --build-arg "VITE_FHIR_PROVIDER=oracle" \
+            --build-arg "VITE_DEBUG_FHIR_STREAM=true" \
+            --build-arg "VITE_ENABLE_SLM_EVAL=true" \
+            --build-arg "VITE_EVALUATION_BASE_WAVEFORM_SOURCE=api_range" \
+            --build-arg "VITE_ESCALATION_POLL_MS=2000" \
+            --build-arg "VITE_ESCALATION_COUNTDOWN_TICK_MS=1000" \
+            -t "$FRONTEND_IMAGE" .
+          docker push "$FRONTEND_IMAGE"
+          echo "FRONTEND_IMAGE=$FRONTEND_IMAGE" >> "$GITHUB_ENV"
+      - name: Refresh stable tags for destroy/recreate
+        run: |
+          docker tag "$BACKEND_IMAGE" "$REGION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REPO/kg-dashboard-backend:stable"
+          docker push "$REGION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REPO/kg-dashboard-backend:stable"
+          docker tag "$FRONTEND_IMAGE" "$REGION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REPO/kg-dashboard-frontend:stable"
+          docker push "$REGION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REPO/kg-dashboard-frontend:stable"
+      - name: Terraform init
+        run: terraform -chdir=infra/app init -reconfigure -backend-config="bucket=$TF_STATE_BUCKET" -backend-config="prefix=cardinal/app"
+      - name: Terraform plan
+        env:
+          TF_VAR_project_id: ${{ env.PROJECT_ID }}
+          TF_VAR_project_number: ${{ env.PROJECT_NUMBER }}
+          TF_VAR_region: ${{ env.REGION }}
+          TF_VAR_frontend_image: ${{ env.FRONTEND_IMAGE }}
+          TF_VAR_backend_image: ${{ env.BACKEND_IMAGE }}
+          TF_VAR_model_bucket_name: ${{ env.MODEL_BUCKET }}
+          TF_VAR_backend_runtime_service_account: ${{ env.BACKEND_RUNTIME_SA }}
+          TF_VAR_model_runtime_service_account: ${{ env.MODEL_RUNTIME_SA }}
+          TF_VAR_github_deployer_service_account: ${{ env.DEPLOY_SA }}
+        run: terraform -chdir=infra/app plan -out=cardinal.tfplan
+      - name: Terraform apply
+        run: terraform -chdir=infra/app apply -auto-approve cardinal.tfplan
+      - name: Smoke test
+        run: |
+          curl --fail --retry 8 --retry-delay 5 "$FRONTEND_URL/"
+          curl --fail --retry 8 --retry-delay 5 "$BACKEND_URL/health"
+          terraform -chdir=infra/app output

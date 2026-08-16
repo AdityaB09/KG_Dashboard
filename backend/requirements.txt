@@ -16,3 +16,4 @@ pydantic-settings
 
 pymongo>=4.6,<5
 dnspython>=2.6,<3
+PyJWT[crypto]>=2.10,<3

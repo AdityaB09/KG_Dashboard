@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import time
 from typing import Any
 
 import httpx
+
+from app.cloud_run_auth import apply_slm_auth
 
 from .config import (
     slm_api_key,
@@ -13,6 +16,8 @@ from .config import (
     slm_chat_path,
     slm_max_output_tokens,
     slm_model,
+    slm_omit_sampling_params,
+    slm_reasoning_effort,
     slm_timeout_seconds,
 )
 
@@ -119,11 +124,14 @@ async def call_model(
             f"Bearer {slm_api_key()}"
         )
 
+    headers = await apply_slm_auth(
+        headers,
+        base_url=slm_base_url(),
+    )
+
     request_payload = {
         "model": model_name,
         "messages": messages,
-        "temperature":
-            temperature,
         "max_tokens":
             slm_max_output_tokens(),
         "stream": False,
@@ -132,19 +140,66 @@ async def call_model(
         },
     }
 
+    # Some current OpenAI-compatible providers (including Gemini 3.6)
+    # deprecate sampling fields. Default remains unchanged for existing
+    # local/Ollama-style endpoints unless explicitly enabled in env.
+    if not slm_omit_sampling_params():
+        request_payload["temperature"] = temperature
+
+    reasoning_effort = slm_reasoning_effort()
+    if reasoning_effort:
+        request_payload["reasoning_effort"] = reasoning_effort
+
+    # ============================================================
+    # CARDINAL — PRIVATE CLOUD RUN GEMMA 4
+    # ============================================================
+    # The existing CARDINAL model seam remains OpenAI-compatible.
+    # For the presentation provider, the local gcloud Run proxy
+    # handles Cloud Run authentication and vLLM receives the
+    # Gemma-specific chat template option directly.
+    cardinal_provider = os.getenv(
+        "CARDINAL_LLM_PROVIDER",
+        "",
+    ).strip().lower()
+
+    if cardinal_provider == "gemma4":
+        # Gemini-only reasoning controls must never be forwarded
+        # to the vLLM Gemma endpoint.
+        request_payload.pop(
+            "reasoning_effort",
+            None,
+        )
+
+        # The deployed vLLM endpoint was validated without the
+        # provider-specific response_format extension. CARDINAL's
+        # existing V7.1 prompt + parser continue to enforce JSON.
+        request_payload.pop(
+            "response_format",
+            None,
+        )
+
+        # This matches the already-validated Cloud Run request.
+        request_payload["chat_template_kwargs"] = {
+            "enable_thinking": False,
+        }
+
     started_at = time.perf_counter()
 
     print(
         "[KGEN EVAL SLM REQUEST]",
         {
+            "provider": cardinal_provider or "default",
             "model": model_name,
             "endpoint": endpoint,
             "messageCount": len(
                 messages
             ),
             "temperature": (
-                temperature
+                None
+                if slm_omit_sampling_params()
+                else temperature
             ),
+            "reasoningEffort": slm_reasoning_effort() or None,
             "maxOutputTokens": (
                 slm_max_output_tokens()
             ),
@@ -182,6 +237,7 @@ async def call_model(
     print(
         "[KGEN EVAL SLM HTTP RESPONSE]",
         {
+            "provider": cardinal_provider or "default",
             "model": model_name,
             "statusCode": (
                 response.status_code
@@ -243,11 +299,23 @@ async def call_model(
             "no message content."
         )
 
+    if cardinal_provider == "gemma4":
+        print(
+            "[CARDINAL-SLM-RAW]",
+            {
+                "provider": "gemma4",
+                "model": model_name,
+                "content": content,
+            },
+            flush=True,
+        )
+
     parsed = _parse_json_object(
         content
     )
 
     metadata = {
+        "provider": cardinal_provider or "default",
         "name": model_name,
         "endpoint": endpoint,
         "finishReason": (
@@ -263,6 +331,7 @@ async def call_model(
     print(
         "[KGEN EVAL SLM COMPLETE]",
         {
+            "provider": cardinal_provider or "default",
             "model": model_name,
             "elapsedSeconds": round(
                 time.perf_counter()

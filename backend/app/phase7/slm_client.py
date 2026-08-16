@@ -7,6 +7,8 @@ from typing import Any, Mapping
 
 import httpx
 
+from app.cloud_run_auth import apply_slm_auth
+
 from app.phase7.config import (
     phase7_settings,
 )
@@ -152,6 +154,11 @@ async def run_slm(
             "Bearer "
             f"{phase7_settings.slm_api_key}"
         )
+
+    headers = await apply_slm_auth(
+        headers,
+        base_url=phase7_settings.slm_base_url,
+    )
 
     source_messages = list(
         prompt_package.get(

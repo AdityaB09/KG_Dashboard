@@ -28,7 +28,10 @@ V7_RESPONSE_FIELDS: tuple[str, ...] = (
     "rejectedAlternatives",
     "recommendedActions",
     "uncertainty",
+    "escalationRecommendation",
 )
+
+LEGACY_V7_RESPONSE_FIELDS: tuple[str, ...] = V7_RESPONSE_FIELDS[:-1]
 
 # IMPORTANT: Keep this text synchronized with the V7 evaluation prompt used for
 # the uploaded Lightning runs. The episode JSON is appended after EPISODE DATA.
@@ -55,6 +58,15 @@ Rules:
   STOP or WITHHOLD as well as what to give.
 - If the data are insufficient to support a conclusion, say so explicitly in
   `uncertainty` rather than guessing. Do not invent values that are not in the data.
+- Recommend ONE CARDINAL escalation level from the fixed ladder below. This is a
+  recommendation only; CARDINAL's policy engine will independently adjudicate it:
+    L0_MONITOR
+    L1_NURSING_REVIEW
+    L2_URGENT_PROVIDER_REVIEW
+    L3_RAPID_RESPONSE_REVIEW
+    L4_EMERGENCY_RESPONSE
+- Base the escalation recommendation only on the supplied episode evidence and explain
+  why that level is appropriate in one concise rationale.
 
 Respond with ONLY a single JSON object, no other text, in exactly this shape:
 
@@ -69,7 +81,12 @@ Respond with ONLY a single JSON object, no other text, in exactly this shape:
     {"alternative": "<plausible competing cause>", "why": "<specific evidence against it>"}
   ],
   "recommendedActions": ["<action 1, most urgent>", "<action 2>", "..."],
-  "uncertainty": ["<what is missing or would change confidence>", "..."]
+  "uncertainty": ["<what is missing or would change confidence>", "..."],
+  "escalationRecommendation": {
+    "levelCode": "<one exact CARDINAL level code>",
+    "rationale": "<why this episode warrants that level>",
+    "confidence": "<low|medium|high>"
+  }
 }
 
 EPISODE DATA"""
@@ -228,15 +245,30 @@ def _prompt_fingerprint(prompt: str) -> str:
     return hashlib.sha256(prompt.encode("utf-8")).hexdigest()
 
 
-def validate_v7_response(payload: Any) -> dict[str, Any]:
+def validate_v7_response(
+    payload: Any,
+    *,
+    allow_legacy_without_escalation: bool = False,
+) -> dict[str, Any]:
     if not isinstance(payload, dict):
-        raise EtiologyV7Error("V7 model response must be a JSON object.")
+        raise EtiologyV7Error("V7.1 model response must be a JSON object.")
 
+    payload = dict(payload)
     actual = set(payload)
     expected = set(V7_RESPONSE_FIELDS)
+    legacy = set(LEGACY_V7_RESPONSE_FIELDS)
+    if actual == legacy and allow_legacy_without_escalation:
+        # Keep existing precomputed V7 result sets loadable. They intentionally
+        # fall back to L0 because the older model never made an escalation call.
+        payload["escalationRecommendation"] = {
+            "levelCode": "L0_MONITOR",
+            "rationale": "Legacy V7 response did not include an escalation recommendation.",
+            "confidence": "low",
+        }
+        actual = set(payload)
     if actual != expected:
         raise EtiologyV7Error(
-            "V7 model response must contain exactly the nine required fields. "
+            "V7.1 model response must contain exactly the ten required fields. "
             f"missing={sorted(expected - actual)}; extra={sorted(actual - expected)}"
         )
 
@@ -257,6 +289,41 @@ def validate_v7_response(payload: Any) -> dict[str, Any]:
             for item in value
         ):
             raise EtiologyV7Error(f"V7 field {key!r} must be an array of strings.")
+
+    escalation = payload.get("escalationRecommendation")
+    if not isinstance(escalation, dict) or set(escalation) != {
+        "levelCode",
+        "rationale",
+        "confidence",
+    }:
+        raise EtiologyV7Error(
+            "V7.1 field 'escalationRecommendation' must contain exactly "
+            "levelCode, rationale, and confidence."
+        )
+    allowed_levels = {
+        "L0_MONITOR",
+        "L1_NURSING_REVIEW",
+        "L2_URGENT_PROVIDER_REVIEW",
+        "L3_RAPID_RESPONSE_REVIEW",
+        "L4_EMERGENCY_RESPONSE",
+    }
+    level_code = str(escalation.get("levelCode") or "").strip().upper()
+    rationale = str(escalation.get("rationale") or "").strip()
+    confidence = str(escalation.get("confidence") or "").strip().lower()
+    if level_code not in allowed_levels:
+        raise EtiologyV7Error(
+            "V7.1 escalationRecommendation.levelCode is not a supported CARDINAL level."
+        )
+    if not rationale:
+        raise EtiologyV7Error(
+            "V7.1 escalationRecommendation.rationale must be a non-empty string."
+        )
+    if confidence not in {"low", "medium", "high"}:
+        raise EtiologyV7Error(
+            "V7.1 escalationRecommendation.confidence must be low, medium, or high."
+        )
+    escalation["levelCode"] = level_code
+    escalation["confidence"] = confidence
 
     rejected = payload.get("rejectedAlternatives")
     if not isinstance(rejected, list):
@@ -307,7 +374,10 @@ def _load_precomputed(scenario_id: str) -> tuple[dict[str, Any], dict[str, Any]]
             f"V7 precomputed output is not contract-valid for {profile}/{scenario_id}."
         )
 
-    response = validate_v7_response(source.get("modelResponse"))
+    response = validate_v7_response(
+        source.get("modelResponse"),
+        allow_legacy_without_escalation=True,
+    )
     metadata = {
         "source": "precomputed_v7",
         "precomputed": True,
@@ -618,7 +688,7 @@ def _store_precomputed_unavailable(
     }
 
     stored_response = {
-        "schemaVersion": "slm-response-etiology-v7-compat-v1",
+        "schemaVersion": "slm-response-etiology-v7.1-compat-v1",
         "createdAt": _now_iso(),
         "incidentId": incident_id,
         "episodeId": episode_id,
@@ -632,7 +702,7 @@ def _store_precomputed_unavailable(
         "notForClinicalUse": True,
         "warnings": [error],
         "response": {
-            "schemaVersion": "etiology-v7-widget-payload-v1",
+            "schemaVersion": "etiology-v7.1-widget-payload-v1",
             "scenarioId": scenario_id,
             "modelResponse": None,
             "displayModelResponse": None,
@@ -651,7 +721,7 @@ def _store_precomputed_unavailable(
                 "liveInference": False,
             },
             "responseMeta": {
-                "contract": "etiology_v7_nine_field_json",
+                "contract": "etiology_v7_1_ten_field_json",
                 "contractValid": False,
                 "inferenceMode": "precomputed",
                 "provider": None,
@@ -743,7 +813,7 @@ async def run_etiology_v7(
     fingerprint = _prompt_fingerprint(prompt)
 
     prompt_artifact = {
-        "schemaVersion": "cardinal-etiology-v7-prompt-v1",
+        "schemaVersion": "cardinal-etiology-v7.1-prompt-v1",
         "scenarioId": scenario_id,
         "episodeId": episode_id,
         "incidentId": incident_id,
@@ -803,7 +873,7 @@ async def run_etiology_v7(
     widget = _widget_interpretation(record=record, response=response, metadata=metadata)
 
     source_result = {
-        "schemaVersion": "cardinal-etiology-runtime-v7.0.0",
+        "schemaVersion": "cardinal-etiology-runtime-v7.1.0",
         "createdAt": _now_iso(),
         "scenarioId": scenario_id,
         "episodeId": episode_id,
@@ -827,7 +897,7 @@ async def run_etiology_v7(
     # Preserve filenames consumed by existing tooling, but make their schema
     # explicitly V7 so they cannot be mistaken for the old four-field pipeline.
     cardinal_compat = {
-        "schemaVersion": "cardinal-model-response-v7-compat-v1",
+        "schemaVersion": "cardinal-model-response-v7.1-compat-v1",
         "scenarioId": scenario_id,
         "episodeId": episode_id,
         "incidentId": incident_id,
@@ -854,7 +924,7 @@ async def run_etiology_v7(
     _atomic_json(episode_dir / "slm_widget_result_v4.json", cardinal_compat)
 
     stored_response = {
-        "schemaVersion": "slm-response-etiology-v7-compat-v1",
+        "schemaVersion": "slm-response-etiology-v7.1-compat-v1",
         "createdAt": _now_iso(),
         "incidentId": incident_id,
         "episodeId": episode_id,
@@ -866,7 +936,7 @@ async def run_etiology_v7(
         "notForClinicalUse": True,
         "warnings": [],
         "response": {
-            "schemaVersion": "etiology-v7-widget-payload-v1",
+            "schemaVersion": "etiology-v7.1-widget-payload-v1",
             "scenarioId": scenario_id,
             "modelResponse": response,
             "displayModelResponse": compatibility,
@@ -893,7 +963,7 @@ async def run_etiology_v7(
                 "liveInference": not bool(metadata.get("precomputed")),
             },
             "responseMeta": {
-                "contract": "etiology_v7_nine_field_json",
+                "contract": "etiology_v7_1_ten_field_json",
                 "contractValid": True,
                 "inferenceMode": (
                     "precomputed" if metadata.get("precomputed") else "live"
@@ -963,6 +1033,7 @@ async def run_etiology_v7(
             "incidentId": incident_id,
             "rhythm": response.get("rhythm"),
             "primaryEtiology": response.get("primaryEtiology"),
+            "escalationRecommendation": response.get("escalationRecommendation"),
             "phase6Used": False,
         },
         "storedResponse": stored_response,

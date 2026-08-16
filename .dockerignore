@@ -2,16 +2,24 @@
 .github
 node_modules
 dist
+*.zip
 *.log
 .env
 .env.*
-backend/.env
 src/.env
+backend/.env
+backend/.env.*
 backend/.venv
 backend/venv
-backend/__pycache__
 backend/**/__pycache__
 backend/**/*.pyc
+backend/data/evaluation_runs
+backend/data/colab_model_benchmark
 backend/data/episodes
 backend/data/incidents
-# IMPORTANT: do not ignore backend/SLM_Eval or backend/data/etiology_v7_precomputed
+backend/.hf-cache
+infra/bootstrap/.terraform
+infra/app/.terraform
+infra/app/*.tfplan
+gha-creds-*.json
+CARDINAL_*_BACKUP_*
