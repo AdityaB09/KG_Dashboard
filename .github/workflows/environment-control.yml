@@ -1,0 +1,355 @@
+name: CARDINAL Environment Control
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "CARDINAL environment action"
+        required: true
+        type: choice
+        options:
+          - START_DEMO
+          - STOP_ALL
+          - STATUS
+
+  schedule:
+    # Hard nightly cutoff. If ANY service is still accessible, email then disable all.
+    - cron: "7 23 * * *"
+      timezone: "America/Chicago"
+
+    # Forgotten-demo guard. Runs twice per hour, offset from the nightly cutoff.
+    # Any service left accessible for >= 2 hours triggers email + forced shutdown.
+    - cron: "17,47 * * * *"
+      timezone: "America/Chicago"
+
+concurrency:
+  group: cardinal-environment-control
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+  REGION: ${{ vars.GCP_REGION }}
+  WIF_PROVIDER: ${{ vars.GCP_WIF_PROVIDER }}
+  DEPLOY_SA: github-cardinal-deployer@${{ vars.GCP_PROJECT_ID }}.iam.gserviceaccount.com
+
+  FRONTEND_SERVICE: kg-dashboard-frontend
+  BACKEND_SERVICE: kg-dashboard-backend
+  GEMMA_SERVICE: cardinal-gemma4-26b-a4b-it
+
+  ALERT_EMAIL: ${{ vars.CARDINAL_ALERT_EMAIL }}
+  SMTP_HOST: smtp.gmail.com
+  SMTP_PORT: "587"
+  DEMO_MAX_AGE_SECONDS: "7200"
+
+jobs:
+  control:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+          workload_identity_provider: ${{ env.WIF_PROVIDER }}
+          service_account: ${{ env.DEPLOY_SA }}
+
+      - name: Set up gcloud
+        uses: google-github-actions/setup-gcloud@v3
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Validate configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$PROJECT_ID" || (echo "Missing GCP_PROJECT_ID repository variable" && exit 1)
+          test -n "$REGION" || (echo "Missing GCP_REGION repository variable" && exit 1)
+          test -n "$WIF_PROVIDER" || (echo "Missing GCP_WIF_PROVIDER repository variable" && exit 1)
+          test -n "$ALERT_EMAIL" || (echo "Missing CARDINAL_ALERT_EMAIL repository variable" && exit 1)
+
+      - name: Determine action
+        id: mode
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            ACTION="${{ github.event.inputs.action }}"
+          elif [[ "${{ github.event.schedule }}" == "7 23 * * *" ]]; then
+            ACTION="NIGHTLY_GUARD"
+          else
+            ACTION="STALE_GUARD"
+          fi
+
+          echo "action=$ACTION" >> "$GITHUB_OUTPUT"
+          echo "CARDINAL action: $ACTION"
+
+      - name: Control CARDINAL environment
+        shell: bash
+        env:
+          ACTION: ${{ steps.mode.outputs.action }}
+        run: |
+          set -euo pipefail
+
+          START_LABEL="cardinal-demo-start-epoch"
+
+          get_json() {
+            gcloud run services describe "$1" \
+              --project="$PROJECT_ID" \
+              --region="$REGION" \
+              --format=json
+          }
+
+          get_state() {
+            local SERVICE="$1"
+            local JSON MODE MANUAL MIN MAX START_EPOCH UPDATE_TIME UPDATE_EPOCH NOW AGE
+
+            JSON="$(get_json "$SERVICE")"
+            MODE="$(jq -r '.scaling.scalingMode // "AUTOMATIC"' <<<"$JSON")"
+            [[ -n "$MODE" && "$MODE" != "SCALING_MODE_UNSPECIFIED" ]] || MODE="AUTOMATIC"
+
+            MANUAL="$(jq -r 'if .scaling.manualInstanceCount == null then "" else (.scaling.manualInstanceCount|tostring) end' <<<"$JSON")"
+            MIN="$(jq -r '(.scaling.minInstanceCount // .template.scaling.minInstanceCount // 0) | tostring' <<<"$JSON")"
+            MAX="$(jq -r 'if (.scaling.maxInstanceCount // .template.scaling.maxInstanceCount) == null then "" else ((.scaling.maxInstanceCount // .template.scaling.maxInstanceCount)|tostring) end' <<<"$JSON")"
+            START_EPOCH="$(jq -r '.labels["cardinal-demo-start-epoch"] // ""' <<<"$JSON")"
+            UPDATE_TIME="$(jq -r '.updateTime // ""' <<<"$JSON")"
+
+            NOW="$(date +%s)"
+            AGE="0"
+
+            # Workflow starts get an explicit label. Manual gcloud/Terraform starts
+            # update Cloud Run updateTime. Use the MOST RECENT timestamp so a later
+            # manual start gets a fresh two-hour window even if an older label remains.
+            UPDATE_EPOCH="0"
+            if [[ -n "$UPDATE_TIME" ]]; then
+              UPDATE_EPOCH="$(date -d "$UPDATE_TIME" +%s 2>/dev/null || echo 0)"
+            fi
+
+            EFFECTIVE_START="0"
+            if [[ "$START_EPOCH" =~ ^[0-9]+$ ]]; then
+              EFFECTIVE_START="$START_EPOCH"
+            fi
+            if [[ "$UPDATE_EPOCH" =~ ^[0-9]+$ && "$UPDATE_EPOCH" -gt "$EFFECTIVE_START" ]]; then
+              EFFECTIVE_START="$UPDATE_EPOCH"
+            fi
+            if [[ "$EFFECTIVE_START" -gt 0 ]]; then
+              AGE=$(( NOW - EFFECTIVE_START ))
+            fi
+
+            (( AGE >= 0 )) || AGE=0
+            printf '%s|%s|%s|%s|%s|%s\n' "$SERVICE" "$MODE" "$MANUAL" "$MIN" "$MAX" "$AGE"
+          }
+
+          is_off() {
+            local MODE="$1"
+            local MANUAL="$2"
+            [[ "$MODE" == "MANUAL" && "$MANUAL" == "0" ]]
+          }
+
+          print_status() {
+            echo ""
+            echo "============================================================"
+            echo "CARDINAL ENVIRONMENT STATUS"
+            echo "============================================================"
+
+            for SERVICE in "$FRONTEND_SERVICE" "$BACKEND_SERVICE" "$GEMMA_SERVICE"; do
+              local STATE NAME MODE MANUAL MIN MAX AGE
+              STATE="$(get_state "$SERVICE")"
+              IFS='|' read -r NAME MODE MANUAL MIN MAX AGE <<< "$STATE"
+
+              echo "$NAME"
+              echo "  mode:             $MODE"
+              echo "  manual instances: ${MANUAL:-N/A}"
+              echo "  min instances:    ${MIN:-N/A}"
+              echo "  max instances:    ${MAX:-N/A}"
+              if is_off "$MODE" "$MANUAL"; then
+                echo "  access state:     DISABLED"
+              else
+                echo "  access state:     OPEN / WAKEABLE"
+                echo "  open age:         ${AGE}s"
+              fi
+            done
+          }
+
+          stop_all() {
+            echo ""
+            echo "FORCING ALL CARDINAL SERVICES TO MANUAL / 0"
+
+            for SERVICE in "$FRONTEND_SERVICE" "$BACKEND_SERVICE" "$GEMMA_SERVICE"; do
+              echo "Disabling $SERVICE ..."
+              gcloud run services update "$SERVICE" \
+                --project="$PROJECT_ID" \
+                --region="$REGION" \
+                --scaling=0 \
+                --quiet
+            done
+          }
+
+          verify_off() {
+            local FAILURE=0
+
+            for SERVICE in "$FRONTEND_SERVICE" "$BACKEND_SERVICE" "$GEMMA_SERVICE"; do
+              local STATE NAME MODE MANUAL MIN MAX AGE
+              STATE="$(get_state "$SERVICE")"
+              IFS='|' read -r NAME MODE MANUAL MIN MAX AGE <<< "$STATE"
+
+              if is_off "$MODE" "$MANUAL"; then
+                echo "[PASS] $SERVICE = MANUAL / 0"
+              else
+                echo "[FAIL] $SERVICE = mode=$MODE manual=${MANUAL:-N/A}"
+                FAILURE=1
+              fi
+            done
+
+            [[ "$FAILURE" == "0" ]]
+          }
+
+          send_alert() {
+            local REASON="$1"
+            local REPORT="$2"
+            local SMTP_USERNAME SMTP_PASSWORD
+
+            echo "Attempting alert email to $ALERT_EMAIL BEFORE shutdown..."
+
+            if ! SMTP_USERNAME="$(gcloud secrets versions access latest --project="$PROJECT_ID" --secret=SMTP_USERNAME 2>/dev/null)"; then
+              echo "ERROR: Cannot read SMTP_USERNAME from Secret Manager."
+              return 1
+            fi
+
+            if ! SMTP_PASSWORD="$(gcloud secrets versions access latest --project="$PROJECT_ID" --secret=SMTP_PASSWORD 2>/dev/null)"; then
+              echo "ERROR: Cannot read SMTP_PASSWORD from Secret Manager."
+              return 1
+            fi
+
+            [[ -n "$SMTP_USERNAME" && -n "$SMTP_PASSWORD" ]] || return 1
+
+            echo "::add-mask::$SMTP_USERNAME"
+            echo "::add-mask::$SMTP_PASSWORD"
+
+            export SMTP_USERNAME SMTP_PASSWORD REASON REPORT
+
+            python .github/scripts/cardinal_environment_email.py
+          }
+
+          build_report_and_flags() {
+            local OPEN=0 STALE=0 REPORT="" NOW
+            NOW="$(date +%s)"
+
+            for SERVICE in "$FRONTEND_SERVICE" "$BACKEND_SERVICE" "$GEMMA_SERVICE"; do
+              local STATE NAME MODE MANUAL MIN MAX AGE
+              STATE="$(get_state "$SERVICE")"
+              IFS='|' read -r NAME MODE MANUAL MIN MAX AGE <<< "$STATE"
+
+              REPORT+="$NAME: mode=$MODE, manual=${MANUAL:-N/A}, min=${MIN:-N/A}, max=${MAX:-N/A}, openAge=${AGE}s"$'\n'
+
+              if ! is_off "$MODE" "$MANUAL"; then
+                OPEN=1
+                if [[ "$AGE" -ge "$DEMO_MAX_AGE_SECONDS" ]]; then
+                  STALE=1
+                fi
+              fi
+            done
+
+            printf '%s\037%s\037%s' "$OPEN" "$STALE" "$REPORT"
+          }
+
+          if [[ "$ACTION" == "STATUS" ]]; then
+            print_status
+            exit 0
+          fi
+
+          if [[ "$ACTION" == "START_DEMO" ]]; then
+            START_EPOCH="$(date +%s)"
+
+            echo "Opening CARDINAL in cost-conscious cold-start mode."
+            echo "No service gets a minimum warm instance."
+
+            gcloud run services update "$FRONTEND_SERVICE" \
+              --project="$PROJECT_ID" --region="$REGION" \
+              --scaling=auto --min=0 --max=2 \
+              --update-labels="${START_LABEL}=${START_EPOCH}" \
+              --quiet
+
+            gcloud run services update "$BACKEND_SERVICE" \
+              --project="$PROJECT_ID" --region="$REGION" \
+              --scaling=auto --min=0 --max=1 \
+              --update-labels="${START_LABEL}=${START_EPOCH}" \
+              --quiet
+
+            # Gemma intentionally uses AUTO 0-1, NOT MANUAL 1.
+            # Therefore the first inference after scale-to-zero cold-starts the model,
+            # and no minimum instance is held warm just because START_DEMO was run.
+            gcloud run services update "$GEMMA_SERVICE" \
+              --project="$PROJECT_ID" --region="$REGION" \
+              --scaling=auto --min=0 --max=1 \
+              --update-labels="${START_LABEL}=${START_EPOCH}" \
+              --quiet
+
+            print_status
+            exit 0
+          fi
+
+          if [[ "$ACTION" == "STOP_ALL" ]]; then
+            stop_all
+            verify_off
+            print_status
+            exit 0
+          fi
+
+          if [[ "$ACTION" == "NIGHTLY_GUARD" || "$ACTION" == "STALE_GUARD" ]]; then
+            FLAGS="$(build_report_and_flags)"
+            OPEN="${FLAGS%%$'\037'*}"
+            REST="${FLAGS#*$'\037'}"
+            STALE="${REST%%$'\037'*}"
+            REPORT="${REST#*$'\037'}"
+
+            if [[ "$OPEN" == "0" ]]; then
+              echo "All CARDINAL services are already MANUAL / 0. Nothing to do."
+              exit 0
+            fi
+
+            if [[ "$ACTION" == "STALE_GUARD" && "$STALE" == "0" ]]; then
+              echo "CARDINAL is open, but no active service has been open for 2 hours yet."
+              print_status
+              exit 0
+            fi
+
+            if [[ "$ACTION" == "NIGHTLY_GUARD" ]]; then
+              REASON="11:07 PM nightly cutoff"
+            else
+              REASON="environment left open for at least 2 hours"
+            fi
+
+            EMAIL_FAILED=0
+            if ! send_alert "$REASON" "$REPORT"; then
+              EMAIL_FAILED=1
+              echo "WARNING: alert email failed. Safety shutdown will continue anyway."
+            fi
+
+            stop_all
+
+            if ! verify_off; then
+              echo "ERROR: one or more CARDINAL services could not be disabled."
+              exit 3
+            fi
+
+            print_status
+
+            if [[ "$EMAIL_FAILED" == "1" ]]; then
+              echo "ERROR: shutdown succeeded, but email delivery failed."
+              exit 4
+            fi
+
+            exit 0
+          fi
+
+          echo "Unknown CARDINAL action: $ACTION"
+          exit 1

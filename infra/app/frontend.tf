@@ -6,8 +6,13 @@ resource "google_cloud_run_v2_service" "frontend" {
   deletion_protection  = false
 
   # Service-level ceiling protects the project even during revision transitions.
+  # Permanent safe baseline: Terraform apply always parks this service.
+  # START_DEMO temporarily changes it to automatic scale-to-zero.
+  # Permanent safe baseline: Terraform apply always parks this service.
+  # START_DEMO temporarily changes it to automatic scale-to-zero.
   scaling {
-    max_instance_count = 2
+    scaling_mode          = "MANUAL"
+    manual_instance_count = 0
   }
 
   template {

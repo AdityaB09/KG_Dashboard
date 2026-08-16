@@ -131,8 +131,19 @@ jobs:
         run: terraform -chdir=infra/app plan -out=cardinal.tfplan
       - name: Terraform apply
         run: terraform -chdir=infra/app apply -auto-approve cardinal.tfplan
+      - name: Temporarily enable frontend/backend for smoke test
+        run: |
+          gcloud run services update kg-dashboard-frontend --project="$PROJECT_ID" --region="$REGION" --scaling=auto --min=0 --max=2 --quiet
+          gcloud run services update kg-dashboard-backend --project="$PROJECT_ID" --region="$REGION" --scaling=auto --min=0 --max=1 --quiet
       - name: Smoke test
         run: |
           curl --fail --retry 8 --retry-delay 5 "$FRONTEND_URL/"
           curl --fail --retry 8 --retry-delay 5 "$BACKEND_URL/health"
           terraform -chdir=infra/app output
+      - name: Park CARDINAL after deployment
+        if: always()
+        run: |
+          echo "Returning production to the permanent safe baseline."
+          gcloud run services update kg-dashboard-frontend --project="$PROJECT_ID" --region="$REGION" --scaling=0 --quiet || true
+          gcloud run services update kg-dashboard-backend --project="$PROJECT_ID" --region="$REGION" --scaling=0 --quiet || true
+          gcloud run services update cardinal-gemma4-26b-a4b-it --project="$PROJECT_ID" --region="$REGION" --scaling=0 --quiet || true

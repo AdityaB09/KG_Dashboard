@@ -8,8 +8,13 @@ resource "google_cloud_run_v2_service" "backend" {
   # Current SMART token/session stores are process-memory dictionaries.
   # Keep the entire service globally capped at one instance until shared
   # session persistence is introduced.
+  # Permanent safe baseline: Terraform apply always parks this service.
+  # START_DEMO temporarily changes it to automatic scale-to-zero.
+  # Permanent safe baseline: Terraform apply always parks this service.
+  # START_DEMO temporarily changes it to automatic scale-to-zero.
   scaling {
-    max_instance_count = 1
+    scaling_mode          = "MANUAL"
+    manual_instance_count = 0
   }
 
   template {

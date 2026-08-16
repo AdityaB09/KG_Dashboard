@@ -4,10 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       operation:
-        description: 'CPU Gemma 26B operation'
+        description: "Gemma operation"
         required: true
         type: choice
-        options: [ON, OFF, STATUS]
+        options:
+          - ON
+          - OFF
+          - STATUS
 
 permissions:
   contents: read
@@ -19,34 +22,45 @@ env:
   REGION: ${{ vars.GCP_REGION }}
   WIF_PROVIDER: ${{ vars.GCP_WIF_PROVIDER }}
   MODEL_SERVICE: cardinal-gemma4-26b-a4b-it
-  MODEL_URL: https://cardinal-gemma4-26b-a4b-it-${{ vars.GCP_PROJECT_NUMBER }}.${{ vars.GCP_REGION }}.run.app
   DEPLOY_SA: github-cardinal-deployer@${{ vars.GCP_PROJECT_ID }}.iam.gserviceaccount.com
 
 jobs:
   control:
     runs-on: ubuntu-latest
-    environment: production
     steps:
       - uses: actions/checkout@v7
-      - name: Validate required repository variables
-        run: |
-          test -n "$PROJECT_ID" || (echo 'Missing GCP_PROJECT_ID repository variable' && exit 1)
-          test -n "$PROJECT_NUMBER" || (echo 'Missing GCP_PROJECT_NUMBER repository variable' && exit 1)
-          test -n "$REGION" || (echo 'Missing GCP_REGION repository variable' && exit 1)
-          test -n "$WIF_PROVIDER" || (echo 'Missing GCP_WIF_PROVIDER repository variable' && exit 1)
+
       - uses: google-github-actions/auth@v3
         with:
           project_id: ${{ env.PROJECT_ID }}
           workload_identity_provider: ${{ env.WIF_PROVIDER }}
           service_account: ${{ env.DEPLOY_SA }}
+
       - uses: google-github-actions/setup-gcloud@v3
-      - name: ON
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: ON - cold autoscaling 0 to 1
         if: ${{ inputs.operation == 'ON' }}
+        shell: bash
         run: |
-          echo 'WARNING: enabling one 8-vCPU Gemma 26B instance; GPU billing begins.'
-          gcloud run services update "$MODEL_SERVICE" --project="$PROJECT_ID" --region="$REGION" --scaling=1
-      - name: OFF
+          START_EPOCH="$(date +%s)"
+          echo "Gemma will be WAKEABLE but has min=0; no permanently warm instance is reserved."
+          gcloud run services update "$MODEL_SERVICE" \
+            --project="$PROJECT_ID" --region="$REGION" \
+            --scaling=auto --min=0 --max=1 \
+            --update-labels="cardinal-demo-start-epoch=${START_EPOCH}" \
+            --quiet
+
+      - name: OFF - fully disabled
         if: ${{ inputs.operation == 'OFF' }}
-        run: gcloud run services update "$MODEL_SERVICE" --project="$PROJECT_ID" --region="$REGION" --scaling=0
+        run: |
+          gcloud run services update "$MODEL_SERVICE" \
+            --project="$PROJECT_ID" --region="$REGION" \
+            --scaling=0 --quiet
+
       - name: Status
-        run: gcloud run services describe "$MODEL_SERVICE" --project="$PROJECT_ID" --region="$REGION" --format='yaml(status.url,scaling,template.nodeSelector,template.containers.resources)'
+        run: |
+          gcloud run services describe "$MODEL_SERVICE" \
+            --project="$PROJECT_ID" --region="$REGION" \
+            --format='yaml(status.url,scaling,template.scaling,template.containers.resources)'
