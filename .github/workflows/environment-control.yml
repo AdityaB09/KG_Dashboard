@@ -101,11 +101,22 @@ jobs:
 
           START_LABEL="cardinal-demo-start-epoch"
 
+          # IMPORTANT:
+          # `gcloud run services describe --format=json` can expose the
+          # Knative/gcloud representation rather than the Cloud Run Admin v2
+          # service scaling object. The guard needs the v2 `scaling` fields
+          # (`scalingMode`, `manualInstanceCount`) to decide whether a service
+          # is truly disabled. Read the Admin API directly.
           get_json() {
-            gcloud run services describe "$1" \
-              --project="$PROJECT_ID" \
-              --region="$REGION" \
-              --format=json
+            local SERVICE="$1"
+            local TOKEN
+
+            TOKEN="$(gcloud auth print-access-token)"
+
+            curl --fail --silent --show-error \
+              -H "Authorization: Bearer ${TOKEN}" \
+              -H "Accept: application/json" \
+              "https://run.googleapis.com/v2/projects/${PROJECT_ID}/locations/${REGION}/services/${SERVICE}"
           }
 
           get_state() {
@@ -194,22 +205,37 @@ jobs:
           }
 
           verify_off() {
-            local FAILURE=0
+            local ATTEMPT FAILURE
 
-            for SERVICE in "$FRONTEND_SERVICE" "$BACKEND_SERVICE" "$GEMMA_SERVICE"; do
-              local STATE NAME MODE MANUAL MIN MAX AGE
-              STATE="$(get_state "$SERVICE")"
-              IFS='|' read -r NAME MODE MANUAL MIN MAX AGE <<< "$STATE"
+            # Cloud Run updates are asynchronous internally even though gcloud
+            # waits for the update operation. Poll the Admin v2 GET briefly so
+            # verification does not fail on a stale read.
+            for ATTEMPT in 1 2 3 4 5 6; do
+              FAILURE=0
+              echo "Verifying disabled state (attempt ${ATTEMPT}/6)..."
 
-              if is_off "$MODE" "$MANUAL"; then
-                echo "[PASS] $SERVICE = MANUAL / 0"
-              else
-                echo "[FAIL] $SERVICE = mode=$MODE manual=${MANUAL:-N/A}"
-                FAILURE=1
+              for SERVICE in "$FRONTEND_SERVICE" "$BACKEND_SERVICE" "$GEMMA_SERVICE"; do
+                local STATE NAME MODE MANUAL MIN MAX AGE
+                STATE="$(get_state "$SERVICE")"
+                IFS='|' read -r NAME MODE MANUAL MIN MAX AGE <<< "$STATE"
+
+                if is_off "$MODE" "$MANUAL"; then
+                  echo "[PASS] $SERVICE = MANUAL / 0"
+                else
+                  echo "[WAIT] $SERVICE = mode=$MODE manual=${MANUAL:-N/A}"
+                  FAILURE=1
+                fi
+              done
+
+              if [[ "$FAILURE" == "0" ]]; then
+                return 0
               fi
+
+              sleep 5
             done
 
-            [[ "$FAILURE" == "0" ]]
+            echo "[FAIL] One or more services did not report MANUAL / 0 after polling."
+            return 1
           }
 
           send_alert() {
