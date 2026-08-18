@@ -66,6 +66,14 @@ def get_token_for_request(request: Request) -> dict[str, Any] | None:
     return token_state
 
 
+def get_token_for_session_id(session_id: str | None) -> dict[str, Any] | None:
+    """Resolve an opaque Oracle SMART session reference for backend adapters."""
+    key = str(session_id or "").strip()
+    if not key:
+        return None
+    return SMART_TOKEN_STORE.get(key)
+
+
 
 def _frontend_redirect_url() -> str:
     base = os.getenv("FRONTEND_APP_URL", "http://127.0.0.1:5173").strip()

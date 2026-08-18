@@ -352,9 +352,6 @@ function InterpretationModal({
       >
         <header className="kgen-slm-modal-header">
           <div>
-            <span className="kgen-slm-modal-eyebrow">
-              CARDINAL Etiology Engine
-            </span>
             <h2 id="kgen-slm-modal-title">
               {clinical.rhythm ||
                 widget.headline ||
@@ -579,43 +576,30 @@ export default function CriticalInterpretationWidget({
         onClick={() => setIsOpen(true)}
         aria-haspopup="dialog"
       >
-        <div className="kgen-slm-compact-heading">
-          <div>
-            <span>CARDINAL Etiology Engine</span>
-            <h3>
-              {clinical.rhythm ||
-                widget.headline}
-            </h3>
-          </div>
-        </div>
-
-        <div className="kgen-slm-compact-rhythm">
+        <div className="kgen-slm-compact-rhythm kgen-slm-compact-rhythm-primary">
           <span>Identified rhythm</span>
           <strong>
-            {clinical.rhythm || "--"}
+            {clinical.rhythm || widget.headline || "--"}
           </strong>
         </div>
 
         {responseUnavailable ? (
-          <p className="kgen-slm-compact-etiology">
-            <b>Response unavailable:</b>{" "}
-            {result?.responseMeta?.error ||
-              "The configured interpretation is unavailable for this episode."}
-          </p>
+          <div className="kgen-slm-compact-summary kgen-slm-compact-summary-error">
+            <span>Interpretation status</span>
+            <strong>
+              {result?.responseMeta?.error ||
+                "Response unavailable for this episode."}
+            </strong>
+          </div>
         ) : (
-          <p className="kgen-slm-compact-etiology">
-            <b>Primary etiology:</b>{" "}
-            {clinical.primaryEtiology ||
-              widget.etiologyContextNarrative ||
-              "--"}
-          </p>
-        )}
-
-        {!responseUnavailable && clinical.mechanism && (
-          <p className="kgen-slm-compact-etiology">
-            <b>Mechanism:</b>{" "}
-            {clinical.mechanism}
-          </p>
+          <div className="kgen-slm-compact-summary">
+            <span>Primary etiology</span>
+            <strong>
+              {clinical.primaryEtiology ||
+                widget.etiologyContextNarrative ||
+                "--"}
+            </strong>
+          </div>
         )}
 
         {!!compactMetrics.length && (
@@ -630,8 +614,8 @@ export default function CriticalInterpretationWidget({
         )}
 
         <span className="kgen-slm-open-prompt">
-          Open full interpretation
-          <strong aria-hidden="true">↗</strong>
+          View full interpretation
+          <strong aria-hidden="true">›</strong>
         </span>
       </button>
 

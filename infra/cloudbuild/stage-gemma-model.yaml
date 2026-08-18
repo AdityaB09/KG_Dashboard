@@ -1,0 +1,40 @@
+steps:
+- name: 'python:3.11-slim'
+  entrypoint: 'bash'
+  secretEnv: ['HF_TOKEN']
+  args:
+  - '-c'
+  - |
+    set -euo pipefail
+    pip install --no-cache-dir "huggingface_hub[hf_xet]"
+    mkdir -p /workspace/model
+
+    hf download google/gemma-4-26B-A4B-it-qat-q4_0-gguf \
+      gemma-4-26B_q4_0-it.gguf \
+      --token "$$HF_TOKEN" \
+      --local-dir /workspace/model
+
+    ls -lh /workspace/model/gemma-4-26B_q4_0-it.gguf
+    du -sh /workspace/model
+
+- name: 'gcr.io/google.com/cloudsdktool/google-cloud-cli:slim'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    set -euo pipefail
+    gcloud storage cp \
+      /workspace/model/gemma-4-26B_q4_0-it.gguf \
+      "gs://${_MODEL_BUCKET}/gemma4-26b-a4b-q4/gemma-4-26B_q4_0-it.gguf"
+
+availableSecrets:
+  secretManager:
+  - versionName: 'projects/$PROJECT_ID/secrets/CARDINAL_HF_TOKEN_STAGE/versions/latest'
+    env: 'HF_TOKEN'
+
+options:
+  machineType: 'E2_STANDARD_2'
+  diskSizeGb: 50
+  logging: CLOUD_LOGGING_ONLY
+
+timeout: '7200s'

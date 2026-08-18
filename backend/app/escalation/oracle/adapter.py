@@ -5,7 +5,7 @@ import os
 from typing import Any
 
 from app.escalation.audit import append_audit_event
-from app.escalation.levels import EscalationLevel, normalize_level
+from app.escalation.levels import EscalationLevel, legacy_level_code, normalize_level
 from app.escalation.oracle.fhir_communication import create_fhir_communication
 from app.escalation.oracle.fhir_identity import discover_current_person
 from app.escalation.oracle.group_inboxes import discover_group_inboxes, find_group_inbox
@@ -30,7 +30,8 @@ def _targets() -> dict[str, Any]:
 
 
 def _configured_target(level: EscalationLevel) -> dict[str, str] | None:
-    value = _targets().get(level.value)
+    targets = _targets()
+    value = targets.get(level.value) or targets.get(legacy_level_code(level))
     if isinstance(value, dict):
         target_type = str(value.get("type") or "GROUPINBOX").strip().upper()
         target_id = str(value.get("id") or "").strip()
@@ -38,12 +39,20 @@ def _configured_target(level: EscalationLevel) -> dict[str, str] | None:
         if target_id or target_name:
             return {"type": target_type, "id": target_id, "name": target_name}
 
-    short = level.value.split("_", 1)[0]
-    target_id = os.getenv(f"ORACLE_ESCALATION_TARGET_{short}_ID", "").strip()
-    target_name = os.getenv(f"ORACLE_ESCALATION_TARGET_{short}_NAME", "").strip()
-    target_type = os.getenv(f"ORACLE_ESCALATION_TARGET_{short}_TYPE", "GROUPINBOX").strip().upper()
-    if target_id or target_name:
-        return {"type": target_type, "id": target_id, "name": target_name}
+    # V10 pathway-specific keys, then legacy L1-L4 keys so existing .env files
+    # continue to route without being rewritten by the patch.
+    suffixes = {
+        EscalationLevel.CARE_TEAM_REVIEW: ("CARE_TEAM", "L1"),
+        EscalationLevel.URGENT_PROVIDER_REVIEW: ("URGENT_PROVIDER", "L2"),
+        EscalationLevel.RAPID_RESPONSE_ACTIVATION: ("RRT", "L3"),
+        EscalationLevel.CODE_RESPONSE_ACTIVATION: ("CODE", "L4"),
+    }.get(level, ())
+    for suffix in suffixes:
+        target_id = os.getenv(f"ORACLE_ESCALATION_TARGET_{suffix}_ID", "").strip()
+        target_name = os.getenv(f"ORACLE_ESCALATION_TARGET_{suffix}_NAME", "").strip()
+        target_type = os.getenv(f"ORACLE_ESCALATION_TARGET_{suffix}_TYPE", "GROUPINBOX").strip().upper()
+        if target_id or target_name:
+            return {"type": target_type, "id": target_id, "name": target_name}
     return None
 
 

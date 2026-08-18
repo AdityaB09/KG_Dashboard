@@ -73,6 +73,8 @@ from app.fhir_cache.routes import (
 from app.slm_widget.routes import (
     router as slm_widget_router,
 )
+from app.escalation.routes import router as escalation_router
+from app.escalation.orchestrator import start_timeout_worker, stop_timeout_worker
 
 
 
@@ -110,8 +112,20 @@ app.include_router(
 app.include_router(
     slm_widget_router
 )
+app.include_router(escalation_router)
 
 install_epic_routes(app)
+
+
+@app.on_event("startup")
+async def start_cardinal_escalation_runtime():
+    start_timeout_worker()
+
+
+@app.on_event("shutdown")
+async def stop_cardinal_escalation_runtime():
+    await stop_timeout_worker()
+
 
 def observe_episode_frame_safely(
     *,

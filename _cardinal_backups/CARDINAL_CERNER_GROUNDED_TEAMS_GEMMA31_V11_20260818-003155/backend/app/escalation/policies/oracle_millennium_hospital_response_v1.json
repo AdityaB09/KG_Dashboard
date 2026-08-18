@@ -1,0 +1,140 @@
+{
+  "schemaVersion": "cardinal-hospital-response-policy-v2",
+  "policyId": "ORACLE-MILLENNIUM-HOSPITAL-RESPONSE-V1",
+  "version": "1.0.0",
+  "displayName": "Oracle Health Millennium Hospital Response Reference Profile",
+  "status": "site-configurable-reference",
+  "vendorSemantics": {
+    "note": "Oracle Health Millennium provides SMART/FHIR context plus Message Center recipients, Group Inboxes, responsible personnel and HIGH(STAT)/NORMAL(ROUTINE) message priority. Clinical activation criteria and response teams are configured by each hospital; they are not Oracle-defined numbered levels.",
+    "oracleMessagePriority": {
+      "MONITOR_ONLY": "NORMAL",
+      "CARE_TEAM_REVIEW": "NORMAL",
+      "URGENT_PROVIDER_REVIEW": "NORMAL",
+      "RAPID_RESPONSE_ACTIVATION": "HIGH",
+      "CODE_RESPONSE_ACTIVATION": "HIGH"
+    }
+  },
+  "defaultMinimumLevel": "CARE_TEAM_REVIEW",
+  "failSafeLevel": "URGENT_PROVIDER_REVIEW",
+  "autoAdvanceSecondsByLevel": {
+    "MONITOR_ONLY": 0,
+    "CARE_TEAM_REVIEW": 300,
+    "URGENT_PROVIDER_REVIEW": 180,
+    "RAPID_RESPONSE_ACTIVATION": 60,
+    "CODE_RESPONSE_ACTIVATION": 0
+  },
+  "scenarioMinimums": {
+    "VFIB-STEMI-001": "CODE_RESPONSE_ACTIVATION",
+    "TORSADES-LQT-002": "RAPID_RESPONSE_ACTIVATION",
+    "VT-ISCHEMIC-003": "RAPID_RESPONSE_ACTIVATION",
+    "AFIB-RVR-SEPSIS-004": "URGENT_PROVIDER_REVIEW",
+    "CHB-HYPERK-005": "RAPID_RESPONSE_ACTIVATION",
+    "BRADY-DIGTOX-006": "URGENT_PROVIDER_REVIEW",
+    "SVT-PSVT-007": "CARE_TEAM_REVIEW",
+    "NSVT-ECTOPY-008": "CARE_TEAM_REVIEW",
+    "WCT-DIFF-009": "RAPID_RESPONSE_ACTIVATION",
+    "WPW-AFIB-010": "RAPID_RESPONSE_ACTIVATION",
+    "FLUTTER-IC-011": "RAPID_RESPONSE_ACTIVATION",
+    "PERI-STEMI-012": "URGENT_PROVIDER_REVIEW",
+    "BRASH-013": "RAPID_RESPONSE_ACTIVATION",
+    "AMIO-DDI-014": "URGENT_PROVIDER_REVIEW"
+  },
+  "evidenceRules": [
+    {
+      "id": "R-CARDIAC-ARREST",
+      "path": "vitals.bloodPressure.note",
+      "operator": "containsAny",
+      "values": ["no pulse", "pulseless", "cardiac arrest", "arterial line flat"],
+      "minimumLevel": "CODE_RESPONSE_ACTIVATION",
+      "reason": "Pulseless/cardiac-arrest evidence requires immediate code/emergency response activation."
+    },
+    {
+      "id": "R-VFIB",
+      "path": "episode.type",
+      "operator": "containsAny",
+      "values": ["ventricular_fibrillation", "ventricular fibrillation", "vfib"],
+      "minimumLevel": "CODE_RESPONSE_ACTIVATION",
+      "reason": "Ventricular fibrillation is an immediately life-threatening arrest rhythm and requires code/emergency response activation."
+    },
+    {
+      "id": "R-CRITICAL",
+      "path": "episode.severity",
+      "operator": "equalsAny",
+      "values": ["critical", "emergency"],
+      "minimumLevel": "RAPID_RESPONSE_ACTIVATION",
+      "reason": "Critical deterioration meets the reference profile's rapid-response activation floor unless stronger arrest/resuscitation evidence requires code response."
+    },
+    {
+      "id": "R-SBP-90",
+      "path": "vitals.bloodPressure.systolic",
+      "operator": "lte",
+      "value": 90,
+      "minimumLevel": "RAPID_RESPONSE_ACTIVATION",
+      "reason": "Hypotension is a common rapid-response activation criterion in hospital deterioration pathways."
+    },
+    {
+      "id": "R-MAP-60",
+      "path": "vitals.bloodPressure.map",
+      "operator": "lte",
+      "value": 60,
+      "minimumLevel": "RAPID_RESPONSE_ACTIVATION",
+      "reason": "Low MAP indicates hemodynamic deterioration requiring rapid-response-level assessment in this reference profile."
+    },
+    {
+      "id": "R-HR-130",
+      "path": "vitals.heartRateBpm",
+      "operator": "gte",
+      "value": 130,
+      "minimumLevel": "URGENT_PROVIDER_REVIEW",
+      "reason": "Marked tachycardia requires urgent provider review; concurrent instability may independently raise the pathway to rapid response."
+    },
+    {
+      "id": "R-HR-40",
+      "path": "vitals.heartRateBpm",
+      "operator": "lte",
+      "value": 40,
+      "minimumLevel": "URGENT_PROVIDER_REVIEW",
+      "reason": "Marked bradycardia requires urgent provider review; concurrent instability may independently raise the pathway."
+    },
+    {
+      "id": "R-SPO2-90",
+      "path": "vitals.spo2Pct",
+      "operator": "lte",
+      "value": 90,
+      "minimumLevel": "RAPID_RESPONSE_ACTIVATION",
+      "reason": "Significant hypoxemia meets the reference profile's rapid-response activation floor."
+    },
+    {
+      "id": "R-K-6",
+      "path": "labs.potassium.value",
+      "operator": "gte",
+      "value": 6.0,
+      "minimumLevel": "URGENT_PROVIDER_REVIEW",
+      "reason": "Marked hyperkalemia requires urgent provider evaluation; ECG/hemodynamic instability may raise the response pathway."
+    },
+    {
+      "id": "R-K-3",
+      "path": "labs.potassium.value",
+      "operator": "lte",
+      "value": 3.0,
+      "minimumLevel": "URGENT_PROVIDER_REVIEW",
+      "reason": "Marked hypokalemia requires urgent provider evaluation."
+    },
+    {
+      "id": "R-DIGOXIN-2",
+      "path": "labs.digoxinLevel.value",
+      "operator": "gte",
+      "value": 2.0,
+      "minimumLevel": "URGENT_PROVIDER_REVIEW",
+      "reason": "Elevated digoxin concentration requires urgent provider review."
+    },
+    {
+      "id": "R-LACTATE-4",
+      "path": "labs.lactate.value",
+      "operator": "gte",
+      "value": 4.0,
+      "minimumLevel": "RAPID_RESPONSE_ACTIVATION",
+      "reason": "Marked lactate elevation with deterioration warrants rapid-response-level assessment in this reference profile."
+    }
+  ]
+}

@@ -161,3 +161,18 @@ def slm_max_output_tokens() -> int:
             "1200",
         )
     )
+
+def slm_omit_sampling_params() -> bool:
+    return env_bool(
+        "SLM_OMIT_SAMPLING_PARAMS",
+        False,
+    )
+
+
+def slm_reasoning_effort() -> str:
+    value = os.getenv(
+        "SLM_REASONING_EFFORT",
+        "",
+    ).strip().lower()
+    return value if value in {"low", "medium", "high"} else ""
+

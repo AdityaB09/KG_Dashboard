@@ -49,10 +49,10 @@ def _content(case: dict[str, Any], level: EscalationLevel) -> str:
     return "\n".join(
         [
             f"CARDINAL - {level_label(level)}",
-            f"Escalation: {level.value}",
+            f"Clinical Response Pathway: {level_label(level)}",
             f"Episode Summary: {response.get('episodeSummary') or ''}",
             f"Primary Etiology: {response.get('primaryEtiology') or ''}",
-            f"Escalation Rationale: {case.get('modelRationale') or ''}",
+            f"Response Rationale: {case.get('modelRationale') or ''}",
             f"Correlation ID: {case.get('correlationId') or ''}",
         ]
     )
@@ -207,7 +207,7 @@ async def _create(
 async def communication_readiness(
     *,
     token_state: dict[str, Any],
-    level: EscalationLevel | str = EscalationLevel.L1_NURSING_REVIEW,
+    level: EscalationLevel | str = EscalationLevel.CARE_TEAM_REVIEW,
 ) -> dict[str, Any]:
     normalize_level(level)
     practitioner_reference, identity = await _resolve_smart_practitioner(token_state)
@@ -249,7 +249,7 @@ async def test_fhir_communication(
     patient_id: str,
     recipient_mode: str = "smart_user",
     include_subject: bool = False,
-    level: EscalationLevel | str = EscalationLevel.L1_NURSING_REVIEW,
+    level: EscalationLevel | str = EscalationLevel.CARE_TEAM_REVIEW,
 ) -> dict[str, Any]:
     # Legacy parameters remain accepted so stale local diagnostic URLs do not break.
     del recipient_mode

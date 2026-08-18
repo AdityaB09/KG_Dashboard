@@ -1,0 +1,326 @@
+.cardinal-escalation-page {
+  min-height: 100vh;
+  padding: 28px;
+  background: #f3f6f8;
+  color: #17212b;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.cardinal-escalation-centered {
+  display: grid;
+  place-items: center;
+}
+
+.cardinal-escalation-header,
+.cardinal-escalation-card {
+  width: min(1180px, 100%);
+  margin: 0 auto 18px;
+  background: #fff;
+  border: 1px solid #d8e0e7;
+  border-radius: 10px;
+  box-shadow: 0 4px 18px rgba(24, 42, 58, 0.06);
+}
+
+.cardinal-escalation-header {
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  border-top: 5px solid #1c5d8f;
+}
+
+.cardinal-escalation-kicker {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #526779;
+}
+
+.cardinal-escalation-header h1 {
+  margin: 0;
+  font-size: clamp(26px, 4vw, 38px);
+  line-height: 1.05;
+}
+
+.cardinal-escalation-header p {
+  margin: 8px 0 0;
+  color: #5d6d79;
+  font-weight: 700;
+}
+
+.cardinal-escalation-status {
+  border: 1px solid #a9bac8;
+  border-radius: 999px;
+  padding: 9px 14px;
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+  background: #eef4f8;
+}
+
+.status-acknowledged,
+.status-resolved {
+  background: #eaf6ee;
+  border-color: #9bc9aa;
+}
+
+.status-ack_pending,
+.status-ack_timeout,
+.status-routing_started {
+  background: #fff6e5;
+  border-color: #e0bd72;
+}
+
+.cardinal-escalation-grid {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 18px;
+}
+
+.cardinal-escalation-grid .cardinal-escalation-card {
+  width: 100%;
+}
+
+.cardinal-escalation-card {
+  padding: 24px 28px;
+}
+
+.cardinal-escalation-card h2 {
+  margin: 0 0 18px;
+  font-size: 18px;
+}
+
+.cardinal-escalation-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.cardinal-escalation-field {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #e0e6eb;
+  background: #f8fafb;
+  border-radius: 7px;
+}
+
+.cardinal-escalation-field span {
+  display: block;
+  margin-bottom: 4px;
+  color: #647584;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cardinal-escalation-field strong {
+  display: block;
+  overflow-wrap: anywhere;
+  font-size: 14px;
+}
+
+.cardinal-escalation-copy-block {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid #e3e9ee;
+}
+
+.cardinal-escalation-copy-block h3 {
+  margin: 0 0 7px;
+  color: #37546b;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cardinal-escalation-copy-block p,
+.cardinal-escalation-copy-block ul {
+  margin: 0;
+  line-height: 1.55;
+}
+
+.cardinal-escalation-copy-block ul {
+  padding-left: 20px;
+}
+
+.cardinal-escalation-actions-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.cardinal-escalation-actions-card h2 {
+  margin-bottom: 5px;
+}
+
+.cardinal-escalation-actions-card p {
+  margin: 0;
+  color: #5c6c79;
+}
+
+.cardinal-escalation-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 9px;
+}
+
+.cardinal-escalation-actions button {
+  border: 1px solid #144f7e;
+  border-radius: 6px;
+  padding: 10px 15px;
+  background: #165f94;
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.cardinal-escalation-actions button.secondary {
+  background: #fff;
+  color: #164f78;
+}
+
+.cardinal-escalation-actions button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.cardinal-escalation-timeline {
+  display: grid;
+  gap: 0;
+}
+
+.cardinal-escalation-timeline-row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 18px;
+  padding: 12px 0;
+  border-top: 1px solid #e3e9ee;
+}
+
+.cardinal-escalation-timeline-row:first-child {
+  border-top: 0;
+}
+
+.cardinal-escalation-timeline-row time {
+  color: #677887;
+  font-size: 12px;
+}
+
+.cardinal-escalation-timeline-row strong {
+  font-size: 13px;
+}
+
+.cardinal-escalation-timeline-row p {
+  margin: 4px 0 0;
+  color: #566875;
+  font-size: 13px;
+}
+
+.cardinal-escalation-inline-error,
+.cardinal-escalation-error,
+.cardinal-escalation-loading {
+  width: min(1180px, 100%);
+  margin: 0 auto 18px;
+  padding: 14px 18px;
+  border: 1px solid #d7a3a3;
+  border-radius: 8px;
+  background: #fff1f1;
+}
+
+.cardinal-escalation-error {
+  max-width: 620px;
+  margin: auto;
+}
+
+.cardinal-escalation-loading {
+  max-width: 420px;
+  margin: auto;
+  border-color: #cbd8e2;
+  background: #fff;
+  text-align: center;
+  font-weight: 700;
+}
+
+@media (max-width: 820px) {
+  .cardinal-escalation-page { padding: 16px; }
+  .cardinal-escalation-grid { grid-template-columns: 1fr; }
+  .cardinal-escalation-header,
+  .cardinal-escalation-actions-card { align-items: flex-start; flex-direction: column; }
+  .cardinal-escalation-fields { grid-template-columns: 1fr; }
+  .cardinal-escalation-actions { justify-content: flex-start; }
+  .cardinal-escalation-timeline-row { grid-template-columns: 1fr; gap: 4px; }
+}
+
+/* CARDINAL escalation hardening V2: dedicated operational detail surface only. */
+.cardinal-escalation-copy-block.no-border { margin-top: 0; padding-top: 0; border-top: 0; }
+.cardinal-delivery-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.cardinal-delivery-channel { min-width: 0; padding: 14px; border: 1px solid #dce4e9; border-radius: 7px; background: #fafcfd; }
+.cardinal-delivery-channel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.cardinal-delivery-channel-head strong { font-size: 13px; }
+.channel-status { flex: 0 0 auto; padding: 4px 7px; border-radius: 999px; border: 1px solid #b9c8d2; background: #f1f5f7; color: #455b69; font-size: 9px; font-weight: 850; letter-spacing: .04em; }
+.channel-delivered, .channel-verified, .channel-ready { border-color: #9bc7aa; background: #edf8f1; color: #275f39; }
+.channel-failed { border-color: #d7a2a2; background: #fff0f0; color: #8e3333; }
+.channel-sandbox-unavailable, .channel-skipped { border-color: #c6cdd2; background: #f5f6f7; color: #67747d; }
+.channel-delivery-attempted { border-color: #dfc07d; background: #fff8e9; color: #7b5a14; }
+.cardinal-delivery-meta { display: grid; gap: 4px; margin-top: 10px; color: #5d6f7b; font-size: 11px; overflow-wrap: anywhere; }
+.timeline-meta { margin-top: 4px; color: #7a8993; font-size: 10px; }
+@media (max-width: 820px) { .cardinal-delivery-grid { grid-template-columns: 1fr; } }
+
+/* CARDINAL V10 — clinical response routing controls only. */
+.status-routed { background: #edf4f8; border-color: #a9bac8; }
+.status-routed_auto_advance { background: #fff6e5; border-color: #e0bd72; }
+.status-routed_terminal { background: #fff0f0; border-color: #d7a2a2; }
+.cardinal-routing-controls { align-items: center; }
+.cardinal-auto-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 9px 7px 12px;
+  border: 1px solid #cad6de;
+  border-radius: 8px;
+  background: #f8fafb;
+  color: #526674;
+  font-size: 12px;
+  font-weight: 750;
+}
+.cardinal-auto-toggle > button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border: 0;
+  background: transparent;
+  color: #314b5e;
+}
+.cardinal-auto-toggle-track {
+  position: relative;
+  width: 34px;
+  height: 18px;
+  border-radius: 999px;
+  background: #aebcc6;
+  transition: background 120ms ease;
+}
+.cardinal-auto-toggle-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,.18);
+  transition: transform 120ms ease;
+}
+.cardinal-auto-toggle.is-on .cardinal-auto-toggle-track { background: #246f4b; }
+.cardinal-auto-toggle.is-on .cardinal-auto-toggle-knob { transform: translateX(16px); }
+.cardinal-auto-toggle.is-disabled { opacity: .62; }

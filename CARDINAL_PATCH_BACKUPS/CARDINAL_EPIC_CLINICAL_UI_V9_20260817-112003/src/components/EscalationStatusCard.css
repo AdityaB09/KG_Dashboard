@@ -1,0 +1,74 @@
+.cardinal-response-strip {
+  margin-top: 10px;
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 5px 8px 5px 10px;
+  border: 1px solid #c7d3dc;
+  border-left-width: 3px;
+  border-radius: 5px;
+  background: #fbfcfd;
+  color: #2a3b47;
+  overflow: hidden;
+  cursor: pointer;
+  transition: background 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+}
+
+.cardinal-response-strip:hover {
+  box-shadow: inset 0 0 0 1px rgba(35, 93, 132, 0.12);
+}
+
+.cardinal-response-strip:focus-visible {
+  outline: 2px solid #2a6f98;
+  outline-offset: 2px;
+}
+
+.cardinal-response-strip.severity-l1 { border-left-color: #6f8a9b; }
+.cardinal-response-strip.severity-l2 { border-left-color: #b7791f; background: #fffdf8; }
+.cardinal-response-strip.severity-l3 { border-left-color: #b85c23; background: #fffaf6; }
+.cardinal-response-strip.severity-l4 { border-left-color: #a93a3a; background: #fff8f8; }
+
+.response-strip-label {
+  flex: 0 0 auto;
+  color: #657784;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .09em;
+}
+.response-strip-divider { width: 1px; height: 15px; background: #d7e0e6; flex: 0 0 auto; }
+.response-strip-level,
+.response-strip-status,
+.response-strip-countdown { font-size: 10.5px; line-height: 1; white-space: nowrap; }
+.response-strip-level {
+  flex: 0 0 auto;
+  min-width: 20px;
+  color: #223b4d;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.response-strip-status { color: #526674; }
+.response-strip-countdown { min-width: 39px; text-align: center; font-variant-numeric: tabular-nums; font-weight: 850; color: #4f6472; }
+.response-strip-countdown.is-due { color: #a23535; }
+.response-strip-details {
+  margin-left: auto;
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 4px;
+  padding: 5px 7px;
+  background: transparent;
+  color: #235d84;
+  font-size: 10px;
+  font-weight: 850;
+  cursor: inherit;
+}
+.cardinal-response-strip:hover .response-strip-details,
+.cardinal-response-strip:focus-visible .response-strip-details {
+  background: #edf4f8;
+}
+
+@media (max-width: 760px) {
+  .cardinal-response-strip { flex-wrap: wrap; }
+  .response-strip-divider { display: none; }
+  .response-strip-details { margin-left: 0; }
+}

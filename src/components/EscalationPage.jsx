@@ -416,7 +416,7 @@ export default function EscalationPage({ eventId }) {
       <section className="cardinal-escalation-card cardinal-escalation-actions-card">
         <div>
           <h2>Routing Controls</h2>
-          <p>Automatic escalation is optional and OFF by default to reduce duplicate notifications and alert fatigue.</p>
+          <p></p>
         </div>
         <div className="cardinal-escalation-actions cardinal-routing-controls">
           <button type="button" className="secondary" onClick={openFullEpisode}>Open Full Episode</button>

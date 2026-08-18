@@ -1,0 +1,211 @@
+{
+  "schemaVersion": "cardinal-escalation-policy-v1",
+  "policyId": "CARDINAL-HOSPITAL-V1",
+  "version": "1.0.0",
+  "displayName": "CARDINAL Hospital Escalation Policy V1",
+  "status": "reference-controlled",
+  "defaultMinimumLevel": "L1_NURSING_REVIEW",
+  "failSafeLevel": "L2_URGENT_PROVIDER_REVIEW",
+  "ackTimeoutSecondsByLevel": {
+    "L0_MONITOR": 0,
+    "L1_NURSING_REVIEW": 300,
+    "L2_URGENT_PROVIDER_REVIEW": 180,
+    "L3_RAPID_RESPONSE_REVIEW": 60,
+    "L4_EMERGENCY_RESPONSE": 0
+  },
+  "scenarioMinimums": {
+    "VFIB-STEMI-001": "L4_EMERGENCY_RESPONSE",
+    "TORSADES-LQT-002": "L4_EMERGENCY_RESPONSE",
+    "VT-ISCHEMIC-003": "L3_RAPID_RESPONSE_REVIEW",
+    "AFIB-RVR-SEPSIS-004": "L2_URGENT_PROVIDER_REVIEW",
+    "CHB-HYPERK-005": "L3_RAPID_RESPONSE_REVIEW",
+    "BRADY-DIGTOX-006": "L2_URGENT_PROVIDER_REVIEW",
+    "SVT-PSVT-007": "L1_NURSING_REVIEW",
+    "NSVT-ECTOPY-008": "L1_NURSING_REVIEW",
+    "WCT-DIFF-009": "L3_RAPID_RESPONSE_REVIEW",
+    "WPW-AFIB-010": "L3_RAPID_RESPONSE_REVIEW",
+    "FLUTTER-IC-011": "L3_RAPID_RESPONSE_REVIEW",
+    "PERI-STEMI-012": "L2_URGENT_PROVIDER_REVIEW",
+    "BRASH-013": "L3_RAPID_RESPONSE_REVIEW",
+    "AMIO-DDI-014": "L2_URGENT_PROVIDER_REVIEW"
+  },
+  "evidenceRules": [
+    {
+      "id": "E-VFIB",
+      "path": "episode.type",
+      "operator": "containsAny",
+      "values": [
+        "ventricular_fibrillation",
+        "ventricular fibrillation",
+        "vfib"
+      ],
+      "minimumLevel": "L4_EMERGENCY_RESPONSE",
+      "reason": "Ventricular fibrillation is configured as an immediate emergency bypass."
+    },
+    {
+      "id": "E-TORSADES",
+      "path": "episode.display",
+      "operator": "containsAny",
+      "values": [
+        "torsades",
+        "polymorphic vt"
+      ],
+      "minimumLevel": "L4_EMERGENCY_RESPONSE",
+      "reason": "Torsades/polymorphic VT is configured as an immediate emergency bypass."
+    },
+    {
+      "id": "E-SBP-80",
+      "path": "vitals.bloodPressure.systolic",
+      "operator": "lte",
+      "value": 80,
+      "minimumLevel": "L4_EMERGENCY_RESPONSE",
+      "reason": "Severe hypotension safety floor."
+    },
+    {
+      "id": "E-MAP-55",
+      "path": "vitals.bloodPressure.map",
+      "operator": "lte",
+      "value": 55,
+      "minimumLevel": "L4_EMERGENCY_RESPONSE",
+      "reason": "Severe low MAP safety floor."
+    },
+    {
+      "id": "E-K-6-5",
+      "path": "labs.potassium.value",
+      "operator": "gte",
+      "value": 6.5,
+      "minimumLevel": "L4_EMERGENCY_RESPONSE",
+      "reason": "Severe hyperkalemia safety floor."
+    },
+    {
+      "id": "E-NO-PULSE",
+      "path": "vitals.bloodPressure.note",
+      "operator": "containsAny",
+      "values": [
+        "no pulse",
+        "arterial line flat"
+      ],
+      "minimumLevel": "L4_EMERGENCY_RESPONSE",
+      "reason": "Pulseless state safety floor."
+    },
+    {
+      "id": "E-CRITICAL",
+      "path": "episode.severity",
+      "operator": "equalsAny",
+      "values": [
+        "critical",
+        "emergency"
+      ],
+      "minimumLevel": "L3_RAPID_RESPONSE_REVIEW",
+      "reason": "Critical episode classification requires rapid-response-level review or higher."
+    },
+    {
+      "id": "E-VASOPRESSOR",
+      "path": "vitals.bloodPressure.note",
+      "operator": "containsAny",
+      "values": [
+        "norepinephrine",
+        "vasopressor",
+        "pressor"
+      ],
+      "minimumLevel": "L3_RAPID_RESPONSE_REVIEW",
+      "reason": "Active vasopressor support requires rapid-response-level review or higher in this reference policy."
+    },
+    {
+      "id": "E-SBP-90",
+      "path": "vitals.bloodPressure.systolic",
+      "operator": "lte",
+      "value": 90,
+      "minimumLevel": "L3_RAPID_RESPONSE_REVIEW",
+      "reason": "Hypotension safety floor."
+    },
+    {
+      "id": "E-MAP-60",
+      "path": "vitals.bloodPressure.map",
+      "operator": "lte",
+      "value": 60,
+      "minimumLevel": "L3_RAPID_RESPONSE_REVIEW",
+      "reason": "Low MAP safety floor."
+    },
+    {
+      "id": "E-HR-180",
+      "path": "vitals.heartRateBpm",
+      "operator": "gte",
+      "value": 180,
+      "minimumLevel": "L2_URGENT_PROVIDER_REVIEW",
+      "reason": "Marked tachycardia provider-review floor; critical episode classification raises this further when applicable."
+    },
+    {
+      "id": "E-HR-35",
+      "path": "vitals.heartRateBpm",
+      "operator": "lte",
+      "value": 35,
+      "minimumLevel": "L3_RAPID_RESPONSE_REVIEW",
+      "reason": "Extreme bradycardia safety floor."
+    },
+    {
+      "id": "E-K-6",
+      "path": "labs.potassium.value",
+      "operator": "gte",
+      "value": 6.0,
+      "minimumLevel": "L3_RAPID_RESPONSE_REVIEW",
+      "reason": "Marked hyperkalemia safety floor."
+    },
+    {
+      "id": "E-SPO2-88",
+      "path": "vitals.spo2Pct",
+      "operator": "lte",
+      "value": 88,
+      "minimumLevel": "L3_RAPID_RESPONSE_REVIEW",
+      "reason": "Severe hypoxemia safety floor."
+    },
+    {
+      "id": "E-LACTATE-4",
+      "path": "labs.lactate.value",
+      "operator": "gte",
+      "value": 4.0,
+      "minimumLevel": "L3_RAPID_RESPONSE_REVIEW",
+      "reason": "Marked lactate elevation safety floor."
+    },
+    {
+      "id": "E-HR-150",
+      "path": "vitals.heartRateBpm",
+      "operator": "gte",
+      "value": 150,
+      "minimumLevel": "L2_URGENT_PROVIDER_REVIEW",
+      "reason": "Significant tachycardia provider-review floor."
+    },
+    {
+      "id": "E-HR-40",
+      "path": "vitals.heartRateBpm",
+      "operator": "lte",
+      "value": 40,
+      "minimumLevel": "L2_URGENT_PROVIDER_REVIEW",
+      "reason": "Significant bradycardia provider-review floor."
+    },
+    {
+      "id": "E-K-3",
+      "path": "labs.potassium.value",
+      "operator": "lte",
+      "value": 3.0,
+      "minimumLevel": "L2_URGENT_PROVIDER_REVIEW",
+      "reason": "Marked hypokalemia provider-review floor."
+    },
+    {
+      "id": "E-DIGOXIN-2",
+      "path": "labs.digoxinLevel.value",
+      "operator": "gte",
+      "value": 2.0,
+      "minimumLevel": "L2_URGENT_PROVIDER_REVIEW",
+      "reason": "Elevated digoxin level provider-review floor."
+    },
+    {
+      "id": "E-INR-5",
+      "path": "labs.inr.value",
+      "operator": "gte",
+      "value": 5.0,
+      "minimumLevel": "L2_URGENT_PROVIDER_REVIEW",
+      "reason": "Marked INR elevation provider-review floor."
+    }
+  ]
+}

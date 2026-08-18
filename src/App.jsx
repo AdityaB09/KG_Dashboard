@@ -211,6 +211,17 @@ const [
   setAnalyticsNotice,
 ] = useState(null);
 
+useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("page") !== "physiology") return;
+
+  const deepLinkedEpisodeId = String(params.get("episodeId") || "").trim();
+  const deepLinkedIncidentId = String(params.get("incidentId") || "").trim();
+  if (deepLinkedEpisodeId) setSelectedEpisodeId(deepLinkedEpisodeId);
+  if (deepLinkedIncidentId) setSelectedIncidentId(deepLinkedIncidentId);
+  setActivePage("physiology");
+}, []);
+
 const postCaptureCompletedAtRef = useRef(0);
 const pendingSmartAnalyticsTimerRef = useRef(null);
 const pendingSmartAnalyticsKeyRef = useRef("");

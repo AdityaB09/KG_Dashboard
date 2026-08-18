@@ -4,6 +4,8 @@ import babel from '@rolldown/plugin-babel'
 
 // https://vite.dev/config/
 export default defineConfig({
+  // Frontend environment is intentionally stored in src/.env.
+  envDir: 'src',
   plugins: [
     react(),
     babel({ presets: [reactCompilerPreset()] })

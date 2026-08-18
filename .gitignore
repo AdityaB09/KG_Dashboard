@@ -62,3 +62,13 @@ src/evaluation/PATCHES
 /*/*.zip
 
 backend/data/colab_model_benchmark/*
+# CARDINAL Terraform / GitHub Actions local artifacts
+infra/bootstrap/.terraform/
+infra/bootstrap/terraform.tfstate
+infra/bootstrap/terraform.tfstate.backup
+infra/app/.terraform/
+infra/app/*.tfplan
+gha-creds-*.json
+infra/bootstrap/runtime.auto.tfvars.json
+infra/app/runtime.auto.tfvars.json
+infra/GITHUB_RUNTIME_VALUES.txt

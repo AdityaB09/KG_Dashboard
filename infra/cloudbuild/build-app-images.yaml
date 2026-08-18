@@ -1,0 +1,40 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args:
+  - 'build'
+  - '-f'
+  - 'Dockerfile.frontend'
+  - '--build-arg'
+  - 'VITE_BACKEND_URL=${_BACKEND_URL}'
+  - '--build-arg'
+  - 'VITE_API_BASE_URL=${_BACKEND_URL}'
+  - '--build-arg'
+  - 'VITE_FHIR_STREAM_URL=${_BACKEND_URL}/api/stream?debug=true'
+  - '--build-arg'
+  - 'VITE_WAVEFORM_STREAM_URL=${_BACKEND_URL}/api/waveforms/stream?sample_rate=220&batch_ms=50'
+  - '--build-arg'
+  - 'VITE_FHIR_PROVIDER=oracle'
+  - '--build-arg'
+  - 'VITE_DEBUG_FHIR_STREAM=true'
+  - '--build-arg'
+  - 'VITE_ENABLE_SLM_EVAL=true'
+  - '--build-arg'
+  - 'VITE_EVALUATION_BASE_WAVEFORM_SOURCE=api_range'
+  - '--build-arg'
+  - 'VITE_ESCALATION_POLL_MS=2000'
+  - '--build-arg'
+  - 'VITE_ESCALATION_COUNTDOWN_TICK_MS=1000'
+  - '-t'
+  - '${_FRONTEND_IMAGE}'
+  - '.'
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', '${_FRONTEND_IMAGE}']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-f', 'Dockerfile.backend', '-t', '${_BACKEND_IMAGE}', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', '${_BACKEND_IMAGE}']
+images:
+- '${_FRONTEND_IMAGE}'
+- '${_BACKEND_IMAGE}'
+options:
+  logging: CLOUD_LOGGING_ONLY

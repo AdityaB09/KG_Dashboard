@@ -95,6 +95,21 @@ class EpicEvaluationDemoService:
             return dict(run) if run else None
 
     @staticmethod
+    def _public_demo(value: dict[str, Any] | None) -> dict[str, Any] | None:
+        if not isinstance(value, dict):
+            return None
+        return {key: item for key, item in value.items() if key != "smartSessionId"}
+
+    @classmethod
+    def _public_run(cls, run: dict[str, Any] | None) -> dict[str, Any] | None:
+        if not run:
+            return None
+        public = {key: value for key, value in run.items() if key != "smartSessionKey"}
+        if "epicDemo" in public:
+            public["epicDemo"] = cls._public_demo(public.get("epicDemo"))
+        return public
+
+    @staticmethod
     def _status(waveform_session_id: str) -> dict[str, Any]:
         try:
             value = evaluation_injection_service.status(waveform_session_id)
@@ -180,7 +195,7 @@ class EpicEvaluationDemoService:
                     **current,
                     "reused": True,
                     "mode": "epic_evaluation_auto",
-                    "epicDemo": existing.get("epicDemo") or current.get("epicDemo"),
+                    "epicDemo": self._public_demo(existing.get("epicDemo") or current.get("epicDemo")),
                 }
 
             bootstrap = await self.bootstrap(request)
@@ -198,6 +213,7 @@ class EpicEvaluationDemoService:
             epic_demo = {
                 "mode": "epic_evaluation_auto",
                 "demoRunId": demo_id,
+                "smartSessionId": str(token_state.get("smart_session_id") or ""),
                 "patientId": patient["id"],
                 "patientKey": bootstrap.get("patientKey"),
                 "patientDisplayName": bootstrap.get("patientDisplayName"),
@@ -240,7 +256,7 @@ class EpicEvaluationDemoService:
             return {
                 **armed,
                 "mode": "epic_evaluation_auto",
-                "epicDemo": epic_demo,
+                "epicDemo": self._public_demo(epic_demo),
                 "episodePack": bootstrap["episodePack"],
                 "clinicalContextMode": "episode_pack_only",
                 "epicFhirContextUsed": False,
@@ -251,7 +267,7 @@ class EpicEvaluationDemoService:
         return {
             **self._status(waveform_session_id),
             "mode": "epic_evaluation_auto",
-            "demoRun": self._run_for_waveform_session(waveform_session_id),
+            "demoRun": self._public_run(self._run_for_waveform_session(waveform_session_id)),
         }
 
     def cancel(self, waveform_session_id: str):

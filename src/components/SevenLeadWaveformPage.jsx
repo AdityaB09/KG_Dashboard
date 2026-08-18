@@ -2619,7 +2619,9 @@ const completedInjectionEpisodeId =
               ? "Analysis Running"
               : injectionStatus.state ===
                 "COMPLETE"
-              ? "Analysis Complete"
+              ? injectionStatus?.escalation?.eventId
+                ? `${injectionStatus.escalation.effectiveLevelLabel || injectionStatus.escalation.effectiveLevel || "Escalation"} • ${String(injectionStatus.escalation.status || "active").replaceAll("_", " ")}`
+                : "Analysis Complete"
               : injectionStatus.state ===
                 "FAILED"
               ? "Evaluation Failed"

@@ -186,17 +186,31 @@ class OracleEvaluationDemoService:
             return dict(run) if run else None
 
     @staticmethod
+    def _public_demo(value: dict[str, Any] | None) -> dict[str, Any] | None:
+        if not isinstance(value, dict):
+            return None
+        return {
+            key: item
+            for key, item in value.items()
+            if key != "smartSessionId"
+        }
+
+    @classmethod
     def _public_run(
+        cls,
         run: dict[str, Any] | None,
     ) -> dict[str, Any] | None:
         if not run:
             return None
 
-        return {
+        public = {
             key: value
             for key, value in run.items()
             if key != "smartSessionKey"
         }
+        if "oracleDemo" in public:
+            public["oracleDemo"] = cls._public_demo(public.get("oracleDemo"))
+        return public
 
     @staticmethod
     def _status(
@@ -399,7 +413,7 @@ class OracleEvaluationDemoService:
                     "mode": (
                         "oracle_evaluation_auto"
                     ),
-                    "oracleDemo": (
+                    "oracleDemo": self._public_demo(
                         existing.get("oracleDemo")
                         or current.get(
                             "oracleDemo"
@@ -478,6 +492,7 @@ class OracleEvaluationDemoService:
                     "oracle_evaluation_auto"
                 ),
                 "demoRunId": demo_run_id,
+                "smartSessionId": str(token_state.get("smart_session_id") or ""),
                 "patientId": patient["id"],
                 "encounterId": (
                     bootstrap.get(
@@ -562,7 +577,7 @@ class OracleEvaluationDemoService:
                 "mode": (
                     "oracle_evaluation_auto"
                 ),
-                "oracleDemo": oracle_demo,
+                "oracleDemo": self._public_demo(oracle_demo),
                 "episodePack": bootstrap["episodePack"],
                 "clinicalContextMode": "episode_pack_only",
                 "oracleFhirContextUsed": False,

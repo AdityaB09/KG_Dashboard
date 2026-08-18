@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from app.config import settings
-from app.escalation.levels import level_label, normalize_level
+from app.escalation.levels import level_label, level_role, normalize_level
 from app.escalation.models import now_iso
 from app.escalation.notifications.recipient_directory import recipient_directory
 
@@ -37,7 +37,7 @@ def _build_message(case: dict[str, Any], recipient: dict[str, str]) -> EmailMess
     link = f"{_frontend_base()}/escalation/{event_id}"
 
     message = EmailMessage()
-    message["Subject"] = f"CARDINAL — {level.value.split('_', 1)[0]} {level_label(level)}"
+    message["Subject"] = f"CARDINAL — {level_label(level)}"
     message["To"] = recipient["email"]
     sender = os.getenv("ESCALATION_EMAIL_FROM", os.getenv("SMTP_USERNAME", "cardinal@localhost")).strip()
     display_name = os.getenv("ESCALATION_EMAIL_FROM_NAME", "CARDINAL Clinical Escalation").strip()
@@ -54,7 +54,8 @@ def _build_message(case: dict[str, Any], recipient: dict[str, str]) -> EmailMess
                 f"Platform: {platform}",
                 f"Patient: {_patient_display(case)}",
                 f"Episode: {response.get('rhythm') or ''}",
-                f"Escalation: {level.value} — {level_label(level)}",
+                f"Response pathway: {level_label(level)}",
+                f"Assigned team/role: {level_role(level)}",
                 "",
                 "Episode Summary",
                 str(response.get("episodeSummary") or ""),
@@ -62,10 +63,10 @@ def _build_message(case: dict[str, Any], recipient: dict[str, str]) -> EmailMess
                 "Primary Etiology",
                 str(response.get("primaryEtiology") or ""),
                 "",
-                "Escalation Reason",
+                "Response Rationale",
                 str(case.get("modelRationale") or ""),
                 "",
-                "Open Escalation",
+                "Open Clinical Response",
                 link,
             ]
         )
@@ -106,7 +107,7 @@ def _write_file(message: EmailMessage, event_id: str) -> dict[str, Any]:
 class EscalationEmailService:
     async def send(self, case: dict[str, Any]) -> dict[str, Any]:
         level = normalize_level(case.get("effectiveLevel"))
-        if level.value == "L0_MONITOR":
+        if level.value == "MONITOR_ONLY":
             return {"status": "not_required"}
 
         recipient = recipient_directory.resolve(level)

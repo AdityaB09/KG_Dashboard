@@ -1,0 +1,199 @@
+warning: in the working copy of '.gitignore', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/app/evaluation/slm_client.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/app/phase7/slm_client.py', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/.gitignore b/.gitignore[m
+[1mindex ad44b2d..6777a0e 100644[m
+[1m--- a/.gitignore[m
+[1m+++ b/.gitignore[m
+[36m@@ -61,4 +61,11 @@[m [msrc/evaluation/PATCHES[m
+ /*.zip[m
+ /*/*.zip[m
+ [m
+[31m-backend/data/colab_model_benchmark/*[m
+\ No newline at end of file[m
+[32m+[m[32mbackend/data/colab_model_benchmark/*[m
+[32m+[m[32m# CARDINAL Terraform / GitHub Actions local artifacts[m
+[32m+[m[32minfra/bootstrap/.terraform/[m
+[32m+[m[32minfra/bootstrap/terraform.tfstate[m
+[32m+[m[32minfra/bootstrap/terraform.tfstate.backup[m
+[32m+[m[32minfra/app/.terraform/[m
+[32m+[m[32minfra/app/*.tfplan[m
+[32m+[m[32mgha-creds-*.json[m
+[1mdiff --git a/backend/app/evaluation/slm_client.py b/backend/app/evaluation/slm_client.py[m
+[1mindex c50e825..287352d 100644[m
+[1m--- a/backend/app/evaluation/slm_client.py[m
+[1m+++ b/backend/app/evaluation/slm_client.py[m
+[36m@@ -1,18 +1,23 @@[m
+ from __future__ import annotations[m
+ [m
+ import json[m
+[32m+[m[32mimport os[m
+ import re[m
+ import time[m
+ from typing import Any[m
+ [m
+ import httpx[m
+ [m
+[32m+[m[32mfrom app.cloud_run_auth import apply_slm_auth[m
+[32m+[m
+ from .config import ([m
+     slm_api_key,[m
+     slm_base_url,[m
+     slm_chat_path,[m
+     slm_max_output_tokens,[m
+     slm_model,[m
+[32m+[m[32m    slm_omit_sampling_params,[m
+[32m+[m[32m    slm_reasoning_effort,[m
+     slm_timeout_seconds,[m
+ )[m
+ [m
+[36m@@ -119,11 +124,14 @@[m [masync def call_model([m
+             f"Bearer {slm_api_key()}"[m
+         )[m
+ [m
+[32m+[m[32m    headers = await apply_slm_auth([m
+[32m+[m[32m        headers,[m
+[32m+[m[32m        base_url=slm_base_url(),[m
+[32m+[m[32m    )[m
+[32m+[m
+     request_payload = {[m
+         "model": model_name,[m
+         "messages": messages,[m
+[31m-        "temperature":[m
+[31m-            temperature,[m
+         "max_tokens":[m
+             slm_max_output_tokens(),[m
+         "stream": False,[m
+[36m@@ -132,19 +140,66 @@[m [masync def call_model([m
+         },[m
+     }[m
+ [m
+[32m+[m[32m    # Some current OpenAI-compatible providers (including Gemini 3.6)[m
+[32m+[m[32m    # deprecate sampling fields. Default remains unchanged for existing[m
+[32m+[m[32m    # local/Ollama-style endpoints unless explicitly enabled in env.[m
+[32m+[m[32m    if not slm_omit_sampling_params():[m
+[32m+[m[32m        request_payload["temperature"] = temperature[m
+[32m+[m
+[32m+[m[32m    reasoning_effort = slm_reasoning_effort()[m
+[32m+[m[32m    if reasoning_effort:[m
+[32m+[m[32m        request_payload["reasoning_effort"] = reasoning_effort[m
+[32m+[m
+[32m+[m[32m    # ============================================================[m
+[32m+[m[32m    # CARDINAL — PRIVATE CLOUD RUN GEMMA 4[m
+[32m+[m[32m    # ============================================================[m
+[32m+[m[32m    # The existing CARDINAL model seam remains OpenAI-compatible.[m
+[32m+[m[32m    # For the presentation provider, the local gcloud Run proxy[m
+[32m+[m[32m    # handles Cloud Run authentication and vLLM receives the[m
+[32m+[m[32m    # Gemma-specific chat template option directly.[m
+[32m+[m[32m    cardinal_provider = os.getenv([m
+[32m+[m[32m        "CARDINAL_LLM_PROVIDER",[m
+[32m+[m[32m        "",[m
+[32m+[m[32m    ).strip().lower()[m
+[32m+[m
+[32m+[m[32m    if cardinal_provider == "gemma4":[m
+[32m+[m[32m        # Gemini-only reasoning controls must never be forwarded[m
+[32m+[m[32m        # to the vLLM Gemma endpoint.[m
+[32m+[m[32m        request_payload.pop([m
+[32m+[m[32m            "reasoning_effort",[m
+[32m+[m[32m            None,[m
+[32m+[m[32m        )[m
+[32m+[m
+[32m+[m[32m        # The deployed vLLM endpoint was validated without the[m
+[32m+[m[32m        # provider-specific response_format extension. CARDINAL's[m
+[32m+[m[32m        # existing V7.1 prompt + parser continue to enforce JSON.[m
+[32m+[m[32m        request_payload.pop([m
+[32m+[m[32m            "response_format",[m
+[32m+[m[32m            None,[m
+[32m+[m[32m        )[m
+[32m+[m
+[32m+[m[32m        # This matches the already-validated Cloud Run request.[m
+[32m+[m[32m        request_payload["chat_template_kwargs"] = {[m
+[32m+[m[32m            "enable_thinking": False,[m
+[32m+[m[32m        }[m
+[32m+[m
+     started_at = time.perf_counter()[m
+ [m
+     print([m
+         "[KGEN EVAL SLM REQUEST]",[m
+         {[m
+[32m+[m[32m            "provider": cardinal_provider or "default",[m
+             "model": model_name,[m
+             "endpoint": endpoint,[m
+             "messageCount": len([m
+                 messages[m
+             ),[m
+             "temperature": ([m
+[31m-                temperature[m
+[32m+[m[32m                None[m
+[32m+[m[32m                if slm_omit_sampling_params()[m
+[32m+[m[32m                else temperature[m
+             ),[m
+[32m+[m[32m            "reasoningEffort": slm_reasoning_effort() or None,[m
+             "maxOutputTokens": ([m
+                 slm_max_output_tokens()[m
+             ),[m
+[36m@@ -182,6 +237,7 @@[m [masync def call_model([m
+     print([m
+         "[KGEN EVAL SLM HTTP RESPONSE]",[m
+         {[m
+[32m+[m[32m            "provider": cardinal_provider or "default",[m
+             "model": model_name,[m
+             "statusCode": ([m
+                 response.status_code[m
+[36m@@ -243,11 +299,23 @@[m [masync def call_model([m
+             "no message content."[m
+         )[m
+ [m
+[32m+[m[32m    if cardinal_provider == "gemma4":[m
+[32m+[m[32m        print([m
+[32m+[m[32m            "[CARDINAL-SLM-RAW]",[m
+[32m+[m[32m            {[m
+[32m+[m[32m                "provider": "gemma4",[m
+[32m+[m[32m                "model": model_name,[m
+[32m+[m[32m                "content": content,[m
+[32m+[m[32m            },[m
+[32m+[m[32m            flush=True,[m
+[32m+[m[32m        )[m
+[32m+[m
+     parsed = _parse_json_object([m
+         content[m
+     )[m
+ [m
+     metadata = {[m
+[32m+[m[32m        "provider": cardinal_provider or "default",[m
+         "name": model_name,[m
+         "endpoint": endpoint,[m
+         "finishReason": ([m
+[36m@@ -263,6 +331,7 @@[m [masync def call_model([m
+     print([m
+         "[KGEN EVAL SLM COMPLETE]",[m
+         {[m
+[32m+[m[32m            "provider": cardinal_provider or "default",[m
+             "model": model_name,[m
+             "elapsedSeconds": round([m
+                 time.perf_counter()[m
+[1mdiff --git a/backend/app/phase7/slm_client.py b/backend/app/phase7/slm_client.py[m
+[1mindex 1de38f9..fcdc850 100644[m
+[1m--- a/backend/app/phase7/slm_client.py[m
+[1m+++ b/backend/app/phase7/slm_client.py[m
+[36m@@ -7,6 +7,8 @@[m [mfrom typing import Any, Mapping[m
+ [m
+ import httpx[m
+ [m
+[32m+[m[32mfrom app.cloud_run_auth import apply_slm_auth[m
+[32m+[m
+ from app.phase7.config import ([m
+     phase7_settings,[m
+ )[m
+[36m@@ -153,6 +155,11 @@[m [masync def run_slm([m
+             f"{phase7_settings.slm_api_key}"[m
+         )[m
+ [m
+[32m+[m[32m    headers = await apply_slm_auth([m
+[32m+[m[32m        headers,[m
+[32m+[m[32m        base_url=phase7_settings.slm_base_url,[m
+[32m+[m[32m    )[m
+[32m+[m
+     source_messages = list([m
+         prompt_package.get([m
+             "messages"[m

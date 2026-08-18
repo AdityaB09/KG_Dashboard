@@ -15,6 +15,7 @@ from typing import Any
 
 import numpy as np
 from app.evaluation_injection.etiology_v7 import run_etiology_v7
+from app.escalation.orchestrator import escalation_orchestrator
 from app.analysis.episode_analyzer import episode_analyzer
 from app.analysis.incident_analyzer import incident_analyzer
 from app.clinical_context import clinical_context_service
@@ -539,6 +540,10 @@ class InjectionSession:
         str,
         Any,
     ] | None = None
+    escalation_result: dict[
+        str,
+        Any,
+    ] | None = None
     final_task_started: bool = False
     # Sanitized Oracle demo binding. Never place access tokens in this object.
     oracle_demo: dict[str, Any] | None = None
@@ -808,6 +813,11 @@ class InjectionSession:
                 self.incident_id
             ),
             "error": self.error,
+            "escalation": (
+                dict(self.escalation_result)
+                if isinstance(self.escalation_result, dict)
+                else None
+            ),
             "baseWaveformSource": (
                 self.base_waveform_source
             ),
@@ -848,12 +858,20 @@ class InjectionSession:
                 self.updated_at
             ),
             "oracleDemo": (
-                dict(self.oracle_demo)
+                {
+                    key: value
+                    for key, value in self.oracle_demo.items()
+                    if key != "smartSessionId"
+                }
                 if isinstance(self.oracle_demo, dict)
                 else None
             ),
             "epicDemo": (
-                dict(self.epic_demo)
+                {
+                    key: value
+                    for key, value in self.epic_demo.items()
+                    if key != "smartSessionId"
+                }
                 if isinstance(self.epic_demo, dict)
                 else None
             ),
@@ -3108,6 +3126,63 @@ class EvaluationInjectionService:
             }
             session.score = score
 
+            # Escalation runs only after a contract-valid etiology response exists.
+            # Vendor/email routing is non-fatal to the already-persisted ECG episode.
+            finalization_stage = "escalation"
+            escalation_result: dict[str, Any] = {
+                "status": "skipped",
+                "reason": "model_response_unavailable",
+            }
+            try:
+                escalation_result = await escalation_orchestrator.evaluate_and_dispatch(
+                    episode_id=session.episode_id,
+                    incident_id=session.incident_id,
+                    scenario_id=session.scenario.scenario_id,
+                    model_response=(
+                        etiology_result.get("modelResponse")
+                        if isinstance(etiology_result, dict)
+                        else None
+                    ),
+                    oracle_demo=session.oracle_demo,
+                    epic_demo=session.epic_demo,
+                    waveform_session_id=session_id,
+                    policy_context={
+                        "severity": session.scenario.severity,
+                        "episode": dict(session.scenario.episode or {}),
+                        "vitals": dict(session.scenario.vitals or {}),
+                        "labs": dict(session.scenario.labs or {}),
+                        "medications": session.scenario.medications,
+                        "clinicalContext": dict(session.scenario.clinical_context or {}),
+                        "ecgMeasurements": dict(session.scenario.ecg_measurements or {}),
+                        "triggerHeartRate": session.scenario.trigger_heart_rate,
+                        "qrsDurationMs": session.scenario.qrs_duration_ms,
+                    },
+                )
+            except Exception as error:
+                escalation_result = {
+                    "status": "failed",
+                    "errorType": type(error).__name__,
+                    "error": str(error),
+                }
+                analysis_warnings.append(
+                    {
+                        "stage": finalization_stage,
+                        "errorType": type(error).__name__,
+                        "message": str(error),
+                    }
+                )
+                print(
+                    "[KGEN EVAL NONFATAL ESCALATION ERROR]",
+                    {
+                        "sessionId": session_id,
+                        "scenarioId": session.scenario.scenario_id,
+                        "errorType": type(error).__name__,
+                        "message": str(error),
+                    },
+                    flush=True,
+                )
+            session.escalation_result = escalation_result
+
             finalization_stage = "metadata_update"
             try:
                 metadata_path = episode_dir / "metadata.json"
@@ -3122,6 +3197,7 @@ class EvaluationInjectionService:
                 current_metadata["etiologyState"] = etiology_result.get("status")
                 current_metadata["evaluationModel"] = etiology_result.get("model")
                 current_metadata["analysisWarnings"] = analysis_warnings
+                current_metadata["escalation"] = escalation_result
                 current_metadata["cardinalEvaluation"] = {
                     "status": etiology_result.get("status"),
                     "source": etiology_result.get("source"),
@@ -3171,6 +3247,9 @@ class EvaluationInjectionService:
                 "incidentStatus": incident_analysis.get("status"),
                 "etiologyState": etiology_result.get("status"),
                 "cardinalStatus": etiology_result.get("status"),
+                "escalationStatus": escalation_result.get("status"),
+                "escalationEventId": escalation_result.get("eventId"),
+                "effectiveEscalationLevel": escalation_result.get("effectiveLevel"),
                 "analysisWarnings": analysis_warnings,
                 "phase6Used": False,
                 "phase7OrchestratorUsed": False,
@@ -3669,6 +3748,11 @@ class EvaluationInjectionService:
             if isinstance(session.epic_demo, dict)
             else {}
         )
+        # Keep the opaque SMART session reference in memory only. Persisted
+        # episode/incident artifacts do not need it and must not become a token
+        # lookup handle after the run has completed.
+        oracle_demo.pop("smartSessionId", None)
+        epic_demo.pop("smartSessionId", None)
         stored_patient = dict(
             session.scenario.patient
             or {}

@@ -41,6 +41,7 @@ import IncidentEpisodeCarousel
 
 import CriticalInterpretationWidget
   from "./CriticalInterpretationWidget";
+import EscalationStatusCard from "./EscalationStatusCard";
 
 
 const MAX_POINTS = 360;
@@ -3701,13 +3702,13 @@ evaluationWaveformsView ? (
         </section>
 
     <section
-  className={`kgen-panel kgen-alert-panel ${episodeAlertColor}`}
+  className={`kgen-panel kgen-alert-panel kgen-critical-interpretation-panel ${episodeAlertColor}`}
 >
   <h2>
     02. Critical Alerts &amp; Interpretation
   </h2>
 
-  <div className="kgen-alert-box">
+  <div className="kgen-alert-box kgen-critical-interpretation-box">
  <CriticalInterpretationWidget
   result={
     displayedSlmWidgetResult
@@ -3733,6 +3734,11 @@ evaluationWaveformsView ? (
   }
 />
 </div>
+<EscalationStatusCard
+  episodeId={activeEpisodeId || episodeId}
+  incidentId={activeIncidentId || incidentId}
+  compact
+/>
 </section>
 
         <section className="kgen-panel kgen-labs-small-panel">

@@ -371,6 +371,28 @@ class IncidentCoordinator:
             f"{trigger.get('symbol')}"
         )
 
+    @staticmethod
+    def automatic_demo_run_id(
+        metadata: dict[str, Any],
+    ) -> str:
+        for key in ("oracleDemo", "epicDemo"):
+            value = metadata.get(key) or {}
+            if isinstance(value, dict):
+                demo_run_id = str(value.get("demoRunId") or "").strip()
+                if demo_run_id:
+                    return demo_run_id
+        return ""
+
+    @staticmethod
+    def automatic_demo_provider(
+        metadata: dict[str, Any],
+    ) -> str:
+        if isinstance(metadata.get("oracleDemo"), dict):
+            return "oracle"
+        if isinstance(metadata.get("epicDemo"), dict):
+            return "epic"
+        return ""
+
     def make_incident_id(
         self,
         metadata: dict[str, Any],
@@ -413,13 +435,7 @@ class IncidentCoordinator:
             for character in category
         ).strip("-")
 
-        demo_run_id = str(
-            (
-                metadata.get("oracleDemo")
-                or {}
-            ).get("demoRunId")
-            or ""
-        )
+        demo_run_id = self.automatic_demo_run_id(metadata)
 
         safe_demo_run = "".join(
             character
@@ -453,16 +469,12 @@ class IncidentCoordinator:
         metadata: dict[str, Any],
         category: str,
     ) -> bool:
-        new_demo_run_id = str(
-            (
-                metadata.get("oracleDemo")
-                or {}
-            ).get("demoRunId")
-            or ""
-        )
+        new_demo_run_id = self.automatic_demo_run_id(metadata)
 
         existing_demo_run_id = str(
-            incident.get("oracleDemoRunId")
+            incident.get("demoRunId")
+            or incident.get("oracleDemoRunId")
+            or incident.get("epicDemoRunId")
             or ""
         )
 
@@ -470,10 +482,10 @@ class IncidentCoordinator:
             metadata.get("mode")
             == "evaluation_injection"
         ):
-            # Each automatic Oracle evaluation run must
-            # remain an independent incident. Re-registering
-            # episodes from the same run may reuse that run's
-            # incident, but a different run must never merge.
+            # Each automatic SMART evaluation run (Oracle or Epic) must
+            # remain an independent incident. Re-registering episodes from
+            # the same run may reuse that run's incident, but a different
+            # run must never merge.
             if not new_demo_run_id:
                 return False
 
@@ -901,13 +913,24 @@ class IncidentCoordinator:
                     metadata.get("mode")
                     or "research"
                 ),
+                "demoRunId": self.automatic_demo_run_id(metadata) or None,
+                "demoProvider": self.automatic_demo_provider(metadata) or None,
+                # Backward-compatible provider-specific fields.
                 "oracleDemoRunId": (
                     (
-                        metadata.get(
-                            "oracleDemo"
-                        )
+                        metadata.get("oracleDemo")
                         or {}
                     ).get("demoRunId")
+                    if isinstance(metadata.get("oracleDemo"), dict)
+                    else None
+                ),
+                "epicDemoRunId": (
+                    (
+                        metadata.get("epicDemo")
+                        or {}
+                    ).get("demoRunId")
+                    if isinstance(metadata.get("epicDemo"), dict)
+                    else None
                 ),
                 "record": metadata.get(
                     "record"
