@@ -349,7 +349,7 @@ export default function EscalationPage({ eventId }) {
   return (
     <main className="cardinal-escalation-page">
       <header className="cardinal-escalation-header">
-        <div><span className="cardinal-escalation-kicker">CARDINAL · Clinical Response Routing</span><h1>{valueOrDash(escalation.responseTierCode)} · {valueOrDash(escalation.effectiveLevelLabel)}</h1><p>{valueOrDash(escalation.assignedRole)} · Site-configurable Cerner-grounded response profile</p></div>
+        <div><span className="cardinal-escalation-kicker">CARDINAL · Clinical Response Routing</span><h1>{valueOrDash(escalation.responseTierCode)} · {valueOrDash(escalation.effectiveLevelLabel)}</h1></div>
         <div className={`cardinal-escalation-status status-${String(escalation.status || "").toLowerCase()}`}>{titleCaseStatus(escalation.status)}{responseCountdown !== "—" ? ` · ${responseCountdown}` : ""}</div>
       </header>
 

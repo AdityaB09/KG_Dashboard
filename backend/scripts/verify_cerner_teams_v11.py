@@ -87,8 +87,8 @@ etiology_path = BACKEND / "app" / "evaluation_injection" / "etiology_v7.py"
 etiology = etiology_path.read_text(encoding="utf-8")
 for code in expected:
     check(code in etiology, f"Etiology prompt supports normalized response tier {code}")
-check("not official oracle/cerner" in etiology.lower(), "Etiology prompt avoids claiming vendor-defined Cerner levels")
-check("do not advance from t3" in etiology.lower(), "Etiology prompt keeps emergency override condition-driven")
+check("not official oracle/cerner" in etiology.lower(), "")
+check("do not advance from t3" in etiology.lower(), "")
 
 # Frontend terminology contract.
 page = (PROJECT / "src" / "components" / "EscalationPage.jsx").read_text(encoding="utf-8")

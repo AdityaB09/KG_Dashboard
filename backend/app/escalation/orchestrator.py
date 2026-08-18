@@ -330,7 +330,7 @@ class EscalationOrchestrator:
             detail=(
                 f"Automatic escalation is ON; next pathway review is due at {next_at}."
                 if next_at
-                else ("Automatic progression stops at Rapid Response / Emergency Override; emergency activation is condition-driven." if is_auto_advance_terminal(level) else "Automatic escalation is OFF or has no site-configured response window for this case.")
+                else ("Automatic progression stops at Rapid Response / Emergency Override;" if is_auto_advance_terminal(level) else "")
             ),
             data={"enabled": auto_enabled, "nextEscalationAt": next_at, "responsePathway": level.value, "responseTier": tier_code(level)},
         )
