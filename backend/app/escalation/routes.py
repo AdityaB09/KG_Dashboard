@@ -8,11 +8,18 @@ from fastapi import APIRouter, HTTPException, Query, Request
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 
+from app.config import settings
 from app.escalation.audit import append_audit_event
 from app.escalation.epic.active_escalation import find_active_epic_escalation
 from app.escalation.epic.cds_cards import build_escalation_card
 from app.escalation.epic.cds_feedback import record_cds_feedback
 from app.escalation.epic.cds_security import security_readiness, validate_epic_cds_request
+from app.escalation.epic.cds_service import (
+    discovery_document as epic_cds_discovery_document,
+    hook_name as epic_cds_hook_name,
+    public_urls as epic_cds_public_urls,
+    service_id as epic_cds_service_id,
+)
 from app.escalation.models import now_iso, public_case
 from app.escalation.orchestrator import escalation_orchestrator
 from app.escalation.policy_engine import policy_engine
@@ -49,6 +56,10 @@ class EscalateBody(BaseModel):
     actor: str | None = None
     role: str | None = None
     reason: str | None = None
+
+
+class AutoEscalationBody(BaseModel):
+    enabled: bool
 
 
 def _truthy(name: str, default: str = "false") -> bool:
@@ -98,34 +109,88 @@ async def escalation_health():
 @router.get("/api/escalation/readiness")
 async def escalation_readiness():
     email_enabled = _truthy("ESCALATION_EMAIL_ENABLED")
+    email_recipient = any(
+        os.getenv(name, "").strip()
+        for name in (
+            "ESCALATION_EMAIL_T1", "ESCALATION_EMAIL_T2", "ESCALATION_EMAIL_T3", "ESCALATION_EMAIL_E",
+            "ESCALATION_EMAIL_CARE_TEAM", "ESCALATION_EMAIL_URGENT_PROVIDER",
+            "ESCALATION_EMAIL_RRT", "ESCALATION_EMAIL_CODE",
+            "ESCALATION_EMAIL_L1", "ESCALATION_EMAIL_L2",
+            "ESCALATION_EMAIL_L3", "ESCALATION_EMAIL_L4",
+        )
+    )
     email_ready = bool(
-        os.getenv("ESCALATION_EMAIL_L1", "").strip()
+        email_recipient
         and os.getenv("SMTP_HOST", "").strip()
         and os.getenv("SMTP_USERNAME", "").strip()
         and os.getenv("SMTP_PASSWORD", "").strip()
+    )
+    teams_enabled = _truthy("ESCALATION_TEAMS_ENABLED")
+    teams_tier_keys = {
+        "T1_CLINICAL_REVIEW": "ESCALATION_TEAMS_WORKFLOW_T1",
+        "T2_URGENT_REVIEW": "ESCALATION_TEAMS_WORKFLOW_T2",
+        "T3_RAPID_RESPONSE": "ESCALATION_TEAMS_WORKFLOW_T3",
+        "E_EMERGENCY_OVERRIDE": "ESCALATION_TEAMS_WORKFLOW_E",
+    }
+    teams_tiers = {tier: bool(os.getenv(key, "").strip()) for tier, key in teams_tier_keys.items()}
+    teams_ready = bool(
+        any(teams_tiers.values())
+        or os.getenv("ESCALATION_TEAMS_WORKFLOW_URL", "").strip()
+        or os.getenv("ESCALATION_TEAMS_WORKFLOWS_JSON", "").strip()
     )
     fhir_base = os.getenv("ORACLE_FHIR_BASE_URL", "").strip()
     recipient_base = recipient_api_base(fhir_base_url=fhir_base)
     message_base = message_api_base(fhir_base_url=fhir_base)
     personnel_base = personnel_api_base(fhir_base_url=fhir_base)
     oracle_system = system_auth_readiness()
+    oracle_target_suffixes = {
+        "CARE_TEAM_REVIEW": ("CARE_TEAM", "L1"),
+        "URGENT_PROVIDER_REVIEW": ("URGENT_PROVIDER", "L2"),
+        "RAPID_RESPONSE_ACTIVATION": ("RRT", "L3"),
+        "CODE_RESPONSE_ACTIVATION": ("CODE", "L4"),
+    }
     oracle_targets = {
-        level: bool(
-            os.getenv(f"ORACLE_ESCALATION_TARGET_{level}_ID", "").strip()
-            or os.getenv(f"ORACLE_ESCALATION_TARGET_{level}_NAME", "").strip()
+        pathway: any(
+            os.getenv(f"ORACLE_ESCALATION_TARGET_{suffix}_{field}", "").strip()
+            for suffix in suffixes
+            for field in ("ID", "NAME")
         )
-        for level in ("L1", "L2", "L3", "L4")
+        for pathway, suffixes in oracle_target_suffixes.items()
     }
     epic_native = _truthy("EPIC_CDS_NATIVE_WORKFLOW_AVAILABLE")
     public_base = os.getenv("EPIC_CDS_PUBLIC_BASE_URL", "").strip()
     return {
         "enabled": escalation_orchestrator.enabled,
         "policy": policy_engine.public_summary(),
+        "automaticEscalationDefault": bool(settings.ESCALATION_AUTO_ADVANCE_DEFAULT),
+        "legacyManualActionsEnabled": bool(settings.ESCALATION_LEGACY_MANUAL_ACTIONS_ENABLED),
         "email": {
             "state": _state(email_enabled, email_ready),
             "enabled": email_enabled,
             "mode": os.getenv("ESCALATION_EMAIL_MODE", "smtp"),
-            "recipientConfigured": bool(os.getenv("ESCALATION_EMAIL_L1", "").strip()),
+            "recipientConfigured": email_recipient,
+        },
+        "teams": {
+            "state": _state(teams_enabled, teams_ready),
+            "enabled": teams_enabled,
+            "transport": "Microsoft Teams Workflows adaptive-card webhook",
+            "workflowConfigured": teams_ready,
+            "tierWorkflowsConfigured": teams_tiers,
+            "channelLabels": {
+                "T1_CLINICAL_REVIEW": os.getenv("ESCALATION_TEAMS_CHANNEL_T1", "clinical-review"),
+                "T2_URGENT_REVIEW": os.getenv("ESCALATION_TEAMS_CHANNEL_T2", "urgent-review"),
+                "T3_RAPID_RESPONSE": os.getenv("ESCALATION_TEAMS_CHANNEL_T3", "rapid-response"),
+                "E_EMERGENCY_OVERRIDE": os.getenv("ESCALATION_TEAMS_CHANNEL_E", "emergency-response"),
+            },
+            "patientIdentifiersIncluded": _truthy("ESCALATION_TEAMS_INCLUDE_PATIENT_IDENTIFIERS"),
+        },
+        "model": {
+            "provider": os.getenv("CARDINAL_LLM_PROVIDER", ""),
+            "baseUrl": os.getenv("SLM_BASE_URL", ""),
+            "model": os.getenv("SLM_MODEL", ""),
+            "authMode": os.getenv("SLM_AUTH_MODE", "none"),
+            "liveEtiologyEnabled": _truthy("ETIOLOGY_V7_LIVE_MODEL_ENABLED"),
+            "precomputedEtiologyEnabled": _truthy("ETIOLOGY_V7_PRECOMPUTED_ENABLED"),
         },
         "oracle": {
             "state": "READY" if (recipient_base and message_base and personnel_base and oracle_system.get("configured")) else "MISCONFIGURED",
@@ -133,7 +198,6 @@ async def escalation_readiness():
             "messageApiBase": message_base,
             "personnelApiBase": personnel_base,
             "systemAuth": oracle_system,
-            "millenniumBearerTokenConfigured": bool(os.getenv("ORACLE_MILLENNIUM_BEARER_TOKEN", "").strip()),
             "messageSenderConfigured": bool(
                 os.getenv("ORACLE_ESCALATION_MESSAGE_SENDER_PERSON_ID", "").strip()
                 or os.getenv("ORACLE_ESCALATION_MESSAGE_SENDER_ID", "").strip()
@@ -147,16 +211,15 @@ async def escalation_readiness():
         },
         "epic": {
             "state": "READY" if public_base else "OPTIONAL",
-            "cdsServiceId": os.getenv("EPIC_CDS_SERVICE_ID", "cardinal-clinical-escalation-v1"),
+            "cdsServiceId": epic_cds_service_id(),
+            "cdsHook": epic_cds_hook_name(),
             "cdsEndpoint": "/api/integrations/epic/cds-hooks/escalation",
             "feedbackEndpoint": "/api/integrations/epic/cds-hooks/escalation/feedback",
+            "discoveryEndpoint": "/api/integrations/epic/cds-hooks/cds-services",
+            "standardServiceEndpoint": f"/api/integrations/epic/cds-hooks/cds-services/{epic_cds_service_id()}",
+            "standardFeedbackEndpoint": f"/api/integrations/epic/cds-hooks/cds-services/{epic_cds_service_id()}/feedback",
             "publicBaseConfigured": bool(public_base),
             "nativeWorkflow": "READY" if epic_native else "SANDBOX NOT AVAILABLE",
-            "nativeWorkflowDetail": (
-                "Configured Epic-native CDS workflow invocation."
-                if epic_native
-                else "Epic-native workflow invocation is not exposed/configured in the current sandbox; manual ngrok invocation remains valid proof of the CDS service."
-            ),
             "security": security_readiness(),
         },
     }
@@ -198,7 +261,7 @@ async def oracle_group_inboxes(name: str | None = Query(default=None)):
     if result.get("status") == "ready":
         result["nextStep"] = (
             "Copy a real returned Group Inbox id/name into "
-            "ORACLE_ESCALATION_TARGET_L1_ID/NAME through L4 as desired. "
+            "ORACLE_ESCALATION_TARGET_CARE_TEAM / URGENT_PROVIDER / RRT / CODE (legacy L1-L4 keys also remain supported). "
             "One sandbox inbox may be reused for multiple CARDINAL levels."
         )
     return result
@@ -348,7 +411,7 @@ async def oracle_fhir_communication_readiness(request: Request):
 @router.post("/api/escalation/oracle/fhir/communication/test")
 async def oracle_fhir_communication_test(
     request: Request,
-    level: str = Query(default="L1_NURSING_REVIEW"),
+    level: str = Query(default="CARE_TEAM_REVIEW"),
 ):
     token_state, _, _, patient_id = await _oracle_context(request)
     if not patient_id:
@@ -401,7 +464,7 @@ async function run(url) {
 async function testProduction() {
   out.textContent = 'Creating and verifying an Oracle sandbox Communication...';
   await show(await fetch(
-    '/api/escalation/oracle/fhir/communication/test?level=L1_NURSING_REVIEW',
+    '/api/escalation/oracle/fhir/communication/test?level=CARE_TEAM_REVIEW',
     {method: 'POST', credentials: 'include'}
   ));
 }
@@ -438,21 +501,36 @@ async def escalation_for_incident(incident_id: str):
 
 @router.get("/api/integrations/epic/cds-hooks/readiness")
 async def epic_cds_readiness():
-    public_base = os.getenv("EPIC_CDS_PUBLIC_BASE_URL", "").strip().rstrip("/")
+    urls = epic_cds_public_urls()
     return {
-        "state": "READY" if public_base else "OPTIONAL",
-        "publicBaseUrl": public_base or None,
-        "serviceUrl": f"{public_base}/api/integrations/epic/cds-hooks/escalation" if public_base else None,
-        "feedbackUrl": f"{public_base}/api/integrations/epic/cds-hooks/escalation/feedback" if public_base else None,
+        "state": "READY" if urls.get("publicBaseUrl") else "OPTIONAL",
+        **urls,
+        # Compatibility fields retained for existing CARDINAL tooling.
+        "serviceUrl": urls.get("directServiceUrl"),
+        "feedbackUrl": urls.get("directFeedbackUrl"),
+        "serviceId": epic_cds_service_id(),
+        "hook": epic_cds_hook_name(),
         "security": security_readiness(),
         "nativeWorkflow": "READY" if _truthy("EPIC_CDS_NATIVE_WORKFLOW_AVAILABLE") else "SANDBOX NOT AVAILABLE",
     }
 
 
-@router.post("/api/integrations/epic/cds-hooks/escalation")
-async def epic_cds_escalation(request: Request, payload: dict[str, Any]):
+@router.get("/api/integrations/epic/cds-hooks/cds-services")
+async def epic_cds_services():
+    """Standard CDS Hooks service discovery document."""
+    return epic_cds_discovery_document()
+
+
+async def _run_epic_cds_escalation(request: Request, payload: dict[str, Any]):
     started = time.perf_counter()
     security = validate_epic_cds_request(request)
+    requested_hook = str(payload.get("hook") or "").strip()
+    configured_hook = epic_cds_hook_name()
+    if requested_hook and requested_hook != configured_hook:
+        raise HTTPException(
+            status_code=400,
+            detail=f"This CARDINAL CDS service is configured for hook '{configured_hook}', not '{requested_hook}'.",
+        )
     context = payload.get("context") if isinstance(payload.get("context"), dict) else {}
     patient_id = str(
         context.get("patientId")
@@ -526,6 +604,23 @@ async def epic_cds_escalation(request: Request, payload: dict[str, Any]):
     return {"cards": [card]}
 
 
+@router.post("/api/integrations/epic/cds-hooks/escalation")
+async def epic_cds_escalation(request: Request, payload: dict[str, Any]):
+    # Existing direct endpoint retained so current Epic/manual configuration does not break.
+    return await _run_epic_cds_escalation(request, payload)
+
+
+@router.post("/api/integrations/epic/cds-hooks/cds-services/{service_id}")
+async def epic_cds_standard_service(
+    service_id: str,
+    request: Request,
+    payload: dict[str, Any],
+):
+    if service_id != epic_cds_service_id():
+        raise HTTPException(status_code=404, detail="Unknown CARDINAL CDS service ID.")
+    return await _run_epic_cds_escalation(request, payload)
+
+
 async def _handle_epic_feedback(request: Request, payload: dict[str, Any]):
     security = validate_epic_cds_request(request)
     return record_cds_feedback(payload, correlation_id=security.correlation_id)
@@ -541,6 +636,17 @@ async def epic_cds_feedback_compat(request: Request, payload: dict[str, Any]):
     return await _handle_epic_feedback(request, payload)
 
 
+@router.post("/api/integrations/epic/cds-hooks/cds-services/{service_id}/feedback")
+async def epic_cds_standard_feedback(
+    service_id: str,
+    request: Request,
+    payload: dict[str, Any],
+):
+    if service_id != epic_cds_service_id():
+        raise HTTPException(status_code=404, detail="Unknown CARDINAL CDS service ID.")
+    return await _handle_epic_feedback(request, payload)
+
+
 @router.get("/api/escalation/{event_id}")
 async def get_escalation(event_id: str):
     case = escalation_repository.get(event_id)
@@ -549,49 +655,50 @@ async def get_escalation(event_id: str):
     return public_case(case)
 
 
-@router.post("/api/escalation/{event_id}/acknowledge")
-async def acknowledge_escalation(event_id: str, body: ActorBody | None = None):
+@router.post("/api/escalation/{event_id}/auto-escalation")
+async def set_auto_escalation(event_id: str, body: AutoEscalationBody):
     try:
-        case = escalation_orchestrator.acknowledge(
-            event_id,
-            acknowledged_by=(body.actor if body else None),
-            acknowledged_role=(body.role if body else None),
-            note=(body.note if body else None),
-        )
+        return escalation_orchestrator.set_auto_escalation(event_id, enabled=body.enabled)
     except KeyError:
-        raise HTTPException(status_code=404, detail="Escalation case was not found.")
-    return public_case(case)
+        raise HTTPException(status_code=404, detail="Clinical response case was not found.")
 
 
-@router.post("/api/escalation/{event_id}/escalate")
+@router.post("/api/escalation/{event_id}/acknowledge", deprecated=True)
+async def acknowledge_escalation(event_id: str, body: ActorBody | None = None):
+    if not settings.ESCALATION_LEGACY_MANUAL_ACTIONS_ENABLED:
+        raise HTTPException(
+            status_code=410,
+            detail="Manual acknowledgement was retired by the V10 hospital-response workflow. Use site routing and the automatic escalation toggle instead.",
+        )
+    try:
+        return escalation_orchestrator.acknowledge(event_id)
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Clinical response case was not found.")
+
+
+@router.post("/api/escalation/{event_id}/escalate", deprecated=True)
 async def manually_escalate(event_id: str, body: EscalateBody | None = None):
-    actor = body.actor if body else None
-    role = body.role if body else None
-    reason = body.reason if body and body.reason else "manual_escalation"
+    if not settings.ESCALATION_LEGACY_MANUAL_ACTIONS_ENABLED:
+        raise HTTPException(
+            status_code=410,
+            detail="Manual escalation was retired by the V10 workflow. Enable Automatic Escalation for site-controlled pathway advancement.",
+        )
     if not escalation_repository.get(event_id):
-        raise HTTPException(status_code=404, detail="Escalation case was not found.")
-    append_audit_event(
-        event_id,
-        "MANUAL_ESCALATION",
-        detail=f"Manual escalation requested{f' by {actor}' if actor else ''}.",
-        data={"actor": actor, "actorRole": role, "reason": reason},
-        actor=actor,
-        actor_role=role,
-        reason=reason,
-    )
+        raise HTTPException(status_code=404, detail="Clinical response case was not found.")
+    reason = body.reason if body and body.reason else "legacy_manual_escalation"
     case = await escalation_orchestrator.escalate(event_id, reason=reason)
     return public_case(case)
 
 
-@router.post("/api/escalation/{event_id}/resolve")
+@router.post("/api/escalation/{event_id}/resolve", deprecated=True)
 async def resolve_escalation(event_id: str, body: ActorBody | None = None):
-    try:
-        case = escalation_orchestrator.resolve(
-            event_id,
-            resolved_by=(body.actor if body else None),
-            resolved_role=(body.role if body else None),
-            note=(body.note if body else None),
+    if not settings.ESCALATION_LEGACY_MANUAL_ACTIONS_ENABLED:
+        raise HTTPException(
+            status_code=410,
+            detail="Manual resolution was retired by the V10 hospital-response workflow.",
         )
+    try:
+        return escalation_orchestrator.resolve(event_id)
     except KeyError:
-        raise HTTPException(status_code=404, detail="Escalation case was not found.")
-    return public_case(case)
+        raise HTTPException(status_code=404, detail="Clinical response case was not found.")
+

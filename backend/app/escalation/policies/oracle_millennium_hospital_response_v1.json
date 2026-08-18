@@ -1,0 +1,199 @@
+{
+  "schemaVersion": "cardinal-hospital-response-policy-v3",
+  "policyId": "ORACLE-MILLENNIUM-HOSPITAL-RESPONSE-V1",
+  "version": "1.1.0",
+  "displayName": "Oracle Health Millennium / Cerner-Grounded Hospital Response Reference Profile",
+  "status": "site-configurable-reference",
+  "vendorSemantics": {
+    "note": "Oracle Health Millennium provides SMART/FHIR context plus Message Center PERSONNEL/GROUPINBOX recipients, responsible personnel and HIGH(STAT)/NORMAL(ROUTINE) message priority. Clinical severity bands, activation criteria, response teams and escalation timing are hospital-configured. Public MU Health Care evidence shows a Cerner Rapid Response implementation using Low/Moderate/High/Very High NEWS categories and a hospital nursing protocol; these are not universal Oracle/Cerner levels.",
+    "oracleMessagePriority": {
+      "MONITOR_ONLY": "NORMAL",
+      "CARE_TEAM_REVIEW": "NORMAL",
+      "URGENT_PROVIDER_REVIEW": "NORMAL",
+      "RAPID_RESPONSE_ACTIVATION": "HIGH",
+      "CODE_RESPONSE_ACTIVATION": "HIGH"
+    }
+  },
+  "defaultMinimumLevel": "CARE_TEAM_REVIEW",
+  "failSafeLevel": "URGENT_PROVIDER_REVIEW",
+  "autoAdvanceSecondsByLevel": {
+    "MONITOR_ONLY": 0,
+    "CARE_TEAM_REVIEW": 0,
+    "URGENT_PROVIDER_REVIEW": 0,
+    "RAPID_RESPONSE_ACTIVATION": 0,
+    "CODE_RESPONSE_ACTIVATION": 0
+  },
+  "scenarioMinimums": {
+    "VFIB-STEMI-001": "CODE_RESPONSE_ACTIVATION",
+    "TORSADES-LQT-002": "RAPID_RESPONSE_ACTIVATION",
+    "VT-ISCHEMIC-003": "RAPID_RESPONSE_ACTIVATION",
+    "AFIB-RVR-SEPSIS-004": "URGENT_PROVIDER_REVIEW",
+    "CHB-HYPERK-005": "RAPID_RESPONSE_ACTIVATION",
+    "BRADY-DIGTOX-006": "URGENT_PROVIDER_REVIEW",
+    "SVT-PSVT-007": "CARE_TEAM_REVIEW",
+    "NSVT-ECTOPY-008": "CARE_TEAM_REVIEW",
+    "WCT-DIFF-009": "RAPID_RESPONSE_ACTIVATION",
+    "WPW-AFIB-010": "RAPID_RESPONSE_ACTIVATION",
+    "FLUTTER-IC-011": "RAPID_RESPONSE_ACTIVATION",
+    "PERI-STEMI-012": "URGENT_PROVIDER_REVIEW",
+    "BRASH-013": "RAPID_RESPONSE_ACTIVATION",
+    "AMIO-DDI-014": "URGENT_PROVIDER_REVIEW"
+  },
+  "evidenceRules": [
+    {
+      "id": "R-CARDIAC-ARREST",
+      "path": "vitals.bloodPressure.note",
+      "operator": "containsAny",
+      "values": [
+        "no pulse",
+        "pulseless",
+        "cardiac arrest",
+        "arterial line flat"
+      ],
+      "minimumLevel": "CODE_RESPONSE_ACTIVATION",
+      "reason": "Pulseless/cardiac-arrest evidence requires immediate code/emergency response activation."
+    },
+    {
+      "id": "R-VFIB",
+      "path": "episode.type",
+      "operator": "containsAny",
+      "values": [
+        "ventricular_fibrillation",
+        "ventricular fibrillation",
+        "vfib"
+      ],
+      "minimumLevel": "CODE_RESPONSE_ACTIVATION",
+      "reason": "Ventricular fibrillation is an immediately life-threatening arrest rhythm and requires code/emergency response activation."
+    },
+    {
+      "id": "R-CRITICAL",
+      "path": "episode.severity",
+      "operator": "equalsAny",
+      "values": [
+        "critical",
+        "emergency"
+      ],
+      "minimumLevel": "RAPID_RESPONSE_ACTIVATION",
+      "reason": "Critical deterioration meets the reference profile's rapid-response activation floor unless stronger arrest/resuscitation evidence requires code response."
+    },
+    {
+      "id": "R-SBP-90",
+      "path": "vitals.bloodPressure.systolic",
+      "operator": "lte",
+      "value": 90,
+      "minimumLevel": "RAPID_RESPONSE_ACTIVATION",
+      "reason": "Hypotension is a common rapid-response activation criterion in hospital deterioration pathways."
+    },
+    {
+      "id": "R-MAP-60",
+      "path": "vitals.bloodPressure.map",
+      "operator": "lte",
+      "value": 60,
+      "minimumLevel": "RAPID_RESPONSE_ACTIVATION",
+      "reason": "Low MAP indicates hemodynamic deterioration requiring rapid-response-level assessment in this reference profile."
+    },
+    {
+      "id": "R-HR-130",
+      "path": "vitals.heartRateBpm",
+      "operator": "gte",
+      "value": 130,
+      "minimumLevel": "URGENT_PROVIDER_REVIEW",
+      "reason": "Marked tachycardia requires urgent provider review; concurrent instability may independently raise the pathway to rapid response."
+    },
+    {
+      "id": "R-HR-40",
+      "path": "vitals.heartRateBpm",
+      "operator": "lte",
+      "value": 40,
+      "minimumLevel": "URGENT_PROVIDER_REVIEW",
+      "reason": "Marked bradycardia requires urgent provider review; concurrent instability may independently raise the pathway."
+    },
+    {
+      "id": "R-SPO2-90",
+      "path": "vitals.spo2Pct",
+      "operator": "lte",
+      "value": 90,
+      "minimumLevel": "RAPID_RESPONSE_ACTIVATION",
+      "reason": "Significant hypoxemia meets the reference profile's rapid-response activation floor."
+    },
+    {
+      "id": "R-K-6",
+      "path": "labs.potassium.value",
+      "operator": "gte",
+      "value": 6.0,
+      "minimumLevel": "URGENT_PROVIDER_REVIEW",
+      "reason": "Marked hyperkalemia requires urgent provider evaluation; ECG/hemodynamic instability may raise the response pathway."
+    },
+    {
+      "id": "R-K-3",
+      "path": "labs.potassium.value",
+      "operator": "lte",
+      "value": 3.0,
+      "minimumLevel": "URGENT_PROVIDER_REVIEW",
+      "reason": "Marked hypokalemia requires urgent provider evaluation."
+    },
+    {
+      "id": "R-DIGOXIN-2",
+      "path": "labs.digoxinLevel.value",
+      "operator": "gte",
+      "value": 2.0,
+      "minimumLevel": "URGENT_PROVIDER_REVIEW",
+      "reason": "Elevated digoxin concentration requires urgent provider review."
+    },
+    {
+      "id": "R-LACTATE-4",
+      "path": "labs.lactate.value",
+      "operator": "gte",
+      "value": 4.0,
+      "minimumLevel": "RAPID_RESPONSE_ACTIVATION",
+      "reason": "Marked lactate elevation with deterioration warrants rapid-response-level assessment in this reference profile."
+    }
+  ],
+  "responseTierProfile": {
+    "profileId": "cardinal-cerner-grounded-t0-t3-e-v1",
+    "claimBoundary": "T0/T1/T2/T3/E are CARDINAL normalized response tiers, not official Oracle/Cerner product levels.",
+    "publicImplementationPattern": {
+      "organization": "University of Missouri Health System / MU Health Care",
+      "vendor": "Cerner",
+      "solution": "Cerner Rapid Response Solution with NEWS/PEWS",
+      "documentedSeverityBands": [
+        "Low",
+        "Moderate",
+        "High",
+        "Very High"
+      ],
+      "documentedOperationalPattern": "High/Very High notifications; automatic Rapid Response based on NEWS severity or provider unable to reach bedside within 15 minutes.",
+      "mappingNote": "CARDINAL uses T0/T1/T2/T3 as a portable policy interface qualitatively aligned to low/moderate/high/very-high response intensity. It does not claim to reproduce MU NEWS thresholds."
+    },
+    "tiers": {
+      "T0_MONITOR": {
+        "pathway": "MONITOR_ONLY",
+        "referenceBand": "LOW"
+      },
+      "T1_CLINICAL_REVIEW": {
+        "pathway": "CARE_TEAM_REVIEW",
+        "referenceBand": "MODERATE"
+      },
+      "T2_URGENT_REVIEW": {
+        "pathway": "URGENT_PROVIDER_REVIEW",
+        "referenceBand": "HIGH"
+      },
+      "T3_RAPID_RESPONSE": {
+        "pathway": "RAPID_RESPONSE_ACTIVATION",
+        "referenceBand": "VERY_HIGH"
+      },
+      "E_EMERGENCY_OVERRIDE": {
+        "pathway": "CODE_RESPONSE_ACTIVATION",
+        "referenceBand": "EMERGENCY_OVERRIDE",
+        "outsideNormalSequence": true
+      }
+    }
+  },
+  "referenceAutomationExamples": {
+    "MU_PROVIDER_BEDSIDE_15_MINUTES": {
+      "appliesTo": "T2_URGENT_REVIEW -> T3_RAPID_RESPONSE only when adopted by site policy",
+      "seconds": 900,
+      "note": "Public MU Health Care implementation reported Rapid Response notification when a provider was unable to be at bedside within 15 minutes after nursing notification. Do not apply this universally."
+    }
+  }
+}

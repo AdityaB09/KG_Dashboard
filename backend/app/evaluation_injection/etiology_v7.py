@@ -12,6 +12,7 @@ from typing import Any
 from app.config import settings
 from app.evaluation.config import model_evaluation_allowed, slm_model
 from app.evaluation.slm_client import EvaluationModelError, call_model
+from app.escalation.levels import EscalationLevel, normalize_level
 
 
 class EtiologyV7Error(RuntimeError):
@@ -58,15 +59,22 @@ Rules:
   STOP or WITHHOLD as well as what to give.
 - If the data are insufficient to support a conclusion, say so explicitly in
   `uncertainty` rather than guessing. Do not invent values that are not in the data.
-- Recommend ONE CARDINAL escalation level from the fixed ladder below. This is a
-  recommendation only; CARDINAL's policy engine will independently adjudicate it:
-    L0_MONITOR
-    L1_NURSING_REVIEW
-    L2_URGENT_PROVIDER_REVIEW
-    L3_RAPID_RESPONSE_REVIEW
-    L4_EMERGENCY_RESPONSE
-- Base the escalation recommendation only on the supplied episode evidence and explain
-  why that level is appropriate in one concise rationale.
+- Recommend ONE normalized hospital response tier from the site-configurable profile
+  below. This is a recommendation only; CARDINAL's deterministic site policy will
+  independently adjudicate it. T0/T1/T2/T3/E are CARDINAL's portable response interface
+  patterned on severity-stratified hospital workflows; they are NOT official Oracle/Cerner
+  product levels:
+    T0_MONITOR
+    T1_CLINICAL_REVIEW
+    T2_URGENT_REVIEW
+    T3_RAPID_RESPONSE
+    E_EMERGENCY_OVERRIDE
+- T3_RAPID_RESPONSE is the highest normal deterioration tier. Do NOT advance from T3 to
+  emergency merely because time elapsed. E_EMERGENCY_OVERRIDE is separate from the normal
+  sequence and is reserved for arrest, pulselessness, or immediately life-threatening
+  instability requiring emergency/resuscitation activation.
+- Base the recommendation only on the supplied episode evidence and explain why that
+  response pathway is appropriate in one concise rationale.
 
 Respond with ONLY a single JSON object, no other text, in exactly this shape:
 
@@ -83,7 +91,7 @@ Respond with ONLY a single JSON object, no other text, in exactly this shape:
   "recommendedActions": ["<action 1, most urgent>", "<action 2>", "..."],
   "uncertainty": ["<what is missing or would change confidence>", "..."],
   "escalationRecommendation": {
-    "levelCode": "<one exact CARDINAL level code>",
+    "levelCode": "<one exact response pathway code>",
     "rationale": "<why this episode warrants that level>",
     "confidence": "<low|medium|high>"
   }
@@ -259,9 +267,9 @@ def validate_v7_response(
     legacy = set(LEGACY_V7_RESPONSE_FIELDS)
     if actual == legacy and allow_legacy_without_escalation:
         # Keep existing precomputed V7 result sets loadable. They intentionally
-        # fall back to L0 because the older model never made an escalation call.
+        # fall back to monitoring because the older model never made a response-pathway call.
         payload["escalationRecommendation"] = {
-            "levelCode": "L0_MONITOR",
+            "levelCode": "MONITOR_ONLY",
             "rationale": "Legacy V7 response did not include an escalation recommendation.",
             "confidence": "low",
         }
@@ -300,20 +308,17 @@ def validate_v7_response(
             "V7.1 field 'escalationRecommendation' must contain exactly "
             "levelCode, rationale, and confidence."
         )
-    allowed_levels = {
-        "L0_MONITOR",
-        "L1_NURSING_REVIEW",
-        "L2_URGENT_PROVIDER_REVIEW",
-        "L3_RAPID_RESPONSE_REVIEW",
-        "L4_EMERGENCY_RESPONSE",
-    }
-    level_code = str(escalation.get("levelCode") or "").strip().upper()
+    # Accept V11 T0/T1/T2/T3/E, V10 pathway codes and historical L0-L4 values so
+    # existing evidence remains usable. Always normalize internally to the stable V10 pathway value.
+    raw_level_code = str(escalation.get("levelCode") or "").strip()
+    try:
+        level_code = normalize_level(raw_level_code).value
+    except ValueError as exc:
+        raise EtiologyV7Error(
+            "V7.1 escalationRecommendation.levelCode is not a supported hospital response pathway."
+        ) from exc
     rationale = str(escalation.get("rationale") or "").strip()
     confidence = str(escalation.get("confidence") or "").strip().lower()
-    if level_code not in allowed_levels:
-        raise EtiologyV7Error(
-            "V7.1 escalationRecommendation.levelCode is not a supported CARDINAL level."
-        )
     if not rationale:
         raise EtiologyV7Error(
             "V7.1 escalationRecommendation.rationale must be a non-empty string."

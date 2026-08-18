@@ -498,4 +498,79 @@ class Settings:
     ).strip()
 
 
+
+    # CARDINAL escalation ladder. Disabled unless explicitly enabled so the
+    # existing Oracle/Epic evaluation runtime remains unchanged by default.
+    ESCALATION_ENABLED = os.getenv(
+        "ESCALATION_ENABLED",
+        "false",
+    ).strip().lower() in {"1", "true", "yes", "on"}
+
+    ESCALATION_STORAGE_PATH = os.getenv(
+        "ESCALATION_STORAGE_PATH",
+        "data/escalations",
+    ).strip()
+
+    # Optional site-managed automatic progression window. Automatic progression
+    # is OFF by default to avoid notification storms / alert fatigue.
+    ESCALATION_RESPONSE_WINDOW_SECONDS = float(
+        os.getenv("ESCALATION_RESPONSE_WINDOW_SECONDS", "0")
+    )
+    # Legacy alias retained for older code/tests.
+    ESCALATION_ACK_TIMEOUT_SECONDS = ESCALATION_RESPONSE_WINDOW_SECONDS
+
+    ESCALATION_AUTO_ADVANCE_DEFAULT = os.getenv(
+        "ESCALATION_AUTO_ADVANCE_DEFAULT",
+        "false",
+    ).strip().lower() in {"1", "true", "yes", "on"}
+
+    ESCALATION_LEGACY_MANUAL_ACTIONS_ENABLED = os.getenv(
+        "ESCALATION_LEGACY_MANUAL_ACTIONS_ENABLED",
+        "false",
+    ).strip().lower() in {"1", "true", "yes", "on"}
+
+    ESCALATION_TEAMS_ENABLED = os.getenv(
+        "ESCALATION_TEAMS_ENABLED",
+        "false",
+    ).strip().lower() in {"1", "true", "yes", "on"}
+
+    ESCALATION_TIMEOUT_POLL_SECONDS = float(
+        os.getenv("ESCALATION_TIMEOUT_POLL_SECONDS", "5")
+    )
+
+    ESCALATION_SCENARIO_MINIMUMS_JSON = os.getenv(
+        "ESCALATION_SCENARIO_MINIMUMS_JSON",
+        "{}",
+    ).strip()
+
+    ESCALATION_POLICY_DEFAULT_LEVEL = os.getenv(
+        "ESCALATION_POLICY_DEFAULT_LEVEL",
+        "MONITOR_ONLY",
+    ).strip()
+
+    ESCALATION_EMAIL_ENABLED = os.getenv(
+        "ESCALATION_EMAIL_ENABLED",
+        "false",
+    ).strip().lower() in {"1", "true", "yes", "on"}
+
+    # Versioned CARDINAL policy / operational identity.
+    ESCALATION_POLICY_ID = os.getenv(
+        "ESCALATION_POLICY_ID",
+        "ORACLE-MILLENNIUM-HOSPITAL-RESPONSE-V1",
+    ).strip()
+    ESCALATION_POLICY_PATH = os.getenv(
+        "ESCALATION_POLICY_PATH",
+        "app/escalation/policies/oracle_millennium_hospital_response_v1.json",
+    ).strip()
+    ESCALATION_POLICY_FAIL_SAFE_LEVEL = os.getenv(
+        "ESCALATION_POLICY_FAIL_SAFE_LEVEL",
+        "URGENT_PROVIDER_REVIEW",
+    ).strip()
+    ESCALATION_SITE_ID = os.getenv("ESCALATION_SITE_ID", "CARDINAL-DEMO-SITE").strip()
+    ESCALATION_FACILITY_ID = os.getenv("ESCALATION_FACILITY_ID", "CARDINAL-LOCAL").strip()
+    ESCALATION_SERVICE_ID = os.getenv("ESCALATION_SERVICE_ID", "cardinal-escalation").strip()
+    ESCALATION_INSTANCE_ID = os.getenv("ESCALATION_INSTANCE_ID", "local-dev-01").strip()
+    ESCALATION_DEFAULT_ACTOR = os.getenv("ESCALATION_DEFAULT_ACTOR", "CARDINAL recipient").strip()
+    ESCALATION_DEFAULT_ACTOR_ROLE = os.getenv("ESCALATION_DEFAULT_ACTOR_ROLE", "Clinical responder").strip()
+
 settings = Settings()

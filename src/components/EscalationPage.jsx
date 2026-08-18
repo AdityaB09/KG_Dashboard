@@ -1,13 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  acknowledgeEscalation,
-  escalateEscalation,
   getEscalation,
-  resolveEscalation,
+  setAutoEscalation,
 } from "../services/escalationService";
 import "./EscalationPage.css";
 
-const TERMINAL = new Set(["RESOLVED", "CANCELLED"]);
 const ESCALATION_POLL_MS = Math.max(1000, Number(import.meta.env.VITE_ESCALATION_POLL_MS || 2500));
 const COUNTDOWN_TICK_MS = Math.max(250, Number(import.meta.env.VITE_ESCALATION_COUNTDOWN_TICK_MS || 1000));
 
@@ -19,8 +16,12 @@ function valueOrDash(value) {
 function titleCaseStatus(value) {
   const upper = String(value || "").toUpperCase();
   const special = {
-    ACK_PENDING: "ACK Pending",
-    ACK_TIMEOUT: "ACK Timeout",
+    ROUTED: "Routed",
+    ROUTED_AUTO_ADVANCE: "Routed · Auto Escalation On",
+    ROUTED_TERMINAL: "Terminal Response Routed",
+    AUTO_ESCALATION_ENABLED: "Automatic Escalation Enabled",
+    AUTO_ESCALATION_DISABLED: "Automatic Escalation Disabled",
+    AUTO_ESCALATION_WINDOW_EXPIRED: "Automatic Escalation Window Expired",
     EPIC_CDS_HOOK_INVOKED: "Epic CDS Hook Invoked",
     EPIC_CDS_CARD_RETURNED: "Epic CDS Card Returned",
     EPIC_CDS_FEEDBACK_RECEIVED: "Epic CDS Feedback Received",
@@ -106,10 +107,13 @@ function DeliveryChannels({ escalation }) {
   const delivery = escalation?.delivery || {};
   const vendor = delivery.vendor || {};
   const email = delivery.email || {};
+  const teams = delivery.teams || {};
   const timeline = Array.isArray(escalation?.timeline) ? escalation.timeline : [];
 
   const emailEvent = latestEvent(timeline, "EMAIL_SENT");
+  const teamsEvent = latestEvent(timeline, "TEAMS_SENT");
   const emailStatus = deliveryState(email.status);
+  const teamsStatus = deliveryState(teams.status);
 
   if (provider === "oracle") {
     const comm = vendor.fhirCommunication || {};
@@ -142,6 +146,14 @@ function DeliveryChannels({ escalation }) {
                 delivery.completedAt
               )}
             </span>
+          </Channel>
+
+          <Channel title="Microsoft Teams" status={teamsStatus}>
+            <span>Transport: {valueOrDash(teams.transport || "Teams Workflows webhook")}</span>
+            <span>Assigned role: {valueOrDash(teams.assignedRole || escalation.assignedRole)}</span>
+            <span>Tier: {valueOrDash(teams.tierCode || escalation.responseTierCode)}</span>
+            <span>Channel: {valueOrDash(teams.channelLabel)}</span>
+            <span>Timestamp: {formatDate(teams.sentAt || teamsEvent?.at)}</span>
           </Channel>
 
           <Channel
@@ -239,8 +251,15 @@ function DeliveryChannels({ escalation }) {
             <span>Recipient: {valueOrDash(email.recipient || email.to)}</span>
             <span>Timestamp: {formatDate(email.sentAt || email.at || emailEvent?.at)}</span>
           </Channel>
-          <Channel title="Epic Active Escalation" status={routing ? "READY" : deliveryState(vendor.status)}>
-            <span>Effective level: {valueOrDash(escalation.effectiveLevel)}</span>
+          <Channel title="Microsoft Teams" status={teamsStatus}>
+            <span>Transport: {valueOrDash(teams.transport || "Teams Workflows webhook")}</span>
+            <span>Assigned role: {valueOrDash(teams.assignedRole || escalation.assignedRole)}</span>
+            <span>Tier: {valueOrDash(teams.tierCode || escalation.responseTierCode)}</span>
+            <span>Channel: {valueOrDash(teams.channelLabel)}</span>
+            <span>Timestamp: {formatDate(teams.sentAt || teamsEvent?.at)}</span>
+          </Channel>
+          <Channel title="Epic Active Response" status={routing ? "READY" : deliveryState(vendor.status)}>
+            <span>Response pathway: {valueOrDash(escalation.effectiveLevelLabel || escalation.effectiveLevel)}</span>
             <span>Activated: {formatDate(routing?.at || delivery.startedAt)}</span>
           </Channel>
           <Channel title="Epic CDS Hook" status={card ? "DELIVERED" : hook ? "DELIVERY ATTEMPTED" : "READY"}>
@@ -275,7 +294,7 @@ export default function EscalationPage({ eventId }) {
       setError("");
     } catch (err) {
       setStatus("error");
-      setError(err?.message || "Unable to load escalation.");
+      setError(err?.message || "Unable to load clinical response.");
     }
   }, [eventId]);
 
@@ -290,11 +309,10 @@ export default function EscalationPage({ eventId }) {
   }, []);
 
   const model = escalation?.modelResponse || {};
-  const isTerminal = TERMINAL.has(String(escalation?.status || "").toUpperCase());
-  const canAcknowledge = escalation && !isTerminal && String(escalation.status || "").toUpperCase() !== "ACKNOWLEDGED";
-  const canEscalate = escalation && !isTerminal && escalation.effectiveLevel !== "L4_EMERGENCY_RESPONSE";
+  const automaticProgressionTerminal = ["RAPID_RESPONSE_ACTIVATION", "CODE_RESPONSE_ACTIVATION"].includes(escalation?.effectiveLevel);
   const timeline = useMemo(() => [...(Array.isArray(escalation?.timeline) ? escalation.timeline : [])].reverse(), [escalation]);
-  const ackCountdown = countdownText(escalation?.ackDueAt || escalation?.nextEscalationAt, now);
+  const responseCountdown = countdownText(escalation?.nextEscalationAt, now);
+  const autoEscalationEnabled = Boolean(escalation?.autoEscalationEnabled);
 
   async function runAction(name, request) {
     setAction(name);
@@ -304,10 +322,18 @@ export default function EscalationPage({ eventId }) {
       setEscalation(result);
       setStatus("ready");
     } catch (err) {
-      setError(err?.message || `Unable to ${name.toLowerCase()} escalation.`);
+      setError(err?.message || `Unable to ${name.toLowerCase()} clinical response.`);
     } finally {
       setAction("");
     }
+  }
+
+  async function toggleAutoEscalation() {
+    if (!escalation || automaticProgressionTerminal || action) return;
+    await runAction(
+      autoEscalationEnabled ? "Disable automatic escalation" : "Enable automatic escalation",
+      () => setAutoEscalation(eventId, !autoEscalationEnabled)
+    );
   }
 
   function openFullEpisode() {
@@ -317,31 +343,33 @@ export default function EscalationPage({ eventId }) {
     window.location.assign(`/?${query.toString()}`);
   }
 
-  if (status === "loading") return <main className="cardinal-escalation-page cardinal-escalation-centered"><div className="cardinal-escalation-loading">Loading clinical escalation…</div></main>;
-  if (!escalation) return <main className="cardinal-escalation-page cardinal-escalation-centered"><section className="cardinal-escalation-error"><h1>Escalation unavailable</h1><p>{error || "The requested escalation case could not be loaded."}</p></section></main>;
+  if (status === "loading") return <main className="cardinal-escalation-page cardinal-escalation-centered"><div className="cardinal-escalation-loading">Loading clinical response…</div></main>;
+  if (!escalation) return <main className="cardinal-escalation-page cardinal-escalation-centered"><section className="cardinal-escalation-error"><h1>Clinical response unavailable</h1><p>{error || "The requested clinical response case could not be loaded."}</p></section></main>;
 
   return (
     <main className="cardinal-escalation-page">
       <header className="cardinal-escalation-header">
-        <div><span className="cardinal-escalation-kicker">CARDINAL · Clinical Escalation</span><h1>{valueOrDash(escalation.effectiveLevelLabel)}</h1><p>{valueOrDash(escalation.effectiveLevel)} · {valueOrDash(escalation.assignedRole)}</p></div>
-        <div className={`cardinal-escalation-status status-${String(escalation.status || "").toLowerCase()}`}>{titleCaseStatus(escalation.status)}{ackCountdown !== "—" ? ` · ${ackCountdown}` : ""}</div>
+        <div><span className="cardinal-escalation-kicker">CARDINAL · Clinical Response Routing</span><h1>{valueOrDash(escalation.responseTierCode)} · {valueOrDash(escalation.effectiveLevelLabel)}</h1><p>{valueOrDash(escalation.assignedRole)} · Site-configurable Cerner-grounded response profile</p></div>
+        <div className={`cardinal-escalation-status status-${String(escalation.status || "").toLowerCase()}`}>{titleCaseStatus(escalation.status)}{responseCountdown !== "—" ? ` · ${responseCountdown}` : ""}</div>
       </header>
 
       {error ? <div className="cardinal-escalation-inline-error">{error}</div> : null}
 
       <section className="cardinal-escalation-grid">
         <article className="cardinal-escalation-card">
-          <h2>Escalation Decision</h2>
+          <h2>Clinical Response Decision</h2>
           <div className="cardinal-escalation-fields">
-            <Field label="Model Recommendation">{valueOrDash(escalation.modelSuggestedLevel)}</Field>
-            <Field label="Policy Minimum">{valueOrDash(escalation.policyMinimumLevel)}</Field>
-            <Field label="Effective Level">{valueOrDash(escalation.effectiveLevel)}</Field>
+            <Field label="Model Recommendation">{valueOrDash(escalation.modelSuggestedLevelLabel || escalation.modelSuggestedLevel)}</Field>
+            <Field label="Normalized Response Tier">{valueOrDash(escalation.responseTierCode)}</Field>
+            <Field label="Site Policy Minimum">{valueOrDash(escalation.policyMinimumLevelLabel || escalation.policyMinimumLevel)}</Field>
+            <Field label="Effective Pathway">{valueOrDash(escalation.effectiveLevelLabel || escalation.effectiveLevel)}</Field>
+            <Field label="Reference Severity Band">{valueOrDash(escalation.referenceSeverityBand)}</Field>
             <Field label="Assigned Role">{valueOrDash(escalation.assignedRole)}</Field>
             <Field label="Policy ID">{valueOrDash(escalation.policyId)}</Field>
             <Field label="Policy Version">{valueOrDash(escalation.policyVersion)}</Field>
             <Field label="Confidence">{valueOrDash(escalation.modelConfidence)}</Field>
           </div>
-          {escalation.modelRationale ? <section className="cardinal-escalation-copy-block"><h3>Escalation Rationale</h3><p>{escalation.modelRationale}</p></section> : null}
+          {escalation.modelRationale ? <section className="cardinal-escalation-copy-block"><h3>Response Rationale</h3><p>{escalation.modelRationale}</p></section> : null}
           {Array.isArray(escalation?.policyDecision?.rulesFired) && escalation.policyDecision.rulesFired.length ? <section className="cardinal-escalation-copy-block"><h3>Policy Rules Fired</h3><ul>{escalation.policyDecision.rulesFired.map((rule) => <li key={rule.ruleId}>{`${rule.ruleId}: ${rule.reason || rule.minimumLevel}`}</li>)}</ul></section> : null}
         </article>
 
@@ -363,13 +391,10 @@ export default function EscalationPage({ eventId }) {
           <div className="cardinal-escalation-fields">
             <Field label="Current Status">{titleCaseStatus(escalation.status)}</Field>
             <Field label="Assigned / Routed Role">{valueOrDash(escalation.assignedRole)}</Field>
-            <Field label="ACK Due">{formatDate(escalation.ackDueAt || escalation.nextEscalationAt)}</Field>
-            <Field label="Countdown">{ackCountdown}</Field>
-            <Field label="Acknowledged By">{valueOrDash(escalation.acknowledgedBy)}</Field>
-            <Field label="Acknowledged Role">{valueOrDash(escalation.acknowledgedRole)}</Field>
-            <Field label="Acknowledged At">{formatDate(escalation.acknowledgedAt)}</Field>
-            <Field label="Time to ACK">{escalation.timeToAckSeconds != null ? `${escalation.timeToAckSeconds}s` : "—"}</Field>
-            <Field label="Resolution">{escalation.resolvedAt ? `Resolved ${formatDate(escalation.resolvedAt)}` : "Open"}</Field>
+            <Field label="Automatic Escalation">{automaticProgressionTerminal ? "Not applicable (Rapid Response / Emergency is condition-driven)" : autoEscalationEnabled ? "ON" : "OFF"}</Field>
+            <Field label="Next Pathway Review">{formatDate(escalation.nextEscalationAt)}</Field>
+            <Field label="Countdown">{responseCountdown}</Field>
+            <Field label="Routing Model">Oracle/Epic vendor routing + Email + Microsoft Teams</Field>
           </div>
         </article>
         <article className="cardinal-escalation-card">
@@ -389,17 +414,30 @@ export default function EscalationPage({ eventId }) {
       <DeliveryChannels escalation={escalation} />
 
       <section className="cardinal-escalation-card cardinal-escalation-actions-card">
-        <div><h2>Response Actions</h2><p>Every action is appended to the CARDINAL audit timeline.</p></div>
-        <div className="cardinal-escalation-actions">
-          <button type="button" disabled={!canAcknowledge || Boolean(action)} onClick={() => runAction("Acknowledge", () => acknowledgeEscalation(eventId))}>{action === "Acknowledge" ? "Acknowledging…" : "Acknowledge"}</button>
+        <div>
+          <h2>Routing Controls</h2>
+          <p>Automatic escalation is optional and OFF by default to reduce duplicate notifications and alert fatigue.</p>
+        </div>
+        <div className="cardinal-escalation-actions cardinal-routing-controls">
           <button type="button" className="secondary" onClick={openFullEpisode}>Open Full Episode</button>
-          <button type="button" className="secondary" disabled={!canEscalate || Boolean(action)} onClick={() => runAction("Escalate", () => escalateEscalation(eventId))}>{action === "Escalate" ? "Escalating…" : "Escalate"}</button>
-          <button type="button" className="secondary" disabled={isTerminal || Boolean(action)} onClick={() => runAction("Resolve", () => resolveEscalation(eventId))}>{action === "Resolve" ? "Resolving…" : "Resolve"}</button>
+          <div className={`cardinal-auto-toggle${autoEscalationEnabled ? " is-on" : ""}${automaticProgressionTerminal ? " is-disabled" : ""}`}>
+            <span>Automatic Escalation</span>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={autoEscalationEnabled}
+              disabled={automaticProgressionTerminal || Boolean(action)}
+              onClick={toggleAutoEscalation}
+            >
+              <span className="cardinal-auto-toggle-track"><span className="cardinal-auto-toggle-knob" /></span>
+              <strong>{automaticProgressionTerminal ? "N/A" : autoEscalationEnabled ? "ON" : "OFF"}</strong>
+            </button>
+          </div>
         </div>
       </section>
 
       <section className="cardinal-escalation-card">
-        <h2>Complete Escalation Timeline</h2>
+        <h2>Complete Clinical Response Timeline</h2>
         <div className="cardinal-escalation-timeline">
           {timeline.length ? timeline.map((event, index) => (
             <div className="cardinal-escalation-timeline-row" key={`${event.at || "event"}-${index}`}>
